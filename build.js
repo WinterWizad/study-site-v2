@@ -6,7 +6,7 @@ import fm from 'front-matter';
 import { glob } from 'glob';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const SRC_DIR = path.join(__dirname, '..');
+const SRC_DIR = __dirname;
 const DIST_DIR = path.join(__dirname, 'dist');
 
 // Subject configuration
