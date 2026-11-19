@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Computing | IT 277 | BIM 8th Semester</title>
+  <meta name="description" content="IT 277 - Cloud Computing - 7 units, 60 marks">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <span class="subject-badge" style="background: #7c3aed">IT 277</span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <div class="sidebar-content">
+        <h3>All Subjects</h3>
+        <ul class="subject-list">
+          
+            <li>
+              <a href="../bi/" class="" style="border-left-color: #2563eb">
+                <span class="subject-code">IT 249</span>
+                <span class="subject-name">Business Intelligence</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="../de/" class="" style="border-left-color: #059669">
+                <span class="subject-code">IT 250</span>
+                <span class="subject-name">Digital Economy</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="../cloud/" class="active" style="border-left-color: #7c3aed">
+                <span class="subject-code">IT 277</span>
+                <span class="subject-name">Cloud Computing</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="../entrepreneurship/" class="" style="border-left-color: #dc2626">
+                <span class="subject-code">IT 248</span>
+                <span class="subject-name">IT Entrepreneurship & Management</span>
+              </a>
+            </li>
+          
+        </ul>
+      </div>
+    </aside>
+
+    <main class="content" role="main">
+      <article class="subject-page">
+        <header class="subject-header">
+          <div class="subject-info">
+            <span class="subject-badge" style="background: #7c3aed">IT 277</span>
+            <h1>Cloud Computing</h1>
+            <p class="subject-meta">60 marks • 30 pass • 7 units • 48 lecture hours</p>
+          </div>
+        </header>
+
+        <section class="units-grid">
+          
+            <article class="unit-card">
+              <a href="unit-1.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 1</span>
+                </div>
+                <h2>Introduction to Cloud Computing</h2>
+                <a href="unit-1.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+            <article class="unit-card">
+              <a href="unit-2.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 2</span>
+                </div>
+                <h2>Cloud Architecture</h2>
+                <a href="unit-2.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+            <article class="unit-card">
+              <a href="unit-3.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 3</span>
+                </div>
+                <h2>Cloud Applications</h2>
+                <a href="unit-3.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+            <article class="unit-card">
+              <a href="unit-4.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 4</span>
+                </div>
+                <h2>Virtualization</h2>
+                <a href="unit-4.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+            <article class="unit-card">
+              <a href="unit-5.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 5</span>
+                </div>
+                <h2>MapReduce</h2>
+                <a href="unit-5.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+            <article class="unit-card">
+              <a href="unit-6.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 6</span>
+                </div>
+                <h2>Cloud Security</h2>
+                <a href="unit-6.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+            <article class="unit-card">
+              <a href="unit-7.html">
+                <div class="unit-card-header">
+                  <span class="unit-number">Unit 7</span>
+                </div>
+                <h2>Cloud Platforms</h2>
+                <a href="unit-7.html" class="read-link">Read Unit →</a>
+              </a>
+            </article>
+          
+        </section>
+
+        <section class="subject-resources">
+          <h3>Resources</h3>
+          <ul class="resource-list">
+            <li><a href="model-question.html">Model Question</a></li>
+            <li><a href="model-question-answers.html">Model Question Answers</a></li>
+            <li><a href="question-bank.html">Question Bank</a></li>
+            <li><a href="../_syllabus/it-277-cloud-computing.md" target="_blank">Syllabus</a></li>
+          </ul>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    window.toggleSidebar = function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+    window.closeSidebar = function() {
+      document.getElementById('sidebar').classList.remove('open');
+    };
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+      link.addEventListener('click', () => closeSidebar());
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    window.toggleTheme = function() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    };
+
+    // Trailing slash redirect for subject index pages
+    const subjectIndexRegex = new RegExp('^/(bi|de|cloud|entrepreneurship)$');
+    if (subjectIndexRegex.test(window.location.pathname)) {
+      window.location.href = window.location.pathname + '/';
+    }
+  </script>
+</body>
+</html>

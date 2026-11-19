@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 6: BI Implementation | Business Intelligence | BIM 8th Semester</title>
+  <meta name="description" content="IT 249 - Unit 6: BI Implementation">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+</head>
+<body class="unit-page">
+  <header class="site-header">
+    <div class="header-content">
+      <a href="../../index.html" class="site-title">BIM 8th Semester</a>
+      <span class="subject-badge" style="background: #2563eb">IT 249</span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <div class="sidebar-content">
+        <h3>Business Intelligence</h3>
+        <p class="subject-meta">IT 249 • 60 marks</p>
+        <ul class="unit-list">
+          
+            <li>
+              <a href="unit-1.html" class="">
+                <span class="unit-num">Unit 1</span>
+                <span class="unit-title">Introduction to Business Intelligence</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-2.html" class="">
+                <span class="unit-num">Unit 2</span>
+                <span class="unit-title">Data Warehousing</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-3.html" class="">
+                <span class="unit-num">Unit 3</span>
+                <span class="unit-title">Data Mining</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-4.html" class="">
+                <span class="unit-num">Unit 4</span>
+                <span class="unit-title">Data Visualization</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-5.html" class="">
+                <span class="unit-num">Unit 5</span>
+                <span class="unit-title">BI Tools and Technologies</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-6.html" class="active">
+                <span class="unit-num">Unit 6</span>
+                <span class="unit-title">BI Implementation</span>
+              </a>
+            </li>
+          
+        </ul>
+        <div class="sidebar-footer">
+          <a href="../../index.html" class="footer-link">← All Subjects</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content" role="main">
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-5.html" class="nav-btn prev">← Unit 5: BI Tools and Technologies</a>
+      <a href="../index.html#bi" class="nav-btn up">↑ Business Intelligence</a>
+      <span class="nav-btn next disabled">Next →</span>
+    </nav>
+  
+
+      <article class="unit-content">
+        <header class="unit-header">
+          <div class="unit-meta">
+            <span class="unit-badge">Unit 6 of 6</span>
+            <span class="subject-name">Business Intelligence</span>
+          </div>
+          <h1 class="unit-title">BI Implementation</h1>
+        </header>
+
+        <div class="markdown-body">
+          <h1 id="unit-6-bi-implementation"><a href="#unit-6-bi-implementation" class="heading-anchor">#</a>Unit 6 — BI Implementation</h1><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Lecture hours</strong></td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Marks carried in 2026 paper</strong></td>
+<td><strong>25</strong> — C1 (5 marks, challenges with example) plus the entire Group D case (20 marks, of which the challenges-and-ethics sub-question is this unit&#39;s)</td>
+</tr>
+<tr>
+<td><strong>Marks in the official model question</strong></td>
+<td><strong>23</strong> — B16 (3, challenges) · D21 (10, retail end-to-end) · D22 (10, healthcare phased plan)</td>
+</tr>
+<tr>
+<td><strong>Difficulty</strong></td>
+<td>★★★★☆ — nothing here is hard to understand; the difficulty is that the paper asks you to <strong>build a solution on paper</strong>, and most students answer with a list of generic risks</td>
+</tr>
+<tr>
+<td><strong>Exam yield</strong></td>
+<td>🔴 highest in the paper — this unit plus Unit 1 owns Group D</td>
+</tr>
+<tr>
+<td><strong>Prerequisite</strong></td>
+<td>Units 1–5. This unit is the assembly manual for everything they taught</td>
+</tr>
+<tr>
+<td><strong>Syllabus bullets</strong></td>
+<td>Best practices for implementing BI solutions · Challenges and considerations in BI implementation · Case studies of successful BI implementations</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> Units 1–5 each answered &quot;what is this thing&quot;. This unit answers &quot;how do you make it work in a real organisation, in what order, and what goes wrong&quot;. The exam tests that in two shapes — a 3-marker (B16) and a 10- or 20-mark case (D21, D22, and the board paper&#39;s Group D). <strong>The case is not a memory test; it is a sequencing test.</strong> The marker is checking whether you can put sources → ETL → model → tool → dashboard → governance in a defensible order, name a milestone for each stage, and say <em>why</em> each choice was made. That is exactly the shape of D21.</p>
+</blockquote><hr class="custom-hr"><h2 id="6-1-what-quot-bi-implementation-quot-actually-means"><a href="#6-1-what-quot-bi-implementation-quot-actually-means" class="heading-anchor">#</a>6.1 What &quot;BI implementation&quot; actually means</h2><blockquote class="custom-blockquote"><p><strong>BI implementation is the programme of work that turns a BI capability from a purchase into a working decision-support system — the data, the models, the tools, the people, the process and the governance — delivered in stages and then operated.</strong></p>
+</blockquote><p>Three words in that definition carry the marks.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Word</th>
+<th>What it rules out</th>
+<th>Why the examiner cares</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>programme</strong></td>
+<td>&quot;we bought Power BI, so we have BI&quot;</td>
+<td>a tool is one deliverable of six; the rest is organisational</td>
+</tr>
+<tr>
+<td><strong>stages</strong></td>
+<td>the single big-bang go-live</td>
+<td>phasing is what D22 explicitly asks you to plan</td>
+</tr>
+<tr>
+<td><strong>operated</strong></td>
+<td>a one-off project that ends at handover</td>
+<td>dashboards decay without refresh, ownership and DQ monitoring</td>
+</tr>
+</tbody></table></div><h3 id="project-versus-programme-the-distinction-that-earns-a-mark"><a href="#project-versus-programme-the-distinction-that-earns-a-mark" class="heading-anchor">#</a>Project versus programme — the distinction that earns a mark</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th><strong>BI project</strong></th>
+<th><strong>BI programme</strong></th>
+</tr>
+</thead><tbody><tr>
+<td>Deliverable</td>
+<td>a dashboard, a report, a warehouse</td>
+<td>a change in how decisions are made</td>
+</tr>
+<tr>
+<td>Success measure</td>
+<td>delivered on time and on budget</td>
+<td><strong>adoption</strong> — the dashboard is used, and a decision changed</td>
+</tr>
+<tr>
+<td>Lifetime</td>
+<td>ends at go-live</td>
+<td>never ends; it is operated and extended</td>
+</tr>
+<tr>
+<td>Failure mode</td>
+<td>late, over budget</td>
+<td>on time, on budget, unused</td>
+</tr>
+</tbody></table></div><p>The second failure mode is the one that matters, and it is invisible in a project plan. A dashboard nobody opens has delivered nothing, whatever the status report says. When a case question asks you to &quot;propose an approach&quot;, say how you will know it worked — <em>weekly active users, decisions logged, exceptions actioned</em> — not just what you will build.</p>
+<h3 id="the-four-layers-of-implementation-work"><a href="#the-four-layers-of-implementation-work" class="heading-anchor">#</a>The four layers of implementation work</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">  ┌────────────────────────────────────────────────────┐
+  │  PEOPLE & ORGANISATION   sponsorship, skills,       │  ← where most failures live
+  │                          ownership, adoption        │
+  ├────────────────────────────────────────────────────┤
+  │  PROCESS & GOVERNANCE    definitions, DQ rules,     │
+  │                          security, release cycle    │
+  ├────────────────────────────────────────────────────┤
+  │  DATA & MODELS           sources, ETL, warehouse,   │
+  │                          star schemas, semantic layer│
+  ├────────────────────────────────────────────────────┤
+  │  TECHNOLOGY              BI tool, database, cloud,  │  ← what students write about
+  │                          scheduling, monitoring     │
+  └────────────────────────────────────────────────────┘</code></pre></div><p>⚠ <strong>The most common 5-mark answer in this unit is a technology-only answer.</strong> It names Power BI, SQL Server and &quot;the cloud&quot; and stops. The bottom layer is 20% of the work and 20% of the marks. C1&#39;s word <em>example</em>, and D22&#39;s words <em>organizational and data-related</em>, are the examiner telling you to climb the stack.</p>
+<h2 id="6-2-best-practices-eight-each-with-what-it-prevents"><a href="#6-2-best-practices-eight-each-with-what-it-prevents" class="heading-anchor">#</a>6.2 Best practices — eight, each with what it prevents</h2><p>A &quot;best practices&quot; question is answered by pairing each practice with the failure it prevents. A list of practices with no failure attached reads as memorised.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>#</th>
+<th>Practice</th>
+<th>What it means in practice</th>
+<th>The failure it prevents</th>
+</tr>
+</thead><tbody><tr>
+<td>1</td>
+<td><strong>Start from decisions, not data</strong></td>
+<td>For each candidate dashboard, write: which decision, by whom, how often, what action follows. Build only what sits behind a decision</td>
+<td>the data swamp — years of integration, no decision changed</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Executive sponsorship and business ownership</strong></td>
+<td>A steering group with budget authority; a named business owner per subject area who signs off definitions</td>
+<td>a stalled programme when the first sponsor is transferred</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Phase it: pilot, then scale</strong></td>
+<td>One domain, one KPI set, 8–12 weeks, in production; then repeat with the template</td>
+<td>the 18-month big bang that is cancelled before its first user</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Define every metric once</strong></td>
+<td>A governed semantic layer and a business glossary; certified datasets; a change process for definitions</td>
+<td>&quot;two versions of the truth&quot; — the meeting that argues about whose number is right</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Treat data quality and master data as the project</strong></td>
+<td>Named data owners; DQ rules tested in the pipeline; one customer ID and one product ID across sources</td>
+<td>dashboards that are technically correct and commercially unusable</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Design the architecture for change</strong></td>
+<td>Layered warehouse (staging → core → mart), conformed dimensions, ELT so raw history is kept, one semantic layer many outputs</td>
+<td>a new source or a new question means rebuilding everything</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Build capability, not just artefacts</strong></td>
+<td>Training, a champion in each department, documentation, a small centre of excellence</td>
+<td>adoption collapse at handover — users revert to spreadsheets</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Security, privacy and audit by design</strong></td>
+<td>Role-based access and row-level security, PII classified and minimised, retention rules, access logging</td>
+<td>a privacy incident, or a regulator&#39;s letter, after go-live</td>
+</tr>
+</tbody></table></div><p>🧠 <strong>Memory hook: D-S-P-D-A-C</strong> — <em>Decisions, Sponsor, Phase, Definitions, Architecture, Capability.</em> (Add security to taste; six is what fits in an answer.)</p>
+<p>🇳🇵 <strong>Nepal anchor:</strong> practice 8 has a specific local edge. Nepal&#39;s <strong>Individual Privacy Act, 2075 (2018)</strong> is the country&#39;s first dedicated data-protection law, implementing the constitutional right to privacy; it regulates the collection, storage and processing of personal information, and it applies to corporate entities as well as public bodies. Any BI programme touching customer, patient or employee data — which is most of them — is therefore a privacy programme too. Saying this in a case answer separates it from a generic risk list.</p>
+<h2 id="6-3-challenges-the-three-families-the-exam-names"><a href="#6-3-challenges-the-three-families-the-exam-names" class="heading-anchor">#</a>6.3 Challenges — the three families the exam names</h2><p>D22 uses the paper&#39;s own taxonomy: <em>technical, organizational, and data-related</em>. C1 asks for challenges <em>with example</em>. Prepare the three families, each with symptom → root cause → mitigation, and one concrete example each.</p>
+<h3 id="technical-challenges"><a href="#technical-challenges" class="heading-anchor">#</a>Technical challenges</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Challenge</th>
+<th>Symptom</th>
+<th>Mitigation</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Source-system sprawl</strong></td>
+<td>a dozen systems, different keys, no common customer</td>
+<td>master data management; conformed dimensions; start with two sources</td>
+</tr>
+<tr>
+<td><strong>Legacy and pack-standard systems</strong></td>
+<td>core banking/ERP extracts are batch-only, undocumented, or locked by the vendor</td>
+<td>a staging layer that isolates the warehouse from source quirks; vendor extract agreements</td>
+</tr>
+<tr>
+<td><strong>Performance and volume</strong></td>
+<td>dashboards time out as history grows</td>
+<td>pre-aggregation, incremental load, columnar storage, star schemas rather than wide joins</td>
+</tr>
+<tr>
+<td><strong>Hybrid estate</strong></td>
+<td>some data on-premises, some in cloud, some in spreadsheets</td>
+<td>one integration layer; never let a spreadsheet become a source of record</td>
+</tr>
+<tr>
+<td><strong>Tool proliferation</strong></td>
+<td>four reporting tools, four definitions, four support contracts</td>
+<td>standardise; a certification process for what is &quot;official&quot;</td>
+</tr>
+<tr>
+<td><strong>Security architecture</strong></td>
+<td>row-level security bolted on late, breaking dashboards</td>
+<td>security modelled with the data, not after it</td>
+</tr>
+</tbody></table></div><h3 id="organisational-challenges"><a href="#organisational-challenges" class="heading-anchor">#</a>Organisational challenges</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Challenge</th>
+<th>Symptom</th>
+<th>Mitigation</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>No sponsorship</strong></td>
+<td>the programme reports to a middle manager with no budget</td>
+<td>executive steering group with decision rights</td>
+</tr>
+<tr>
+<td><strong>Unclear ownership</strong></td>
+<td>everyone wants the dashboard; nobody owns the KPI definition</td>
+<td>named business owner per subject area</td>
+</tr>
+<tr>
+<td><strong>Skills gap</strong></td>
+<td>one analyst who understands DAX and cannot take leave</td>
+<td>train two per domain; document; centre of excellence</td>
+</tr>
+<tr>
+<td><strong>Resistance and &quot;we know our business&quot;</strong></td>
+<td>managers keep the old spreadsheet beside the new dashboard</td>
+<td>involve users in design; show a decision the dashboard changed</td>
+</tr>
+<tr>
+<td><strong>Scope creep</strong></td>
+<td>every meeting adds a report</td>
+<td>decision-first backlog with a published release cycle</td>
+</tr>
+<tr>
+<td><strong>IT–business divide</strong></td>
+<td>business says IT is slow, IT says business keeps changing its mind</td>
+<td>joint delivery team, shared definition of done</td>
+</tr>
+</tbody></table></div><h3 id="data-related-challenges"><a href="#data-related-challenges" class="heading-anchor">#</a>Data-related challenges</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Challenge</th>
+<th>Symptom</th>
+<th>Mitigation</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Poor quality</strong></td>
+<td>duplicates, missing fields, impossible dates</td>
+<td>DQ profiling before modelling; rules tested in the pipeline; a DQ scorecard</td>
+</tr>
+<tr>
+<td><strong>No common identifier</strong></td>
+<td>one customer appears four times</td>
+<td>master data management; a survivorship rule</td>
+</tr>
+<tr>
+<td><strong>Conflicting definitions</strong></td>
+<td>&quot;active customer&quot; means three things</td>
+<td>governed glossary and semantic layer</td>
+</tr>
+<tr>
+<td><strong>Short or restated history</strong></td>
+<td>last year&#39;s numbers changed after a system migration</td>
+<td>retain raw history (ELT); version the marts</td>
+</tr>
+<tr>
+<td><strong>Undocumented metadata</strong></td>
+<td>nobody knows what a column means</td>
+<td>a data catalogue populated as you build</td>
+</tr>
+<tr>
+<td><strong>Privacy and consent</strong></td>
+<td>personal data used beyond its collection purpose</td>
+<td>purpose limitation, minimisation, access control, retention</td>
+</tr>
+</tbody></table></div><p>⚠ <strong>The example rule.</strong> C1 says <em>with example</em> and it means one per challenge family, from one consistent organisation. Choose a Nepali commercial bank and keep it: core banking batch extracts (technical), branch managers defending their own spreadsheets (organisational), and three definitions of &quot;active account&quot; (data-related). One organisation, three families — that scores; three unrelated examples read as padding.</p>
+<h3 id="the-challenge-that-is-really-a-decision-build-versus-buy"><a href="#the-challenge-that-is-really-a-decision-build-versus-buy" class="heading-anchor">#</a>The challenge that is really a decision — build versus buy</h3><p>Worth one line in any implementation answer, because it is a real consideration and examiners reward it: <strong>buy</strong> a BI tool and configure it when the need is standard (dashboards, scheduled refresh, row-level security); <strong>build</strong> when the analytical logic is the competitive asset (a demand-forecasting model, a credit-scoring engine). The hybrid — buy the platform, build the model — is the norm.</p>
+<h2 id="6-4-the-phased-plan-the-backbone-of-every-case-answer"><a href="#6-4-the-phased-plan-the-backbone-of-every-case-answer" class="heading-anchor">#</a>6.4 The phased plan — the backbone of every case answer</h2><p>D22 asks for &quot;a phased implementation plan (high level) with key milestones&quot;. That is a structure question, so learn the structure once and reuse it for D21, D22 and the 20-mark board case.</p>
+<div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> PHASE 0        PHASE 1        PHASE 2        PHASE 3        PHASE 4
+ Discover &     Foundation     First          Scale &        Operate &
+ govern         (data)         dashboards     extend         improve
+ 2-4 weeks      8-12 weeks     6-8 weeks      3-6 months     ongoing
+ ─────┬──────────────┬──────────────┬──────────────┬──────────────┬────►
+      │              │              │              │              │
+  M1 charter     M2 data       M3 first       M4 second     M5 adoption
+  signed,        dictionary     dashboard      domain live   target met,
+  sponsor,       approved,      in use by      with the      DQ scorecard
+  scope,         warehouse      a named        same          green, roadmap
+  success        loaded, DQ     decision-      template      refreshed
+  measures       baseline       maker</code></pre></div><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Phase</th>
+<th>What you do</th>
+<th>Milestone (the thing that proves it)</th>
+<th>Why this order</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>0 Discover &amp; govern</strong></td>
+<td>interviews; decision inventory; success measures; data profiling; privacy/security scope; architecture sketch</td>
+<td><strong>charter signed</strong> — sponsor, scope, budget, success measures</td>
+<td>you cannot phase what you have not scoped; the charter is also what stops scope creep</td>
+</tr>
+<tr>
+<td><strong>1 Foundation</strong></td>
+<td>source extracts, staging, core warehouse, conformed dimensions, master data for customer/product, DQ rules, metadata catalogue</td>
+<td><strong>data dictionary approved and warehouse loaded</strong> with a DQ baseline</td>
+<td>every later phase is a query against this; skipping it is why pilots fail late</td>
+</tr>
+<tr>
+<td><strong>2 First dashboards</strong></td>
+<td>semantic layer; 3–5 KPIs; one dashboard for a named decision-maker; row-level security; refresh schedule</td>
+<td><strong>first dashboard in production use</strong>, with a decision that changed</td>
+<td>the pilot proves the template and buys political capital</td>
+</tr>
+<tr>
+<td><strong>3 Scale &amp; extend</strong></td>
+<td>second and third subject area on the same template; more sources; training and champions; release cycle</td>
+<td><strong>second domain live</strong> using the same model and definitions</td>
+<td>proves it is a platform, not a one-off</td>
+</tr>
+<tr>
+<td><strong>4 Operate &amp; improve</strong></td>
+<td>monitoring, DQ scorecard, usage analytics, backlog, roadmap, periodic review</td>
+<td><strong>adoption target met</strong>; roadmap for next year</td>
+<td>BI is operated, not delivered</td>
+</tr>
+</tbody></table></div><p>Three planning points examiners look for:</p>
+<ol>
+<li><strong>Milestones are evidence, not activity.</strong> &quot;Requirements gathered&quot; is an activity; &quot;data dictionary approved by the business owner&quot; is a milestone. Write the second kind.</li><li><strong>Each phase ends with something usable.</strong> A foundation phase that produces nothing visible for six months is the failure mode of practice 3.</li><li><strong>Timeboxes are indicative.</strong> Say &quot;roughly 8–12 weeks&quot; and explain what would compress or extend it — never present a schedule as a promise.</li></ol>
+<h2 id="6-5-case-studies-what-quot-successful-implementation-quot-looks-like"><a href="#6-5-case-studies-what-quot-successful-implementation-quot-looks-like" class="heading-anchor">#</a>6.5 Case studies — what &quot;successful implementation&quot; looks like</h2><p>The syllabus asks for case studies. Use three well-documented ones as <strong>patterns</strong>, not as current claims about those companies: each shows one best practice at industrial scale.</p>
+<h3 id="case-1-walmart-share-the-data-with-the-supplier"><a href="#case-1-walmart-share-the-data-with-the-supplier" class="heading-anchor">#</a>Case 1 — Walmart: share the data with the supplier</h3><p><strong>Situation:</strong> a retailer with thousands of stores and thousands of suppliers, each guessing what to ship.<br><strong>What was built:</strong> a central retail data warehouse, and a supplier-facing portal that let vendors see store-level sales and stock for their own products.<br><strong>Why it worked:</strong> it turned BI into an <em>inter-organisational</em> process. The supplier&#39;s decision (what to manufacture) was improved with the retailer&#39;s data, so both sides gained, and the retailer&#39;s data became a condition of doing business.<br><strong>Exam use:</strong> the best illustration of &quot;BI changes a decision outside the company&quot;, and of governance — vendors see only their own rows, which is row-level security as a commercial mechanism.</p>
+<h3 id="case-2-tesco-the-loyalty-card-as-a-data-asset"><a href="#case-2-tesco-the-loyalty-card-as-a-data-asset" class="heading-anchor">#</a>Case 2 — Tesco: the loyalty card as a data asset</h3><p><strong>Situation:</strong> a grocer with a loyalty scheme that most retailers treated as a discount mechanism.<br><strong>What was built:</strong> basket-level analysis of card transactions, linking what was bought together, by whom, over time — the association-rule and segmentation machinery of Unit 3, applied at scale.<br><strong>Why it worked:</strong> the scheme was designed as a <em>data collection instrument</em> first and a discount second, and the analysis was tied to specific decisions — targeting, range, promotions, store clustering.<br><strong>Exam use:</strong> ties Unit 3 to Unit 6; the classic answer to &quot;how does a retailer turn transactions into decisions&quot;.</p>
+<h3 id="case-3-harrah-39-s-now-caesars-value-the-customer-not-the-visit"><a href="#case-3-harrah-39-s-now-caesars-value-the-customer-not-the-visit" class="heading-anchor">#</a>Case 3 — Harrah&#39;s (now Caesars): value the customer, not the visit</h3><p><strong>Situation:</strong> a casino operator with a loyalty programme but no view of which customers were worth retaining.<br><strong>What was built:</strong> a customer data warehouse with predictive models of customer value and attrition, used to decide who gets an offer, and how much.<br><strong>Why it worked:</strong> the analysis was commissioned by the executive who could act on it (practice 2), and success was measured in behaviour change, not in reports shipped.<br><strong>Exam use:</strong> the cleanest example that BI&#39;s value is in the <em>decision and the incentive</em>, not the dashboard.</p>
+<h3 id="case-4-the-nepali-pattern-constructed-not-a-named-company"><a href="#case-4-the-nepali-pattern-constructed-not-a-named-company" class="heading-anchor">#</a>Case 4 — the Nepali pattern (constructed, not a named company)</h3><p><strong>Situation:</strong> a mid-size commercial bank with core banking, a card switch, mobile banking and a spreadsheet-based MIS.<br><strong>What would be built:</strong> a warehouse fed nightly from core banking; star schemas for deposits, loans, channels and branches; a board pack and a branch performance dashboard with row-level security; a DQ scorecard for account and customer data.<br><strong>Why it works:</strong> the decisions already exist and already have owners — deposit mobilisation, credit growth, NPL, CASA — so practice 1 is satisfied before the project starts.<br><strong>Exam use:</strong> the safe, credible local example. Say it is a <em>pattern</em>, never that a named bank does exactly this.</p>
+<p>⚠ <strong>How to use a case in an answer.</strong> Never tell the story for its own sake. The pattern is: <em>situation → what was built → which best practice it demonstrates → the transferable lesson</em>. Four lines. A paragraph of company history earns nothing.</p>
+<h2 id="6-6-worked-case-d21-the-retailer-end-to-end"><a href="#6-6-worked-case-d21-the-retailer-end-to-end" class="heading-anchor">#</a>6.6 Worked case — D21, the retailer end-to-end</h2><blockquote class="custom-blockquote"><p><em>&quot;A mid-size retail company wants to implement a BI solution to improve sales forecasting and inventory planning. Propose an end-to-end BI approach covering data sources, ETL strategy, data modelling, choice of BI tools, visualization/dashboarding, and governance. Explain why each component is chosen and how they integrate to deliver business value.&quot;</em></p>
+</blockquote><p>The question hands you the structure in its own list. Answer in that order, one short block each, and close with integration.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Layer</th>
+<th>The choice</th>
+<th>Why it is chosen</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Sources</strong></td>
+<td>POS/e-commerce orders, inventory and warehouse system, supplier and purchase orders, product master, store master, CRM/loyalty</td>
+<td>forecasting needs demand (POS) <em>and</em> supply (stock, lead times); without both you can only report, not plan</td>
+</tr>
+<tr>
+<td><strong>ETL</strong></td>
+<td>nightly batch for sales; more frequent (hourly/CDC) for stock levels; staging area; DQ rules for duplicates, missing product codes, negative quantities</td>
+<td>daily granularity is enough for planning; stock needs to be near-current or replenishment is wrong by lunchtime</td>
+</tr>
+<tr>
+<td><strong>Modelling</strong></td>
+<td>star schema: <code>fact_sales</code> (grain: order line per day), <code>fact_inventory_snapshot</code> (grain: product × location × day), dimensions <code>dim_product</code>, <code>dim_store</code>, <code>dim_date</code>, <code>dim_supplier</code>, <code>dim_customer</code></td>
+<td>two facts at different grains answer &quot;what sold&quot; and &quot;what is left&quot;; conformed dimensions let both be cut the same way</td>
+</tr>
+<tr>
+<td><strong>Tools</strong></td>
+<td>Power BI (authoring + service) if the estate is Microsoft; Tableau if visual exploration is the priority; the warehouse (SQL Server/Postgres/cloud) underneath</td>
+<td>Unit 5&#39;s fit argument — cheapest where the platform already exists, and it must connect to the warehouse without a second copy of the data</td>
+</tr>
+<tr>
+<td><strong>Visualisation</strong></td>
+<td>demand-and-stock dashboard: sales trend vs forecast, forecast error (MAPE) by category, stock cover in days, stockout and overstock exception lists, supplier lead-time variance</td>
+<td>each tile answers a named decision — order more, mark down, expedite, change the reorder point</td>
+</tr>
+<tr>
+<td><strong>Governance</strong></td>
+<td>metric definitions (what counts as a sale, a stockout, stock cover), row-level security by region/store, DQ SLAs with named owners, refresh monitoring, a steering group</td>
+<td>without it, two branches report two different stock figures and planning stops</td>
+</tr>
+</tbody></table></div><p><strong>How it integrates.</strong> The star schema is the hinge: the same product and date dimensions serve both the sales fact and the stock fact, so &quot;sold 40, have 12, lead time 5 days&quot; is one query, not a reconciliation exercise. The dashboard then becomes a decision surface, and the DQ SLA is what keeps it trustworthy. The business value is specific: fewer stockouts on fast movers, less dead stock on slow movers, and a forecast whose error is measured rather than assumed.</p>
+<p><strong>Then say how you would know it worked.</strong> Forecast error falling, stock cover inside target, exception lists cleared within the week, and the planners actually using it. A case answer without a success measure is a build plan, not an implementation.</p>
+<h2 id="6-7-worked-case-d22-the-healthcare-phased-plan"><a href="#6-7-worked-case-d22-the-healthcare-phased-plan" class="heading-anchor">#</a>6.7 Worked case — D22, the healthcare phased plan</h2><blockquote class="custom-blockquote"><p><em>&quot;A healthcare provider plans to deploy a BI platform. Discuss major implementation best practices and potential challenges — technical, organizational, and data-related. Provide a phased implementation plan (high level) with key milestones.&quot;</em></p>
+</blockquote><p>Same skeleton, different content, and the sector adds two constraints: <strong>patient safety</strong> makes wrong numbers a clinical risk, and <strong>consent and privacy</strong> make data use a legal question, not a preference.</p>
+<p><strong>Best practices, sector-specific.</strong> Clinician ownership of clinical metrics (practice 2); definitions agreed with the clinical governance committee, not IT (practice 4); a named patient identifier and consistent coding (practice 5); role-based access so a ward nurse and a finance officer see different rows (practice 8); start with operational flows, where the decisions are daily (practice 3).</p>
+<p><strong>Challenges, by family.</strong></p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Family</th>
+<th>Healthcare-specific examples</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Technical</strong></td>
+<td>hospital management systems and laboratory systems that do not interoperate; batch-only extracts; imaging and unstructured notes outside the warehouse; identity matching across registrations</td>
+</tr>
+<tr>
+<td><strong>Organisational</strong></td>
+<td>clinicians who distrust numbers they did not produce; competing priorities during a service surge; no analytics staff; governance split between clinical, finance and IT</td>
+</tr>
+<tr>
+<td><strong>Data-related</strong></td>
+<td>inconsistent clinical coding; duplicate patient records; missing outcomes; consent and purpose limitation under the privacy law; historical data that predates a system change</td>
+</tr>
+</tbody></table></div><p><strong>The phased plan.</strong></p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Phase</th>
+<th>Focus</th>
+<th>Milestone</th>
+</tr>
+</thead><tbody><tr>
+<td>0 · Discover (3–4 weeks)</td>
+<td>clinical and operational decision inventory; privacy and consent scope; data profiling</td>
+<td><strong>charter signed by the medical director and the CFO</strong></td>
+</tr>
+<tr>
+<td>1 · Foundation (8–12 weeks)</td>
+<td>master patient index; encounters, admissions, pharmacy and lab data in a warehouse; data dictionary with clinical coding rules</td>
+<td><strong>data dictionary approved by clinical governance; DQ baseline published</strong></td>
+</tr>
+<tr>
+<td>2 · Operational dashboards (6–8 weeks)</td>
+<td>bed occupancy, OPD waiting time, theatre utilisation, pharmacy stock and expiry</td>
+<td><strong>first dashboard used in the daily operations huddle</strong></td>
+</tr>
+<tr>
+<td>3 · Clinical quality (8 weeks)</td>
+<td>average length of stay, readmissions, infection rate, mortality review, cost per case</td>
+<td><strong>quality indicators agreed and reconciled with the clinical audit</strong></td>
+</tr>
+<tr>
+<td>4 · Predict and extend (ongoing)</td>
+<td>demand forecasting, no-show prediction, capacity planning; other departments on the template</td>
+<td><strong>adoption target met; quarterly roadmap in place</strong></td>
+</tr>
+</tbody></table></div><p><strong>The close.</strong> Name the one thing that would make you pause the programme: a patient-identity problem. If the same patient appears twice, every clinical metric downstream is wrong, so fixing the master patient index is a gate before any clinical dashboard, not a later enhancement. A case answer that names its own gate condition reads as professional judgement.</p>
+<h2 id="6-8-answer-skeletons"><a href="#6-8-answer-skeletons" class="heading-anchor">#</a>6.8 Answer skeletons</h2><h3 id="b16-quot-outline-key-challenges-organizations-face-when-implementing-bi-solutions-quot-3"><a href="#b16-quot-outline-key-challenges-organizations-face-when-implementing-bi-solutions-quot-3" class="heading-anchor">#</a>B16 · &quot;Outline key challenges organizations face when implementing BI solutions.&quot; [3]</h3><blockquote class="custom-blockquote"><p><em>Shape: name the three families, one instance each, one line of consequence. ~110 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>Organisations meet three families of challenge. <strong>Data:</strong> source systems disagree — duplicate customers, inconsistent product codes and three definitions of &quot;active customer&quot; — so the warehouse is technically correct and commercially untrusted. <strong>Technical:</strong> legacy and pack-standard systems offer only batch, undocumented extracts, and dashboard performance degrades as history grows. <strong>Organisational:</strong> the commonest failure is not technical at all — no executive sponsor, no named owner for each metric, and a skills gap that leaves one analyst holding the programme. The usual result is a dashboard delivered on time and never used.</p>
+</blockquote><p><em>(108 words)</em></p>
+<h3 id="c1-quot-explain-challenges-in-bi-implementation-with-example-quot-5"><a href="#c1-quot-explain-challenges-in-bi-implementation-with-example-quot-5" class="heading-anchor">#</a>C1 · &quot;Explain challenges in BI implementation with example.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: three families × (challenge + example) → the organisational point → what mitigation looks like. ~220 words, one organisation throughout.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>Take a mid-size commercial bank implementing BI over core banking, cards and mobile channels.</p>
+<p><strong>Technical.</strong> Extracts arrive as overnight batch files with undocumented fields, and the card switch has no shared customer key, so the warehouse cannot join channels without a mapping layer. Mitigation: a staging layer, vendor extract agreements and master data management.</p>
+<p><strong>Data-related.</strong> Three definitions of &quot;active account&quot; exist — by balance, by transaction, by login — and customer records duplicate across branches. A dashboard built on any one of them will be disputed in the first meeting. Mitigation: a governed glossary, one definition signed off by the business owner, and DQ rules tested in the pipeline.</p>
+<p><strong>Organisational.</strong> The programme is sponsored by a middle manager without budget, branch managers keep their own spreadsheets because they trust them, and a single analyst holds all the tool knowledge. This is where most implementations fail, and no technology choice fixes it. Mitigation: an executive steering group, named metric owners, two trained analysts per domain, and a pilot whose result a manager actually used.</p>
+<p>The pattern to state: data and technical problems are solvable with time and money; organisational problems need sponsorship and adoption, which is why they decide whether the programme survives.</p>
+</blockquote><p><em>(219 words)</em></p>
+<h3 id="d21-retailer-end-to-end-10"><a href="#d21-retailer-end-to-end-10" class="heading-anchor">#</a>D21 · Retailer end-to-end [10]</h3><blockquote class="custom-blockquote"><p><em>Shape: the six components the question lists, one short block each with the reason, then integration, then the success measure. ~380 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p><strong>Sources.</strong> Point-of-sale and e-commerce orders give demand; the inventory and warehouse system gives supply; supplier purchase orders and lead times give replenishment; product, store and customer masters give the dimensions. Both demand and supply are needed — with POS alone you can report sales but not plan stock.</p>
+<p><strong>ETL.</strong> Nightly batch for sales, because planning runs daily; more frequent or change-data-capture loads for stock, because a replenishment decision made on stale stock is wrong. A staging area isolates source quirks, and DQ rules reject duplicates, unknown product codes and negative quantities before they reach the warehouse.</p>
+<p><strong>Data model.</strong> A star schema with two facts at different grains: <code>fact_sales</code> at order-line-per-day, and <code>fact_inventory_snapshot</code> at product × location × day, sharing <code>dim_product</code>, <code>dim_date</code>, <code>dim_store</code>, <code>dim_supplier</code> and <code>dim_customer</code>. Conformed dimensions are what allow &quot;sold 40, have 12, lead time 5 days&quot; to be one query rather than a reconciliation.</p>
+<p><strong>Tools.</strong> Power BI where the estate is Microsoft, Tableau where visual exploration is the priority — the choice is fit, not brand. The warehouse remains the single copy of the data; the tool reads it through a governed semantic layer.</p>
+<p><strong>Visualisation.</strong> A planning dashboard: sales against forecast, forecast error by category, stock cover in days, stockout and overstock exception lists, supplier lead-time variance. Each visual is tied to a decision — reorder, mark down, expedite, reset the reorder point.</p>
+<p><strong>Governance.</strong> Definitions signed off once (sale, stockout, stock cover), row-level security by region, DQ thresholds with named owners, refresh monitoring, and a steering group that owns the backlog.</p>
+<p><strong>How it integrates.</strong> The star schema is the hinge: one set of dimensions serves both facts, the semantic layer defines every measure once, and the dashboard turns those measures into exceptions. Value follows directly — fewer stockouts on fast movers, less dead stock on slow movers, and a forecast whose error is measured monthly rather than assumed.</p>
+<p><strong>Sequencing.</strong> Phase 0 agrees the decisions the dashboards must serve; Phase 1 loads the two facts with DQ rules; Phase 2 ships the planning dashboard for one category; Phase 3 extends it to all categories on the same template. Value therefore arrives in Phase 2, not at the end of the programme.</p>
+</blockquote><p><em>(348 words)</em></p>
+<h3 id="d22-healthcare-phased-plan-10"><a href="#d22-healthcare-phased-plan-10" class="heading-anchor">#</a>D22 · Healthcare phased plan [10]</h3><blockquote class="custom-blockquote"><p><em>Shape: best practices (sector-specific) → challenges by the paper&#39;s own three families → four phases with an evidence milestone each → the gate condition. ~380 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p><strong>Best practices.</strong> Give clinical metrics to clinical owners: definitions agreed with the clinical governance committee, not IT. Establish one patient identifier and consistent coding before any clinical dashboard. Apply role-based and row-level access so wards, finance and executives see different rows. Start with operational flows — occupancy, waiting time, pharmacy stock — where decisions are daily and value is immediate.</p>
+<p><strong>Challenges.</strong> <em>Technical:</em> hospital, laboratory and imaging systems that do not interoperate, batch-only extracts, and unstructured notes outside the warehouse. <em>Organisational:</em> clinicians who distrust numbers they did not produce, no analytics staff, and governance split across clinical, finance and IT. <em>Data-related:</em> inconsistent clinical coding, duplicate patient records, missing outcomes, and consent and purpose limitation under Nepal&#39;s Individual Privacy Act, 2075.</p>
+<p><strong>Phased plan.</strong> <em>Phase 0, discovery (3–4 weeks):</em> decision inventory, privacy scope, data profiling — milestone: charter signed by the medical director and the CFO. <em>Phase 1, foundation (8–12 weeks):</em> master patient index, encounters, admissions, pharmacy and laboratory data in a warehouse, with a clinical data dictionary — milestone: dictionary approved by clinical governance and a DQ baseline published. <em>Phase 2, operational dashboards (6–8 weeks):</em> bed occupancy, OPD waiting time, theatre utilisation, pharmacy stock and expiry — milestone: the first dashboard used in the daily operations huddle. <em>Phase 3, clinical quality (8 weeks):</em> length of stay, readmissions, infection rate, mortality review, cost per case — milestone: indicators reconciled with clinical audit. <em>Phase 4, predict and extend:</em> demand forecasting, no-show prediction, further departments on the same template — milestone: adoption target met and a quarterly roadmap agreed.</p>
+<p><strong>The gate.</strong> Patient identity comes first. If one patient appears twice, every clinical metric downstream is wrong, so the master patient index is a precondition for Phase 3 rather than a later enhancement. Naming that gate is how the plan shows judgement rather than a timeline.</p>
+<p><strong>Sequencing and risk.</strong> Operational dashboards deliberately precede clinical quality: counting beds and waiting times is simpler and builds the clinicians&#39; trust that the quality indicators will later spend. If the DQ baseline is not met at the Phase 1 gate, Phase 3 slips rather than shipping rates the clinical audit will contradict.</p>
+</blockquote><p><em>(325 words)</em></p>
+<h3 id="group-d-the-20-mark-implementation-case"><a href="#group-d-the-20-mark-implementation-case" class="heading-anchor">#</a>Group D · the 20-mark implementation case</h3><p>The board paper&#39;s Group D is <strong>one 20-mark case with four sub-questions</strong>. When the case is an implementation story, the four parts are almost always: <strong>(a) what is the problem and what would you build, (b) what data and architecture, (c) how do you deliver it and in what order, (d) what can go wrong — risk, ethics, governance.</strong> That is 5 marks each, and (c) and (d) are this unit.</p>
+<blockquote class="custom-blockquote"><p><strong>Scaffold to memorise:</strong> (a) decision and gap → (b) sources, ETL, star schema → (c) phases with evidence milestones → (d) three challenge families, plus privacy/ethics, plus the success measure.</p>
+</blockquote><p>⚠ <strong>Do not write one long essay for a 20-mark case.</strong> Four labelled parts, each opening with its own topic sentence, is faster to mark and easier to keep inside the time. Unit 1&#39;s §1.5 holds the Amazon case rehearsal; this unit holds the implementation half.</p>
+<h2 id="6-9-traps"><a href="#6-9-traps" class="heading-anchor">#</a>6.9 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Trap</th>
+<th>Why it costs marks</th>
+<th>Fix</th>
+</tr>
+</thead><tbody><tr>
+<td>Answering implementation as a tool purchase</td>
+<td>the question is about programme, data and people</td>
+<td>use the four layers: technology is one of them</td>
+</tr>
+<tr>
+<td>Listing challenges with no example</td>
+<td>C1 prints <em>with example</em>; D22 prints <em>technical, organizational, and data-related</em></td>
+<td>one organisation, one example per family</td>
+</tr>
+<tr>
+<td>Writing a timeline with no milestones</td>
+<td>D22 prints <em>with key milestones</em></td>
+<td>each phase ends in evidence: signed charter, approved dictionary, dashboard in use</td>
+</tr>
+<tr>
+<td>Milestones that are activities</td>
+<td>&quot;requirements gathered&quot; proves nothing</td>
+<td>&quot;data dictionary approved by the business owner&quot;</td>
+</tr>
+<tr>
+<td>Claiming BI projects &quot;usually fail 70% of the time&quot;</td>
+<td>cannot be verified, and markers know it is a recycled statistic</td>
+<td>say &quot;many fail on adoption, not on delivery&quot; and explain why</td>
+</tr>
+<tr>
+<td>Ignoring privacy in a data case</td>
+<td>a modern paper expects it, and Nepal has a privacy law</td>
+<td>one line on purpose limitation, minimisation and access control</td>
+</tr>
+<tr>
+<td>Recommending a big-bang go-live</td>
+<td>contradicts the phasing the question asks for</td>
+<td>pilot → template → scale</td>
+</tr>
+<tr>
+<td>Treating case studies as company history</td>
+<td>the marker wants the lesson, not the story</td>
+<td>situation → built → practice demonstrated → lesson</td>
+</tr>
+<tr>
+<td>Naming a real Nepali bank&#39;s systems</td>
+<td>unverifiable and risks being wrong</td>
+<td>describe the pattern; say it is a pattern</td>
+</tr>
+<tr>
+<td>Forgetting the success measure</td>
+<td>a build plan is not an implementation</td>
+<td>close with adoption and outcome metrics</td>
+</tr>
+</tbody></table></div><h2 id="6-10-self-test-answers-collapsed"><a href="#6-10-self-test-answers-collapsed" class="heading-anchor">#</a>6.10 Self-test (answers collapsed)</h2><ol>
+<li>Define BI implementation in one sentence, and name the one word that separates it from a BI project. <em>(1 mark)</em></li><li>Give three challenges of BI implementation, one from each family. <em>(3 marks — B16)</em></li><li>Name four best practices and, for each, the failure it prevents. <em>(3–5 marks)</em></li><li>Why is a pilot phase recommended over a single go-live? <em>(3 marks)</em></li><li>What is a milestone, as opposed to an activity? Give one example from a phased BI plan. <em>(1–3 marks)</em></li><li>🇳🇵 A hospital&#39;s BI programme is six weeks from its first clinical dashboard when the data team finds 4% duplicate patient records. What do you do, and why? <em>(5 marks — mini case)</em></li><li>Outline an end-to-end BI approach for a retailer that wants better inventory planning. <em>(10 marks — D21)</em></li><li>Draft a four-phase plan for a healthcare BI platform with one milestone per phase. <em>(10 marks — D22)</em></li></ol>
+<details>
+<summary>Answers</summary>
+
+<ol>
+<li>&quot;BI implementation is the programme that turns a BI capability into a working decision-support system — data, models, tools, people, process and governance — delivered in stages and then operated.&quot; The separating word is <strong>programme</strong> (or <strong>operated</strong>): a project ends at go-live, a programme is measured by adoption.</li><li><strong>Technical:</strong> batch-only, undocumented extracts from legacy systems. <strong>Organisational:</strong> no executive sponsor and no named owner of metric definitions. <strong>Data-related:</strong> duplicate customers and three conflicting definitions of &quot;active customer&quot;. (Any one from each family.)</li><li><strong>Decisions first</strong> → prevents a data swamp with no decision changed. <strong>Phase it</strong> → prevents the cancelled big bang. <strong>Define metrics once</strong> → prevents two versions of the truth. <strong>Security and privacy by design</strong> → prevents a post-launch incident. <em>(Also: sponsorship, master data, capability building, architecture for change.)</em></li><li>A pilot proves the template on one domain in 8–12 weeks, produces a visible result that buys sponsorship, exposes data-quality problems while they are cheap, and creates a reusable pattern. A single go-live defers all four risks to the moment of maximum exposure.</li><li>An activity is work done (&quot;requirements gathered&quot;, &quot;ETL developed&quot;); a milestone is evidence that a phase is complete (&quot;data dictionary approved by the business owner&quot;, &quot;first dashboard used in the daily huddle&quot;). Milestones are what a steering group can verify.</li><li>Do not publish the clinical dashboard. Report the DQ finding to the steering group, quantify it (4% of records affected, which metrics move), run identity matching and a survivorship rule, and re-baseline. Then release the dashboard with the residual error stated. Rationale: a duplicate patient inflates or deflates every clinical rate, and a number that is wrong once is distrusted permanently — so the identity fix is a gate, not a backlog item.</li><li>See §6.6 — sources (POS + inventory + suppliers), ETL (nightly sales, near-real-time stock), star schema with <code>fact_sales</code> and <code>fact_inventory_snapshot</code> on conformed dimensions, a BI tool chosen for fit, a planning dashboard of forecast error, stock cover and exception lists, and governance of definitions, security and DQ.</li><li>See §6.7 — Phase 0 discovery (charter signed), Phase 1 foundation (data dictionary approved, DQ baseline), Phase 2 operational dashboards (used in the daily huddle), Phase 3 clinical quality (reconciled with clinical audit), Phase 4 predict and extend (adoption target met).</li></ol>
+</details>
+
+<hr class="custom-hr"><h2 id="6-11-sixty-second-check"><a href="#6-11-sixty-second-check" class="heading-anchor">#</a>6.11 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Define BI implementation, and say why &quot;programme&quot; and &quot;operated&quot; matter</li><li><input disabled="" type="checkbox"> Draw the four implementation layers</li><li><input disabled="" type="checkbox"> Name four best practices with the failure each prevents</li><li><input disabled="" type="checkbox"> Name three challenge families with one example each, from one organisation</li><li><input disabled="" type="checkbox"> Draw the five-phase plan with one evidence milestone per phase</li><li><input disabled="" type="checkbox"> Give three case patterns and the one practice each illustrates</li><li><input disabled="" type="checkbox"> Recall the D21 component order: sources → ETL → model → tools → visualisation → governance</li><li><input disabled="" type="checkbox"> Recall the D22 gate: patient identity before clinical metrics</li><li><input disabled="" type="checkbox"> Say what a 20-mark case answer looks like: four labelled parts, not one essay</li></ul>
+<p>If all nine are there, this unit&#39;s <strong>25 board marks and 23 model marks</strong> are covered — C1, B16, D21, D22 and the implementation half of Group D.</p>
+<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 249, Unit 6, 8 LHs) · TU 2026 paper (C1, Group D) · official TU/FOM model question 2026 (B16, D21, D22) · best-practice structure and the implementation lifecycle from Sherman, Business Intelligence Guidebook (a syllabus reading) and Kimball &amp; Ross, The Data Warehouse Toolkit (also a syllabus reading) — both textbook-level, not fetched this session. The Individual Privacy Act, 2075 (2018) is described at the level of what it regulates (collection, storage, processing of personal information, applicable to corporate entities), confirmed against public legal summaries, not against the statute text. The Walmart, Tesco and Harrah&#39;s case boxes describe the commonly published account of what each organisation built and why; no current figures, market positions or unverifiable claims are asserted, and the Nepali bank case is explicitly a constructed pattern, not a claim about a named institution.</em></p>
+
+        </div>
+      </article>
+
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-5.html" class="nav-btn prev">← Unit 5: BI Tools and Technologies</a>
+      <a href="../index.html#bi" class="nav-btn up">↑ Business Intelligence</a>
+      <span class="nav-btn next disabled">Next →</span>
+    </nav>
+  
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+    // Initialize highlight.js
+    document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+
+    // Copy code function
+    window.copyCode = function(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    };
+
+    // Sidebar toggle
+    window.toggleSidebar = function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+    window.closeSidebar = function() {
+      document.getElementById('sidebar').classList.remove('open');
+    };
+
+    // Close sidebar on link click (mobile)
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+      link.addEventListener('click', () => closeSidebar());
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    window.toggleTheme = function() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    };
+  </script>
+</body>
+</html>

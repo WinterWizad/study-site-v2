@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 3: Cloud Applications | Cloud Computing | BIM 8th Semester</title>
+  <meta name="description" content="IT 277 - Unit 3: Cloud Applications">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+</head>
+<body class="unit-page">
+  <header class="site-header">
+    <div class="header-content">
+      <a href="../../index.html" class="site-title">BIM 8th Semester</a>
+      <span class="subject-badge" style="background: #7c3aed">IT 277</span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <div class="sidebar-content">
+        <h3>Cloud Computing</h3>
+        <p class="subject-meta">IT 277 • 60 marks</p>
+        <ul class="unit-list">
+          
+            <li>
+              <a href="unit-1.html" class="">
+                <span class="unit-num">Unit 1</span>
+                <span class="unit-title">Introduction to Cloud Computing</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-2.html" class="">
+                <span class="unit-num">Unit 2</span>
+                <span class="unit-title">Cloud Architecture</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-3.html" class="active">
+                <span class="unit-num">Unit 3</span>
+                <span class="unit-title">Cloud Applications</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-4.html" class="">
+                <span class="unit-num">Unit 4</span>
+                <span class="unit-title">Virtualization</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-5.html" class="">
+                <span class="unit-num">Unit 5</span>
+                <span class="unit-title">MapReduce</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-6.html" class="">
+                <span class="unit-num">Unit 6</span>
+                <span class="unit-title">Cloud Security</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-7.html" class="">
+                <span class="unit-num">Unit 7</span>
+                <span class="unit-title">Cloud Platforms</span>
+              </a>
+            </li>
+          
+        </ul>
+        <div class="sidebar-footer">
+          <a href="../../index.html" class="footer-link">← All Subjects</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content" role="main">
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-2.html" class="nav-btn prev">← Unit 2: Cloud Architecture</a>
+      <a href="../index.html#cloud" class="nav-btn up">↑ Cloud Computing</a>
+      <a href="unit-4.html" class="nav-btn next">Unit 4: Virtualization →</a>
+    </nav>
+  
+
+      <article class="unit-content">
+        <header class="unit-header">
+          <div class="unit-meta">
+            <span class="unit-badge">Unit 3 of 7</span>
+            <span class="subject-name">Cloud Computing</span>
+          </div>
+          <h1 class="unit-title">Cloud Applications</h1>
+        </header>
+
+        <div class="markdown-body">
+          <h1 id="unit-3-cloud-applications"><a href="#unit-3-cloud-applications" class="heading-anchor">#</a>Unit 3 — Cloud Applications</h1><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Lecture hours</strong></td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>Marks carried in model question</strong></td>
+<td><strong>0</strong> — but <strong>insurance for a board paper</strong>. A board setter could easily put a 5-marker on migration, licensing, cost model, SLA, or web application design.</td>
+</tr>
+<tr>
+<td><strong>Difficulty</strong></td>
+<td>★★★☆☆ — practical topics; the concepts are straightforward but need structured answers</td>
+</tr>
+<tr>
+<td><strong>Exam yield</strong></td>
+<td>🟢 low in model question, <strong>high insurance value</strong> — 5 hours, read once, be ready for any 5-marker</td>
+</tr>
+<tr>
+<td><strong>Prerequisite</strong></td>
+<td>Units 1–2 (service models, deployment models, cloud service requirements)</td>
+</tr>
+<tr>
+<td><strong>Syllabus bullets</strong></td>
+<td>Migrating to the cloud · Software licenses · Cloud cost model · Service levels for cloud applications — security · Web applications design</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit carries <strong>zero marks in the model question</strong>, but that is <em>one sample</em>. A board paper can put a 5-marker on any of these five bullets. Read it once, know the six migration strategies, the three license models, the cost model components, the SLA structure, and the web app design principles. That is your insurance.</p>
+</blockquote><hr class="custom-hr"><h2 id="3-1-migrating-to-the-cloud-the-six-strategies"><a href="#3-1-migrating-to-the-cloud-the-six-strategies" class="heading-anchor">#</a>3.1 Migrating to the cloud — the six strategies</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Strategy</th>
+<th>What it means</th>
+<th>When to use</th>
+<th>Trade-off</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Rehost</strong> (&quot;lift-and-shift&quot;)</td>
+<td>move VMs as-is to IaaS; no code changes</td>
+<td>speed, low risk, legacy apps</td>
+<td>no cloud-native benefits; same ops burden</td>
+</tr>
+<tr>
+<td><strong>Replatform</strong> (&quot;lift-tinker-shift&quot;)</td>
+<td>minor optimisations (managed DB, containerise)</td>
+<td>moderate effort, some cloud benefits</td>
+<td>limited modernisation</td>
+</tr>
+<tr>
+<td><strong>Refactor</strong> (&quot;re-architect&quot;)</td>
+<td>rewrite for cloud-native (microservices, serverless)</td>
+<td>long-term agility, scalability</td>
+<td>high effort, high risk, high reward</td>
+</tr>
+<tr>
+<td><strong>Repurchase</strong></td>
+<td>replace with SaaS (e.g., on-prem CRM → Salesforce)</td>
+<td>commoditised function, vendor manages</td>
+<td>data migration, process change</td>
+</tr>
+<tr>
+<td><strong>Retire</strong></td>
+<td>decommission unused apps</td>
+<td>reduce cost, attack surface</td>
+<td>must identify dependencies first</td>
+</tr>
+<tr>
+<td><strong>Retain</strong></td>
+<td>keep on-premises (latency, compliance, not ready)</td>
+<td>valid reasons exist</td>
+<td>revisit periodically</td>
+</tr>
+</tbody></table></div><p><strong>Migration process:</strong> assess (discovery, TCO, dependency map) → pilot (low-risk wave) → migrate (wave by wave, validate, cutover) → optimise (rightsizing, reserved instances, FinOps) → govern (guardrails, policies, tagging).</p>
+<hr class="custom-hr"><h2 id="3-2-software-licenses-in-the-cloud"><a href="#3-2-software-licenses-in-the-cloud" class="heading-anchor">#</a>3.2 Software licenses in the cloud</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>License model</th>
+<th>Cloud implication</th>
+<th>Example</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>BYOL</strong> (Bring Your Own License)</td>
+<td>use existing on-prem licences on cloud (dedicated hosts, license mobility)</td>
+<td>Windows Server, SQL Server, Oracle on AWS/Azure dedicated hosts</td>
+</tr>
+<tr>
+<td><strong>License-included</strong> (pay-as-you-go)</td>
+<td>licence cost baked into instance hourly rate</td>
+<td>AWS RDS (SQL Server license included), Azure SQL MI</td>
+</tr>
+<tr>
+<td><strong>Subscription / SaaS</strong></td>
+<td>pay per user/month; vendor manages compliance</td>
+<td>Microsoft 365, Salesforce, ServiceNow</td>
+</tr>
+<tr>
+<td><strong>Open source</strong></td>
+<td>no licence cost; support subscription optional</td>
+<td>Linux, PostgreSQL, Kubernetes, Kafka</td>
+</tr>
+</tbody></table></div><p><strong>Key trap:</strong> &quot;license mobility&quot; — not all on-prem licences allow cloud use. Microsoft Software Assurance enables it; Oracle requires specific cloud programmes. Always verify the licence terms before migrating.</p>
+<hr class="custom-hr"><h2 id="3-3-cloud-cost-model"><a href="#3-3-cloud-cost-model" class="heading-anchor">#</a>3.3 Cloud cost model</h2><blockquote class="custom-blockquote"><p><strong>Cloud cost = compute + storage + network + managed services + support + (hidden: data egress, API calls, idle resources, over-provisioning).</strong></p>
+</blockquote><h3 id="components"><a href="#components" class="heading-anchor">#</a>Components</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Component</th>
+<th>What to watch</th>
+<th>Optimisation</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Compute</strong></td>
+<td>instance type, on-demand vs reserved vs spot, rightsizing</td>
+<td>reserved instances (1–3 yr, 30–72% off), spot (90% off, interruptible), autoscaling</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>tier (hot/cool/archive), redundancy (LRS/ZRS/GRS), snapshot lifecycle</td>
+<td>lifecycle policies, archive tier, delete orphaned snapshots</td>
+</tr>
+<tr>
+<td><strong>Network</strong></td>
+<td><strong>data egress</strong> (major hidden cost), inter-AZ traffic, VPN/Direct Connect</td>
+<td>CloudFront/CDN, VPC endpoints, region selection, compression</td>
+</tr>
+<tr>
+<td><strong>Managed services</strong></td>
+<td>RDS, Redis, Kafka, Kubernetes control plane — pay for convenience</td>
+<td>evaluate build vs buy; serverless (pay-per-request) for variable load</td>
+</tr>
+<tr>
+<td><strong>Support</strong></td>
+<td>Business/Enterprise tiers (AWS Support, Azure Support)</td>
+<td>match tier to criticality; developer tier for non-prod</td>
+</tr>
+</tbody></table></div><h3 id="finops-the-discipline"><a href="#finops-the-discipline" class="heading-anchor">#</a>FinOps — the discipline</h3><ol>
+<li><strong>Visibility</strong> — tagging (owner, env, project), cost allocation, dashboards</li><li><strong>Optimisation</strong> — rightsizing, reserved/spot, storage tiering, delete waste</li><li><strong>Governance</strong> — budgets, alerts, guardrails (SCPs, quotas), chargeback/showback</li><li><strong>Culture</strong> — engineers own cost; finance partners with engineering</li></ol>
+<hr class="custom-hr"><h2 id="3-4-service-levels-for-cloud-applications-security"><a href="#3-4-service-levels-for-cloud-applications-security" class="heading-anchor">#</a>3.4 Service levels for cloud applications — security</h2><blockquote class="custom-blockquote"><p><strong>SLA (Service Level Agreement)</strong> = provider&#39;s commitment on availability, performance, support. <strong>SLO (Service Level Objective)</strong> = internal target. <strong>SLI (Service Level Indicator)</strong> = the metric measured.</p>
+</blockquote><h3 id="standard-sla-structure"><a href="#standard-sla-structure" class="heading-anchor">#</a>Standard SLA structure</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Element</th>
+<th>What it covers</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Availability</strong></td>
+<td>% uptime (99.9% = 8.76h/yr downtime; 99.99% = 52.6min/yr)</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>latency percentiles (p50, p95, p99), throughput guarantees</td>
+</tr>
+<tr>
+<td><strong>Durability</strong></td>
+<td>data loss probability (S3: 99.999999999% = 11 nines)</td>
+</tr>
+<tr>
+<td><strong>Support</strong></td>
+<td>response time by severity (P1: 15min, P2: 1h, P3: 4h)</td>
+</tr>
+<tr>
+<td><strong>Credits</strong></td>
+<td>service credits for SLA breach (typically 10–100% of monthly fee)</td>
+</tr>
+</tbody></table></div><h3 id="security-in-slas"><a href="#security-in-slas" class="heading-anchor">#</a>Security in SLAs</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Security SLA element</th>
+<th>What to demand</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Encryption</strong></td>
+<td>at rest (AES-256), in transit (TLS 1.2+), key management (BYOK/HYOK)</td>
+</tr>
+<tr>
+<td><strong>Compliance</strong></td>
+<td>SOC 2, ISO 27001, PCI DSS, HIPAA, GDPR — provider&#39;s certifications</td>
+</tr>
+<tr>
+<td><strong>Incident response</strong></td>
+<td>breach notification timeline (GDPR: 72h), forensic support</td>
+</tr>
+<tr>
+<td><strong>Vulnerability management</strong></td>
+<td>patching cadence, scanning, pen test reports</td>
+</tr>
+<tr>
+<td><strong>Data sovereignty</strong></td>
+<td>region lock, data residency guarantees</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="3-5-web-applications-design-cloud-native-principles"><a href="#3-5-web-applications-design-cloud-native-principles" class="heading-anchor">#</a>3.5 Web applications design — cloud-native principles</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Principle</th>
+<th>What it means</th>
+<th>Cloud implementation</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Statelessness</strong></td>
+<td>no session affinity; store state in external store (Redis, DB, S3)</td>
+<td>enables horizontal scaling, zero-downtime deploy</td>
+</tr>
+<tr>
+<td><strong>Horizontal scaling</strong></td>
+<td>add instances, not bigger instances</td>
+<td>auto-scaling groups, Kubernetes HPA, serverless</td>
+</tr>
+<tr>
+<td><strong>Resilience</strong></td>
+<td>design for failure: timeouts, retries, circuit breakers, bulkheads</td>
+<td>Polly, Hystrix, Istio, AWS X-Ray</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>logs, metrics, traces — the three pillars</td>
+<td>CloudWatch, Prometheus/Grafana, OpenTelemetry, X-Ray</td>
+</tr>
+<tr>
+<td><strong>CI/CD</strong></td>
+<td>automated build, test, deploy; infrastructure as code</td>
+<td>GitHub Actions, GitLab CI, CodePipeline, ArgoCD, Terraform</td>
+</tr>
+<tr>
+<td><strong>Security by default</strong></td>
+<td>least privilege IAM, secrets management, WAF, DDoS protection</td>
+<td>AWS Secrets Manager, Vault, AWS WAF, Shield</td>
+</tr>
+</tbody></table></div><h3 id="twelve-factor-app-summary"><a href="#twelve-factor-app-summary" class="heading-anchor">#</a>Twelve-Factor App (summary)</h3><ol>
+<li><strong>Codebase</strong> — one repo, many deploys</li><li><strong>Dependencies</strong> — explicit, isolated</li><li><strong>Config</strong> — env vars, not files</li><li><strong>Backing services</strong> — attached resources (DB, queue, cache)</li><li><strong>Build, release, run</strong> — strict separation</li><li><strong>Processes</strong> — stateless, share-nothing</li><li><strong>Port binding</strong> — export services via port</li><li><strong>Concurrency</strong> — scale out via process model</li><li><strong>Disposability</strong> — fast startup, graceful shutdown</li><li><strong>Dev/prod parity</strong> — keep environments similar</li><li><strong>Logs</strong> — event streams, not files</li><li><strong>Admin processes</strong> — run as one-off processes</li></ol>
+<hr class="custom-hr"><h2 id="3-6-answer-skeletons-insurance-not-in-model-question"><a href="#3-6-answer-skeletons-insurance-not-in-model-question" class="heading-anchor">#</a>3.6 Answer skeletons (insurance — not in model question)</h2><h3 id="quot-explain-the-six-cloud-migration-strategies-with-when-to-use-each-quot-5"><a href="#quot-explain-the-six-cloud-migration-strategies-with-when-to-use-each-quot-5" class="heading-anchor">#</a>&quot;Explain the six cloud migration strategies with when to use each.&quot; [5]</h3><blockquote class="custom-blockquote"><p><strong>Shape: table of six strategies + when to use + trade-off. ~200 words.</strong></p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Strategy</th>
+<th>What it means</th>
+<th>When to use</th>
+<th>Trade-off</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Rehost</strong></td>
+<td>move VMs as-is to IaaS</td>
+<td>speed, low risk, legacy apps</td>
+<td>no cloud-native benefits</td>
+</tr>
+<tr>
+<td><strong>Replatform</strong></td>
+<td>minor optimisations (managed DB, containers)</td>
+<td>moderate effort, some benefits</td>
+<td>limited modernisation</td>
+</tr>
+<tr>
+<td><strong>Refactor</strong></td>
+<td>rewrite for cloud-native (microservices, serverless)</td>
+<td>long-term agility, scalability</td>
+<td>high effort, risk, reward</td>
+</tr>
+<tr>
+<td><strong>Repurchase</strong></td>
+<td>replace with SaaS (CRM → Salesforce)</td>
+<td>commoditised function</td>
+<td>data migration, process change</td>
+</tr>
+<tr>
+<td><strong>Retire</strong></td>
+<td>decommission unused apps</td>
+<td>reduce cost, attack surface</td>
+<td>must identify dependencies</td>
+</tr>
+<tr>
+<td><strong>Retain</strong></td>
+<td>keep on-prem (latency, compliance)</td>
+<td>valid reasons exist</td>
+<td>revisit periodically</td>
+</tr>
+</tbody></table></div><p>Migration process: assess → pilot → migrate (wave by wave) → optimise (rightsizing, FinOps) → govern (guardrails, tagging).</p>
+</blockquote><p><em>(~180 words)</em></p>
+<h3 id="quot-describe-the-cloud-cost-model-and-three-optimisation-techniques-quot-5"><a href="#quot-describe-the-cloud-cost-model-and-three-optimisation-techniques-quot-5" class="heading-anchor">#</a>&quot;Describe the cloud cost model and three optimisation techniques.&quot; [5]</h3><blockquote class="custom-blockquote"><p>Cloud cost = compute + storage + network + managed services + support + hidden (egress, API calls, idle resources). <strong>Three optimisations:</strong> (1) <strong>Compute</strong> — reserved instances (1–3 yr, 30–72% off), spot (90% off, interruptible), rightsizing, autoscaling. (2) <strong>Storage</strong> — lifecycle policies (hot→cool→archive), delete orphaned snapshots, tiered redundancy. (3) <strong>Network</strong> — CDN/CloudFront for egress, VPC endpoints for private access, region selection, compression. <strong>FinOps discipline:</strong> tagging for visibility, budgets/alerts for governance, engineer-owned cost culture.</p>
+</blockquote><p><em>(185 words)</em></p>
+<h3 id="quot-what-is-an-sla-explain-its-elements-with-focus-on-security-quot-5"><a href="#quot-what-is-an-sla-explain-its-elements-with-focus-on-security-quot-5" class="heading-anchor">#</a>&quot;What is an SLA? Explain its elements with focus on security.&quot; [5]</h3><blockquote class="custom-blockquote"><p>SLA = provider&#39;s commitment on availability, performance, support. <strong>Elements:</strong> availability (% uptime, e.g., 99.9% = 8.76h/yr), performance (latency p50/p95/p99, throughput), durability (data loss probability), support (response time by severity), credits (service credits for breach). <strong>Security SLA:</strong> encryption at rest (AES-256)/in transit (TLS 1.2+), key management (BYOK), compliance certs (SOC 2, ISO 27001, PCI DSS), incident response (breach notification timeline, e.g., GDPR 72h), vulnerability management (patching cadence, scanning), data sovereignty (region lock, residency guarantees).</p>
+</blockquote><p><em>(190 words)</em></p>
+<h3 id="quot-describe-cloud-native-web-application-design-principles-quot-5"><a href="#quot-describe-cloud-native-web-application-design-principles-quot-5" class="heading-anchor">#</a>&quot;Describe cloud-native web application design principles.&quot; [5]</h3><blockquote class="custom-blockquote"><p><strong>Principles:</strong> (1) <strong>Statelessness</strong> — no session affinity; state in Redis/DB/S3; enables horizontal scaling. (2) <strong>Horizontal scaling</strong> — add instances, not bigger ones; auto-scaling, K8s HPA, serverless. (3) <strong>Resilience</strong> — timeouts, retries, circuit breakers, bulkheads (Polly, Istio, X-Ray). (4) <strong>Observability</strong> — logs, metrics, traces (CloudWatch, Prometheus, OpenTelemetry). (5) <strong>CI/CD</strong> — automated build/test/deploy, IaC (Terraform, ArgoCD). (6) <strong>Security by default</strong> — least-privilege IAM, secrets management (Vault, Secrets Manager), WAF, DDoS protection. <strong>Twelve-Factor App</strong> summarises: codebase, dependencies, config (env vars), backing services, build/release/run, processes, port binding, concurrency, disposability, dev/prod parity, logs, admin processes.</p>
+</blockquote><p><em>(195 words)</em></p>
+<hr class="custom-hr"><h2 id="3-7-traps"><a href="#3-7-traps" class="heading-anchor">#</a>3.7 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Trap</th>
+<th>Why it costs marks</th>
+<th>Fix</th>
+</tr>
+</thead><tbody><tr>
+<td>Writing &quot;lift-and-shift&quot; as the only migration strategy</td>
+<td>six strategies exist; the question asks for &quot;strategies&quot; (plural)</td>
+<td>know all six: rehost, replatform, refactor, repurchase, retire, retain</td>
+</tr>
+<tr>
+<td>Confusing BYOL with license-included</td>
+<td>different cost models, different compliance</td>
+<td>BYOL = your licence on dedicated hosts; license-included = pay-per-hour</td>
+</tr>
+<tr>
+<td>Forgetting data egress in cost model</td>
+<td>it&#39;s the #1 hidden cost</td>
+<td>always list egress as a network cost component</td>
+</tr>
+<tr>
+<td>Writing SLA as only &quot;99.9% uptime&quot;</td>
+<td>SLA has multiple elements</td>
+<td>availability, performance, durability, support, credits</td>
+</tr>
+<tr>
+<td>Missing security in SLA answer</td>
+<td>&quot;service levels for cloud applications — security&quot; is the syllabus bullet</td>
+<td>encryption, compliance, incident response, vulnerability mgmt, sovereignty</td>
+</tr>
+<tr>
+<td>Listing Twelve-Factor App without cloud implementation</td>
+<td>the question is about <em>cloud-native</em> design</td>
+<td>map each factor to cloud implementation (e.g., config → env vars + Secrets Manager)</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="3-8-self-test-answers-collapsed"><a href="#3-8-self-test-answers-collapsed" class="heading-anchor">#</a>3.8 Self-test (answers collapsed)</h2><ol>
+<li>Name the six cloud migration strategies. <em>(2 marks)</em></li><li>When would you choose refactor over replatform? <em>(2 marks)</em></li><li>What is BYOL, and when does it apply? <em>(2 marks)</em></li><li>Name the five components of cloud cost. <em>(2 marks)</em></li><li>Give three cloud cost optimisation techniques. <em>(3 marks)</em></li><li>What are the five elements of an SLA? <em>(3 marks)</em></li><li>Name three security SLA elements. <em>(2 marks)</em></li><li>What does &quot;statelessness&quot; mean in cloud-native design, and why does it matter? <em>(2 marks)</em></li></ol>
+<details>
+<summary>Answers</summary>
+
+<ol>
+<li>Rehost, replatform, refactor, repurchase, retire, retain.</li><li>Refactor when you need long-term agility, scalability, cloud-native benefits; replatform when you need moderate effort for some benefits. Refactor = rewrite; replatform = minor optimisations.</li><li>BYOL = Bring Your Own License; use existing on-prem licences on cloud (dedicated hosts, license mobility). Applies to Windows Server, SQL Server, Oracle with Software Assurance / specific cloud programmes.</li><li>Compute, storage, network, managed services, support. (Hidden: data egress, API calls, idle resources, over-provisioning.)</li><li>(1) Compute: reserved instances, spot, rightsizing, autoscaling. (2) Storage: lifecycle policies, delete orphans, tiered redundancy. (3) Network: CDN for egress, VPC endpoints, region selection.</li><li>Availability, performance, durability, support, credits.</li><li>Encryption (at rest/in transit + key mgmt), compliance certifications (SOC 2, ISO 27001), incident response (breach notification timeline), vulnerability management, data sovereignty.</li><li>Statelessness = no session affinity; state stored externally (Redis, DB, S3). Matters because it enables horizontal scaling (add instances) and zero-downtime deployments.</li></ol>
+</details>
+
+<hr class="custom-hr"><h2 id="3-9-sixty-second-check"><a href="#3-9-sixty-second-check" class="heading-anchor">#</a>3.9 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Six migration strategies: name + when to use + trade-off</li><li><input disabled="" type="checkbox"> Three license models: BYOL, license-included, subscription/SaaS</li><li><input disabled="" type="checkbox"> Cloud cost: five components + three optimisations</li><li><input disabled="" type="checkbox"> SLA: five elements + three security elements</li><li><input disabled="" type="checkbox"> Cloud-native design: six principles + Twelve-Factor summary</li></ul>
+<p>If all five are there, Unit 3&#39;s <strong>insurance</strong> is covered — ready for any board-paper 5-marker.</p>
+<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 3, 5 LHs) · Saurabh, Cloud Computing, ch. 5–6 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 6–7 (syllabus reading) · AWS/Azure/GCP migration frameworks, Well-Architected Framework, FinOps Foundation — standard industry practices. AWS/Azure/Google service names are standard examples, not current feature claims.</em></p>
+
+        </div>
+      </article>
+
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-2.html" class="nav-btn prev">← Unit 2: Cloud Architecture</a>
+      <a href="../index.html#cloud" class="nav-btn up">↑ Cloud Computing</a>
+      <a href="unit-4.html" class="nav-btn next">Unit 4: Virtualization →</a>
+    </nav>
+  
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+    // Initialize highlight.js
+    document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+
+    // Copy code function
+    window.copyCode = function(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    };
+
+    // Sidebar toggle
+    window.toggleSidebar = function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+    window.closeSidebar = function() {
+      document.getElementById('sidebar').classList.remove('open');
+    };
+
+    // Close sidebar on link click (mobile)
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+      link.addEventListener('click', () => closeSidebar());
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    window.toggleTheme = function() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    };
+  </script>
+</body>
+</html>

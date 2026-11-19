@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 5: BI Tools and Technologies | Business Intelligence | BIM 8th Semester</title>
+  <meta name="description" content="IT 249 - Unit 5: BI Tools and Technologies">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+</head>
+<body class="unit-page">
+  <header class="site-header">
+    <div class="header-content">
+      <a href="../../index.html" class="site-title">BIM 8th Semester</a>
+      <span class="subject-badge" style="background: #2563eb">IT 249</span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <div class="sidebar-content">
+        <h3>Business Intelligence</h3>
+        <p class="subject-meta">IT 249 • 60 marks</p>
+        <ul class="unit-list">
+          
+            <li>
+              <a href="unit-1.html" class="">
+                <span class="unit-num">Unit 1</span>
+                <span class="unit-title">Introduction to Business Intelligence</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-2.html" class="">
+                <span class="unit-num">Unit 2</span>
+                <span class="unit-title">Data Warehousing</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-3.html" class="">
+                <span class="unit-num">Unit 3</span>
+                <span class="unit-title">Data Mining</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-4.html" class="">
+                <span class="unit-num">Unit 4</span>
+                <span class="unit-title">Data Visualization</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-5.html" class="active">
+                <span class="unit-num">Unit 5</span>
+                <span class="unit-title">BI Tools and Technologies</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-6.html" class="">
+                <span class="unit-num">Unit 6</span>
+                <span class="unit-title">BI Implementation</span>
+              </a>
+            </li>
+          
+        </ul>
+        <div class="sidebar-footer">
+          <a href="../../index.html" class="footer-link">← All Subjects</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content" role="main">
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-4.html" class="nav-btn prev">← Unit 4: Data Visualization</a>
+      <a href="../index.html#bi" class="nav-btn up">↑ Business Intelligence</a>
+      <a href="unit-6.html" class="nav-btn next">Unit 6: BI Implementation →</a>
+    </nav>
+  
+
+      <article class="unit-content">
+        <header class="unit-header">
+          <div class="unit-meta">
+            <span class="unit-badge">Unit 5 of 6</span>
+            <span class="subject-name">Business Intelligence</span>
+          </div>
+          <h1 class="unit-title">BI Tools and Technologies</h1>
+        </header>
+
+        <div class="markdown-body">
+          <h1 id="unit-5-bi-tools-and-technologies"><a href="#unit-5-bi-tools-and-technologies" class="heading-anchor">#</a>Unit 5 — BI Tools and Technologies</h1><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Lecture hours</strong></td>
+<td>12 — the largest unit in the syllabus</td>
+</tr>
+<tr>
+<td><strong>Marks carried in 2026 paper</strong></td>
+<td><strong>10</strong> — two 1-markers (A9 two BI tools, A10 OLAP limitation), one 3-marker (B5 OLAP vs traditional queries), one 5-marker (C4 BI tools vs reporting tools)</td>
+</tr>
+<tr>
+<td><strong>Marks in the official model question</strong></td>
+<td><strong>2</strong> — A8 (one popular BI tool), A9 (what OLAP is used for). Low in the model paper, high in the board paper — prepare for the board paper</td>
+</tr>
+<tr>
+<td><strong>Difficulty</strong></td>
+<td>★★★☆☆ — tool names are free marks; OLAP operations and the &quot;why is BI more powerful&quot; comparison are where marks are lost</td>
+</tr>
+<tr>
+<td><strong>Exam yield</strong></td>
+<td>🔴 high — 12 hours, 4 questions in 2026, and <strong>OLAP appears in some form in both official sources</strong></td>
+</tr>
+<tr>
+<td><strong>Prerequisite</strong></td>
+<td>Unit 2 (the star schema is what a cube is built from) · Unit 4 (a dashboard is the BI tool&#39;s output)</td>
+</tr>
+<tr>
+<td><strong>Syllabus bullets</strong></td>
+<td>Overview of popular BI tools (Tableau, Power BI) · Hands-on experience with BI tools for analysis and reporting · Introduction to OLAP</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit has two halves that behave very differently. The <strong>tool half</strong> (5.1–5.2) is name-and-compare — cheap marks, and the only place in the paper where you must produce proper nouns. The <strong>OLAP half</strong> (5.3–5.6) is conceptual and carries the real weight: it is where the paper asks for a <em>mechanism</em> (B5) and a <em>critique</em> (A10). Students memorise &quot;OLAP is multidimensional&quot; and then lose the 3-marker, because the 3-marker is about <strong>how it differs from a SQL query</strong>, not what the acronym means.</p>
+</blockquote><hr class="custom-hr"><h2 id="5-1-what-a-bi-tool-is-and-the-landscape"><a href="#5-1-what-a-bi-tool-is-and-the-landscape" class="heading-anchor">#</a>5.1 What a BI tool is, and the landscape</h2><blockquote class="custom-blockquote"><p><strong>A BI tool is software that sits on top of modelled data — usually a warehouse or cube — and lets a non-programmer explore, aggregate and visualise it interactively, without writing SQL.</strong></p>
+</blockquote><p>Everything else in this unit follows from that sentence. Three clauses carry it: <strong>modelled data</strong> (the tool assumes a clean star schema, not raw tables), <strong>non-programmer</strong> (that is why it exists — analysts, managers), <strong>interactively</strong> (that is what separates it from a printed report).</p>
+<h3 id="where-it-sits-in-the-stack"><a href="#where-it-sits-in-the-stack" class="heading-anchor">#</a>Where it sits in the stack</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> SOURCES ──► ETL ──► WAREHOUSE / CUBE ──► [ BI TOOL ] ──► DECISION
+                        (Unit 2)            (this unit)     (Unit 6)
+                                              │
+                                    connect → model → visualise
+                                    → publish → schedule</code></pre></div><h3 id="the-five-tool-categories-name-the-category-then-an-example"><a href="#the-five-tool-categories-name-the-category-then-an-example" class="heading-anchor">#</a>The five tool categories (name the category, then an example)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Category</th>
+<th>What it is for</th>
+<th>Examples</th>
+<th>Exam value</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>BI &amp; analytics platforms</strong></td>
+<td>the main answer — self-service analysis and dashboards over a warehouse</td>
+<td><strong>Power BI</strong>, <strong>Tableau</strong>, Qlik Sense, Looker, Spotfire</td>
+<td>🔴 the two the syllabus names</td>
+</tr>
+<tr>
+<td><strong>Enterprise reporting tools</strong></td>
+<td>pixel-perfect, scheduled, paginated reports (invoices, statutory returns)</td>
+<td>SSRS, Crystal Reports, JasperReports</td>
+<td>🟡 the &quot;traditional&quot; side of C4</td>
+</tr>
+<tr>
+<td><strong>OLAP / cube engines</strong></td>
+<td>pre-computed multidimensional stores that BI tools query</td>
+<td>SSAS (Tabular/Multidimensional), Oracle Essbase, Mondrian</td>
+<td>🔴 §5.3 builds on this</td>
+</tr>
+<tr>
+<td><strong>Cloud-native BI</strong></td>
+<td>same analysis, no server to run</td>
+<td>Amazon QuickSight, Power BI Service, Looker, Looker Studio</td>
+<td>🟡 cheap example in an answer</td>
+</tr>
+<tr>
+<td><strong>Open-source BI</strong></td>
+<td>low-cost self-service</td>
+<td>Apache Superset, Metabase, Redash</td>
+<td>🟢 one line if asked for alternatives</td>
+</tr>
+<tr>
+<td><strong>Embedded analytics</strong></td>
+<td>dashboards inside another product</td>
+<td>Power BI Embedded, Tableau Embedded</td>
+<td>🟢 recognise the term</td>
+</tr>
+</tbody></table></div><p>⚠ <strong>Trap:</strong> the 1-marker says <em>&quot;List any two BI tools&quot;</em>. &quot;Excel&quot; and &quot;SQL&quot; are not BI tools in this context — Excel is a spreadsheet and SQL is a language. Microsoft Power BI and Tableau are the safe two, every time.</p>
+<h3 id="the-hands-on-workflow-the-quot-hands-on-experience-quot-syllabus-bullet-as-five-steps"><a href="#the-hands-on-workflow-the-quot-hands-on-experience-quot-syllabus-bullet-as-five-steps" class="heading-anchor">#</a>The hands-on workflow — the &quot;hands-on experience&quot; syllabus bullet, as five steps</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Step</th>
+<th>What actually happens</th>
+<th>Why the examiner cares</th>
+</tr>
+</thead><tbody><tr>
+<td>1 <strong>Connect</strong></td>
+<td>point the tool at the warehouse/cube/file; choose import (in-memory) or direct query (live)</td>
+<td>import is fast, direct query is fresh — the classic trade-off</td>
+</tr>
+<tr>
+<td>2 <strong>Model</strong></td>
+<td>define relationships (fact → dimensions), create measures and calculated columns</td>
+<td>this is where the star schema from Unit 2 pays off</td>
+</tr>
+<tr>
+<td>3 <strong>Visualise</strong></td>
+<td>drag fields onto a canvas; the tool generates the chart, you choose the type</td>
+<td>Unit 4&#39;s principles apply here, not different ones</td>
+</tr>
+<tr>
+<td>4 <strong>Publish / share</strong></td>
+<td>publish to a workspace or server; set row-level security and permissions</td>
+<td>separates a personal workbook from a governed asset</td>
+</tr>
+<tr>
+<td>5 <strong>Schedule / refresh / govern</strong></td>
+<td>refresh cadence, usage monitoring, certified datasets</td>
+<td>the difference between a demo and a BI implementation (Unit 6)</td>
+</tr>
+</tbody></table></div><p>🧠 <strong>Memory hook: C-M-V-P-S</strong> — <em>Connect, Model, Visualise, Publish, Schedule.</em> Five steps, and they map onto the five clauses of the definition.</p>
+<h2 id="5-2-tableau-and-power-bi-the-comparison-worth-having-ready"><a href="#5-2-tableau-and-power-bi-the-comparison-worth-having-ready" class="heading-anchor">#</a>5.2 Tableau and Power BI — the comparison worth having ready</h2><p>The syllabus names exactly these two, so a comparison question is always possible, and either one is an acceptable answer to &quot;give one popular BI tool&quot;.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th><strong>Microsoft Power BI</strong></th>
+<th><strong>Tableau</strong></th>
+</tr>
+</thead><tbody><tr>
+<td>Vendor / lineage</td>
+<td>Microsoft; launched 2015, built on Power Query + Power Pivot</td>
+<td>Tableau Software; owned by Salesforce since 2019</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>desktop authoring + cloud service (SaaS) or on-premises report server</td>
+<td>desktop authoring + Tableau Server / Tableau Cloud</td>
+</tr>
+<tr>
+<td>Data modelling</td>
+<td>Power Query (ETL-lite) + a tabular model; <strong>DAX</strong> for measures</td>
+<td>connects live or extracts; lighter modelling, stronger on visual exploration</td>
+</tr>
+<tr>
+<td>Signature strength</td>
+<td>cheap, ubiquitous, tight integration with Excel, Teams and Azure; strong governance</td>
+<td>best-in-class visual exploration and dashboard interactivity; <strong>VizQL</strong></td>
+</tr>
+<tr>
+<td>Weakness</td>
+<td>DAX has a steep learning curve; heavy models need capacity planning</td>
+<td>cost per seat; less natural as an enterprise ETL/modelling layer</td>
+</tr>
+<tr>
+<td>Best fit</td>
+<td>an organisation already on Microsoft 365</td>
+<td>an analytics team that lives in the visuals</td>
+</tr>
+<tr>
+<td>One-line verdict for the exam</td>
+<td><em>the default enterprise choice where Microsoft is already the platform</em></td>
+<td><em>the default choice where visual exploration is the product</em></td>
+</tr>
+</tbody></table></div><p>⚠ <strong>Do not write</strong> &quot;Power BI is better because it is cheaper&quot; as your comparison. Cost is a purchasing criterion, not an analytical one; the mark is for <strong>fit</strong> — governance and integration versus exploration depth.</p>
+<p>🇳🇵 <strong>Nepal anchor:</strong> the pattern visible in Nepali banks, insurers, telecoms and universities is a warehouse or a data mart plus <strong>Power BI</strong>, because licences come bundled with the Microsoft estate (Windows, SQL Server, Microsoft 365) that is already installed. Tableau tends to appear where a dedicated analytics team exists and the deliverable is public-facing or executive visual storytelling. That is a pattern of <em>fit</em>, not a claim about any named institution&#39;s procurement.</p>
+<hr class="custom-hr"><h2 id="5-3-olap-what-it-is-what-it-is-for-and-how-it-works"><a href="#5-3-olap-what-it-is-what-it-is-for-and-how-it-works" class="heading-anchor">#</a>5.3 OLAP — what it is, what it is for, and how it works</h2><blockquote class="custom-blockquote"><p><strong>OLAP (Online Analytical Processing) is the multidimensional analysis of warehouse data: it lets a user summarise, slice and drill through measures along business dimensions, interactively and at speed, instead of writing a new query for every question.</strong></p>
+</blockquote><p>The term was introduced by <strong>E. F. Codd in 1993</strong> as the analytical counterpart to OLTP. That one sentence — <em>the analytical counterpart to OLTP</em> — is worth remembering, because it explains everything below.</p>
+<h3 id="what-olap-is-used-for-model-question-a9-1-mark"><a href="#what-olap-is-used-for-model-question-a9-1-mark" class="heading-anchor">#</a>What OLAP is used for (model question A9, 1 mark)</h3><blockquote class="custom-blockquote"><p>OLAP is used for fast, interactive multidimensional analysis: summarising measures such as sales across dimensions such as time, product and region, and drilling from total to detail.</p>
+</blockquote><p><em>(27 words. The point the examiner wants: <strong>aggregation along business dimensions, interactively</strong>. Not &quot;storing data&quot;, not &quot;reporting&quot;, not &quot;mining&quot;.)</em></p>
+<h3 id="the-cube-the-mental-model"><a href="#the-cube-the-mental-model" class="heading-anchor">#</a>The cube — the mental model</h3><p>A star schema is a set of tables; a <strong>cube</strong> is the same data reorganised so every combination of dimension values has a pre-computed measure.</p>
+<div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">              PRODUCT
+                ▲
+       (Laptop) │
+                │
+                │        ┌──────────────┐
+                │        │   MEASURE    │
+                │        │  Sales = 4.2M│
+   TIME ◄───────┼───────►│  Units = 1.9k│
+  (2026-Q3)     │        │  Margin = 31%│
+                │        └──────────────┘
+                │
+                ▼
+              REGION (Kathmandu)
+
+  Three dimensions + one or more measures = a cube.
+  Add a fourth dimension and it is a hypercube — the maths
+  is the same, the picture stops being drawable.</code></pre></div><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Term</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Dimension</strong></td>
+<td>an axis you analyse <em>by</em></td>
+<td>time, product, region, channel, customer segment</td>
+</tr>
+<tr>
+<td><strong>Hierarchy</strong></td>
+<td>levels inside a dimension</td>
+<td>Year → Quarter → Month → Day; Country → Province → City</td>
+</tr>
+<tr>
+<td><strong>Measure</strong></td>
+<td>the number you aggregate</td>
+<td>revenue, units sold, margin, headcount</td>
+</tr>
+<tr>
+<td><strong>Cube</strong></td>
+<td>dimensions × measures, pre-aggregated</td>
+<td>the object the BI tool queries</td>
+</tr>
+<tr>
+<td><strong>Grain</strong></td>
+<td>the finest level stored</td>
+<td>one row per order line per day</td>
+</tr>
+</tbody></table></div><h3 id="the-five-operations-the-ones-to-name-in-a-3-or-5-marker"><a href="#the-five-operations-the-ones-to-name-in-a-3-or-5-marker" class="heading-anchor">#</a>The five operations — the ones to name in a 3- or 5-marker</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Operation</th>
+<th>What it does</th>
+<th>Concrete example</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Roll-up</strong> (drill-up)</td>
+<td>aggregate to a coarser level of a hierarchy</td>
+<td>monthly sales → quarterly sales → annual sales</td>
+</tr>
+<tr>
+<td><strong>Drill-down</strong></td>
+<td>move to a finer level</td>
+<td>annual → quarter → month → the individual invoice</td>
+</tr>
+<tr>
+<td><strong>Slice</strong></td>
+<td>fix <strong>one</strong> dimension, view the rest</td>
+<td>sales in 2026 only</td>
+</tr>
+<tr>
+<td><strong>Dice</strong></td>
+<td>fix <strong>two or more</strong> dimensions — a sub-cube</td>
+<td>2026 × Bagmati × laptops</td>
+</tr>
+<tr>
+<td><strong>Pivot</strong> (rotate)</td>
+<td>swap the axes to see the same numbers from another angle</td>
+<td>products as rows → products as columns</td>
+</tr>
+</tbody></table></div><p>⚠ The examinable difference is <strong>slice vs dice</strong>: slice fixes <em>one</em> dimension, dice fixes <em>two or more</em>. Writing them as synonyms is the most common OLAP error in scripts.</p>
+<h3 id="three-storage-architectures-one-line-each"><a href="#three-storage-architectures-one-line-each" class="heading-anchor">#</a>Three storage architectures — one line each</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Type</th>
+<th>How it stores</th>
+<th>Speed / freshness trade-off</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>MOLAP</strong></td>
+<td>pre-computed, compressed cube on disk (SSAS Multidimensional, Essbase)</td>
+<td>fastest queries; slow load, storage-hungry, stale until processed</td>
+</tr>
+<tr>
+<td><strong>ROLAP</strong></td>
+<td>no cube — SQL rewritten against the relational star schema (Mondrian)</td>
+<td>always current, scales to huge data; slower aggregation</td>
+</tr>
+<tr>
+<td><strong>HOLAP</strong></td>
+<td>aggregates in the cube, detail left in the relational store</td>
+<td>compromise: fast summaries, detail on demand</td>
+</tr>
+</tbody></table></div><h2 id="5-4-olap-versus-a-traditional-database-query-b5"><a href="#5-4-olap-versus-a-traditional-database-query-b5" class="heading-anchor">#</a>5.4 OLAP versus a traditional database query — B5</h2><p>The 2026 paper asked: <em>&quot;How does OLAP differ from traditional database queries in terms of analysis capabilities?&quot;</em> Note the phrase <strong>analysis capabilities</strong> — the marks are for what you can <em>do</em>, not for storage.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th><strong>Traditional SQL query</strong> (OLTP database)</th>
+<th><strong>OLAP</strong></th>
+</tr>
+</thead><tbody><tr>
+<td>Question shape</td>
+<td>&quot;fetch these rows&quot; — one question, one query</td>
+<td>&quot;let me explore&quot; — many questions from one view</td>
+</tr>
+<tr>
+<td>Aggregation</td>
+<td>you write <code>GROUP BY</code>; the database computes it on demand</td>
+<td>aggregates are pre-computed; the answer is a lookup</td>
+</tr>
+<tr>
+<td>Dimensions</td>
+<td>columns in a table, no concept of a hierarchy</td>
+<td>first-class dimensions with hierarchies, so roll-up/drill-down are one click</td>
+</tr>
+<tr>
+<td>Operations available</td>
+<td>select, join, group, sort</td>
+<td>roll-up, drill-down, slice, dice, pivot</td>
+</tr>
+<tr>
+<td>Response time</td>
+<td>degrades as history and joins grow</td>
+<td>stable and fast, because the work was done at load time</td>
+</tr>
+<tr>
+<td>User</td>
+<td>developer or analyst who writes SQL</td>
+<td>manager or analyst who does not</td>
+</tr>
+<tr>
+<td>Result</td>
+<td>a result set</td>
+<td>an interactive view that can be re-cut without a new query</td>
+</tr>
+<tr>
+<td>Data currency</td>
+<td>live, current</td>
+<td>as of the last cube process / refresh</td>
+</tr>
+<tr>
+<td>Optimised for</td>
+<td><strong>transactions</strong> — many small reads and writes</td>
+<td><strong>analysis</strong> — few large reads over history</td>
+</tr>
+</tbody></table></div><p><strong>The mechanism to state explicitly</strong> (this is the mark most scripts miss): OLAP is fast <em>because the aggregation happens at load time, not at query time</em>, and because dimensions are indexed and pre-joined. A traditional query re-does the work on every execution; a cube does it once.</p>
+<p>⚠ <strong>The honest nuance, worth one line:</strong> the boundary has blurred. A modern columnar warehouse (Redshift, BigQuery, Snowflake) with materialised views answers many &quot;OLAP-style&quot; questions quickly without a cube. Say this only if the question invites evaluation — in a 3-marker it costs time.</p>
+<h2 id="5-5-the-limitations-of-olap-a10"><a href="#5-5-the-limitations-of-olap-a10" class="heading-anchor">#</a>5.5 The limitations of OLAP — A10</h2><p>The 1-mark answer:</p>
+<blockquote class="custom-blockquote"><p>OLAP answers only the questions the cube was designed for: it is limited to modelled dimensions and pre-aggregated history, so it is stale between refreshes and cannot discover unknown patterns.</p>
+</blockquote><p><em>(30 words. Cut &quot;and pre-aggregated history&quot; to land at 26 if the paper&#39;s 1-markers are tight.)</em></p>
+<p>The four limitations worth knowing, in case a 3- or 5-marker appears:</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Limitation</th>
+<th>Why it matters</th>
+<th>Business consequence</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Design-bound</strong></td>
+<td>only dimensions and measures in the cube are analysable; a new question needs a schema change</td>
+<td>the question you did not anticipate costs weeks, not minutes</td>
+</tr>
+<tr>
+<td><strong>Staleness</strong></td>
+<td>pre-aggregation means the cube is as fresh as its last process</td>
+<td>a decision made at 9 a.m. on yesterday&#39;s numbers</td>
+</tr>
+<tr>
+<td><strong>Load cost and volume</strong></td>
+<td>processing time and storage grow with dimensions and history; sparse cubes waste space</td>
+<td>overnight windows get missed as data grows</td>
+</tr>
+<tr>
+<td><strong>No discovery</strong></td>
+<td>OLAP confirms and cuts known structure; it does not find unknown patterns</td>
+<td>churn drivers and basket affinities need <strong>data mining</strong> (Unit 3), not OLAP</td>
+</tr>
+</tbody></table></div><p>⚠ <strong>The distinction the examiner is testing:</strong> <em>OLAP answers the question you already know how to ask; data mining finds the question you did not know to ask.</em> If a 5-marker asks you to evaluate OLAP, that sentence is the conclusion.</p>
+<h2 id="5-6-bi-tools-versus-traditional-reporting-tools-c4"><a href="#5-6-bi-tools-versus-traditional-reporting-tools-c4" class="heading-anchor">#</a>5.6 BI tools versus traditional reporting tools — C4</h2><p>The 2026 5-marker: <em>&quot;Compare Business Intelligence tools with traditional reporting tools. What makes BI more powerful? Explain.&quot;</em> Two halves — compare, then justify.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th><strong>Traditional reporting</strong> (SSRS, Crystal, printed packs)</th>
+<th><strong>BI tools</strong> (Power BI, Tableau)</th>
+</tr>
+</thead><tbody><tr>
+<td>Output</td>
+<td>fixed, paginated report — the same layout every time</td>
+<td>interactive dashboard the reader re-cuts</td>
+</tr>
+<tr>
+<td>Who defines the question</td>
+<td>the IT/reporting team, in advance</td>
+<td>the business user, at the moment of need</td>
+</tr>
+<tr>
+<td>Data model</td>
+<td>one report, one query, often one source</td>
+<td>one governed semantic model shared by many reports</td>
+</tr>
+<tr>
+<td>Change cost</td>
+<td>a new requirement means a new report build</td>
+<td>a new filter, or a new visual, in minutes</td>
+</tr>
+<tr>
+<td>Interaction</td>
+<td>none — read-only</td>
+<td>drill-down, filter, cross-highlight, what-if</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>scheduled batch, often monthly</td>
+<td>scheduled refresh, often daily or hourly</td>
+</tr>
+<tr>
+<td>Reach</td>
+<td>email, print, PDF</td>
+<td>web, mobile, embedded, alerts</td>
+</tr>
+<tr>
+<td>Governance risk</td>
+<td>low — few artefacts, tightly controlled</td>
+<td>higher — needs certified datasets and row-level security, or it becomes &quot;spreadsheet sprawl with nicer charts&quot;</td>
+</tr>
+</tbody></table></div><p><strong>What makes BI more powerful — the four reasons to write:</strong></p>
+<ol>
+<li><strong>A semantic layer, defined once.</strong> Measures such as &quot;active customer&quot; or &quot;gross margin&quot; are defined in the model, so every report on it agrees. In traditional reporting, each report re-implements the calculation, and the definitions drift. <em>(This is also why §5.1&#39;s definition insisted on <strong>modelled data</strong> and a <strong>non-programmer</strong>: the semantic layer is what lets the manager explore without SQL.)</em></li><li><strong>Self-service.</strong> The business user answers the next question without raising a ticket — which removes the reporting backlog that is the real cost of traditional reporting.</li><li><strong>Interactivity converts a number into an investigation.</strong> Drill-down from a bad month to the branch, product and invoice that caused it, inside one screen.</li><li><strong>One model, many outputs.</strong> The same certified dataset serves a dashboard, an alert, a mobile view and an embedded page — plus machine-learning and forecasting features that a paginated report cannot hold.</li></ol>
+<p>⚠ <strong>The balanced close, worth a mark:</strong> traditional reporting is not obsolete. Statutory returns, invoices and regulator submissions need a <strong>fixed, auditable layout</strong> — exactly what a paginated tool does better. The professional answer is <em>both</em>: BI for exploration, paginated reporting for the record.</p>
+<hr class="custom-hr"><h2 id="5-7-answer-skeletons"><a href="#5-7-answer-skeletons" class="heading-anchor">#</a>5.7 Answer skeletons</h2><h3 id="a9-quot-list-any-two-bi-tools-quot-1"><a href="#a9-quot-list-any-two-bi-tools-quot-1" class="heading-anchor">#</a>A9 · &quot;List any two BI tools.&quot; [1]</h3><blockquote class="custom-blockquote"><p>Microsoft Power BI and Tableau.</p>
+</blockquote><p><em>(6 words. The question says list — do not explain, do not compare. Two proper nouns, then stop.)</em></p>
+<h3 id="a10-quot-what-is-the-limitation-of-olap-quot-1"><a href="#a10-quot-what-is-the-limitation-of-olap-quot-1" class="heading-anchor">#</a>A10 · &quot;What is the limitation of OLAP?&quot; [1]</h3><blockquote class="custom-blockquote"><p>OLAP answers only the questions the cube was designed for: it is limited to modelled dimensions and pre-aggregated history, so it goes stale between refreshes and cannot discover unknown patterns.</p>
+</blockquote><p><em>(30 words — delete &quot;and pre-aggregated history&quot; to land at 26.)</em></p>
+<h3 id="a8-model-question-quot-give-one-popular-bi-tool-quot-1"><a href="#a8-model-question-quot-give-one-popular-bi-tool-quot-1" class="heading-anchor">#</a>A8 · model question — &quot;Give one popular BI tool.&quot; [1]</h3><blockquote class="custom-blockquote"><p>Microsoft Power BI.</p>
+</blockquote><p><em>(3 words. &quot;One&quot; means one. Naming three risks looking like you did not read the question.)</em></p>
+<h3 id="a9-model-question-quot-what-is-olap-used-for-quot-1"><a href="#a9-model-question-quot-what-is-olap-used-for-quot-1" class="heading-anchor">#</a>A9 · model question — &quot;What is OLAP used for?&quot; [1]</h3><blockquote class="custom-blockquote"><p>For fast, interactive multidimensional analysis: summarising measures such as sales across dimensions such as time, product and region, and drilling from a total down to the detail behind it.</p>
+</blockquote><p><em>(29 words. Aggregation + dimensions + drilling — the three things the marker looks for.)</em></p>
+<h3 id="b5-quot-how-does-olap-differ-from-traditional-database-queries-in-terms-of-analysis-capabilities-quot-3"><a href="#b5-quot-how-does-olap-differ-from-traditional-database-queries-in-terms-of-analysis-capabilities-quot-3" class="heading-anchor">#</a>B5 · &quot;How does OLAP differ from traditional database queries in terms of analysis capabilities?&quot; [3]</h3><blockquote class="custom-blockquote"><p><em>Shape: the core distinction, then three named differences, then the mechanism that explains the speed. ~110 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>A traditional query fetches rows for one question already written in SQL; OLAP supports exploration, so the user re-cuts one view without writing new queries. Three differences follow. <strong>Aggregation:</strong> SQL computes <code>GROUP BY</code> results on every execution, while a cube&#39;s aggregates are pre-computed at load time. <strong>Dimensions:</strong> a relational table has columns, whereas OLAP has dimensions with hierarchies, so roll-up, drill-down, slice, dice and pivot need no new query. <strong>Time and users:</strong> SQL performance degrades as history and joins grow, and it needs a developer; OLAP stays fast because the work was done at load time, and it is used directly by managers. That is why OLAP is fast — the cost moved from query time to load time.</p>
+</blockquote><h3 id="c4-quot-compare-business-intelligence-tools-with-traditional-reporting-tools-what-makes-bi-more-powerful-explain-quot-5"><a href="#c4-quot-compare-business-intelligence-tools-with-traditional-reporting-tools-what-makes-bi-more-powerful-explain-quot-5" class="heading-anchor">#</a>C4 · &quot;Compare Business Intelligence tools with traditional reporting tools. What makes BI more powerful? Explain.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: what each is → four comparison dimensions → four reasons BI is more powerful → one balanced caveat. ~230 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>Traditional reporting tools (SSRS, Crystal Reports) produce <strong>fixed, paginated outputs</strong>: the reporting team defines the question in advance, the layout is identical every run, and the reader consumes it. BI tools (Power BI, Tableau) sit on a <strong>governed semantic model</strong> and produce an <strong>interactive view</strong> the business user re-cuts.</p>
+<p><strong>Compare.</strong> <em>Change cost:</em> a new requirement means a new report build in traditional reporting, versus a filter or a new visual in minutes. <em>Interaction:</em> traditional output is read-only; BI supports drill-down, filtering and cross-highlighting. <em>Data model:</em> each traditional report embeds its own query and calculations, while many BI reports share one model. <em>Latency and reach:</em> monthly batch and print versus daily refresh across web, mobile, alerts and embedded pages.</p>
+<p><strong>Why BI is more powerful.</strong> First, <strong>a semantic layer defined once</strong> — &quot;active customer&quot; means the same thing in every report, ending the definition drift of hand-built reports. Second, <strong>self-service</strong>, which removes the reporting backlog. Third, <strong>interactivity turns a number into an investigation</strong>: drill from a bad month to the invoice that caused it. Fourth, <strong>one model, many outputs</strong>, including forecasting and alerts that a paginated report cannot carry.</p>
+<p><strong>The balance:</strong> statutory returns and invoices still need a fixed, auditable layout, which paginated tools do better. Use both — BI to explore, reporting to certify.</p>
+</blockquote><hr class="custom-hr"><h2 id="5-8-traps"><a href="#5-8-traps" class="heading-anchor">#</a>5.8 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Trap</th>
+<th>Why it costs marks</th>
+<th>Fix</th>
+</tr>
+</thead><tbody><tr>
+<td>Naming Excel or SQL as a BI tool</td>
+<td>wrong category — spreadsheet and language</td>
+<td>Power BI, Tableau, Qlik, Looker</td>
+</tr>
+<tr>
+<td>Writing &quot;OLAP is a database&quot;</td>
+<td>it is an analytical <em>processing model</em>, often a cube over a warehouse</td>
+<td>&quot;multidimensional analysis of warehouse data&quot;</td>
+</tr>
+<tr>
+<td>Confusing slice and dice</td>
+<td>loses the one distinction the marker checks</td>
+<td>slice = one dimension fixed; dice = two or more</td>
+</tr>
+<tr>
+<td>Describing OLAP operations without examples</td>
+<td>definitions alone read as memorised</td>
+<td>name the hierarchy and the business case in the same breath</td>
+</tr>
+<tr>
+<td>Saying OLAP is &quot;real-time&quot;</td>
+<td>pre-aggregation makes it as fresh as the last process</td>
+<td>say &quot;stale between refreshes&quot; and gain a mark</td>
+</tr>
+<tr>
+<td>Claiming OLAP finds hidden patterns</td>
+<td>that is data mining (Unit 3)</td>
+<td>OLAP confirms known structure; mining discovers unknown structure</td>
+</tr>
+<tr>
+<td>Answering C4 with a feature list</td>
+<td>the question asks for a <em>comparison</em> and a <em>justification</em></td>
+<td>compare on change cost, interaction, model, latency; then four reasons</td>
+</tr>
+<tr>
+<td>Saying traditional reporting is obsolete</td>
+<td>unearned and wrong; statutory output needs fixed layout</td>
+<td>close with the balanced &quot;both&quot;</td>
+</tr>
+<tr>
+<td>Quoting licence prices or market share</td>
+<td>unverifiable and changes yearly</td>
+<td>compare on fit: integration and governance vs exploration depth</td>
+</tr>
+<tr>
+<td>Writing &quot;Power BI is better than Tableau&quot;</td>
+<td>the paper asks for a comparison, not a verdict</td>
+<td>compare on the dimensions; end with fit</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="5-9-self-test-answers-collapsed"><a href="#5-9-self-test-answers-collapsed" class="heading-anchor">#</a>5.9 Self-test (answers collapsed)</h2><ol>
+<li>Define a BI tool in one sentence, naming the three things that make it different from a printed report. <em>(1 mark)</em></li><li>List any two BI tools, and the category each belongs to. <em>(1 mark)</em></li><li>What is OLAP used for? <em>(1 mark — model A9)</em></li><li>Name the five OLAP operations and give an example of each. <em>(3–5 marks)</em></li><li>Distinguish slice from dice in one line. <em>(1 mark)</em></li><li>State the limitation of OLAP, and say which unit&#39;s technique covers what OLAP cannot do. <em>(1 mark)</em></li><li>Explain how OLAP differs from a traditional SQL query in analysis capabilities. <em>(3 marks — B5)</em></li><li>🇳🇵 A Kathmandu retail chain&#39;s board asks for &quot;the same dashboard for 12 branches, each seeing only its own sales&quot;. Name the two BI tool features the answer needs. <em>(3 marks — mini case)</em></li></ol>
+<details>
+<summary>Answers</summary>
+
+<ol>
+<li>&quot;A BI tool is software that sits on modelled warehouse data and lets a non-programmer explore, aggregate and visualise it interactively, without writing SQL.&quot; The three differences: modelled data, non-programmer, interactive.</li><li><strong>Power BI</strong> and <strong>Tableau</strong> — both BI and analytics platforms. (Also acceptable: Qlik Sense; Looker. Wrong: Excel, SQL.)</li><li>Aggregation of measures across business dimensions, interactively, with drill-down to detail.</li><li><strong>Roll-up</strong> monthly → quarterly · <strong>drill-down</strong> quarter → the individual invoice · <strong>slice</strong> fix one dimension, e.g. 2026 only · <strong>dice</strong> fix two or more, e.g. 2026 × Bagmati × laptops · <strong>pivot</strong> swap rows and columns.</li><li>Slice fixes <strong>one</strong> dimension and shows the rest; dice fixes <strong>two or more</strong>, producing a sub-cube.</li><li>It only answers questions the cube was designed for, is stale between refreshes, and cannot discover unknown patterns — that is <strong>data mining</strong> (Unit 3). (Also: load time and storage grow with dimensions.)</li><li>SQL fetches rows for a pre-written question and computes aggregates on every run; OLAP pre-computes aggregates at load time and offers hierarchies, so roll-up/drill-down/slice/dice/pivot need no new query. Speed comes from moving the cost to load time.</li><li><strong>Row-level security</strong> (each branch sees only its own rows) and a <strong>shared certified dataset / semantic model</strong> (one definition of revenue, twelve views of it). Bonus: scheduled refresh for a single source of truth.</li></ol>
+</details>
+
+<hr class="custom-hr"><h2 id="5-10-sixty-second-check"><a href="#5-10-sixty-second-check" class="heading-anchor">#</a>5.10 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Define a BI tool with its three distinguishing clauses</li><li><input disabled="" type="checkbox"> Name two BI tools and their category</li><li><input disabled="" type="checkbox"> Say what OLAP is used for in one sentence</li><li><input disabled="" type="checkbox"> Draw a cube: three dimensions and one measure</li><li><input disabled="" type="checkbox"> Name all five OLAP operations with an example each</li><li><input disabled="" type="checkbox"> Say the slice-vs-dice difference in one line</li><li><input disabled="" type="checkbox"> State the limitation of OLAP, and name the unit that covers the gap</li><li><input disabled="" type="checkbox"> Give the mechanism that makes OLAP faster than SQL</li><li><input disabled="" type="checkbox"> Give four reasons BI is more powerful than traditional reporting</li></ul>
+<p>If all nine are there, Unit 5&#39;s 12 marks are secure — A9, A10, B5 and C4 — and you can answer both model-question 1-markers (A8, A9) without a pause.</p>
+<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 249, Unit 5, 12 LHs) · TU 2026 paper (A9, A10, B5, C4) · official TU/FOM model question 2026 (A8, A9) · OLAP terminology and the five operations from Codd&#39;s 1993 formulation and standard OLAP literature (Kimball &amp; Ross, <em>The Data Warehouse Toolkit</em> — a syllabus reading; Sherman, <em>Business Intelligence Guidebook</em> — also a syllabus reading). Product facts (vendors, ownership, deployment models) are stated at the level of &quot;who owns it and how it is delivered&quot;, not as current pricing or market share, because both change yearly. The Nepali adoption patterns are described as patterns, not as claims about any named institution&#39;s procurement.</em></p>
+
+        </div>
+      </article>
+
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-4.html" class="nav-btn prev">← Unit 4: Data Visualization</a>
+      <a href="../index.html#bi" class="nav-btn up">↑ Business Intelligence</a>
+      <a href="unit-6.html" class="nav-btn next">Unit 6: BI Implementation →</a>
+    </nav>
+  
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+    // Initialize highlight.js
+    document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+
+    // Copy code function
+    window.copyCode = function(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    };
+
+    // Sidebar toggle
+    window.toggleSidebar = function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+    window.closeSidebar = function() {
+      document.getElementById('sidebar').classList.remove('open');
+    };
+
+    // Close sidebar on link click (mobile)
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+      link.addEventListener('click', () => closeSidebar());
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    window.toggleTheme = function() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    };
+  </script>
+</body>
+</html>

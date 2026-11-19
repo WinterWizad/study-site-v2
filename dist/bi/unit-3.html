@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 3: Data Mining | Business Intelligence | BIM 8th Semester</title>
+  <meta name="description" content="IT 249 - Unit 3: Data Mining">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+</head>
+<body class="unit-page">
+  <header class="site-header">
+    <div class="header-content">
+      <a href="../../index.html" class="site-title">BIM 8th Semester</a>
+      <span class="subject-badge" style="background: #2563eb">IT 249</span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <div class="sidebar-content">
+        <h3>Business Intelligence</h3>
+        <p class="subject-meta">IT 249 • 60 marks</p>
+        <ul class="unit-list">
+          
+            <li>
+              <a href="unit-1.html" class="">
+                <span class="unit-num">Unit 1</span>
+                <span class="unit-title">Introduction to Business Intelligence</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-2.html" class="">
+                <span class="unit-num">Unit 2</span>
+                <span class="unit-title">Data Warehousing</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-3.html" class="active">
+                <span class="unit-num">Unit 3</span>
+                <span class="unit-title">Data Mining</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-4.html" class="">
+                <span class="unit-num">Unit 4</span>
+                <span class="unit-title">Data Visualization</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-5.html" class="">
+                <span class="unit-num">Unit 5</span>
+                <span class="unit-title">BI Tools and Technologies</span>
+              </a>
+            </li>
+          
+            <li>
+              <a href="unit-6.html" class="">
+                <span class="unit-num">Unit 6</span>
+                <span class="unit-title">BI Implementation</span>
+              </a>
+            </li>
+          
+        </ul>
+        <div class="sidebar-footer">
+          <a href="../../index.html" class="footer-link">← All Subjects</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content" role="main">
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-2.html" class="nav-btn prev">← Unit 2: Data Warehousing</a>
+      <a href="../index.html#bi" class="nav-btn up">↑ Business Intelligence</a>
+      <a href="unit-4.html" class="nav-btn next">Unit 4: Data Visualization →</a>
+    </nav>
+  
+
+      <article class="unit-content">
+        <header class="unit-header">
+          <div class="unit-meta">
+            <span class="unit-badge">Unit 3 of 6</span>
+            <span class="subject-name">Business Intelligence</span>
+          </div>
+          <h1 class="unit-title">Data Mining</h1>
+        </header>
+
+        <div class="markdown-body">
+          <h1 id="unit-3-data-mining"><a href="#unit-3-data-mining" class="heading-anchor">#</a>Unit 3 — Data Mining</h1><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Lecture hours</strong></td>
+<td>8</td>
+</tr>
+<tr>
+<td><strong>Marks carried in 2026 paper</strong></td>
+<td><strong>9</strong> — one 1-marker, one 3-marker, one 5-marker (all three answer lengths)</td>
+</tr>
+<tr>
+<td><strong>Marks in the official model question</strong></td>
+<td><strong>18 attempted</strong> (A5, A6, B13, B14, C18, C19) — the heaviest unit in the model paper after Unit 6</td>
+</tr>
+<tr>
+<td><strong>Difficulty</strong></td>
+<td>★★★★☆ — the ideas are intuitive, the vocabulary is dense, and classification/clustering/association rules blur together under exam pressure</td>
+</tr>
+<tr>
+<td><strong>Exam yield</strong></td>
+<td>🔴 high — every mark band is tested, so nothing here is optional</td>
+</tr>
+<tr>
+<td><strong>Prerequisite</strong></td>
+<td>Unit 1 (analysis vs mining) and Unit 2 (this unit mines the warehouse&#39;s data; preprocessing is the bridge)</td>
+</tr>
+<tr>
+<td><strong>Syllabus bullets</strong></td>
+<td>Introduction to data mining concepts · Data preprocessing techniques · Classification and clustering algorithms · Association rule mining</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Why this unit is worth more than 9 marks:</strong> it is the only unit where the paper asks <em>you</em> to apply an algorithm to a business problem (C3, and C18 in the model question). That is also the skill Group D rewards — the Amazon case&#39;s recommendation engine is association rules plus classification, wearing a marketing hat. Learn the three techniques as three answers to three different questions, and both C3 and part (b) of the case become routine.</p>
+</blockquote><hr class="custom-hr"><h2 id="3-1-what-data-mining-is-and-what-it-is-not"><a href="#3-1-what-data-mining-is-and-what-it-is-not" class="heading-anchor">#</a>3.1 What data mining is — and what it is not</h2><blockquote class="custom-blockquote"><p><strong>Data mining is the automated discovery of previously unknown, potentially useful patterns and relationships in large datasets, using statistical, mathematical and machine-learning techniques.</strong></p>
+</blockquote><p>Four words in that definition are doing the work, and each is worth a mark in a 3-marker:</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Word</th>
+<th>What it excludes</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Automated</strong></td>
+<td>not a human eyeballing a pivot table</td>
+</tr>
+<tr>
+<td><strong>Previously unknown</strong></td>
+<td>not a report of last month&#39;s sales — that is already known</td>
+</tr>
+<tr>
+<td><strong>Potentially useful</strong></td>
+<td>not a coincidence in noise; the pattern must support a decision</td>
+</tr>
+<tr>
+<td><strong>Large datasets</strong></td>
+<td>not five rows in Excel — the techniques earn their keep at scale</td>
+</tr>
+</tbody></table></div><h3 id="data-mining-vs-the-three-things-students-confuse-it-with"><a href="#data-mining-vs-the-three-things-students-confuse-it-with" class="heading-anchor">#</a>Data mining vs the three things students confuse it with</h3><p>This table is the single highest-value thing in the unit, because 1-markers are built from exactly these edges:</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th>What it does</th>
+<th>Output</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>SQL query / reporting</strong></td>
+<td>retrieves records that match a condition you already specified</td>
+<td>rows you asked for</td>
+</tr>
+<tr>
+<td><strong>OLAP</strong></td>
+<td>aggregates and slices known measures along known dimensions</td>
+<td>a cube cell; drill-down</td>
+</tr>
+<tr>
+<td><strong>Statistics</strong></td>
+<td>tests a hypothesis you formulated in advance</td>
+<td>a p-value, a confidence interval</td>
+</tr>
+<tr>
+<td><strong>Data mining</strong></td>
+<td>searches for structure you did <em>not</em> specify in advance</td>
+<td>a model, rule, cluster or segment</td>
+</tr>
+</tbody></table></div><p>🧠 <strong>Memory hook:</strong> <em>reporting answers a question you had; mining finds a question you did not know to ask.</em></p>
+<p>⚠ <strong>The trap that costs the 1-mark:</strong> &quot;data mining is extracting data from a database.&quot; That is <em>querying</em>. Mining is the <strong>pattern discovery</strong> step; nothing is &quot;mined out&quot; of the data in the sense of removal.</p>
+<h3 id="where-mining-sits-in-the-pipeline-kdd"><a href="#where-mining-sits-in-the-pipeline-kdd" class="heading-anchor">#</a>Where mining sits in the pipeline (KDD)</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> SELECTION        PREPROCESSING       TRANSFORMATION        MINING          EVALUATION
+┌──────────┐     ┌──────────────┐    ┌───────────────┐   ┌───────────┐   ┌────────────┐
+│ pick the │ ──► │ clean: fix   │ ──►│ normalise,    │──►│ classify  │──►│ is the     │
+│ relevant │     │ missing,     │    │ discretise,   │   │ cluster   │   │ pattern    │
+│ tables & │     │ smooth noise,│    │ encode, reduce│   │ associate │   │ real, or   │
+│ records  │     │ de-duplicate │    │ attributes    │   │           │   │ overfit?   │
+└──────────┘     └──────────────┘    └───────────────┘   └───────────┘   └────────────┘
+                                                                              │
+                                                     knowledge / action ◄──────┘</code></pre></div><p>This whole chain is <strong>KDD — Knowledge Discovery in Databases</strong>. Mining is one step of five. The exam likes the distinction: <em>KDD is the process; data mining is the algorithm inside it.</em></p>
+<p>🇳🇵 <strong>Nepal anchor:</strong> a Kathmandu e-commerce operation (Daraz-style) has order, clickstream and support-ticket tables. Selecting those three, cleaning the duplicates and test orders, and encoding the categories is KDD; finding &quot;customers who buy a phone case within 14 days of a handset are 3× less likely to return it&quot; is the mining step.</p>
+<hr class="custom-hr"><h2 id="3-2-data-preprocessing-the-syllabus-bullet-students-skip-and-the-cheapest-place-to-lose-3-marks"><a href="#3-2-data-preprocessing-the-syllabus-bullet-students-skip-and-the-cheapest-place-to-lose-3-marks" class="heading-anchor">#</a>3.2 Data preprocessing — the syllabus bullet students skip, and the cheapest place to lose 3 marks</h2><p>Reality check first: real data is dirty. Missing values, inconsistent dates, the same customer entered twice, amounts in two currencies, outliers from a system glitch. Mining algorithms assume clean, consistent, numeric input — feed them garbage and they return confident garbage. Industry rule of thumb: <strong>preprocessing is 60–80% of the actual effort.</strong></p>
+<h3 id="the-four-families-name-them-then-say-what-each-fixes"><a href="#the-four-families-name-them-then-say-what-each-fixes" class="heading-anchor">#</a>The four families — name them, then say what each fixes</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Family</th>
+<th>What it fixes</th>
+<th>Typical operations</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Data cleaning</strong></td>
+<td>wrong or missing values</td>
+<td>fill missing (mean/mode/prediction), smooth noise (binning, regression), remove duplicates, treat outliers</td>
+</tr>
+<tr>
+<td><strong>Data integration</strong></td>
+<td>the same entity in several systems</td>
+<td>merge sources, resolve identity and naming conflicts, remove redundant attributes</td>
+</tr>
+<tr>
+<td><strong>Data transformation</strong></td>
+<td>wrong shape or scale for the algorithm</td>
+<td>normalisation (min–max, z-score), discretisation (continuous → bins), encoding categories, aggregation, derived attributes</td>
+</tr>
+<tr>
+<td><strong>Data reduction</strong></td>
+<td>too much data to compute on</td>
+<td>attribute selection, dimensionality reduction (PCA), sampling, numerosity reduction</td>
+</tr>
+</tbody></table></div><h3 id="the-three-operations-examiners-most-often-ask-you-to-name"><a href="#the-three-operations-examiners-most-often-ask-you-to-name" class="heading-anchor">#</a>The three operations examiners most often ask you to name</h3><ol>
+<li><strong>Missing values</strong> — delete the record (loses data), impute the mean/median/mode (fast, distorts variance), or predict it from other attributes (best, most work).</li><li><strong>Normalisation</strong> — put attributes on a comparable scale. Without it, an attribute measured in rupees (range 0–500,000) dominates one measured in years (0–10) in any distance-based method such as k-means or k-NN. Min–max scales to [0,1]; z-score centres on mean 0, standard deviation 1.</li><li><strong>Discretisation</strong> — turn a continuous value into categories (<code>age 18–25, 26–35, …</code>), which is what a decision tree or association rule needs in order to produce human-readable rules.</li></ol>
+<p>⚠ <strong>Trap:</strong> answering &quot;preprocessing = cleaning&quot;. Cleaning is one of four families. If the question says <em>techniques</em> (plural), naming cleaning alone caps you at about a third of the marks.</p>
+<p>⚠ <strong>Second trap, and it is a real one:</strong> normalisation is <strong>not</strong> optional decoration. If a 5-marker asks why k-means gave nonsense segments, the answer is usually unscaled attributes or an unstandardised <code>k</code>.</p>
+<hr class="custom-hr"><h2 id="3-3-classification-and-clustering-the-distinction-the-paper-tests-directly"><a href="#3-3-classification-and-clustering-the-distinction-the-paper-tests-directly" class="heading-anchor">#</a>3.3 Classification and clustering — the distinction the paper tests directly</h2><p>One line, and it carries the whole unit:</p>
+<blockquote class="custom-blockquote"><p><strong>Classification predicts a known label; clustering discovers unknown groups.</strong></p>
+</blockquote><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th><strong>Classification</strong></th>
+<th><strong>Clustering</strong></th>
+</tr>
+</thead><tbody><tr>
+<td>Learning type</td>
+<td><strong>supervised</strong> — training data carries the answer</td>
+<td><strong>unsupervised</strong> — no labels at all</td>
+</tr>
+<tr>
+<td>Question</td>
+<td>&quot;which known class does this belong to?&quot;</td>
+<td>&quot;what natural groups exist?&quot;</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>a class label + a model you can inspect</td>
+<td>a set of clusters + membership</td>
+</tr>
+<tr>
+<td>Needs first</td>
+<td>labelled historical examples</td>
+<td>only the attributes and a similarity measure</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>churn prediction, fraud, credit scoring, &quot;will respond to campaign&quot;</td>
+<td>customer segmentation, anomaly detection, document grouping</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>accuracy, confusion matrix, precision, recall, F1</td>
+<td>cohesion vs separation, silhouette, domain review</td>
+</tr>
+<tr>
+<td>Failure mode</td>
+<td><strong>overfitting</strong> — 99% on training data, useless in production</td>
+<td>a <code>k</code> that is arbitrary; clusters that are statistically real but commercially meaningless</td>
+</tr>
+</tbody></table></div><p>🧠 <strong>Memory hook:</strong> <em>classification has a teacher; clustering has none.</em></p>
+<h3 id="the-algorithms-worth-naming-name-one-property-each"><a href="#the-algorithms-worth-naming-name-one-property-each" class="heading-anchor">#</a>The algorithms worth naming (name + one property each)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Technique</th>
+<th>Algorithms</th>
+<th>Property to quote</th>
+</tr>
+</thead><tbody><tr>
+<td>Classification</td>
+<td><strong>decision tree</strong> (ID3, C4.5, CART)</td>
+<td>produces readable if–then rules; the default answer in an exam</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>naïve Bayes</strong></td>
+<td>probabilistic, very fast, assumes attributes independent</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>k-NN</strong></td>
+<td>classifies by the majority label of the k nearest records; no model built</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>logistic regression / SVM</strong></td>
+<td>strong on clean numeric data; less interpretable</td>
+</tr>
+<tr>
+<td>Clustering</td>
+<td><strong>k-means</strong></td>
+<td>centroid-based, fast, needs <code>k</code> chosen in advance, numeric attributes</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>hierarchical</strong></td>
+<td>builds a dendrogram; no <code>k</code> needed; slower on large data</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>DBSCAN</strong></td>
+<td>density-based; finds arbitrary shapes and labels noise as outliers</td>
+</tr>
+</tbody></table></div><h3 id="decision-tree-vs-na-ve-bayes-the-comparison-c18-asks-for"><a href="#decision-tree-vs-na-ve-bayes-the-comparison-c18-asks-for" class="heading-anchor">#</a>Decision tree vs naïve Bayes — the comparison C18 asks for</h3><p>These are the two algorithms the syllabus names first, and the model question asks you to hold them against each other rather than define them. A comparison answered as two definitions scores about 2/5; the marks are in the <strong>dimensions</strong>.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Dimension</th>
+<th><strong>Decision tree</strong> (ID3, C4.5, CART)</th>
+<th><strong>Naïve Bayes</strong></th>
+</tr>
+</thead><tbody><tr>
+<td><strong>What it learns</strong></td>
+<td>a hierarchy of if–then splits chosen to maximise information gain (or reduce Gini impurity)</td>
+<td>a probability per class, from the conditional frequency of each attribute value inside that class</td>
+</tr>
+<tr>
+<td><strong>Model form</strong></td>
+<td>a tree you can read aloud as rules</td>
+<td>a table of probabilities you cannot read as a story</td>
+</tr>
+<tr>
+<td><strong>Key assumption</strong></td>
+<td>none about attribute independence; interactions are captured automatically by deeper splits</td>
+<td>every attribute is <strong>conditionally independent</strong> of the others given the class — usually false, hence <em>naïve</em></td>
+</tr>
+<tr>
+<td><strong>Mixed data types</strong></td>
+<td>numerics and categories natively</td>
+<td>categories natively; numerics need a Gaussian or discretised variant</td>
+</tr>
+<tr>
+<td><strong>Missing values</strong></td>
+<td>needs imputation or surrogate splits</td>
+<td>simply omit that attribute for that record</td>
+</tr>
+<tr>
+<td><strong>Overfitting risk</strong></td>
+<td><strong>high</strong> — a deep tree memorises; requires pruning or a depth/size limit</td>
+<td><strong>low</strong> — very few parameters to fit</td>
+</tr>
+<tr>
+<td><strong>Speed and data appetite</strong></td>
+<td>slower to train; each split needs enough records on both sides</td>
+<td>one pass over the data; works on a few hundred records</td>
+</tr>
+<tr>
+<td><strong>Interpretability</strong></td>
+<td>high — that is its selling point</td>
+<td>low</td>
+</tr>
+<tr>
+<td><strong>Stability</strong></td>
+<td>unstable: a slightly different sample can produce a different tree</td>
+<td>stable</td>
+</tr>
+</tbody></table></div><p><strong>Strengths and weaknesses, in the form the question wants:</strong></p>
+<ul>
+<li><strong>Decision tree — strengths:</strong> produces rules a manager can audit and act on (&quot;if recency &lt; 30 days and basket &gt; NPR 2,000, target with the loyalty offer&quot;); needs no scaling or distributional assumption; captures interactions and non-linear boundaries; handles mixed attribute types.</li><li><strong>Decision tree — weaknesses:</strong> overfits unless pruned; unstable; biased toward attributes with many distinct values; a small change in the data can restructure the whole tree; poor at expressing smooth linear relationships, which it approximates with a staircase of splits.</li><li><strong>Naïve Bayes — strengths:</strong> extremely fast, trains on tiny datasets, scales to hundreds of attributes, naturally handles text and high-dimensional sparse data (the classic spam filter); robust to irrelevant attributes.</li><li><strong>Naïve Bayes — weaknesses:</strong> the independence assumption is almost always violated, and correlated attributes get <strong>double-counted</strong>, which makes the probabilities over-confident; it cannot represent an interaction between two attributes unless the combination is encoded as a feature; continuous attributes force a distributional guess.</li></ul>
+<p><strong>Which to choose — the line that earns the last mark:</strong></p>
+<blockquote class="custom-blockquote"><p>Choose a <strong>decision tree</strong> when the answer has to be explained to a decision-maker, when attributes are mixed, and when there is enough data to prune honestly. Choose <strong>naïve Bayes</strong> when attributes are many, records are few, and speed or text data dominate. In practice you fit both and compare them on a held-out set — because the independence assumption&#39;s damage cannot be predicted from the data dictionary.</p>
+</blockquote><p>🇳🇵 <strong>Nepal anchor:</strong> a bank scoring loan applications for a cooperative will usually prefer the tree, because the loan officer must justify a rejection to the borrower and to the regulator — &quot;income below X and existing EMIs above Y&quot; is defensible, a posterior probability is not. A telecom filtering Nepali-language SMS spam will prefer naïve Bayes, because there are tens of thousands of token attributes and it must run in milliseconds on every message.</p>
+<h3 id="the-example-that-makes-clustering-click-and-answers-b3"><a href="#the-example-that-makes-clustering-click-and-answers-b3" class="heading-anchor">#</a>The example that makes clustering click (and answers B3)</h3><p>Take a grocery chain&#39;s customers and cluster on <strong>recency, frequency and monetary value</strong> (RFM). Nobody tells the algorithm how many types of customer exist. Three groups fall out:</p>
+<ul>
+<li>weekly high-spend families → loyalty top-up, fresh-produce offers</li><li>weekend bulk buyers → volume discounts, larger pack sizes</li><li>dormant one-time shoppers → win-back voucher, reactivation email</li></ul>
+<p>The segments came <strong>from the data</strong>, not from a manager&#39;s guess. That single sentence is the &quot;importance&quot; the 3-marker is asking for.</p>
+<p>🇳🇵 <strong>Nepal anchor:</strong> a Kathmandu retail chain or a digital wallet can cluster users on transaction frequency, average ticket and merchant category. The output that matters is not the cluster number — it is that &quot;dormant but previously high-value&quot; becomes a group you can <em>name</em>, <em>count</em> and <em>target</em>, which is why clustering is a business tool and not just a statistics exercise.</p>
+<hr class="custom-hr"><h2 id="3-4-association-rule-mining-a7-lives-here"><a href="#3-4-association-rule-mining-a7-lives-here" class="heading-anchor">#</a>3.4 Association rule mining — A7 lives here</h2><blockquote class="custom-blockquote"><p><strong>An association rule is an implication X → Y meaning transactions that contain itemset X also tend to contain Y, measured by support and confidence.</strong></p>
+</blockquote><p>That is the 1-mark answer (25 words). Do not add the Apriori explanation to a 1-mark question.</p>
+<h3 id="the-four-measures-with-a-worked-example-you-can-reproduce-in-the-hall"><a href="#the-four-measures-with-a-worked-example-you-can-reproduce-in-the-hall" class="heading-anchor">#</a>The four measures — with a worked example you can reproduce in the hall</h3><p>Setup: <strong>1,000 transactions.</strong> Bread appears in <strong>200</strong>. Butter appears in <strong>400</strong>. Bread <em>and</em> butter appear together in <strong>120</strong>.</p>
+<div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Measure</th>
+<th>Formula</th>
+<th>Here</th>
+<th>Reads as</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Support</strong></td>
+<td><code>count(X ∪ Y) / N</code></td>
+<td>120/1000 = <strong>12%</strong></td>
+<td>how often the combination occurs at all</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td><code>support(X ∪ Y) / support(X)</code></td>
+<td>120/200 = <strong>60%</strong></td>
+<td>of bread buyers, how many also bought butter</td>
+</tr>
+<tr>
+<td><strong>Lift</strong></td>
+<td><code>confidence / support(Y)</code></td>
+<td>0.60/0.40 = <strong>1.5</strong></td>
+<td>50% more likely than chance → positive association</td>
+</tr>
+<tr>
+<td><strong>Conviction</strong></td>
+<td><code>(1 − support(Y)) / (1 − confidence)</code></td>
+<td>0.6/0.4 = <strong>1.5</strong></td>
+<td>how much the rule would be wrong without the association</td>
+</tr>
+</tbody></table></div><p>Reading the numbers correctly is where marks are won:</p>
+<ul>
+<li><strong>lift = 1</strong> → X and Y are independent; the rule is useless.</li><li><strong>lift &gt; 1</strong> → positive association (the useful case).</li><li><strong>lift &lt; 1</strong> → they <em>substitute</em> for each other; a promotion on one cannibalises the other. This is a genuinely useful finding, not a failed rule.</li><li><strong>High confidence with low support</strong> → a rule that is right almost every time it fires, but fires on almost nobody. Commercially worthless. Always quote support <em>and</em> confidence together; one alone is half an answer.</li></ul>
+<h3 id="apriori-how-the-frequent-itemsets-are-actually-found"><a href="#apriori-how-the-frequent-itemsets-are-actually-found" class="heading-anchor">#</a>Apriori — how the frequent itemsets are actually found</h3><p>Brute force is impossible: with <em>n</em> items there are 2ⁿ candidate itemsets. Apriori uses one property:</p>
+<blockquote class="custom-blockquote"><p><strong>Downward closure (anti-monotonicity): if an itemset is infrequent, every superset of it is also infrequent.</strong></p>
+</blockquote><p>So the algorithm alternates two steps, level by level:</p>
+<ol>
+<li><strong>Join</strong> — combine frequent <em>k</em>-itemsets into candidate (<em>k</em>+1)-itemsets.</li><li><strong>Prune</strong> — discard any candidate containing an infrequent subset, then count support on the database and keep those above minimum support.</li></ol>
+<p>Frequent itemsets → generate rules → keep only rules above <strong>minimum confidence</strong>. Both thresholds are business decisions, not statistics: lower support = more rules = more noise.</p>
+<p>⚠ <strong>Trap:</strong> saying &quot;Apriori finds rules with high accuracy&quot;. There is no accuracy here. It finds rules above a <strong>support</strong> and <strong>confidence</strong> threshold; <strong>lift</strong> is what tells you whether the rule beats chance.</p>
+<h3 id="market-basket-analysis-and-the-honest-limit"><a href="#market-basket-analysis-and-the-honest-limit" class="heading-anchor">#</a>Market basket analysis, and the honest limit</h3><p>The retail application is <strong>market basket analysis</strong>: what is bought together, used for shelf layout, bundles, cross-sell recommendations and promotion design. The 2026 case&#39;s Amazon recommendations are exactly this idea, industrialised.</p>
+<p>The limit worth one line: association rules are <strong>aggregate and correlational</strong>. &quot;Customers who buy nappies buy beer&quot; says nothing about <em>why</em>, and nothing about any individual customer. Claiming causation from a rule is the fastest way to lose the evaluation mark.</p>
+<hr class="custom-hr"><h2 id="3-5-answer-skeletons-2026-paper-and-official-model-question"><a href="#3-5-answer-skeletons-2026-paper-and-official-model-question" class="heading-anchor">#</a>3.5 Answer skeletons — 2026 paper and official model question</h2><h3 id="a7-quot-define-the-concept-of-association-rule-in-datamining-quot-1"><a href="#a7-quot-define-the-concept-of-association-rule-in-datamining-quot-1" class="heading-anchor">#</a>A7 · &quot;Define the concept of association rule in datamining.&quot; [1]</h3><blockquote class="custom-blockquote"><p>An association rule is an implication X → Y meaning transactions that contain itemset X also tend to contain Y, measured by support and confidence.</p>
+</blockquote><p><em>(25 words. Support and confidence are named because they are what make it a rule rather than a coincidence — but no formulas, no Apriori.)</em></p>
+<h3 id="b3-quot-what-is-the-importance-of-clustering-algorithm-explain-with-example-quot-3"><a href="#b3-quot-what-is-the-importance-of-clustering-algorithm-explain-with-example-quot-3" class="heading-anchor">#</a>B3 · &quot;What is the importance of clustering algorithm? Explain with example.&quot; [3]</h3><blockquote class="custom-blockquote"><p><em>Shape: one line on what clustering does, two or three importance points, then one concrete example. ~115 words.</em></p>
+<p>Clustering groups records so that members of a group are similar to each other and different from other groups, <strong>without any pre-existing labels</strong>. Its importance follows from that: it discovers segments nobody defined in advance, it reduces a heterogeneous customer base into a few homogeneous groups that can be targeted differently, and it scales to millions of records while surfacing anomalies as small distant clusters. For example, a Kathmandu grocery chain clustering customers on recency, frequency and spend obtains three groups — weekly high-spend families, weekend bulk buyers and dormant one-time shoppers — and runs a loyalty offer, a volume discount and a win-back voucher respectively. The segments came from the data, not from a manager&#39;s guess.</p>
+</blockquote><h3 id="c3-quot-a-retail-company-wants-to-analyze-customer-data-to-improve-sales-explain-with-example-how-classification-algorithm-can-be-applied-to-achieve-this-objective-quot-5"><a href="#c3-quot-a-retail-company-wants-to-analyze-customer-data-to-improve-sales-explain-with-example-how-classification-algorithm-can-be-applied-to-achieve-this-objective-quot-5" class="heading-anchor">#</a>C3 · &quot;A Retail Company wants to analyze customer data to improve sales — explain with example how classification algorithm can be applied to achieve this objective.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: restate the objective as a prediction problem → define the label → list features → name the algorithm and how it is trained/evaluated → state the business action → one caution. ~230 words.</em></p>
+<p>The retailer&#39;s real question is <em>which customers will buy</em>, so the task is <strong>classification</strong>: the outcome is a known category, not a free-form pattern.</p>
+<p><strong>Define the label.</strong> Using two years of history, label each customer &quot;responded to a promotion&quot; or &quot;did not&quot;. That label is what makes the problem supervised.</p>
+<p><strong>Build the features.</strong> Recency of last purchase, purchase frequency, monetary value, average basket, category affinity, channel preference and discount sensitivity — all derived from the customer&#39;s own transaction record.</p>
+<p><strong>Train and evaluate.</strong> Fit a decision tree, which is the practical choice here because it yields readable rules such as <em>&quot;if recency &lt; 30 days AND average basket &gt; NPR 2,000 then likely responder&quot;</em>. Hold back a test set, and judge the model with a confusion matrix, precision and recall rather than raw accuracy, since responders are typically a minority class.</p>
+<p><strong>Act on the scores.</strong> Score the entire base and spend only on high-probability responders, while routing high-value customers who score as likely to lapse into a retention programme.</p>
+<p><strong>The gain</strong> is measurable: the same campaign budget reaches more likely buyers, and unprofitable discounts stop going to customers who would have bought anyway.</p>
+<p><strong>The caution:</strong> the model learns past behaviour, so it must be retrained as demand shifts, and it must not be used to justify discrimination on protected attributes.</p>
+</blockquote><p>⚠ C3 says <em>&quot;explain with example&quot;</em>. A generic description of decision trees with no retailer, no label and no campaign scores about 2/5. The marks are in the label → features → evaluation → action chain.</p>
+<h3 id="c18-model-question-quot-compare-and-contrast-decision-trees-and-naive-bayes-classifiers-mentioning-strengths-and-weaknesses-of-each-quot-5"><a href="#c18-model-question-quot-compare-and-contrast-decision-trees-and-naive-bayes-classifiers-mentioning-strengths-and-weaknesses-of-each-quot-5" class="heading-anchor">#</a>C18 · model question — &quot;Compare and contrast decision trees and Naive Bayes classifiers, mentioning strengths and weaknesses of each.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: one framing line → four or five comparison dimensions → strengths and weaknesses of each → a rule for choosing. ~230 words. This is the answer to write if the paper asks for a comparison; do not spend it on C3, which wants an application.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>Both are <strong>supervised classifiers</strong> that learn from labelled history to assign a known class, but they learn different objects. A decision tree learns a hierarchy of if–then splits chosen to maximise information gain, so it can represent interactions between attributes; naïve Bayes learns a probability per class from the conditional frequency of each attribute value, on the assumption that attributes are independent given the class.</p>
+<p><strong>Compare:</strong> a tree is readable as rules and handles mixed numeric and categorical data natively, where naïve Bayes is opaque and needs a distributional assumption for continuous attributes. A tree overfits easily and is unstable; naïve Bayes has few parameters and overfits rarely. Naïve Bayes trains in a single pass and copes with hundreds of attributes and small datasets; a tree is slower and needs enough records on both sides of every split.</p>
+<p><strong>Strengths — tree:</strong> interpretable, no scaling needed, captures non-linearity and interactions. <strong>Weaknesses — tree:</strong> overfits without pruning, unstable, biased toward attributes with many distinct values.</p>
+<p><strong>Strengths — naïve Bayes:</strong> very fast, works on tiny data, strong on text and high-dimensional sparse data. <strong>Weaknesses — naïve Bayes:</strong> the independence assumption is usually false, so correlated attributes are double-counted and the probabilities become over-confident; it cannot express an interaction unless that interaction is engineered as a feature.</p>
+<p><strong>Choose</strong> a tree when the result must be explained and data is plentiful; naïve Bayes when attributes are many, records are few and speed matters. In practice, fit both and compare them on a held-out set.</p>
+</blockquote><hr class="custom-hr"><h2 id="3-6-traps"><a href="#3-6-traps" class="heading-anchor">#</a>3.6 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Trap</th>
+<th>Why it costs marks</th>
+<th>Fix</th>
+</tr>
+</thead><tbody><tr>
+<td>Calling clustering &quot;supervised&quot;</td>
+<td>inverts the only distinction the paper tests directly</td>
+<td>classification has labels, clustering does not</td>
+</tr>
+<tr>
+<td>&quot;Data mining = extracting data&quot;</td>
+<td>that is querying; the definition mark is for <em>pattern discovery</em></td>
+<td>automated discovery of previously unknown, useful patterns in large data</td>
+</tr>
+<tr>
+<td>Preprocessing answered as &quot;cleaning&quot; only</td>
+<td>there are four families</td>
+<td>cleaning · integration · transformation · reduction</td>
+</tr>
+<tr>
+<td>Quoting confidence without support</td>
+<td>a rule that fires on 3 customers</td>
+<td>always report support <em>and</em> confidence, then lift</td>
+</tr>
+<tr>
+<td>&quot;Lift &lt; 1 means the rule failed&quot;</td>
+<td>it means substitution — a real finding</td>
+<td>lift &lt; 1 = negative association, useful for cannibalisation</td>
+</tr>
+<tr>
+<td>Confusing support of the rule with support of X</td>
+<td>arithmetic then goes wrong</td>
+<td>support(X→Y) = count(X∪Y)/N; support(X) = count(X)/N</td>
+</tr>
+<tr>
+<td>Describing Apriori as measuring &quot;accuracy&quot;</td>
+<td>wrong vocabulary</td>
+<td>support and confidence thresholds; lift for chance</td>
+</tr>
+<tr>
+<td>Claiming a rule explains <em>why</em></td>
+<td>correlation is not causation</td>
+<td>rules are aggregate and correlational — say so explicitly</td>
+</tr>
+<tr>
+<td>Reporting 99% training accuracy as success</td>
+<td>that is overfitting, not performance</td>
+<td>quote test-set precision/recall</td>
+</tr>
+<tr>
+<td>Answering C3 with theory only</td>
+<td>the question says &quot;with example&quot;</td>
+<td>label → features → train → evaluate → act</td>
+</tr>
+<tr>
+<td>Forgetting normalisation when asked why k-means misbehaves</td>
+<td>it is the standard cause</td>
+<td>unscaled attributes distort distance, so big-unit attributes dominate</td>
+</tr>
+<tr>
+<td>Answering C18 with two definitions side by side</td>
+<td>the verb is <strong>compare and contrast</strong></td>
+<td>compare on dimensions: what is learned, assumption, overfitting, interpretability, speed, data appetite</td>
+</tr>
+<tr>
+<td>Calling naïve Bayes &quot;better because it uses probability&quot;</td>
+<td>its probabilities are over-confident when attributes correlate — that is its main weakness</td>
+<td>name the independence assumption and its cost, then say when it still wins</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="3-7-self-test-answers-collapsed"><a href="#3-7-self-test-answers-collapsed" class="heading-anchor">#</a>3.7 Self-test (answers collapsed)</h2><ol>
+<li>Define data mining in one sentence and name the one word that distinguishes it from reporting. <em>(1 mark)</em></li><li>Name the four families of data preprocessing and one operation from each. <em>(3 marks)</em></li><li>Distinguish classification from clustering in two lines. <em>(1–3 marks depending on paper mood)</em></li><li>In 1,000 transactions, 300 contain tea, 150 contain tea and sugar, and 500 contain sugar. Compute support, confidence and lift for tea → sugar, and say what the lift means. <em>(3 marks)</em></li><li>State the downward-closure property Apriori relies on, and why it matters computationally. <em>(3 marks)</em></li><li>Name one classification algorithm and one clustering algorithm, each with one distinguishing property. <em>(1–3 marks)</em></li><li>🇳🇵 A Kathmandu grocery chain has 200,000 loyalty transactions and wants to know which products to place together, which customers to target, and which customers are about to leave. Name the mining technique for each of the three questions. <em>(5 marks — mini case)</em></li><li>Compare decision trees and naïve Bayes on four dimensions, and say which you would use to explain a loan rejection to a borrower. <em>(5 marks)</em></li></ol>
+<details>
+<summary>Answers</summary>
+
+<ol>
+<li>&quot;Data mining is the automated discovery of previously unknown, potentially useful patterns in large datasets.&quot; The distinguishing word is <strong>unknown</strong> — reporting answers questions you already had; mining finds structure you did not specify.</li><li><strong>Cleaning</strong> (impute missing values, remove duplicates) · <strong>integration</strong> (merge sources, resolve identity conflicts) · <strong>transformation</strong> (normalisation, discretisation, encoding) · <strong>reduction</strong> (attribute selection, sampling, PCA).</li><li>Classification is supervised: a labelled training set teaches a model to assign a known class to new records. Clustering is unsupervised: no labels exist, and the algorithm discovers groups of similar records itself.</li><li>support(tea ∪ sugar) = 150/1000 = <strong>15%</strong>; support(tea) = 300/1000 = 30%, so confidence = 150/300 = <strong>50%</strong>; support(sugar) = 500/1000 = 50%, so lift = 0.50/0.50 = <strong>1.0</strong>. Lift of exactly 1 means tea and sugar are independent — buying one tells you nothing about the other. (Note how a 50% confidence rule looks impressive and is worthless.)</li><li>If an itemset is infrequent, all its supersets are also infrequent. So the algorithm prunes entire branches of the search space and never counts them, turning an exponential 2ⁿ search into something tractable.</li><li>Classification: <strong>decision tree</strong> — produces interpretable if–then rules. Clustering: <strong>k-means</strong> — centroid-based and fast, but requires <code>k</code> in advance and numeric, normalised attributes.</li><li>Products placed together → <strong>association rule mining</strong> (market basket, Apriori). Customers to target → <strong>clustering</strong> (RFM segmentation) or <strong>classification</strong> if a specific outcome such as &quot;will respond&quot; is already known. Customers about to leave → <strong>classification</strong> (churn prediction with a labelled &quot;churned&quot; history), which is the only one of the three that needs a label.</li><li><strong>What is learned:</strong> a tree of if–then splits vs a class-conditional probability table. <strong>Assumption:</strong> none vs conditional independence of attributes. <strong>Overfitting:</strong> high, needs pruning vs low, few parameters. <strong>Interpretability:</strong> high vs low. Use the <strong>decision tree</strong> for a loan rejection: &quot;income below NPR 25,000 and existing EMIs above 40% of income&quot; is a reason a borrower and a regulator can both inspect; a posterior probability is not a reason, it is a verdict with no evidence attached.</li></ol>
+</details>
+
+<hr class="custom-hr"><h2 id="3-8-sixty-second-check"><a href="#3-8-sixty-second-check" class="heading-anchor">#</a>3.8 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Define data mining, including the word <em>unknown</em></li><li><input disabled="" type="checkbox"> Name the four preprocessing families</li><li><input disabled="" type="checkbox"> Say classification vs clustering in one sentence each</li><li><input disabled="" type="checkbox"> Write support, confidence and lift formulas from memory</li><li><input disabled="" type="checkbox"> Say what lift = 1 and lift &lt; 1 mean</li><li><input disabled="" type="checkbox"> Name one classification and one clustering algorithm with a property</li><li><input disabled="" type="checkbox"> State the downward-closure property in one line</li><li><input disabled="" type="checkbox"> Compare decision tree and naïve Bayes on four dimensions, with one weakness each</li></ul>
+<p>If all eight are there, you can answer A5, A6, A7, B3, B13, B14, C3 and C18 — 18 marks across the 2026 paper and the model question, and the only unit where the paper asks you to <em>apply</em> something.</p>
+<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 249, Unit 3, 8 LHs) · TU 2026 paper (A7, B3, C3) · official TU/FOM model question 2026 (A5, A6, B13, B14, C18, C19) · support/confidence/lift/conviction definitions, the Apriori downward-closure property and the decision-tree/naïve-Bayes comparison cross-checked against the standard literature (Agrawal &amp; Srikant; Han, Kamber &amp; Pei, <em>Data Mining: Concepts and Techniques</em>; Witten, Frank &amp; Hall, <em>Data Mining: Practical Machine Learning Tools and Techniques</em> — both syllabus-level readings). Worked example and its arithmetic are computed in this file, so you can verify each figure by hand.</em></p>
+
+        </div>
+      </article>
+
+      
+    <nav class="unit-nav" aria-label="Unit navigation">
+      <a href="unit-2.html" class="nav-btn prev">← Unit 2: Data Warehousing</a>
+      <a href="../index.html#bi" class="nav-btn up">↑ Business Intelligence</a>
+      <a href="unit-4.html" class="nav-btn next">Unit 4: Data Visualization →</a>
+    </nav>
+  
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+    // Initialize highlight.js
+    document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+
+    // Copy code function
+    window.copyCode = function(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    };
+
+    // Sidebar toggle
+    window.toggleSidebar = function() {
+      document.getElementById('sidebar').classList.toggle('open');
+    };
+    window.closeSidebar = function() {
+      document.getElementById('sidebar').classList.remove('open');
+    };
+
+    // Close sidebar on link click (mobile)
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+      link.addEventListener('click', () => closeSidebar());
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+
+    window.toggleTheme = function() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+    };
+  </script>
+</body>
+</html>
