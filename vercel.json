@@ -8,6 +8,22 @@
       "destination": "/_syllabus/$1.md"
     },
     {
+      "source": "/bi/(unit-[0-9]+|model-question|model-question-answers|question-bank)",
+      "destination": "/bi/$1.html/"
+    },
+    {
+      "source": "/de/(unit-[0-9]+|model-question|model-question-answers|question-bank)",
+      "destination": "/de/$1.html/"
+    },
+    {
+      "source": "/cloud/(unit-[0-9]+|model-question|model-question-answers|question-bank)",
+      "destination": "/cloud/$1.html/"
+    },
+    {
+      "source": "/entrepreneurship/(unit-[0-9]+|model-question|model-question-answers|question-bank)",
+      "destination": "/entrepreneurship/$1.html/"
+    },
+    {
       "source": "/(.*)",
       "destination": "/$1"
     }
