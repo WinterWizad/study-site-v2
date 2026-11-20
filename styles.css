@@ -968,3 +968,179 @@ button:focus-visible, a:focus-visible, .nav-btn:focus-visible {
 
 ::selection { background: var(--accent); color: white; }
 ::-moz-selection { background: var(--accent); color: white; }
+
+/* ============================================================================
+   Exam Routine Section (Home Page)
+   ============================================================================ */
+
+.exam-routine {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.exam-routine h3 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.routine-badge {
+  background: var(--accent);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.routine-table-wrapper { overflow-x: auto; }
+
+.routine-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.routine-table th,
+.routine-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.routine-table th {
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  background: var(--bg);
+}
+
+.routine-table tr:last-child td { border-bottom: none; }
+
+.routine-table code {
+  background: var(--code-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* Our subjects highlighted */
+.routine-table tr.ours td {
+  background: linear-gradient(135deg, var(--accent)08, transparent);
+}
+.routine-table tr.ours:hover td {
+  background: linear-gradient(135deg, var(--accent)15, transparent);
+}
+
+/* Other subjects greyed */
+.routine-table tr.other td {
+  color: var(--fg-muted);
+}
+.routine-table tr.other code { opacity: 0.7; }
+
+.routine-notes {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  line-height: 1.8;
+}
+
+.routine-notes p { margin: 0.25rem 0; }
+
+/* ============================================================================
+   Exam Countdown (Header)
+   ============================================================================ */
+
+.countdown-text {
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  background: var(--card-bg);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.countdown-text strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.countdown-text a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.countdown-text a:hover { color: var(--accent-hover); }
+
+/* ============================================================================
+   Exam Date (Subject & Unit Pages)
+   ============================================================================ */
+
+.exam-date {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+
+.exam-date strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ============================================================================
+   Print Styles - Exam Routine
+   ============================================================================ */
+
+@media print {
+  .site-header, .sidebar, .sidebar-toggle, .sidebar-overlay, .unit-nav, .nav-btn,
+  .code-header, .copy-btn, .read-link, .card-link, .resource-list a,
+  .print-hide {
+    display: none !important;
+  }
+
+  .layout { display: block; }
+  .content { padding: 0; max-width: none; margin: 0; }
+  body { background: white; color: black; font-size: 11pt; line-height: 1.6; }
+
+  .markdown-body { font-size: 11pt; }
+  .markdown-body h1 { font-size: 18pt; page-break-after: avoid; }
+  .markdown-body h2 { font-size: 15pt; page-break-after: avoid; }
+  .markdown-body h3 { font-size: 13pt; page-break-after: avoid; }
+
+  .markdown-body pre, .markdown-body blockquote, .markdown-body table,
+  .markdown-body .mermaid, .code-block {
+    page-break-inside: avoid;
+  }
+
+  .subject-card, .unit-card { page-break-inside: avoid; }
+
+  a { color: black !important; text-decoration: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; }
+
+  .unit-header, .subject-header { border-bottom: 1px solid #ccc; }
+
+  /* Exam routine print: compact table, no links */
+  .exam-routine {
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+  .routine-table { font-size: 9pt; }
+  .routine-table th { background: #f5f5f5 !important; }
+  .routine-table tr.ours td { background: #eef5ff !important; }
+  .routine-table a { color: black !important; text-decoration: underline; }
+  .routine-notes { font-size: 8pt; }
+  .exam-date { font-size: 9pt; }
+}
