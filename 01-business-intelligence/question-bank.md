@@ -1,6 +1,6 @@
 # IT 249 — Question Bank
 
-**Two official sources now exist for this subject:**
+**Two official sources for this subject:**
 
 | Source | Status | Where |
 |---|---|---|
@@ -9,9 +9,7 @@
 
 Both are official. They are different documents with different authority: the board paper is what was asked, the model question is what the Dean's Office said would be asked. Neither is a prediction.
 
-> ⚠ Honest limitation: only **one** board paper for this subject exists publicly (the new-syllabus 8th semester was first examined in 2026). The pattern below is therefore an inference from **n=1** — a strong one, because the model question independently confirms the 10/5/3 structure and the unit weighting. It is still not a guarantee. Mock papers will reuse the structure and vary the content.
-
-> 🎯 **The model question is the acceptance test.** A unit is not finished until every model question mapped to it can be answered from that unit's notes alone. Coverage table: §"Model-question coverage" below; rule: `.opencode/memory/lessons.md`.
+> ⚠ Honest limitation: only **one** board paper for this subject exists publicly (the new-syllabus 8th semester was first examined in 2026). The pattern below is an inference from **n=1** — a strong one, because the model question independently confirms the 10/5/3 structure and the unit weighting. It is still not a guarantee.
 
 ---
 

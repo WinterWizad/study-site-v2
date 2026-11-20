@@ -25,7 +25,7 @@ This table is the whole strategy. Hours tell you what the college taught; marks 
 
 | File | Status |
 |---|---|
-| `model-question.md` | ✅ official TU/FOM model question, verbatim + unit mapping (the acceptance test) |
+| `model-question.md` | ✅ official TU/FOM model question, verbatim + unit mapping |
 | `question-bank.md` | ✅ real 2026 paper + model-question coverage table + heat map |
 | `unit-1-introduction-to-bi.md` | ✅ written · QC **PASS** |
 | `unit-2-data-warehousing.md` | ✅ written · QC **PASS** |

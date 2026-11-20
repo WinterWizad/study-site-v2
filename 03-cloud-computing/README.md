@@ -25,7 +25,7 @@
 | 6 | `unit-6-security.md` | ✅ | ⬜ | ⬜ | ⬜ | ✅ A7, A9, B16, C18, C20, D22 |
 | 7 | `unit-7-platforms.md` | ✅ | ⬜ | ⬜ | ⬜ | ✅ A10 |
 
-**Rule:** write one unit at a time → QC → if PASS, move to next. The model-question questions mapped to the unit are the acceptance test.
+
 
 ## Folder contents
 

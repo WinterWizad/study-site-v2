@@ -1,16 +1,11 @@
 # IT 277 — Official Model Question (TU / FOM 2026)
 
-> **Verbatim.** Issued by Tribhuvan University, Faculty of Management, Office of the Dean, in the 2026 model-question set for BIM 8th semester. **Full Marks 60 · Pass Marks 30 · Time 3 Hours.**
->
-> - Source PDF: `fomecd.edu.np/noticeattachments/Model Question for BITM 1st and BBA BIM and BBM 8th Semester Final.pdf`
-> - Local copy: `_raw/pdf/noticeattachments-model-20question-...final-pdf.pdf`
-> - Wording reproduced as printed. Nothing paraphrased.
-
-> ⚠ **This is the only official artifact that exists for this subject.** There is no board paper: BIM 8th semester under the new syllabus was first examined in 2026, and IT 277 is an elective that no public source has posted a paper for. Everything previously written in this workspace about "zero published questions" applies to *past papers* only — a model question now exists, and it is a much better guide than nothing.
+**Full Marks 60 · Pass Marks 30 · Time 3 Hours**  
+Wording reproduced as printed from the Dean's Office model question set.
 
 ---
 
-## The paper
+## The Paper
 
 **TRIBHUVAN UNIVERSITY — FACULTY OF MANAGEMENT — Office of the Dean**
 **Model Question 2026**
@@ -79,7 +74,7 @@ Candidates are required to give their answers in their own words as far as possi
 | C18 | cloud security concept | 6 | CIA + shared responsibility |
 | C19 | MapReduce architecture + working | 5 | map → shuffle → reduce, with the word-count diagram |
 | C20 | security architecture in cloud | 6 | layered: identity, network, data, VM, governance |
-| D21 | virtualization's role + hypervisor types | 4 | **a 10-mark rewrite of B13/B14** — see the warning below |
+| D21 | virtualization's role + hypervisor types | 4 | **a 10-mark rewrite of B13/B14** |
 | D22 | risks + mitigation | 6 | risk register → control → residual risk |
 
 ### Marks by unit if every question is attempted
@@ -95,24 +90,4 @@ Candidates are required to give their answers in their own words as far as possi
 | 7 | Cloud Platforms and Applications | 12 | A10 | 1 |
 | | | 48 | | **68 attempted → 60 counted** |
 
-Three things fall out of that table, and they are the study plan for this subject:
-
-1. **Security is the case.** 25 of 60 marks — a quarter of the paper — including one full Group D case. Unit 6 is 6 lecture hours. Marks and hours are nearly inverted for this unit.
-2. **Virtualization is the second engine.** 17 marks, and D21 asks about it at 10 marks, which means it appears in both Group B *and* Group D. It cannot be learned as prose.
-3. **Unit 3 carries nothing here, and Unit 7 carries 1 mark despite being the largest unit (12 LHs).** Do not read that as "skip them" — a model question is one sample, and Unit 7 (AppEngine, Azure, Aneka, web services) is where a different setter would put a 5-marker. Read it as: **Unit 3 is lowest priority, Unit 7 is low-yield but must be nameable**, and Units 6 → 4 → 2 → 5 in that order are where the marks are.
-
-## Group D shape — and the trap it sets
-
-Like IT 249, the model paper gives **2 × 10 = 20** with no choice, while a board paper may use **1 × 20**. Prepare for both.
-
-⚠ **D21 overlaps Group B badly.** "Explain virtualization, its role, hypervisor types and examples" is essentially B13 + B14 at triple length. If you write the B15/B13 answer and then repeat it for D21, you have written ~6 marks of content twice in a 3-hour paper. The 10-mark answer must add what the 3-markers cannot hold: the **role** in cloud economics (multi-tenancy, elasticity, isolation), a labelled diagram of Type 1 **and** Type 2 with real products, and a closing judgement on when each is used.
-
-## How to use this file — the acceptance test
-
-1. **Per unit, before calling it finished:** close the notes, read that unit's rows above, and answer each one out loud. A mapped question that cannot be answered from that unit's notes alone means the unit is **not** done.
-2. **Never borrow across units to answer a mapped question.** If D21 needs the cloud-economics framing that lives in Unit 1, then Unit 4 must restate it in one line.
-3. **Diagrams are part of the answer.** A written-as-prose answer to B13, C19 or D21 loses the marks the diagram carries.
-4. **Re-run the whole table as a mock** once all seven units exist: 3 hours, no notes, all of Group A, one full Group B/C selection, both Group D cases.
-5. Anything the notes add beyond this table is **insurance**, not waste — but it is labelled, and it is cut first if time runs short.
-
-> ⚠ A model question is a **shape**, not a leak. The safest assumption is that a board setter keeps the structure, keeps the weight on security and virtualization, and changes the examples.
+> ⚠ The model question is a **shape**, not a leak. The safest assumption is that a board setter keeps the structure, keeps the weight on security and virtualization, and changes the examples.

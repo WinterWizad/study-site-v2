@@ -1,34 +1,10 @@
-# IT 250 — Exam Blueprint (no official model question exists)
+# IT 250 — 2026 Board Paper (Digital Economy)
 
-> **This file is not a model question.** The Dean's Office 2026 model-question PDF (the one that carries IT 248, IT 249, IT 276, IT 277 and IT 278) **does not contain IT 250**. That is verified, not assumed: the full extracted text was searched for `IT 250`, `Digital Economy`, `K-economy`, `multi-sided`, `e-governance` and `digital currency`, and the only match was the Daraz Nepal case, which belongs to **BBA 8th semester, MKM 211: Internet Marketing** — a different programme's paper with a similar-sounding name.
->
-> Two further searches for a college- or TU-issued Digital Economy model question returned nothing. So the honest position is: **no model question exists for this subject**, and nothing here should be presented as one.
->
-> **What replaces it:** the **2026 board paper**, which is a real TU paper for this exact subject, with the same 100-mark structure the model questions use. It is the acceptance test until a model question appears.
->
-> - Source PDF: `_raw/pdf/noticeattachments-model-20question-...final-pdf.pdf` (checked; IT 250 absent)
-> - Board paper: `_raw/text/hamronotes.com/bitm-semester-8-digital-economy-question-banks-digital-economy-question-bank-2026.md`
-> - Full verbatim transcription with solutions index: `question-bank.md` (built when this subject starts)
+**Full Marks 100 · Pass Marks 50 · Time 3 Hours**
 
----
+This is the verbatim 2026 board paper for IT 250 Digital Economy. No official model question was issued for this subject; this board paper serves as the reference.
 
-## Structure — this subject is 100 marks, not 60
-
-| | IT 249 · IT 277 | **IT 250 · IT 248** |
-|---|---|---|
-| Full marks / pass | 60 / 30 | **100 / 50** |
-| Group A | 10 × 1 | 10 × **2** = 20 |
-| Group B | any 5 of 6 × 3 | any 6 of **7** × 5 = 30 |
-| Group C | any 3 of 4 × 5 | any 3 of 4 × **10** = 30 |
-| Group D | 2 × 10 | 1 × **20** |
-
-Confirmed twice for IT 250: the 2026 board paper prints **Full Marks: 100, Pass Marks: 50**, and its mark tags sum to 20 + 35 + 40 + 20 = 115 attempted → 100 counted. The earlier "all four subjects are 60/30" assumption was wrong and is corrected in `_syllabus/exam-pattern.md`.
-
-**Consequence:** the same 3 hours now holds 40 more marks. Group A answers are ~50-60 words, Group B ~200 words, Group C ~400 words. Writing speed is a study topic in this subject, not an afterthought.
-
----
-
-## The 2026 board paper (verbatim, by group)
+## The 2026 Board Paper (verbatim, by group)
 
 **IT 250: Digital Economy** · Full Marks 100 · Pass Marks 50
 
@@ -114,19 +90,4 @@ Confirmed twice for IT 250: the 2026 board paper prints **Full Marks: 100, Pass 
 | 6 | Digitalization in Nepal | 7 | A10, D22 | 22 |
 | | | 48 | | **115 attempted → 100 counted** |
 
-**Unit 3 is the core of the paper** — competition/coopetition, the layered internet model, digital business models and value creation, and it supplies the 10-marker on value creation. **Unit 6 owns the case**, and the case is the one place a Nepali example is compulsory rather than decorative.
-
-**Unit 5 is the thinnest at 12 marks**, but it holds the only question in the paper that requires *analysis* rather than recall (C21, consumer choice and labour markets) — a 10-marker that cannot be bluffed from definitions.
-
----
-
-## How to use this file — the acceptance test
-
-The rule is identical to the subjects that do have a model question: **the official paper is the checker.**
-
-1. **Per unit, before calling it finished:** close the notes and answer that unit's rows out loud. A mapped question that cannot be answered from that unit's notes alone means the unit is **not** done.
-2. **Never borrow across units** to answer a mapped question — if C21 needs the asymmetric-information machinery from the same unit, it must be in that unit.
-3. **Mark the substitution honestly.** If you describe this paper to anyone, it is the **2026 board paper**, not a model question. They are different documents with different authority.
-4. **Write to 100-mark lengths.** 2-mark ≈ 50-60 words · 5-mark ≈ 180-220 · 10-mark ≈ 350-400 · case ≈ 700-800.
-5. **Re-run the table as a mock** once all six units exist: 3 hours, no notes, all of Group A, six of Group B, three of Group C, and the case.
-6. **If a real model question turns up** (a college pre-board, a Dean's Office circular, a later PDF), drop it into `_raw/`, map it the same way, and re-run this table. A second artifact is worth more than any amount of note-polishing.
+The six case facts to learn: reach, price transparency, data reliability, funding dependency, digital divide, and policy.

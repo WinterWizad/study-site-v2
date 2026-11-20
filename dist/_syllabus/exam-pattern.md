@@ -1,6 +1,6 @@
 # Exam Pattern - BIM 8th Semester (TU, Faculty of Management)
 
-> **Sources of truth:** the official **TU/FOM model question set 2026** (Dean's Office PDF, saved in `_raw/pdf/`) and the **2026 board papers** as published. Every row below is confirmed on at least two of: model question, board paper, syllabus.
+**Sources:** TU/FOM Model Question 2026, 2026 Board Papers, Official Syllabus.
 >
 > **Corrected 2026-11-18.** Earlier versions of this file said all four subjects were 60/30 with a 10 × 1 Group A. That was true of Business Intelligence only, and it was generalised too fast. Two of the four papers are **100 marks**, and their Group A carries 2 marks per question.
 

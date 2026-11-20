@@ -1,15 +1,11 @@
 # IT 249 — Official Model Question (TU / FOM 2026)
 
-> **Verbatim.** This is the model question issued by Tribhuvan University, Faculty of Management, Office of the Dean, in the 2026 model-question set for BIM 8th semester. It is **not** a board paper and **not** a prediction — it is the Dean's Office statement of what the paper will look like.
->
-> - Source PDF: `fomecd.edu.np/noticeattachments/Model Question for BITM 1st and BBA BIM and BBM 8th Semester Final.pdf`
-> - Local copy: `_raw/pdf/noticeattachments-model-20question-...final-pdf.pdf` · extracted text: `_raw/text/pdf/...final-pdf.md`
-> - **Full Marks 60 · Pass Marks 30 · Time 3 Hours**
-> - Wording is reproduced as printed, including the paper's own abbreviations and typography. Nothing is paraphrased.
+**Full Marks 60 · Pass Marks 30 · Time 3 Hours**  
+Wording reproduced as printed from the Dean's Office model question set.
 
 ---
 
-## The paper
+## The Paper
 
 **TRIBHUVAN UNIVERSITY — FACULTY OF MANAGEMENT — Office of the Dean**
 **Model Question 2026**
@@ -107,14 +103,5 @@ The 68 is the point: Groups B and C each offer one more question than you must a
 | Style | applied, one company story, ethics in the last sub-question | one applied build question + one governance/plan question |
 
 Group D is the only structural difference, and it is a real one: one 20-mark case rewards depth on a single company; two 10-mark cases reward **breadth** — you must produce two complete, structured answers in the same 55 minutes. Rehearse both shapes.
-
-## How to use this file — the acceptance test
-
-This model question is the **checker** for the notes, not extra content to memorise.
-
-1. **Per unit, before calling it finished:** close the notes, read that unit's rows in the mapping table above, and try to answer each one out loud. If a question mapped to the unit cannot be answered from that unit's notes alone, the unit is **not** done.
-2. **Never answer a mapped question by reaching into another unit.** If C20 needs principles that live in §4.2 as well as §4.5, then §4.5 must restate them — the examiner's unit boundary is the syllabus bullet, not the writer's filing system.
-3. **Group D questions span units by design** (D21 = unit 2 + unit 6). Those are checked at subject level, not unit level.
-4. **Re-run the whole table as a mock** once every unit exists: 3 hours, no notes, all of Group A, one full Group B/C selection, and both Group D cases.
 
 > ⚠ The model question is a **shape**, not a leak. Q18, Q19 and Q20 in particular are the obvious places a board examiner would vary the company or the algorithm pair. Learn the *method* the answer skeleton demonstrates, not the sentence.

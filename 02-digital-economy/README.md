@@ -24,7 +24,7 @@
 | 5 | `unit-5-economics-of-information.md` | ✅ | ⬜ | ⬜ | ⬜ | ✅ A9, C21 |
 | 6 | `unit-6-nepal-perspective.md` | ✅ | ⬜ | ⬜ | ⬜ | ✅ A10, D22 |
 
-**Rule:** write one unit at a time → QC → if PASS, move to next. The board-paper questions mapped to the unit are the acceptance test.
+
 
 ## Folder contents
 

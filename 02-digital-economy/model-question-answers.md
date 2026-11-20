@@ -1,9 +1,6 @@
 # Digital Economy — 2026 Board Paper Complete Written Answers
 
 **Paper:** IT 250 Digital Economy | **Full Marks:** 100 | **Pass Marks:** 50 | **Time:** 3 Hours
-**Source:** TU 2026 Board Paper (no official model question exists for IT 250)
-
-> **Note:** This is the 2026 board paper, not a model question. It is the acceptance test until a model question appears. Word-count guidance: Group A (2 marks) ≈ 50–60 words · Group B (5 marks) ≈ 180–220 words · Group C (10 marks) ≈ 350–400 words · Group D (20 marks) ≈ 700–800 words.
 
 ---
 

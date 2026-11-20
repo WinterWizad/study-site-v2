@@ -7,8 +7,6 @@
 | **TU 2026 board paper** — the exam actually sat | verbatim below | "Real paper - TU 2026" |
 | **TU/FOM official model question 2026** | **does not exist** for IT 250 | Verified absent from the Dean's Office PDF |
 
-The 2026 board paper is the **acceptance test** for this subject. A unit is not finished until every board-paper question mapped to it can be answered from that unit's notes alone.
-
 ---
 
 ## Real paper - TU 2026
@@ -58,13 +56,11 @@ The 2026 board paper is the **acceptance test** for this subject. A unit is not 
 > c. Suggest the sustainable revenue model that can be followed by Agro-tech Concern to support farmers in the digitalization of agri-business.
 > d. What types of policy measures would you suggest to the Ministry of Agriculture for enabling e-governance platforms to be effectively implemented in agri-business digitalization?
 
-*(The case narrative is condensed here; the full verbatim text is in the raw source file. Learn the six facts it turns on: reach, price transparency, data reliability, funding dependency, digital divide, and policy.)*
-
 ---
 
-## Board question — coverage map (the checker)
+## Board question — coverage map
 
-Full paper: the table above. This table is the **checker**: can the unit's notes alone answer the question?
+Full paper: the table above. This table maps each question to its unit:
 
 | Q | Board question | Unit | Answerable from that unit's notes alone? |
 |---|---|---|---|

@@ -1,7 +1,6 @@
 # IT 249 — Business Intelligence (Syllabus)
 
 **Source:** TU, Faculty of Management, Office of the Dean — *BIM 8th Semester Syllabus 2025*.
-**Verified against the PDF itself** (not a blog transcription): `_raw/text/pdf/syllabuses-bim-...pdf`, lines 196–290. Units, hours and readings below match the Dean's Office document exactly. Official PDF: `fomecd.edu.np/syllabuses/BIM 8th Semester Syllabus 2025.pdf`
 
 | Field | Value |
 |---|---|

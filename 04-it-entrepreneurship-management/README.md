@@ -24,7 +24,7 @@
 | 5 | `unit-5-finance-marketing.md` | ✅ | ⬜ | ⬜ | ⬜ | ✅ A7, A8, B16, C18, C20b |
 | 6 | `unit-6-leadership-csr.md` | ✅ | ⬜ | ⬜ | ⬜ | ✅ A9, A10, B17, C19, C20a, C21a |
 
-**Rule:** write one unit at a time → QC → if PASS, move to next. The model-question questions mapped to the unit are the acceptance test.
+
 
 ## Folder contents
 

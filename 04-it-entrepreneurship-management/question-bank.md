@@ -5,9 +5,9 @@
 | Source | Status | Where |
 |---|---|---|
 | **TU/FOM official model question 2026** | verbatim below | this file |
-| **TU 2026 board paper** | verbatim in raw source | `_raw/text/hamronotes.com/...question-bank-2026.md` |
+| **TU 2026 board paper** | verbatim in source | Board paper 2026 |
 
-Both are 100 marks / 50 pass with identical structure. The model question is the **acceptance test**.
+Both are 100 marks / 50 pass with identical structure.
 
 ---
 

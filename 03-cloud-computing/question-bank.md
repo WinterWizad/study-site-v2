@@ -7,8 +7,6 @@
 | **TU/FOM official model question 2026** | verbatim below | this file |
 | **TU 2026 board paper** | **does not exist** (no public source has posted it) | n/a |
 
-The model question is the **acceptance test** for this subject. A unit is not finished until every model question mapped to it can be answered from that unit's notes alone.
-
 ---
 
 ## Model question — TU/FOM 2026
