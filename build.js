@@ -419,14 +419,16 @@ function getNextExam() {
 function daysUntil(dateIso) {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
-  const target = new Date(dateIso);
+  const [y, m, d] = dateIso.split('-').map(Number);
+  const target = new Date(y, m - 1, d);
   const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
   return diff;
 }
 
 function formatExamDate(iso) {
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  const [y, m, d] = iso.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 function getSubjectExam(subjectId) {
@@ -513,7 +515,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
             <span class="subject-name">${subject.name}</span>
           </div>
           <h1 class="unit-title">${unit.title}</h1>
-          ${(() => { const ex = getSubjectExam(subject.id); if (ex) { const days = daysUntil(ex.iso); return `<p class="exam-date">Exam: ${ex.day}, ${ex.iso} · <strong>${days}</strong> day${days !== 1 ? 's' : ''}</p>`; } return ''; })()}
+          ${(() => { const ex = getSubjectExam(subject.id); if (ex) { const days = daysUntil(ex.iso); return `<p class="exam-date">Exam: ${formatExamDate(ex.iso)} · <strong>${days}</strong> day${days !== 1 ? 's' : ''}</p>`; } return ''; })()}
         </header>
 
         <div class="markdown-body">
@@ -734,7 +736,7 @@ function generateSubjectIndexHtml(subject) {
             <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
             <h1>${subject.name}</h1>
             <p class="subject-meta">${subject.marks} marks • ${subject.passMarks} pass • ${subject.units.length} units • 48 lecture hours</p>
-            ${(() => { const ex = getSubjectExam(subject.id); if (ex) { const days = daysUntil(ex.iso); return `<p class="exam-date">Exam: ${ex.day}, ${ex.iso} · <strong>${days}</strong> day${days !== 1 ? 's' : ''}</p>`; } return ''; })()}
+            ${(() => { const ex = getSubjectExam(subject.id); if (ex) { const days = daysUntil(ex.iso); return `<p class="exam-date">Exam: ${formatExamDate(ex.iso)} · <strong>${days}</strong> day${days !== 1 ? 's' : ''}</p>`; } return ''; })()}
           </div>
         </header>
 
@@ -958,11 +960,20 @@ function generateMainIndexHtml() {
 
     // Exam countdown
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
+    function parseLocal(iso) {
+      const [y, m, d] = iso.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+    function fmtDate(iso) {
+      const [y, m, d] = iso.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
     function updateCountdown() {
       const now = new Date(); now.setHours(0,0,0,0);
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
-        const d = new Date(e.iso);
+        const d = parseLocal(e.iso);
         if (d >= now) { next = e; break; }
       }
       const el = document.getElementById('examCountdown');
@@ -971,9 +982,9 @@ function generateMainIndexHtml() {
         el.innerHTML = '<span class="countdown-text">All papers complete</span>';
         return;
       }
-      const days = Math.ceil((new Date(next.iso) - now) / 86400000);
+      const days = Math.ceil((parseLocal(next.iso) - now) / 86400000);
       const subjectLink = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
-      el.innerHTML = '<span class="countdown-text">Next: ' + subjectLink + ' — ' + next.day + ', ' + next.iso.split('-')[1] + '/' + next.iso.split('-')[2] + ' · <strong>' + days + '</strong> day' + (days !== 1 ? 's' : '') + '</span>';
+      el.innerHTML = '<span class="countdown-text">Next: ' + subjectLink + ' — ' + fmtDate(next.iso) + ' · <strong>' + days + '</strong> day' + (days !== 1 ? 's' : '') + '</span>';
     }
     updateCountdown();
     setInterval(updateCountdown, 3600000);
