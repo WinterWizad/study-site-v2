@@ -393,9 +393,6 @@ body.unit-page .sidebar {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
 }
-.variant-title { margin: 0; font-size: 0.9375rem; font-weight: 700; }
-.variant-sub { margin: 0.15rem 0 0.75rem; font-size: 0.75rem; color: var(--fg-muted); }
-
 .rail-counter {
   display: flex;
   flex-wrap: wrap;
@@ -423,23 +420,24 @@ body.unit-page .sidebar {
 .rail-viewport { overflow-x: auto; padding: 0 8px; }
 .rail-track {
   position: relative;
-  height: 232px;
+  height: 226px;
   min-width: 880px;
-  margin: 0 26px;
+  margin: 0 120px;
 }
 .rail-line {
   position: absolute;
   left: 0;
   right: 0;
-  top: 132px;
+  top: 150px;
   height: 3px;
   background: var(--border);
   border-radius: 2px;
 }
 .rail-origin {
+  display: none;
   position: absolute;
   left: 0;
-  top: 144px;
+  top: -4px;
   font-size: 0.6875rem;
   color: var(--fg-muted);
   white-space: nowrap;
@@ -455,7 +453,7 @@ body.unit-page .sidebar {
 }
 .station-card {
   position: absolute;
-  top: 24px;
+  top: 16px;
   left: 0;
   transform: translateX(-50%);
   display: flex;
@@ -468,12 +466,18 @@ body.unit-page .sidebar {
   border-radius: var(--radius);
   transition: background var(--transition);
 }
+.rail-station.row-b .station-card { top: 76px; }
 .station-code { font-size: 0.75rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
 .station-when { font-size: 0.6875rem; font-weight: 600; white-space: nowrap; }
-.station-bs { font-size: 0.625rem; color: var(--fg-muted); white-space: nowrap; }
+.station-kind {
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-muted);
+}
 .station-dot {
   position: absolute;
-  top: 125px;
+  top: 143px;
   left: 0;
   transform: translateX(-50%);
   box-sizing: border-box;
@@ -488,12 +492,13 @@ body.unit-page .sidebar {
 .rail-station.is-next .station-dot { background: var(--accent); }
 .rail-station.is-today .station-dot { background: var(--accent); }
 .rail-station.is-past { opacity: 0.45; }
-.rail-station.is-other .station-code { color: var(--fg-muted); }
-.rail-station.is-other .station-dot { border-color: var(--fg-muted); }
+.rail-station.is-movie .station-code { color: var(--fg); }
+.rail-station.is-movie .station-dot { border-color: var(--fg); background: var(--fg); }
+.rail-station.is-movie.row-b .station-card { top: 68px; }
 
 .rail-gap {
   position: absolute;
-  top: 100px;
+  top: 162px;
   transform: translateX(-50%);
   padding: 0 0.25rem;
   background: var(--card-bg);
@@ -505,7 +510,7 @@ body.unit-page .sidebar {
 
 .rail-tick {
   position: absolute;
-  top: 140px;
+  top: 182px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -524,7 +529,7 @@ body.unit-page .sidebar {
 
 .rail-traveller {
   position: absolute;
-  top: 92px;
+  top: 90px;
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -533,6 +538,25 @@ body.unit-page .sidebar {
   pointer-events: none;
   transition: left 0.9s linear;
 }
+.speed-lines {
+  position: absolute;
+  right: calc(100% - 6px);
+  top: 20px;
+  width: 54px;
+  height: 28px;
+}
+.speed-lines i {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0;
+  animation: streak 1.05s linear infinite;
+}
+.speed-lines i:nth-child(1) { top: 1px; width: 40px; animation-delay: 0s; }
+.speed-lines i:nth-child(2) { top: 12px; width: 54px; animation-delay: 0.35s; }
+.speed-lines i:nth-child(3) { top: 23px; width: 32px; animation-delay: 0.7s; }
 .train-flat { display: block; }
 .traveller-tag {
   order: -1;
@@ -546,17 +570,21 @@ body.unit-page .sidebar {
   line-height: 1.3;
 }
 
-.rail-note { margin: 0.35rem 0 0; font-size: 0.75rem; color: var(--fg-muted); }
-
-/* Motion: the track draws once, the train idles, stations settle in. */
+/* Motion: the track draws once, the train idles, speed lines trail behind. */
 .rail-line { transform-origin: left center; animation: railDraw 0.7s ease-out both; }
 .rail-station { animation: stationIn 0.4s ease-out 0.15s both; }
-.train-flat { animation: trainIdle 2.4s ease-in-out infinite; }
+.train-flat { animation: trainIdle 1.8s ease-in-out infinite; }
 @keyframes railDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes stationIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes trainIdle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes trainIdle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes streak {
+  0% { transform: translateX(12px); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: translateX(-28px); opacity: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .rail-line, .rail-station, .train-flat { animation: none !important; }
+  .rail-line, .rail-station, .train-flat, .speed-lines i, .rail-mini-train::before { animation: none !important; }
+  .speed-lines i { opacity: 0.5; }
   .rail-traveller, .rail-mini-train { transition: none; }
 }
 
@@ -749,10 +777,21 @@ body.unit-page .sidebar {
     border-top: 3px solid transparent;
     border-bottom: 3px solid transparent;
   }
+  .rail-mini-train::before {
+    content: "";
+    position: absolute;
+    right: 100%;
+    top: 5px;
+    width: 16px;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.6;
+    animation: streak 1.05s linear infinite;
+  }
   .rail-viewport { overflow: visible; padding: 0; }
   .rail-track { min-width: 0; height: auto; margin: 0; padding-left: 26px; }
-  .rail-line { left: 7px; right: auto; top: 8px; bottom: 8px; width: 3px; height: auto; }
-  .rail-origin { left: 0; top: -4px; }
+  .rail-line { left: 7px; right: auto; top: 8px; bottom: 8px; width: 3px; height: auto; animation: none; }
+  .rail-origin { display: block; left: 0; top: -4px; }
   .rail-tick, .rail-gap { display: none; }
   .rail-station {
     position: relative;
@@ -793,7 +832,7 @@ body.unit-page .sidebar {
   .rail-hero { margin-top: 0; padding: 0; border: 0; }
   .rail-viewport { overflow: visible; padding: 0; }
   .rail-track { min-width: 0; height: auto; margin: 0; padding-left: 26px; }
-  .rail-line { left: 7px; right: auto; top: 6px; bottom: 6px; width: 2px; height: auto; background: #666; }
+  .rail-line { left: 7px; right: auto; top: 6px; bottom: 6px; width: 2px; height: auto; background: #666; animation: none; }
   .rail-station {
     position: relative;
     left: auto !important;
@@ -805,7 +844,6 @@ body.unit-page .sidebar {
   }
   .station-card { position: static; transform: none; width: auto; align-items: flex-start; text-align: left; padding: 0; }
   .station-dot { top: 4px; left: 1px; transform: none; width: 12px; height: 12px; border-color: #666; }
-  .rail-note { margin-top: 0; }
   .door, .marks-block { border: 1px solid #ccc; page-break-inside: avoid; }
 }
 

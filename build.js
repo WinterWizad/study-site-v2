@@ -14,9 +14,20 @@ const EXAM_ROUTINE = [
   { iso: '2026-12-01', bs: 'Mangsir 15, 2083', day: 'Tuesday', code: 'IT 248', title: 'IT Entrepreneurship & Management (NC)', subjectId: 'entrepreneurship', isOurs: true },
   { iso: '2026-12-03', bs: 'Mangsir 17, 2083', day: 'Thursday', code: 'IT 250', title: 'Digital Economy (NC)', subjectId: 'de', isOurs: true },
   { iso: '2026-12-06', bs: 'Mangsir 20, 2083', day: 'Sunday', code: 'IT 249', title: 'Business Intelligence (NC)', subjectId: 'bi', isOurs: true },
-  { iso: '2026-12-08', bs: 'Mangsir 22, 2083', day: 'Tuesday', code: 'IT 275 / IT 276', title: '.NET Technologies (NC) / Database Administration (NC)', subjectId: null, isOurs: false },
   { iso: '2026-12-10', bs: 'Mangsir 24, 2083', day: 'Thursday', code: 'IT 277', title: 'Cloud Computing (NC)', subjectId: 'cloud', isOurs: true },
 ];
+
+// Two real cinema releases on 18 Dec 2026. Kept out of EXAM_ROUTINE so the
+// countdown, sidebar and subject doors still answer only for exam papers.
+// Sources: Wikipedia — "Avengers: Doomsday" and "Dune: Part Three".
+const CINEMA_STOP = {
+  iso: '2026-12-18',
+  code: 'Dune 3 + Avengers',
+  view: ['Dune 3', 'Avengers'],
+  title: 'Dune: Part Three + Avengers: Doomsday — both in cinemas 18 December 2026',
+  isMovie: true,
+};
+const RAIL_STOPS = [...EXAM_ROUTINE, CINEMA_STOP];
 
 const EXAM_CENTRE = 'Kirtipur';
 
@@ -840,7 +851,7 @@ function railGeometry() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const first = parseIsoLocal(EXAM_ROUTINE[0].iso);
-  const end = parseIsoLocal(EXAM_ROUTINE[EXAM_ROUTINE.length - 1].iso);
+  const end = parseIsoLocal(RAIL_STOPS[RAIL_STOPS.length - 1].iso);
   const start = today < first ? today : first;
   const span = Math.max(1, end - start);
   const frac = d => Math.min(100, Math.max(0, ((d - start) / span) * 100));
@@ -861,8 +872,8 @@ function railGeometry() {
     });
   }
 
-  // Bare track between papers = the free days the student can still use.
-  const examIsos = new Set(EXAM_ROUTINE.map(e => e.iso));
+  // Bare track between stops = the free days the student can still use.
+  const stopIsos = new Set(RAIL_STOPS.map(s => s.iso));
   const gaps = [];
   let run = [];
   const flush = () => {
@@ -879,7 +890,7 @@ function railGeometry() {
     run = [];
   };
   for (let d = new Date(first); d < end; d = nextDay(d)) {
-    if (examIsos.has(isoLocal(d))) flush();
+    if (stopIsos.has(isoLocal(d))) flush();
     else run.push(new Date(d));
   }
   flush();
@@ -887,27 +898,32 @@ function railGeometry() {
   return { fNow: frac(today), isoFrac, ticks, gaps };
 }
 
-function railStationHtml(exam, left) {
-  const when = parseIsoLocal(exam.iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-  const bs = exam.bs.replace(/, 2083$/, '');
+function railStationHtml(stop, left, row) {
+  const when = parseIsoLocal(stop.iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const names = stop.isMovie
+    ? stop.view.map(n => `<span class="station-code">${n}</span>`).join('')
+    : `<span class="station-code">${stop.code}</span>`;
+  const kind = stop.isMovie ? '<span class="station-kind">films</span>' : '';
   const inner = `
         <span class="station-card">
-          <span class="station-code">${exam.code}</span>
+          ${kind}${names}
           <span class="station-when">${when}</span>
-          <span class="station-bs">${bs}</span>
         </span>
         <span class="station-dot"></span>`;
-  return exam.subjectId
-    ? `<a class="rail-station is-ours" href="${exam.subjectId}/" style="left:${left}%" data-iso="${exam.iso}" title="${exam.title}">${inner}
+  const cls = 'rail-station ' + (stop.isMovie ? 'is-movie' : 'is-ours') + (row % 2 ? ' row-b' : '');
+  const attrs = `class="${cls}" style="left:${left}%" data-iso="${stop.iso}" title="${stop.title}"`;
+  return stop.subjectId
+    ? `<a ${attrs} href="${stop.subjectId}/">${inner}
       </a>`
-    : `<div class="rail-station is-other" style="left:${left}%" data-iso="${exam.iso}" title="${exam.title}">${inner}
+    : `<div ${attrs}>${inner}
       </div>`;
 }
 
 function railTravellerHtml(left) {
   return `
         <div class="rail-traveller" id="traveller" style="left:${left}%" aria-hidden="true">
-          <svg class="train-flat" viewBox="0 0 96 40" width="96" height="40" focusable="false">
+          <span class="speed-lines"><i></i><i></i><i></i></span>
+          <svg class="train-flat" viewBox="0 0 96 40" width="144" height="60" focusable="false">
             <rect x="8" y="10" width="52" height="20" rx="3" fill="var(--accent)"/>
             <rect x="12" y="4" width="16" height="10" rx="2" fill="var(--accent)"/>
             <path d="M60 10h14l14 14v6H60z" fill="var(--accent)"/>
@@ -925,11 +941,9 @@ function railTravellerHtml(left) {
 function railHeroHtml(rail) {
   const left = rail.fNow.toFixed(3);
   return `
-      <section class="rail-hero" id="timetable" aria-labelledby="railTitle">
-        <h2 id="railTitle" class="variant-title">Ten days, five papers</h2>
-        <p class="variant-sub">Today is on the left. Each stop is a paper. The train moves as time passes.</p>
+      <section class="rail-hero" id="timetable" aria-label="Exam timetable rail">
         <div class="rail-counter">
-          <span class="counter-label">Next paper</span>
+          <span class="counter-label">Next</span>
           <span class="counter-code" id="code">IT 248</span>
           <span class="counter-time" aria-hidden="true"><b id="days">0</b>d <b id="hours">00</b>:<b id="mins">00</b>:<b id="secs">00</b></span>
           <span class="sr-only" id="sr"></span>
@@ -941,15 +955,15 @@ function railHeroHtml(rail) {
         <div class="rail-viewport">
           <div class="rail-track">
             <div class="rail-line"></div>
-            <span class="rail-origin">Today, ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+            <span class="rail-origin">Today</span>
             ${rail.gaps.map(g => `
             <span class="rail-gap" style="left:${g.left.toFixed(3)}%" data-iso="${g.iso}">${g.label}</span>`).join('')}
             ${rail.ticks.map(t => `
             <span class="rail-tick" style="left:${t.left.toFixed(3)}%" data-iso="${t.iso}"><i></i><em>${t.label}</em></span>`).join('')}
-            ${EXAM_ROUTINE.map(e => railStationHtml(e, rail.isoFrac(e.iso).toFixed(3))).join('')}${railTravellerHtml(left)}
+            ${RAIL_STOPS.map((s, i) => railStationHtml(s, rail.isoFrac(s.iso).toFixed(3), i)).join('')}${railTravellerHtml(left)}
           </div>
         </div>
-        <p class="rail-note">Your papers fall every other day &mdash; the gaps between stops are free days. Routine: Dean's Office, 2083/07/28.</p>
+        <span class="sr-only">Exam routine: Dean's Office, 2083/07/28. Films: Dune: Part Three and Avengers: Doomsday, both 18 December 2026.</span>
       </section>`;
 }
 
@@ -1015,7 +1029,7 @@ function generateMainIndexHtml() {
     <main class="content" role="main">
       <section class="page-head">
         <h1>Examination timetable</h1>
-        <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; 1&ndash;10 December 2026 &middot; centre ${EXAM_CENTRE}</p>
+        <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; exams 1&ndash;10 December 2026 &middot; films 18 December &middot; centre ${EXAM_CENTRE}</p>
       </section>
 
       ${railHeroHtml(rail)}
@@ -1105,8 +1119,10 @@ function generateMainIndexHtml() {
       if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
-    // One clock drives both comparison rails, the header readout and the sidebar.
+    // One clock drives the rail, the header readout and the sidebar. Films are
+    // only the far end of the line; the counter still counts exam papers.
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
+    const RAIL_LAST_ISO = ${JSON.stringify(RAIL_STOPS[RAIL_STOPS.length - 1].iso)};
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
       return new Date(y, m - 1, d);
@@ -1116,7 +1132,7 @@ function generateMainIndexHtml() {
       return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
     }
     const RAIL_FIRST = parseLocal(EXAM_ROUTINE_JS[0].iso);
-    const RAIL_END = parseLocal(EXAM_ROUTINE_JS[EXAM_ROUTINE_JS.length - 1].iso);
+    const RAIL_END = parseLocal(RAIL_LAST_ISO);
     function railFraction(now) {
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const start = today < RAIL_FIRST ? today : RAIL_FIRST;
