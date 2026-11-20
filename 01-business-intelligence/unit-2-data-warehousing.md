@@ -48,7 +48,7 @@
 ├── 6 Data Quality Dimensions + Controls
 └── Master Data Management (MDM) Link
 
-2.6 Modern Patterns (Exam Insurance)
+2.6 Modern Patterns
 ├── ELT vs ETL
 ├── CDC / Change Data Capture
 ├── Real-time / Near-real-time DW
@@ -187,7 +187,7 @@ Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of hist
 
 > **Why sequence matters**: Loading untransformed data corrupts history — DW is non-volatile.
 
-### 2.3.4 ETL vs ELT (Exam Insurance)
+### 2.3.4 ETL vs ELT
 
 | | ETL | ELT |
 |---|---|---|
@@ -244,7 +244,7 @@ Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of hist
 
 > Since DW is non-volatile, **Type 2 is the normal answer** — and it wins marks in the architecture 5-marker.
 
-### 2.4.4 Advanced Modelling (Exam Insurance)
+### 2.4.4 Advanced Modelling
 
 - **Surrogate Keys vs Natural Keys**: Surrogate (system-generated integer) preferred — stable, small, decoupled from source changes. Natural keys (business codes) change and cause FK breaks.
 - **Factless Fact Tables**: Fact table with only FKs, no measures — tracks events (student attendance, promo eligibility). Many-to-many bridge tables are factless.
@@ -280,7 +280,7 @@ Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of hist
 
 ---
 
-## 2.6 Modern Patterns (Exam Insurance)
+## 2.6 Modern Patterns
 
 | Pattern | What It Is | When Tested |
 |---|---|---|
@@ -321,23 +321,7 @@ Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of hist
 
 ---
 
-## 2.8 Traps (Condensed)
-
-| Trap | Fix |
-|---|---|
-| Architecture with prose only | Draw 5-layer diagram, then explain |
-| "Non-volatile = never deleted" | No update/delete + historical reproducibility |
-| Data mart = data warehouse | Scope + source: mart = one department; EDW = whole org |
-| ETL = "extract, transform, load" only | Say what happens in each stage |
-| Star vs snowflake = "one is bigger" | Normalisation vs denormalisation → joins vs speed |
-| Forgetting metadata | Metadata = definitions + lineage |
-| Warehouse updated in place by users | Only ETL loads; users read |
-| SCD = only Type 1 | Type 2 (new row + dates) is DW default |
-| Grain not declared | Grain fixes level of detail; prevents double-counting |
-
----
-
-## 2.9 Self-Test (Answers Collapsed)
+## 2.8 Self-Test (Answers Collapsed)
 
 1. State Inmon's four characteristics of a data warehouse and one line on each. *(3–5 marks)*
 2. Draw the data warehouse architecture with staging area and data marts; label six components. *(5 marks)*
@@ -368,7 +352,7 @@ Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of hist
 
 ---
 
-## 2.10 Sixty-Second Check
+## 2.9 Sixty-Second Check
 
 Close the file and, on a blank page:
 

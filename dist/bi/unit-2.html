@@ -158,7 +158,7 @@
 ├── 6 Data Quality Dimensions + Controls
 └── Master Data Management (MDM) Link
 
-2.6 Modern Patterns (Exam Insurance)
+2.6 Modern Patterns
 ├── ELT vs ETL
 ├── CDC / Change Data Capture
 ├── Real-time / Near-real-time DW
@@ -377,7 +377,7 @@
 </blockquote><h3 id="2-3-3-load"><a href="#2-3-3-load" class="heading-anchor">#</a>2.3.3 Load</h3><ul>
 <li><strong>Bulk Load</strong>: COPY/BCP for speed; disable indexes/constraints during load</li><li><strong>Load Order</strong>: Dimensions first (surrogate keys), then Facts (FK references)</li><li><strong>Refresh Strategy</strong>: Full reload (small marts) vs Incremental (large facts) vs CDC (real-time)</li><li><strong>ELT Pattern</strong>: Load raw to staging → transform in-warehouse (SQL/dbt); leverages MPP</li></ul>
 <blockquote class="custom-blockquote"><p><strong>Why sequence matters</strong>: Loading untransformed data corrupts history — DW is non-volatile.</p>
-</blockquote><h3 id="2-3-4-etl-vs-elt-exam-insurance"><a href="#2-3-4-etl-vs-elt-exam-insurance" class="heading-anchor">#</a>2.3.4 ETL vs ELT (Exam Insurance)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</blockquote><h3 id="2-3-4-etl-vs-elt"><a href="#2-3-4-etl-vs-elt" class="heading-anchor">#</a>2.3.4 ETL vs ELT</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th></th>
 <th>ETL</th>
 <th>ELT</th>
@@ -492,7 +492,7 @@
 <td>Limited history, specific attributes</td>
 </tr>
 </tbody></table></div><blockquote class="custom-blockquote"><p>Since DW is non-volatile, <strong>Type 2 is the normal answer</strong> — and it wins marks in the architecture 5-marker.</p>
-</blockquote><h3 id="2-4-4-advanced-modelling-exam-insurance"><a href="#2-4-4-advanced-modelling-exam-insurance" class="heading-anchor">#</a>2.4.4 Advanced Modelling (Exam Insurance)</h3><ul>
+</blockquote><h3 id="2-4-4-advanced-modelling"><a href="#2-4-4-advanced-modelling" class="heading-anchor">#</a>2.4.4 Advanced Modelling</h3><ul>
 <li><strong>Surrogate Keys vs Natural Keys</strong>: Surrogate (system-generated integer) preferred — stable, small, decoupled from source changes. Natural keys (business codes) change and cause FK breaks.</li><li><strong>Factless Fact Tables</strong>: Fact table with only FKs, no measures — tracks events (student attendance, promo eligibility). Many-to-many bridge tables are factless.</li><li><strong>Conformed Dimensions</strong>: Same dimension (e.g., <code>dim_product</code>) shared across multiple fact tables (<code>fact_sales</code>, <code>fact_inventory</code>). Enables &quot;sold 40, have 12&quot; in one query.</li><li><strong>Late-Arriving Dimensions / Early-Arriving Facts</strong>: Fact arrives before dimension row exists — use inferred member (surrogate key with placeholder attrs) and update later via CDC.</li></ul>
 <hr class="custom-hr"><h2 id="2-5-metadata-amp-data-quality"><a href="#2-5-metadata-amp-data-quality" class="heading-anchor">#</a>2.5 Metadata &amp; Data Quality</h2><h3 id="2-5-1-metadata-repository-a10-1-mark"><a href="#2-5-1-metadata-repository-a10-1-mark" class="heading-anchor">#</a>2.5.1 Metadata Repository (A10, 1 mark)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Category</th>
@@ -547,7 +547,7 @@
 <td>Primary keys, deduplication rules</td>
 </tr>
 </tbody></table></div><blockquote class="custom-blockquote"><p><strong>MDM Link</strong>: Master Data Management ensures &quot;one customer, one product&quot; across sources — feeds conformed dimensions.</p>
-</blockquote><hr class="custom-hr"><h2 id="2-6-modern-patterns-exam-insurance"><a href="#2-6-modern-patterns-exam-insurance" class="heading-anchor">#</a>2.6 Modern Patterns (Exam Insurance)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</blockquote><hr class="custom-hr"><h2 id="2-6-modern-patterns"><a href="#2-6-modern-patterns" class="heading-anchor">#</a>2.6 Modern Patterns</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Pattern</th>
 <th>What It Is</th>
 <th>When Tested</th>
@@ -582,47 +582,7 @@
 <p><strong>[draw the diagram from §2.2 — sources → staging/ETL → EDW → marts/tools, metadata alongside]</strong></p>
 <p><strong>Source systems</strong> are the operational databases, POS, CRM and external feeds that generate raw data. The <strong>staging area</strong> receives extracted data and is where it is cleaned, conformed and de-duplicated, keeping heavy transformation away from both the source systems and the warehouse. The <strong>ETL process</strong> moves data across these layers on a scheduled or near-real-time basis. The <strong>enterprise data warehouse</strong> stores the integrated, subject-oriented, time-variant history in dimensional (star) schemas and acts as the organisation&#39;s single source of truth. <strong>Data marts</strong> are department-scoped subsets fed from the warehouse — dependent marts — so that sales, finance and HR each get fast, focused access without duplicating definitions. A <strong>metadata repository</strong> records definitions, lineage and load statistics, which is what allows two reports to agree on what &quot;revenue&quot; means.</p>
 <p>The layering exists because the requirements conflict: source systems must stay fast and current, while analysis needs history and consistency. Separating them is what makes both possible.</p>
-</blockquote><hr class="custom-hr"><h2 id="2-8-traps-condensed"><a href="#2-8-traps-condensed" class="heading-anchor">#</a>2.8 Traps (Condensed)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
-<th>Trap</th>
-<th>Fix</th>
-</tr>
-</thead><tbody><tr>
-<td>Architecture with prose only</td>
-<td>Draw 5-layer diagram, then explain</td>
-</tr>
-<tr>
-<td>&quot;Non-volatile = never deleted&quot;</td>
-<td>No update/delete + historical reproducibility</td>
-</tr>
-<tr>
-<td>Data mart = data warehouse</td>
-<td>Scope + source: mart = one department; EDW = whole org</td>
-</tr>
-<tr>
-<td>ETL = &quot;extract, transform, load&quot; only</td>
-<td>Say what happens in each stage</td>
-</tr>
-<tr>
-<td>Star vs snowflake = &quot;one is bigger&quot;</td>
-<td>Normalisation vs denormalisation → joins vs speed</td>
-</tr>
-<tr>
-<td>Forgetting metadata</td>
-<td>Metadata = definitions + lineage</td>
-</tr>
-<tr>
-<td>Warehouse updated in place by users</td>
-<td>Only ETL loads; users read</td>
-</tr>
-<tr>
-<td>SCD = only Type 1</td>
-<td>Type 2 (new row + dates) is DW default</td>
-</tr>
-<tr>
-<td>Grain not declared</td>
-<td>Grain fixes level of detail; prevents double-counting</td>
-</tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="2-9-self-test-answers-collapsed"><a href="#2-9-self-test-answers-collapsed" class="heading-anchor">#</a>2.9 Self-Test (Answers Collapsed)</h2><ol>
+</blockquote><hr class="custom-hr"><h2 id="2-8-self-test-answers-collapsed"><a href="#2-8-self-test-answers-collapsed" class="heading-anchor">#</a>2.8 Self-Test (Answers Collapsed)</h2><ol>
 <li>State Inmon&#39;s four characteristics of a data warehouse and one line on each. <em>(3–5 marks)</em></li><li>Draw the data warehouse architecture with staging area and data marts; label six components. <em>(5 marks)</em></li><li>Explain ETL, naming what happens in each stage. <em>(3 marks)</em></li><li>Why must warehouse data be non-volatile, and how is a correction handled if data cannot be updated? <em>(1–3 marks)</em></li><li>Distinguish dependent and independent data marts; which is preferred and why? <em>(3 marks)</em></li><li>What is the grain of a fact table, and why declare it first? <em>(1–3 marks)</em></li><li>🇳🇵 A Nepali bank wants monthly branch-wise deposit reports without slowing its core banking system, and wants to keep 10 years of history. Draw the architecture you would propose and justify each layer. <em>(5 marks)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -638,7 +598,7 @@
 </li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="2-10-sixty-second-check"><a href="#2-10-sixty-second-check" class="heading-anchor">#</a>2.10 Sixty-Second Check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="2-9-sixty-second-check"><a href="#2-9-sixty-second-check" class="heading-anchor">#</a>2.9 Sixty-Second Check</h2><p>Close the file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> Write the four characteristics from memory, with one line each</li><li><input disabled="" type="checkbox"> Draw the five-layer architecture with staging area and marts, and label metadata</li><li><input disabled="" type="checkbox"> Explain E, T and L in one sentence each</li><li><input disabled="" type="checkbox"> Give the 1-mark answer for &quot;why non-volatile&quot;</li><li><input disabled="" type="checkbox"> State one difference between star and snowflake schema</li><li><input disabled="" type="checkbox"> Say what a dependent data mart is, and why it is preferred</li><li><input disabled="" type="checkbox"> Name the 6 data quality dimensions with one control each</li><li><input disabled="" type="checkbox"> Difference between full and incremental extraction</li><li><input disabled="" type="checkbox"> Type 1 vs Type 2 SCD</li><li><input disabled="" type="checkbox"> What is CDC?</li></ul>
 <p>If all ten are there, this unit is marks-safe — and it is the single best unit to have safe.</p>
