@@ -106,36 +106,70 @@
 <td>7</td>
 </tr>
 <tr>
-<td><strong>Marks carried in 2026 paper</strong></td>
-<td><strong>7</strong> — one 1-marker and <strong>two</strong> 3-markers (B4 dashboard design, B6 misleading charts)</td>
+<td><strong>Marks in 2026 paper</strong></td>
+<td>7 — one 1-marker, two 3-markers (B4 dashboard design, B6 misleading charts)</td>
 </tr>
 <tr>
-<td><strong>Marks in the official model question</strong></td>
-<td><strong>9 attempted</strong> (A7, B15, C20) — including C20, which asks you to <em>design</em> a dashboard rather than list principles</td>
+<td><strong>Marks in model question</strong></td>
+<td>9 — A7, B15, C20 (includes C20: design a dashboard)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
-<td>★★☆☆☆ to write, ★★★★☆ to score — everyone can name a chart; few can say <em>why</em> a chart is wrong</td>
+<td>★★☆☆☆ to write, ★★★★☆ to score — everyone names a chart; few say <em>why</em> a chart is wrong</td>
 </tr>
 <tr>
 <td><strong>Exam yield</strong></td>
-<td>🔴 high by mark-per-hour — 7 marks for 7 lecture hours, and the questions are opinion-with-reasons, not recall</td>
+<td>🔴 high by mark-per-hour — 7 marks for 7 hours, questions are opinion-with-reasons, not recall</td>
 </tr>
 <tr>
 <td><strong>Prerequisite</strong></td>
 <td>Unit 1 (visualization is the presentation column of the BI stack); Unit 2 (the data being shown)</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
-<td>Principles of data visualization · Tools and techniques for data visualization · Dashboard design and best practices</td>
+<td><strong>Syllabus</strong></td>
+<td>Principles of data visualization · Tools and techniques · Dashboard design and best practices</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Why this unit is a gift and a trap at once:</strong> it is the only unit where the examiner is asking for <em>judgement</em>, so there is no list to memorise and no definition to hide behind. B6 (&quot;how can poor visualization choices mislead?&quot;) is the highest-signal question in the paper for separating students who understand BI from students who memorised it. Answer it with mechanisms and numbers, not adjectives.</p>
-</blockquote><hr class="custom-hr"><h2 id="4-1-what-data-visualization-is"><a href="#4-1-what-data-visualization-is" class="heading-anchor">#</a>4.1 What data visualization is</h2><blockquote class="custom-blockquote"><p><strong>Data visualization is the graphical representation of data using charts, graphs and maps so that patterns, trends and outliers can be perceived quickly and communicated clearly.</strong></p>
-</blockquote><p>Two clauses carry the marks: <strong>perceive quickly</strong> (the cognitive reason) and <strong>communicate clearly</strong> (the business reason). A definition that says only &quot;presenting data in charts&quot; gets half.</p>
-<h3 id="why-the-eye-beats-the-table"><a href="#why-the-eye-beats-the-table" class="heading-anchor">#</a>Why the eye beats the table</h3><p>A table of 500 daily sales figures forces the reader to compare numbers one pair at a time; a line chart lets the visual system detect slope, seasonality and the outlier in a single glance. That is not a stylistic preference — it is <strong>pre-attentive processing</strong>: position, length and colour are decoded by the eye before conscious reading begins.</p>
-<p>So visualization is not decoration applied at the end of analysis. It is the <strong>interface between the analysis and the decision</strong>, and a bad interface silently changes the decision (§4.4).</p>
-<p>🇳🇵 <strong>Nepal anchor:</strong> a bank&#39;s board pack that prints 14 pages of monthly deposit tables gets skimmed; the same data as one line chart per province with a red threshold line gets discussed. Same numbers, different decision.</p>
-<hr class="custom-hr"><h2 id="4-2-principles-of-data-visualization-the-syllabus-bullet-with-the-most-marks-behind-it"><a href="#4-2-principles-of-data-visualization-the-syllabus-bullet-with-the-most-marks-behind-it" class="heading-anchor">#</a>4.2 Principles of data visualization — the syllabus bullet with the most marks behind it</h2><h3 id="principle-1-encode-with-the-channels-the-eye-reads-accurately"><a href="#principle-1-encode-with-the-channels-the-eye-reads-accurately" class="heading-anchor">#</a>Principle 1 — Encode with the channels the eye reads accurately</h3><p>Not all visual channels are equally precise. Ranked, best to worst:</p>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This is the only unit where the examiner asks for <em>judgement</em>. No list to memorise, no definition to hide behind. B6 (&quot;how can poor visualization choices mislead?&quot;) is the highest-signal question in the paper for separating students who understand BI from those who memorised it. Answer it with mechanisms and numbers, not adjectives.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">4.1 Definition
+├── Perceive quickly + communicate clearly
+└── Memory hook: eye beats table
+
+4.2 Principles 🎯 3-mark / 🎯 5-mark
+├── Encode with accurate channels (position > length > angle > area > volume)
+├── Match chart to question (sorted bar, line, stacked bar, histogram, scatter)
+├── Maximise data-ink ratio, lie factor = 1
+├── Use colour with a job (sequential, diverging, qualitative, accent)
+└── Design for cognitive limits (one message, direct labels, zero baseline, small multiples)
+
+4.3 Tools & Techniques 🎯 1-mark
+├── BI platforms: Power BI, Tableau, Qlik, Looker
+├── Spreadsheet: Excel
+├── Programming: Python (matplotlib, seaborn, Plotly), R (ggplot2)
+├── Web: D3.js, ECharts
+└── Technique ladder: static → composite → small multiples → interactive → operational
+
+4.4 Dashboard Design 🎯 3-mark / 🎯 5-mark
+├── Decision fit: 5–7 KPIs, exception-driven, decision-owned
+├── Visual hierarchy: top-left, summary before detail, 5-second rule
+├── Clarity + restraint: right chart, direct labels, no chartjunk, timestamp + definition
+├── Performance + interaction discipline
+└── C20 worked design: monthly sales dashboard (5 KPIs + 4 charts + SKU table)
+
+4.5 Misleading Charts 🎯 3-mark
+├── Truncated axis (bar length = ratio)
+├── Inconsistent/dual axes (manufacture correlation)
+├── Area/volume distortion (radius vs area, 3D)
+├── Cherry-picked window
+├── Wrong denominator/aggregation (Simpson's paradox)
+└── Decorative encoding (rainbow, 12-slice pie, spaghetti)</code></pre></div><hr class="custom-hr"><h2 id="4-1-what-data-visualization-is-1-mark"><a href="#4-1-what-data-visualization-is-1-mark" class="heading-anchor">#</a>4.1 What Data Visualization Is 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>Data visualization is the graphical representation of data using charts, graphs and maps so that patterns, trends and outliers can be perceived quickly and communicated clearly.</strong></p>
+</blockquote><p>Two clauses carry the marks: <strong>perceive quickly</strong> (cognitive reason) and <strong>communicate clearly</strong> (business reason). A definition that says only &quot;presenting data in charts&quot; gets half.</p>
+<h3 id="why-the-eye-beats-the-table"><a href="#why-the-eye-beats-the-table" class="heading-anchor">#</a>Why the Eye Beats the Table</h3><p>A table of 500 daily sales figures forces the reader to compare numbers one pair at a time; a line chart lets the visual system detect slope, seasonality and the outlier in a single glance. That is not a stylistic preference — it is <strong>pre-attentive processing</strong>: position, length and colour are decoded by the eye before conscious reading begins.</p>
+<p>So visualization is not decoration applied at the end of analysis. It is the <strong>interface between the analysis and the decision</strong>, and a bad interface silently changes the decision (§4.5).</p>
+<p>🇳🇵 <strong>Nepal anchor:</strong> A bank&#39;s board pack that prints 14 pages of monthly deposit tables gets skimmed; the same data as one line chart per province with a red threshold line gets discussed. Same numbers, different decision.</p>
+<p>🎯 <strong>Exam hook:</strong> A8 asks for the definition. Include both &quot;perceived quickly&quot; and &quot;communicated clearly.&quot;</p>
+<hr class="custom-hr"><h3 id="a8-quot-what-is-data-visualization-quot-1-1-mark"><a href="#a8-quot-what-is-data-visualization-quot-1-1-mark" class="heading-anchor">#</a>A8 · &quot;What is Data Visualization?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>Data visualization is the graphical representation of data using charts, graphs and maps so that patterns, trends and outliers can be perceived quickly and communicated clearly.</p>
+</blockquote><p><em>(26 words. Perception + communication — both clauses, one sentence.)</em></p>
+<hr class="custom-hr"><h2 id="4-2-principles-of-data-visualization-the-syllabus-bullet-with-the-most-marks-3-mark-5-mark"><a href="#4-2-principles-of-data-visualization-the-syllabus-bullet-with-the-most-marks-3-mark-5-mark" class="heading-anchor">#</a>4.2 Principles of Data Visualization — The Syllabus Bullet With the Most Marks 🎯 3-mark / 🎯 5-mark</h2><h3 id="principle-1-encode-with-the-channels-the-eye-reads-accurately"><a href="#principle-1-encode-with-the-channels-the-eye-reads-accurately" class="heading-anchor">#</a>Principle 1 — Encode With the Channels the Eye Reads Accurately</h3><p>Not all visual channels are equally precise. Ranked best to worst:</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Channel</th>
 <th>Accuracy</th>
@@ -171,8 +205,8 @@
 <td>categorical only</td>
 <td>grouping, not magnitude</td>
 </tr>
-</tbody></table></div><p>⚠ <strong>The mark-losing habit:</strong> using area or 3D to show a precise difference. If two values differ by 10%, the reader <em>cannot</em> see it in a bubble, and the chart is decorative rather than informative.</p>
-<h3 id="principle-2-match-the-chart-to-the-question-being-asked"><a href="#principle-2-match-the-chart-to-the-question-being-asked" class="heading-anchor">#</a>Principle 2 — Match the chart to the question being asked</h3><p>This is the table to reproduce in the exam, because it converts &quot;principles&quot; into something a marker can tick:</p>
+</tbody></table></div><p>⚠ <strong>Mark-losing habit:</strong> Using area or 3D to show a precise difference. If two values differ by 10%, the reader <em>cannot</em> see it in a bubble, and the chart is decorative rather than informative.</p>
+<h3 id="principle-2-match-the-chart-to-the-question-being-asked"><a href="#principle-2-match-the-chart-to-the-question-being-asked" class="heading-anchor">#</a>Principle 2 — Match the Chart to the Question Being Asked</h3><p>This is the table to reproduce in the exam — it converts &quot;principles&quot; into something a marker can tick:</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Question</th>
 <th>Chart</th>
@@ -181,7 +215,7 @@
 </thead><tbody><tr>
 <td>How do categories compare?</td>
 <td><strong>sorted bar</strong></td>
-<td>position/length is the accurate channel; sorting does the ranking for the reader</td>
+<td>position/length is the accurate channel; sorting does the ranking</td>
 </tr>
 <tr>
 <td>How has it changed over time?</td>
@@ -213,10 +247,11 @@
 <td><strong>small multiples</strong></td>
 <td>one panel per unit beats 12 lines on one axis</td>
 </tr>
-</tbody></table></div><h3 id="principle-3-maximise-the-data-ink-ratio-and-keep-the-lie-factor-at-1"><a href="#principle-3-maximise-the-data-ink-ratio-and-keep-the-lie-factor-at-1" class="heading-anchor">#</a>Principle 3 — Maximise the data-ink ratio, and keep the lie factor at 1</h3><p>Tufte&#39;s two tests, both quotable in a 3- or 5-marker:</p>
+</tbody></table></div><p>🎯 <strong>Exam hook:</strong> This table answers &quot;which chart for comparison/trend/composition/distribution/relationship?&quot;</p>
+<h3 id="principle-3-maximise-the-data-ink-ratio-and-keep-the-lie-factor-at-1"><a href="#principle-3-maximise-the-data-ink-ratio-and-keep-the-lie-factor-at-1" class="heading-anchor">#</a>Principle 3 — Maximise the Data-Ink Ratio, and Keep the Lie Factor at 1</h3><p>Tufte&#39;s two tests, both quotable in a 3- or 5-marker:</p>
 <ul>
-<li><strong>Data-ink ratio</strong> — the proportion of ink that actually encodes data. Gridlines, borders, shadows, background fills and 3D effects are <strong>chartjunk</strong>: they consume attention without carrying information.</li><li><strong>Lie factor</strong> = <em>size of the effect shown in the graphic</em> ÷ <em>size of the effect in the data</em>. A truthful chart sits at <strong>1.0</strong>. A truncated axis or an over-scaled bubble pushes it far above 1 — which is precisely the mechanism B6 asks about.</li></ul>
-<h3 id="principle-4-use-colour-with-a-job-and-not-as-the-only-channel"><a href="#principle-4-use-colour-with-a-job-and-not-as-the-only-channel" class="heading-anchor">#</a>Principle 4 — Use colour with a job, and not as the only channel</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<li><strong>Data-ink ratio</strong> — proportion of ink that actually encodes data. Gridlines, borders, shadows, background fills and 3D effects are <strong>chartjunk</strong>: they consume attention without carrying information.</li><li><strong>Lie factor</strong> = <em>size of effect shown in the graphic</em> ÷ <em>size of effect in the data</em>. A truthful chart sits at <strong>1.0</strong>. A truncated axis or over-scaled bubble pushes it far above 1 — which is precisely the mechanism B6 asks about.</li></ul>
+<h3 id="principle-4-use-colour-with-a-job-and-not-as-the-only-channel"><a href="#principle-4-use-colour-with-a-job-and-not-as-the-only-channel" class="heading-anchor">#</a>Principle 4 — Use Colour With a Job, and Not as the Only Channel</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Purpose</th>
 <th>Palette</th>
 <th>Rule</th>
@@ -224,7 +259,7 @@
 </thead><tbody><tr>
 <td>magnitude (low → high)</td>
 <td><strong>sequential</strong> (one hue, light → dark)</td>
-<td>never rainbow — it invents boundaries that are not in the data</td>
+<td>never rainbow — it invents boundaries not in the data</td>
 </tr>
 <tr>
 <td>deviation from a midpoint</td>
@@ -241,10 +276,10 @@
 <td>one accent colour + grey</td>
 <td>highlight the point, grey the rest</td>
 </tr>
-</tbody></table></div><p>Roughly <strong>1 in 12 men</strong> has some colour-vision deficiency, most commonly red–green — so never encode &quot;good vs bad&quot; in red/green alone. Add position, labels or icons. Same principle for accessibility: contrast, readable type size, and never colour-only encoding.</p>
-<h3 id="principle-5-design-for-cognitive-limits-not-for-the-data-39-s-convenience"><a href="#principle-5-design-for-cognitive-limits-not-for-the-data-39-s-convenience" class="heading-anchor">#</a>Principle 5 — Design for cognitive limits, not for the data&#39;s convenience</h3><ul>
+</tbody></table></div><p>Roughly <strong>1 in 12 men</strong> has some colour-vision deficiency, most commonly red–green — so never encode &quot;good vs bad&quot; in red/green alone. Add position, labels or icons. Same principle for accessibility: contrast, readable type size, never colour-only encoding.</p>
+<h3 id="principle-5-design-for-cognitive-limits-not-for-the-data-39-s-convenience"><a href="#principle-5-design-for-cognitive-limits-not-for-the-data-39-s-convenience" class="heading-anchor">#</a>Principle 5 — Design for Cognitive Limits, Not for the Data&#39;s Convenience</h3><ul>
 <li><strong>One message per chart.</strong> If you cannot write the chart&#39;s headline in one sentence, it is two charts.</li><li><strong>Direct labelling</strong> beats a legend hunt; <strong>sorted categories</strong> beat alphabetical order.</li><li><strong>Zero baseline on bars</strong> — bar length is a ratio judgement, so cutting the axis lies.</li><li><strong>Consistent scales and time windows</strong> across panels, so the eye compares like with like.</li><li><strong>Gestalt grouping</strong> — proximity and enclosure group related items; whitespace separates sections better than boxes.</li><li><strong>Small multiples</strong> instead of a 12-line spaghetti chart.</li></ul>
-<hr class="custom-hr"><h2 id="4-3-tools-and-techniques"><a href="#4-3-tools-and-techniques" class="heading-anchor">#</a>4.3 Tools and techniques</h2><h3 id="the-tool-landscape-name-two-or-three-know-the-category"><a href="#the-tool-landscape-name-two-or-three-know-the-category" class="heading-anchor">#</a>The tool landscape — name two or three, know the category</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="4-3-tools-and-techniques-1-mark"><a href="#4-3-tools-and-techniques-1-mark" class="heading-anchor">#</a>4.3 Tools and Techniques 🎯 1-mark</h2><h3 id="the-tool-landscape-name-two-or-three-know-the-category"><a href="#the-tool-landscape-name-two-or-three-know-the-category" class="heading-anchor">#</a>The Tool Landscape — Name Two or Three, Know the Category</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Category</th>
 <th>Tools</th>
 <th>Note for the exam</th>
@@ -252,7 +287,7 @@
 </thead><tbody><tr>
 <td><strong>BI / dashboard platforms</strong></td>
 <td><strong>Microsoft Power BI</strong>, <strong>Tableau</strong>, Qlik Sense, Google Looker Studio</td>
-<td>the syllabus names Power BI and Tableau; use those</td>
+<td>syllabus names Power BI and Tableau; use those</td>
 </tr>
 <tr>
 <td><strong>Spreadsheet</strong></td>
@@ -269,7 +304,7 @@
 <td>D3.js, ECharts</td>
 <td>bespoke interactive visuals inside a product</td>
 </tr>
-</tbody></table></div><h3 id="the-technique-ladder-from-static-to-interactive"><a href="#the-technique-ladder-from-static-to-interactive" class="heading-anchor">#</a>The technique ladder — from static to interactive</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><h3 id="the-technique-ladder-from-static-to-interactive"><a href="#the-technique-ladder-from-static-to-interactive" class="heading-anchor">#</a>The Technique Ladder — From Static to Interactive</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Level</th>
 <th>Technique</th>
 <th>What it adds</th>
@@ -299,15 +334,15 @@
 <td>KPI card + sparkline + alert threshold</td>
 <td>monitoring, not exploration</td>
 </tr>
-</tbody></table></div><p>⚠ <strong>Trap:</strong> listing tools when the question asks for <em>techniques</em>, or vice versa. &quot;Tableau&quot; is a tool; &quot;drill-down&quot; is a technique; &quot;heatmap&quot; is a chart type. Keep the three words apart.</p>
-<hr class="custom-hr"><h2 id="4-4-dashboard-design-for-executives-b4-and-the-most-practical-section-in-the-unit"><a href="#4-4-dashboard-design-for-executives-b4-and-the-most-practical-section-in-the-unit" class="heading-anchor">#</a>4.4 Dashboard design for executives — B4, and the most practical section in the unit</h2><p>An executive dashboard is not a report. A report is read once, in full; a dashboard is <strong>glanced at repeatedly</strong> and must answer &quot;is anything wrong?&quot; in seconds. Everything below follows from that single constraint.</p>
-<h3 id="the-three-factors-to-write-b4"><a href="#the-three-factors-to-write-b4" class="heading-anchor">#</a>The three factors to write (B4)</h3><p><strong>1. Decision fit — show the few metrics that map to decisions the executive owns.</strong><br>Five to seven KPIs on one screen, exception-driven (green/amber/red against a target), not an exhaustive dump. A dashboard with forty numbers has no hierarchy, so the reader scans nothing and acts on nothing. Ask of every tile: <em>what decision changes if this goes red?</em> If the answer is &quot;none&quot;, delete it.</p>
+</tbody></table></div><p>⚠ <strong>Trap:</strong> Listing tools when the question asks for <em>techniques</em>, or vice versa. &quot;Tableau&quot; is a tool; &quot;drill-down&quot; is a technique; &quot;heatmap&quot; is a chart type. Keep the three words apart.</p>
+<hr class="custom-hr"><h2 id="4-4-dashboard-design-for-executives-b4-c20-3-mark-5-mark"><a href="#4-4-dashboard-design-for-executives-b4-c20-3-mark-5-mark" class="heading-anchor">#</a>4.4 Dashboard Design for Executives — B4, C20 🎯 3-mark / 🎯 5-mark</h2><p>An executive dashboard is not a report. A report is read once, in full; a dashboard is <strong>glanced at repeatedly</strong> and must answer &quot;is anything wrong?&quot; in seconds. Everything below follows from that single constraint.</p>
+<h3 id="the-three-factors-to-write-b4"><a href="#the-three-factors-to-write-b4" class="heading-anchor">#</a>The Three Factors to Write (B4)</h3><p><strong>1. Decision fit — show the few metrics that map to decisions the executive owns.</strong><br>Five to seven KPIs on one screen, exception-driven (green/amber/red against a target), not an exhaustive dump. A dashboard with forty numbers has no hierarchy, so the reader scans nothing and acts on nothing. Ask of every tile: <em>what decision changes if this goes red?</em> If the answer is &quot;none&quot;, delete it.</p>
 <p><strong>2. Visual hierarchy — arrange it the way the eye scans.</strong><br>Most important KPI top-left (reading order), summary before detail, consistent grid, consistent time windows and units across tiles, and drill-down available on demand rather than on screen. Group by question, not by data source. The &quot;five-second rule&quot;: the main message must be readable in five seconds without a legend.</p>
 <p><strong>3. Clarity and restraint — remove everything that is not the message.</strong><br>Correct chart type per tile, direct labels, a restrained palette with one accent for exceptions, no 3D, no chartjunk, no dual axes. And the two things that make a number <em>trusted</em>: a visible <strong>timestamp / last-refresh</strong> and a short <strong>metric definition</strong> (&quot;active customer = purchased in 90 days&quot;). Executives forgive an ugly dashboard; they do not forgive a number whose definition they cannot check.</p>
-<h3 id="two-supporting-factors-use-if-you-need-a-fourth-point"><a href="#two-supporting-factors-use-if-you-need-a-fourth-point" class="heading-anchor">#</a>Two supporting factors (use if you need a fourth point)</h3><ul>
+<h3 id="two-supporting-factors-use-if-you-need-a-fourth-point"><a href="#two-supporting-factors-use-if-you-need-a-fourth-point" class="heading-anchor">#</a>Two Supporting Factors (Use If You Need a Fourth Point)</h3><ul>
 <li><strong>Performance and delivery</strong> — loads in seconds, works on a tablet, refreshes on schedule; a slow dashboard is abandoned.</li><li><strong>Interaction discipline</strong> — filters that cannot produce an empty or misleading view; defaults that show the current period, not &quot;all time&quot;.</li></ul>
-<p>🇳🇵 <strong>Nepal anchor:</strong> a commercial bank&#39;s board dashboard typically carries deposits, credit growth, NPL ratio, CASA ratio, cost of funds and profit — six tiles, monthly, each with a target band. That is exactly the &quot;few KPIs + exception thresholds&quot; pattern, and it is what makes it glanceable in a board meeting rather than readable only in a binder.</p>
-<h3 id="the-worked-design-model-question-c20-a-monthly-sales-dashboard-for-an-online-retailer"><a href="#the-worked-design-model-question-c20-a-monthly-sales-dashboard-for-an-online-retailer" class="heading-anchor">#</a>The worked design — model question C20: a monthly sales dashboard for an online retailer</h3><p>B4 asks you to <em>list</em> factors. C20 asks you to <strong>design</strong> — which means a layout, a chart per tile, and a stated purpose for each. A principles essay with no layout scores badly; the design is the answer.</p>
+<p>🇳🇵 <strong>Nepal anchor:</strong> A commercial bank&#39;s board dashboard typically carries deposits, credit growth, NPL ratio, CASA ratio, cost of funds and profit — six tiles, monthly, each with a target band. That is exactly the &quot;few KPIs + exception thresholds&quot; pattern, and it is what makes it glanceable in a board meeting rather than readable only in a binder.</p>
+<hr class="custom-hr"><h3 id="the-worked-design-model-question-c20-monthly-sales-dashboard-for-an-online-retailer"><a href="#the-worked-design-model-question-c20-monthly-sales-dashboard-for-an-online-retailer" class="heading-anchor">#</a>The Worked Design — Model Question C20: Monthly Sales Dashboard for an Online Retailer</h3><p>B4 asks you to <em>list</em> factors. C20 asks you to <strong>design</strong> — which means a layout, a chart per tile, and a stated purpose for each. A principles essay with no layout scores badly; the design is the answer.</p>
 <p><strong>Audience and decision:</strong> the head of sales and the e-commerce operations lead, once a month, deciding where to spend the next month&#39;s marketing budget and which categories to promote.</p>
 <p><strong>Layout — five-second summary on top, &quot;where&quot; in the middle, &quot;what exactly&quot; at the bottom:</strong></p>
 <div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">┌──────────────────────────────────────────────────────────────────────┐
@@ -340,10 +375,10 @@
 </tr>
 <tr>
 <td>12-month trend</td>
-<td>line, revenue and orders on one axis (both are money/volume — no dual axis needed if orders are indexed)</td>
+<td>line, revenue and orders on one axis</td>
 <td>revenue, orders, MoM and YoY</td>
 <td>&quot;is this a blip or a slope?&quot;</td>
-<td>directly under the KPIs, because every KPI question is a trend question</td>
+<td>directly under KPIs, because every KPI question is a trend question</td>
 </tr>
 <tr>
 <td>Category mix</td>
@@ -375,8 +410,12 @@
 </tr>
 </tbody></table></div><p><strong>Three things that make it a <em>design</em> rather than a collage:</strong> every tile carries its <strong>definition</strong> (&quot;AOV = revenue ÷ paid orders&quot;), a <strong>last-refresh timestamp</strong>, and an <strong>exception threshold</strong> so the reader&#39;s eye goes to the variance rather than to the number. Monthly period with month-to-date projected to month-end, because a raw MTD figure in week two always looks like a collapse.</p>
 <p>⚠ The examiner&#39;s marks for C20 are in <strong>justification</strong>, not decoration. &quot;Revenue trend as a line because trend is a continuous quantity and lines are read as rate of change&quot; earns; &quot;a nice line chart&quot; does not.</p>
-<hr class="custom-hr"><h2 id="4-5-how-poor-visualization-misleads-b6"><a href="#4-5-how-poor-visualization-misleads-b6" class="heading-anchor">#</a>4.5 How poor visualization misleads — B6</h2><p>This is the question where you demonstrate that you understand the <em>mechanism</em>, not just the moral. Structure the answer as <strong>mechanism → example → consequence</strong>.</p>
-<h3 id="the-six-mechanisms-name-three-for-3-marks-five-for-5"><a href="#the-six-mechanisms-name-three-for-3-marks-five-for-5" class="heading-anchor">#</a>The six mechanisms (name three for 3 marks, five for 5)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h3 id="b4-quot-discuss-any-three-factor-that-should-be-consider-to-design-an-effective-dashboard-for-executives-quot-3-3-mark"><a href="#b4-quot-discuss-any-three-factor-that-should-be-consider-to-design-an-effective-dashboard-for-executives-quot-3-3-mark" class="heading-anchor">#</a>B4 · &quot;Discuss any three factor that should be consider to design an effective dashboard for executives.&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><em>Shape: three named factors, each with a reason and a concrete detail. ~110 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p><strong>Decision fit.</strong> An executive reads for seconds, so the dashboard carries five to seven KPIs that map to decisions the executive owns, shown as exception-driven status against target; any tile that would not change a decision is removed. <strong>Visual hierarchy.</strong> The most important KPI sits top-left, summary above detail, with a consistent grid and consistent time windows, so the main message is readable within five seconds. <strong>Clarity and restraint.</strong> Each tile uses the chart type its question needs, with direct labels, one accent colour for exceptions, no 3D or chartjunk — plus a last-refresh timestamp and a one-line definition of each metric, because an executive must trust the number before acting on it.</p>
+</blockquote><hr class="custom-hr"><h3 id="c20-model-question-quot-design-a-dashboard-for-monthly-sales-performance-for-an-online-retailer-list-the-key-visualizations-metrics-kpis-and-justify-their-placement-and-purpose-quot-5-5-mark"><a href="#c20-model-question-quot-design-a-dashboard-for-monthly-sales-performance-for-an-online-retailer-list-the-key-visualizations-metrics-kpis-and-justify-their-placement-and-purpose-quot-5-5-mark" class="heading-anchor">#</a>C20 · Model Question — &quot;Design a dashboard for monthly sales performance for an online retailer: list the key visualizations, metrics (KPIs), and justify their placement and purpose.&quot; [5] 🎯 5-mark</h3><blockquote class="custom-blockquote"><p><em>Shape: state the audience and the decision in one line → top KPI strip → trend → breakdowns → detail table → one line on delivery. ~230 words. This is the applied version of B4: B4 asks what makes a dashboard good, C20 asks you to build one, and the layout is the answer.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>Designed for the head of sales reviewing the month in one glance and deciding where next month&#39;s budget goes. <strong>Top strip:</strong> five KPI tiles — revenue, orders, average order value, conversion rate and gross margin — each shown against plan and against last month, amber or red on variance, because that is the five-second answer to &quot;are we on plan?&quot;. <strong>Directly beneath, a 12-month line</strong> of revenue and orders, projected to month-end, because one month cannot separate a blip from a trend. <strong>Right column:</strong> revenue by category as sorted horizontal bars, and return rate by category against an 8% threshold line, because revenue that comes back is not revenue. <strong>Middle-left:</strong> a purchase funnel from sessions to product views to paid orders, because when conversion falls the funnel says whether the cause is traffic, the product page, the cart or checkout. <strong>Bottom:</strong> a table of the top 20 SKUs with units, revenue, return rate and stock cover — detail to drill into, not a glance. Placement follows the eye: the answer top-left, the diagnosis next, the detail last. Every tile carries its metric definition, a last-refresh timestamp and an exception threshold, so the reader finds the variance before reading a single number.</p>
+</blockquote><hr class="custom-hr"><h2 id="4-5-how-poor-visualization-misleads-b6-3-mark"><a href="#4-5-how-poor-visualization-misleads-b6-3-mark" class="heading-anchor">#</a>4.5 How Poor Visualization Misleads — B6 🎯 3-mark</h2><p>This is the question where you demonstrate that you understand the <em>mechanism</em>, not just the moral. Structure the answer as <strong>mechanism → example → consequence</strong>.</p>
+<h3 id="the-six-mechanisms-name-three-for-3-marks-five-for-5"><a href="#the-six-mechanisms-name-three-for-3-marks-five-for-5" class="heading-anchor">#</a>The Six Mechanisms (Name Three for 3 Marks, Five for 5)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Mechanism</th>
 <th>How it lies</th>
 <th>What it looks like</th>
@@ -412,39 +451,25 @@
 <td>the reader sees pattern in noise; boundaries appear where the data is continuous</td>
 </tr>
 </tbody></table></div><p><strong>Simpson&#39;s paradox</strong> deserves its own line because it is the one that survives even an honest chart: a treatment can beat the control in <em>every</em> segment and still lose overall, if the segments are weighted differently. It is a <strong>denominator</strong> problem, and no amount of chart design fixes a wrong aggregation.</p>
-<h3 id="the-worked-example-use-this-in-the-exam-it-has-numbers"><a href="#the-worked-example-use-this-in-the-exam-it-has-numbers" class="heading-anchor">#</a>The worked example (use this in the exam — it has numbers)</h3><blockquote class="custom-blockquote"><p>A telecom&#39;s internal dashboard says &quot;complaints falling for three months&quot;. The chart plots total monthly complaints on a y-axis running 380–420; the line falls from 412 to 398 — a <strong>3.4% drop</strong> — but 14 units inside a 40-unit frame occupies about <strong>35% of the chart height</strong>, so the reader sees a collapse. Placed on the full 24-month axis starting at zero, the same series is flat with ordinary seasonal noise: the &quot;fall&quot; is the seasonal low. No individual number is false; the <strong>lie factor</strong> is, because the effect shown is roughly 0.35 ÷ 0.034 ≈ <strong>10×</strong> the effect in the data.</p>
+<h3 id="the-worked-example-use-this-in-the-exam-it-has-numbers"><a href="#the-worked-example-use-this-in-the-exam-it-has-numbers" class="heading-anchor">#</a>The Worked Example (Use This in the Exam — It Has Numbers)</h3><blockquote class="custom-blockquote"><p>A telecom&#39;s internal dashboard says &quot;complaints falling for three months&quot;. The chart plots total monthly complaints on a y-axis running 380–420; the line falls from 412 to 398 — a <strong>3.4% drop</strong> — but 14 units inside a 40-unit frame occupies about <strong>35% of the chart height</strong>, so the reader sees a collapse. Placed on the full 24-month axis starting at zero, the same series is flat with ordinary seasonal noise: the &quot;fall&quot; is the seasonal low. No individual number is false; the <strong>lie factor</strong> is, because the effect shown is roughly 0.35 ÷ 0.034 ≈ <strong>10×</strong> the effect in the data.</p>
 </blockquote><p>That is the shape to write: what the chart does, the numbers, the honest alternative, and the consequence (a decision made on a phantom improvement).</p>
-<p>⚠ <strong>The honest caveat worth one line:</strong> misleading charts are not always dishonest. Truncated axes, rainbow palettes and 3D pies are usually produced by default settings, not malice — which is why the professional duty is to check the default before publishing.</p>
-<hr class="custom-hr"><h2 id="4-6-answer-skeletons-2026-paper-and-official-model-question"><a href="#4-6-answer-skeletons-2026-paper-and-official-model-question" class="heading-anchor">#</a>4.6 Answer skeletons — 2026 paper and official model question</h2><h3 id="a8-quot-what-is-data-visualization-quot-1"><a href="#a8-quot-what-is-data-visualization-quot-1" class="heading-anchor">#</a>A8 · &quot;What is Data Visualization?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Data visualization is the graphical representation of data using charts, graphs and maps so that patterns, trends and outliers can be perceived quickly and communicated clearly.</p>
-</blockquote><p><em>(26 words. Perception + communication — both clauses, one sentence.)</em></p>
-<h3 id="b4-quot-discuss-any-three-factor-that-should-be-consider-to-design-an-effective-dashboard-for-executives-quot-3"><a href="#b4-quot-discuss-any-three-factor-that-should-be-consider-to-design-an-effective-dashboard-for-executives-quot-3" class="heading-anchor">#</a>B4 · &quot;Discuss any three factor that should be consider to design an effective dashboard for executives.&quot; [3]</h3><blockquote class="custom-blockquote"><p><em>Shape: three named factors, each with a reason and a concrete detail. ~110 words.</em></p>
-<p><strong>Decision fit.</strong> An executive reads for seconds, so the dashboard carries five to seven KPIs that map to decisions the executive owns, shown as exception-driven status against target; any tile that would not change a decision is removed. <strong>Visual hierarchy.</strong> The most important KPI sits top-left, summary above detail, with a consistent grid and consistent time windows, so the main message is readable within five seconds. <strong>Clarity and restraint.</strong> Each tile uses the chart type its question needs, with direct labels, one accent colour for exceptions, no 3D or chartjunk — plus a last-refresh timestamp and a one-line definition of each metric, because an executive must trust the number before acting on it.</p>
-</blockquote><h3 id="b6-quot-how-poor-visualization-choices-can-mislead-users-explain-with-an-example-quot-3"><a href="#b6-quot-how-poor-visualization-choices-can-mislead-users-explain-with-an-example-quot-3" class="heading-anchor">#</a>B6 · &quot;How poor visualization choices can mislead users? Explain with an example.&quot; [3]</h3><blockquote class="custom-blockquote"><p><em>Shape: mechanism → example with numbers → consequence. ~120 words.</em></p>
-<p>Poor choices mislead when the encoding exaggerates an effect the data does not contain. <strong>Truncating a bar chart&#39;s axis</strong> so it starts near the maximum exploits bar length being read as a ratio: a 3% rise on an axis of 98–102 fills the frame and looks like a doubling. <strong>Scaling bubbles by radius, or using 3D</strong>, exaggerates through area — a 10% larger radius reads as roughly 21% larger. <strong>Dual axes with independent scales</strong> manufacture a correlation, and <strong>cherry-picking the start date</strong> reverses a trend. A telecom charting falling complaints over three months on a 380–420 axis turns a 3.4% seasonal dip in a flat series into an apparent collapse. The consequence: a decision taken on a phantom improvement.</p>
-</blockquote><h3 id="c20-model-question-quot-design-a-dashboard-for-monthly-sales-performance-for-an-online-retailer-list-the-key-visualizations-metrics-kpis-and-justify-their-placement-and-purpose-quot-5"><a href="#c20-model-question-quot-design-a-dashboard-for-monthly-sales-performance-for-an-online-retailer-list-the-key-visualizations-metrics-kpis-and-justify-their-placement-and-purpose-quot-5" class="heading-anchor">#</a>C20 · model question — &quot;Design a dashboard for monthly sales performance for an online retailer: list the key visualizations, metrics (KPIs), and justify their placement and purpose.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: state the audience and the decision in one line → top KPI strip → trend → breakdowns → detail table → one line on delivery. ~230 words. This is the applied version of B4: B4 asks what makes a dashboard good, C20 asks you to build one, and the layout is the answer.</em></p>
-</blockquote><blockquote class="custom-blockquote"><p>Designed for the head of sales reviewing the month in one glance and deciding where next month&#39;s budget goes. <strong>Top strip:</strong> five KPI tiles — revenue, orders, average order value, conversion rate and gross margin — each shown against plan and against last month, amber or red on variance, because that is the five-second answer to &quot;are we on plan?&quot;. <strong>Directly beneath, a 12-month line</strong> of revenue and orders, projected to month-end, because one month cannot separate a blip from a trend. <strong>Right column:</strong> revenue by category as sorted horizontal bars, and return rate by category against an 8% threshold line, because revenue that comes back is not revenue. <strong>Middle-left:</strong> a purchase funnel from sessions to product views to paid orders, because when conversion falls the funnel says whether the cause is traffic, the product page, the cart or checkout. <strong>Bottom:</strong> a table of the top 20 SKUs with units, revenue, return rate and stock cover — detail to drill into, not a glance. Placement follows the eye: the answer top-left, the diagnosis next, the detail last. Every tile carries its metric definition, a last-refresh timestamp and an exception threshold, so the reader finds the variance before reading a single number.</p>
-</blockquote><h3 id="5-marker-quot-explain-the-principles-of-data-visualization-with-suitable-examples-quot-practice-generated"><a href="#5-marker-quot-explain-the-principles-of-data-visualization-with-suitable-examples-quot-practice-generated" class="heading-anchor">#</a>5-marker · &quot;Explain the principles of data visualization with suitable examples.&quot; [practice — generated]</h3><blockquote class="custom-blockquote"><p><em>No printed question asked this in this exact form, but the syllabus bullet is the unit&#39;s largest and a 5-mark version is the obvious risk. ~210 words.</em></p>
-<p>Visualization principles exist to make the comparison the viewer needs as easy as possible, so they are rules about perception rather than about taste.</p>
-<p><strong>Encode with accurate channels.</strong> Position and length are read precisely; area, angle and volume are not. Two bars show a 3% difference honestly; two bubbles do not.</p>
-<p><strong>Match the chart to the question.</strong> Sorted bars for comparison, lines for trend over time, stacked bars for composition, histograms for distribution, scatter for relationship, small multiples for many units over many periods.</p>
-<p><strong>Maximise the data-ink ratio.</strong> Gridlines, borders, shadows and 3D effects are chartjunk: they consume attention without carrying data, and they push Tufte&#39;s <em>lie factor</em> away from 1.0.</p>
-<p><strong>Use colour with a purpose.</strong> Sequential shades for magnitude, diverging for deviation around a meaningful centre, qualitative hues for categories, one accent for emphasis — and never red/green as the only signal, since roughly one man in twelve cannot separate them.</p>
-<p><strong>Respect cognitive limits.</strong> One message per chart, direct labels over legends, sorted categories, a zero baseline on bars, and consistent scales across panels.</p>
-<p>The test of a visualization is not whether it looks impressive but whether the intended comparison is the easiest thing to do on the page.</p>
-</blockquote><hr class="custom-hr"><h2 id="4-7-traps"><a href="#4-7-traps" class="heading-anchor">#</a>4.7 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<p>⚠ <strong>Honest caveat worth one line:</strong> Misleading charts are not always dishonest. Truncated axes, rainbow palettes and 3D pies are usually produced by default settings, not malice — which is why the professional duty is to check the default before publishing.</p>
+<hr class="custom-hr"><h3 id="b6-quot-how-poor-visualization-choices-can-mislead-users-explain-with-an-example-quot-3-3-mark"><a href="#b6-quot-how-poor-visualization-choices-can-mislead-users-explain-with-an-example-quot-3-3-mark" class="heading-anchor">#</a>B6 · &quot;How poor visualization choices can mislead users? Explain with an example.&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><em>Shape: mechanism → example with numbers → consequence. ~120 words.</em></p>
+</blockquote><blockquote class="custom-blockquote"><p>Poor choices mislead when the encoding exaggerates an effect the data does not contain. <strong>Truncating a bar chart&#39;s axis</strong> so it starts near the maximum exploits bar length being read as a ratio: a 3% rise on an axis of 98–102 fills the frame and looks like a doubling. <strong>Scaling bubbles by radius, or using 3D</strong>, exaggerates through area — a 10% larger radius reads as roughly 21% more. <strong>Dual axes with independent scales</strong> manufacture a correlation, and <strong>cherry-picking the start date</strong> reverses a trend. A telecom charting falling complaints over three months on a 380–420 axis turns a 3.4% seasonal dip in a flat series into an apparent collapse. The consequence: a decision taken on a phantom improvement.</p>
+</blockquote><hr class="custom-hr"><h2 id="4-6-traps"><a href="#4-6-traps" class="heading-anchor">#</a>4.6 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
 </tr>
 </thead><tbody><tr>
 <td>Answering B6 with adjectives (&quot;charts can be confusing&quot;)</td>
-<td>the marks are for <em>mechanisms</em></td>
+<td>marks are for <em>mechanisms</em></td>
 <td>name the mechanism, give numbers, state the consequence</td>
 </tr>
 <tr>
 <td>Saying &quot;pie charts are bad&quot;</td>
 <td>unarguable and unearned</td>
-<td>pie is acceptable for 2–3 slices; it fails for many slices because angle is a weak channel</td>
+<td>pie is acceptable for 2–3 slices; fails for many slices because angle is a weak channel</td>
 </tr>
 <tr>
 <td>Truncated axis called &quot;wrong&quot; without the reason</td>
@@ -483,15 +508,15 @@
 </tr>
 <tr>
 <td>Using red/green as the only good/bad signal</td>
-<td>accessibility failure, and examiners notice</td>
+<td>accessibility failure, examiners notice</td>
 <td>add labels or symbols; colour-blind safe palettes</td>
 </tr>
 <tr>
 <td>Answering C20 with five principles and no layout</td>
-<td>the verb is <strong>design</strong> — principles are the B4 answer</td>
+<td>verb is <strong>design</strong> — principles are the B4 answer</td>
 <td>give the wireframe, one chart per tile, and a stated purpose for each</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-8-self-test-answers-collapsed"><a href="#4-8-self-test-answers-collapsed" class="heading-anchor">#</a>4.8 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-7-self-test-answers-collapsed"><a href="#4-7-self-test-answers-collapsed" class="heading-anchor">#</a>4.7 Self-Test (Answers Collapsed)</h2><ol>
 <li>Define data visualization in one sentence containing both perception and communication. <em>(1 mark)</em></li><li>Name the three most accurate visual channels and the least accurate. <em>(1–3 marks)</em></li><li>Which chart for: comparison, trend, composition, distribution, relationship? <em>(3 marks)</em></li><li>Name three factors in designing an executive dashboard, with a reason for each. <em>(3 marks)</em></li><li>Explain two mechanisms by which a chart can mislead, with numbers. <em>(3 marks)</em></li><li>What is Tufte&#39;s lie factor, and what value is truthful? <em>(1–3 marks)</em></li><li>🇳🇵 A provincial health ministry maps &quot;number of hospital beds&quot; by district and concludes the hill districts are well served. Name the error and the fix. <em>(3–5 marks — mini case)</em></li><li>Sketch a monthly sales dashboard for an online retailer: five KPIs, four supporting charts, and one sentence on why each sits where it sits. <em>(5 marks — model question C20)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -500,11 +525,11 @@
 <li>&quot;Data visualization is the graphical representation of data so that patterns, trends and outliers can be perceived quickly and communicated clearly.&quot;</li><li>Most accurate: <strong>position on a common scale</strong>, <strong>length</strong>, and (weaker) <strong>angle/slope</strong>. Least accurate: <strong>volume / 3D</strong> — area is already poor, and volume is worse.</li><li>Comparison → sorted bar · trend → line · composition → stacked bar (pie only for 2–3 slices) · distribution → histogram or box plot · relationship → scatter.</li><li>Any three of: <strong>decision fit</strong> (few KPIs tied to decisions, exception-driven) · <strong>visual hierarchy</strong> (most important top-left, summary before detail, consistent grid) · <strong>clarity and restraint</strong> (right chart type, direct labels, no chartjunk) · <strong>data trust</strong> (timestamp, metric definition) · <strong>performance</strong> (fast, mobile, scheduled refresh).</li><li><strong>Truncated axis</strong>: a 3% rise plotted on 98–102 looks like a doubling, because bar length is read as a ratio. <strong>Area distortion</strong>: scaling a bubble by radius makes a 10% larger radius read as ~21% more area. (Also acceptable: dual axes manufacturing correlation; cherry-picked window.)</li><li>Lie factor = size of the effect shown in the graphic ÷ size of the effect in the data. Truthful ≈ <strong>1.0</strong>; anything far from 1 exaggerates or understates.</li><li>The error is a <strong>wrong denominator</strong>: absolute bed counts simply follow population, so the most populous districts look darkest regardless of access. Fix: map <strong>beds per 1,000 people</strong> (a rate, with a sequential palette and a legend), and if the question is access rather than capacity, map travel time to the nearest facility. The visual was accurate; the measure was not.</li><li>Five KPIs across the top (revenue, orders, AOV, conversion, gross margin) against plan; beneath them a 12-month revenue/orders line; right column revenue by category and return rate by category; middle-left a sessions → views → carts → orders funnel; bottom a top-20 SKU table. The strip is top-left because it answers &quot;are we on plan?&quot; in five seconds; the trend sits under it because one month cannot distinguish a blip from a trend; the funnel sits in the diagnostic layer because it localises a conversion drop; the table is last because it is drill-down, not a glance.</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="4-9-sixty-second-check"><a href="#4-9-sixty-second-check" class="heading-anchor">#</a>4.9 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="4-8-sixty-second-check"><a href="#4-8-sixty-second-check" class="heading-anchor">#</a>4.8 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> Define visualization with both clauses</li><li><input disabled="" type="checkbox"> Rank position, length, area, volume by accuracy</li><li><input disabled="" type="checkbox"> Give the chart for comparison / trend / composition / distribution / relationship</li><li><input disabled="" type="checkbox"> Name the three executive-dashboard factors</li><li><input disabled="" type="checkbox"> Explain one misleading mechanism with numbers</li><li><input disabled="" type="checkbox"> State the lie factor and its truthful value</li><li><input disabled="" type="checkbox"> Lay out a monthly sales dashboard: 5 KPIs, 4 charts, and the reason for each position</li></ul>
 <p>If all seven are there, Unit 4&#39;s 9 marks are secure — 7 from the 2026 paper plus C20 from the model question — and you have just gained the vocabulary for the case&#39;s &quot;how do dashboards drive loyalty&quot; part.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 249, Unit 4, 7 LHs) · TU 2026 paper (A8, B4, B6) · official TU/FOM model question 2026 (A7, B15, C20) · principles (data-ink ratio, chartjunk, lie factor) from Tufte, &quot;The Visual Display of Quantitative Information&quot;, and dashboard practice from Few, &quot;Information Dashboard Design&quot; — both standard references for this syllabus bullet. The telecom, ministry and online-retailer examples are constructed illustrations, not claims about any named organisation&#39;s published figures.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 249, Unit 4, 7 LHs) · TU 2026 paper (A8, B4, B6) · TU/FOM model question 2026 (A7, B15, C20) · Principles (data-ink ratio, chartjunk, lie factor) from Tufte, &quot;The Visual Display of Quantitative Information&quot;, and dashboard practice from Few, &quot;Information Dashboard Design&quot; — both standard references for this syllabus bullet. The telecom, ministry and online-retailer examples are constructed illustrations, not claims about any named organisation&#39;s published figures.</em></p>
 
         </div>
       </article>

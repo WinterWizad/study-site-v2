@@ -3,18 +3,63 @@
 | | |
 |---|---|
 | **Lecture hours** | 8 |
-| **Marks carried in 2026 paper** | **25** — C1 (5 marks, challenges with example) plus the entire Group D case (20 marks, of which the challenges-and-ethics sub-question is this unit's) |
-| **Marks in the official model question** | **23** — B16 (3, challenges) · D21 (10, retail end-to-end) · D22 (10, healthcare phased plan) |
-| **Difficulty** | ★★★★☆ — nothing here is hard to understand; the difficulty is that the paper asks you to **build a solution on paper**, and most students answer with a list of generic risks |
+| **Marks in 2026 paper** | 25 — C1 (5 marks, challenges with example) plus entire Group D case (20 marks, challenges-and-ethics sub-question is this unit) |
+| **Marks in model question** | 23 — B16 (3, challenges) · D21 (10, retail end-to-end) · D22 (10, healthcare phased plan) |
+| **Difficulty** | ★★★★☆ — nothing is hard to understand; the paper asks you to **build a solution on paper**, and most students answer with a list of generic risks |
 | **Exam yield** | 🔴 highest in the paper — this unit plus Unit 1 owns Group D |
 | **Prerequisite** | Units 1–5. This unit is the assembly manual for everything they taught |
-| **Syllabus bullets** | Best practices for implementing BI solutions · Challenges and considerations in BI implementation · Case studies of successful BI implementations |
+| **Syllabus** | Best practices for implementing BI solutions · Challenges and considerations · Case studies of successful BI implementations |
 
-> **Read this first:** Units 1–5 each answered "what is this thing". This unit answers "how do you make it work in a real organisation, in what order, and what goes wrong". The exam tests that in two shapes — a 3-marker (B16) and a 10- or 20-mark case (D21, D22, and the board paper's Group D). **The case is not a memory test; it is a sequencing test.** The marker is checking whether you can put sources → ETL → model → tool → dashboard → governance in a defensible order, name a milestone for each stage, and say *why* each choice was made. That is exactly the shape of D21.
+> **Read this first:** Units 1–5 each answered "what is this thing". This unit answers "how do you make it work in a real organisation, in what order, and what goes wrong". The exam tests that in two shapes — a 3-marker (B16) and a 10- or 20-mark case (D21, D22, and the board paper's Group D). **The case is not a memory test; it is a sequencing test.** The marker checks whether you can put sources → ETL → model → tool → dashboard → governance in a defensible order, name a milestone for each stage, and say *why* each choice was made. That is exactly the shape of D21.
 
 ---
 
-## 6.1 What "BI implementation" actually means
+## Coverage Map
+
+```
+6.1 What BI Implementation Means 🎯 3-mark / 🎯 5-mark
+├── Programme vs project (adoption vs delivery)
+├── Four layers: People → Process → Data → Technology
+└── Memory hook: D-S-P-D-A-C
+
+6.2 Best Practices (8) 🎯 3-mark / 🎯 5-mark
+├── Decisions first → prevents data swamp
+├── Executive sponsor → prevents stall
+├── Phase it: pilot then scale → prevents big bang
+├── Define metrics once → prevents two versions of truth
+├── Data quality + master data as project → prevents unusable dashboards
+├── Architecture for change → prevents rebuilds
+├── Build capability → prevents adoption collapse
+└── Security/privacy by design → prevents incidents
+
+6.3 Challenges (3 families) 🎯 3-mark / 🎯 5-mark
+├── Technical: source sprawl, legacy, performance, hybrid, tool proliferation, security
+├── Organisational: no sponsor, unclear ownership, skills gap, resistance, scope creep, IT-business divide
+└── Data-related: poor quality, no common ID, conflicting definitions, short history, undocumented metadata, privacy
+
+6.4 Phased Plan (5 phases) 🎯 10-mark
+├── Phase 0: Discover & govern (2–4 weeks) → charter signed
+├── Phase 1: Foundation (8–12 weeks) → data dictionary approved, warehouse loaded, DQ baseline
+├── Phase 2: First dashboards (6–8 weeks) → first dashboard in production use
+├── Phase 3: Scale & extend (3–6 months) → second domain live on same template
+└── Phase 4: Operate & improve (ongoing) → adoption target met, roadmap refreshed
+
+6.5 Case Patterns 🎯 5-mark
+├── Walmart: share data with supplier → inter-organisational BI, row-level security as commercial mechanism
+├── Tesco: loyalty card as data asset → Unit 3 at scale, decisions first
+├── Harrah's: value the customer, not the visit → executive sponsorship, behaviour change as success
+└── Nepali bank pattern: decisions already exist → practice 1 satisfied before project starts
+
+6.6 D21 Retail Case 🎯 10-mark
+└── Sources → ETL → Model → Tools → Visualisation → Governance → Integration → Success measure
+
+6.7 D22 Healthcare Case 🎯 10-mark
+└── Best practices (sector) → Challenges (3 families) → Phased plan → Gate condition (patient identity)
+```
+
+---
+
+## 6.1 What "BI Implementation" Actually Means 🎯 3-mark / 🎯 5-mark
 
 > **BI implementation is the programme of work that turns a BI capability from a purchase into a working decision-support system — the data, the models, the tools, the people, the process and the governance — delivered in stages and then operated.**
 
@@ -26,7 +71,7 @@ Three words in that definition carry the marks.
 | **stages** | the single big-bang go-live | phasing is what D22 explicitly asks you to plan |
 | **operated** | a one-off project that ends at handover | dashboards decay without refresh, ownership and DQ monitoring |
 
-### Project versus programme — the distinction that earns a mark
+### Project Versus Programme — The Distinction That Earns a Mark
 
 | | **BI project** | **BI programme** |
 |---|---|---|
@@ -37,27 +82,33 @@ Three words in that definition carry the marks.
 
 The second failure mode is the one that matters, and it is invisible in a project plan. A dashboard nobody opens has delivered nothing, whatever the status report says. When a case question asks you to "propose an approach", say how you will know it worked — *weekly active users, decisions logged, exceptions actioned* — not just what you will build.
 
-### The four layers of implementation work
+### The Four Layers of Implementation Work
 
 ```
-  ┌────────────────────────────────────────────────────┐
-  │  PEOPLE & ORGANISATION   sponsorship, skills,       │  ← where most failures live
-  │                          ownership, adoption        │
-  ├────────────────────────────────────────────────────┤
-  │  PROCESS & GOVERNANCE    definitions, DQ rules,     │
-  │                          security, release cycle    │
-  ├────────────────────────────────────────────────────┤
-  │  DATA & MODELS           sources, ETL, warehouse,   │
-  │                          star schemas, semantic layer│
-  ├────────────────────────────────────────────────────┤
-  │  TECHNOLOGY              BI tool, database, cloud,  │  ← what students write about
-  │                          scheduling, monitoring     │
-  └────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────┐
+│  PEOPLE & ORGANISATION   sponsorship, skills,       │  ← where most failures live
+│                          ownership, adoption        │
+├────────────────────────────────────────────────────┤
+│  PROCESS & GOVERNANCE    definitions, DQ rules,     │
+│                          security, release cycle    │
+├────────────────────────────────────────────────────┤
+│  DATA & MODELS           sources, ETL, warehouse,   │
+│                          star schemas, semantic layer│
+├────────────────────────────────────────────────────┤
+│  TECHNOLOGY              BI tool, database, cloud,  │  ← what students write about
+│                          scheduling, monitoring     │
+└────────────────────────────────────────────────────┘
 ```
 
 ⚠ **The most common 5-mark answer in this unit is a technology-only answer.** It names Power BI, SQL Server and "the cloud" and stops. The bottom layer is 20% of the work and 20% of the marks. C1's word *example*, and D22's words *organizational and data-related*, are the examiner telling you to climb the stack.
 
-## 6.2 Best practices — eight, each with what it prevents
+🧠 **Memory hook: D-S-P-D-A-C** — *Decisions, Sponsor, Phase, Definitions, Architecture, Capability.* (Add security to taste; six is what fits in an answer.)
+
+🇳🇵 **Nepal anchor:** Practice 8 has a specific local edge. Nepal's **Individual Privacy Act, 2075 (2018)** is the country's first dedicated data-protection law, implementing the constitutional right to privacy; it regulates the collection, storage and processing of personal information, and it applies to corporate entities as well as public bodies. Any BI programme touching customer, patient or employee data — which is most of them — is therefore a privacy programme too. Saying this in a case answer separates it from a generic risk list.
+
+---
+
+## 6.2 Best Practices — Eight, Each With What It Prevents 🎯 3-mark / 🎯 5-mark
 
 A "best practices" question is answered by pairing each practice with the failure it prevents. A list of practices with no failure attached reads as memorised.
 
@@ -72,15 +123,13 @@ A "best practices" question is answered by pairing each practice with the failur
 | 7 | **Build capability, not just artefacts** | Training, a champion in each department, documentation, a small centre of excellence | adoption collapse at handover — users revert to spreadsheets |
 | 8 | **Security, privacy and audit by design** | Role-based access and row-level security, PII classified and minimised, retention rules, access logging | a privacy incident, or a regulator's letter, after go-live |
 
-🧠 **Memory hook: D-S-P-D-A-C** — *Decisions, Sponsor, Phase, Definitions, Architecture, Capability.* (Add security to taste; six is what fits in an answer.)
+---
 
-🇳🇵 **Nepal anchor:** practice 8 has a specific local edge. Nepal's **Individual Privacy Act, 2075 (2018)** is the country's first dedicated data-protection law, implementing the constitutional right to privacy; it regulates the collection, storage and processing of personal information, and it applies to corporate entities as well as public bodies. Any BI programme touching customer, patient or employee data — which is most of them — is therefore a privacy programme too. Saying this in a case answer separates it from a generic risk list.
-
-## 6.3 Challenges — the three families the exam names
+## 6.3 Challenges — The Three Families the Exam Names 🎯 3-mark / 🎯 5-mark
 
 D22 uses the paper's own taxonomy: *technical, organizational, and data-related*. C1 asks for challenges *with example*. Prepare the three families, each with symptom → root cause → mitigation, and one concrete example each.
 
-### Technical challenges
+### Technical Challenges
 
 | Challenge | Symptom | Mitigation |
 |---|---|---|
@@ -91,7 +140,7 @@ D22 uses the paper's own taxonomy: *technical, organizational, and data-related*
 | **Tool proliferation** | four reporting tools, four definitions, four support contracts | standardise; a certification process for what is "official" |
 | **Security architecture** | row-level security bolted on late, breaking dashboards | security modelled with the data, not after it |
 
-### Organisational challenges
+### Organisational Challenges
 
 | Challenge | Symptom | Mitigation |
 |---|---|---|
@@ -102,7 +151,7 @@ D22 uses the paper's own taxonomy: *technical, organizational, and data-related*
 | **Scope creep** | every meeting adds a report | decision-first backlog with a published release cycle |
 | **IT–business divide** | business says IT is slow, IT says business keeps changing its mind | joint delivery team, shared definition of done |
 
-### Data-related challenges
+### Data-Related Challenges
 
 | Challenge | Symptom | Mitigation |
 |---|---|---|
@@ -115,21 +164,23 @@ D22 uses the paper's own taxonomy: *technical, organizational, and data-related*
 
 ⚠ **The example rule.** C1 says *with example* and it means one per challenge family, from one consistent organisation. Choose a Nepali commercial bank and keep it: core banking batch extracts (technical), branch managers defending their own spreadsheets (organisational), and three definitions of "active account" (data-related). One organisation, three families — that scores; three unrelated examples read as padding.
 
-### The challenge that is really a decision — build versus buy
+### The Challenge That Is Really a Decision — Build Versus Buy
 
 Worth one line in any implementation answer, because it is a real consideration and examiners reward it: **buy** a BI tool and configure it when the need is standard (dashboards, scheduled refresh, row-level security); **build** when the analytical logic is the competitive asset (a demand-forecasting model, a credit-scoring engine). The hybrid — buy the platform, build the model — is the norm.
 
-## 6.4 The phased plan — the backbone of every case answer
+---
+
+## 6.4 The Phased Plan — The Backbone of Every Case Answer 🎯 10-mark
 
 D22 asks for "a phased implementation plan (high level) with key milestones". That is a structure question, so learn the structure once and reuse it for D21, D22 and the 20-mark board case.
 
 ```
- PHASE 0        PHASE 1        PHASE 2        PHASE 3        PHASE 4
- Discover &     Foundation     First          Scale &        Operate &
- govern         (data)         dashboards     extend         improve
- 2-4 weeks      8-12 weeks     6-8 weeks      3-6 months     ongoing
- ─────┬──────────────┬──────────────┬──────────────┬──────────────┬────►
-      │              │              │              │              │
+PHASE 0        PHASE 1        PHASE 2        PHASE 3        PHASE 4
+Discover &     Foundation     First          Scale &        Operate &
+govern         (data)         dashboards     extend         improve
+2-4 weeks      8-12 weeks     6-8 weeks      3-6 months     ongoing
+─────┬──────────────┬──────────────┬──────────────┬──────────────┬────►
+     │              │              │              │              │
   M1 charter     M2 data       M3 first       M4 second     M5 adoption
   signed,        dictionary     dashboard      domain live   target met,
   sponsor,       approved,      in use by      with the      DQ scorecard
@@ -140,7 +191,7 @@ D22 asks for "a phased implementation plan (high level) with key milestones". Th
 
 | Phase | What you do | Milestone (the thing that proves it) | Why this order |
 |---|---|---|---|
-| **0 Discover & govern** | interviews; decision inventory; success measures; data profiling; privacy/security scope; architecture sketch | **charter signed** — sponsor, scope, budget, success measures | you cannot phase what you have not scoped; the charter is also what stops scope creep |
+| **0 Discover & govern** | interviews; decision inventory; success measures; data profiling; privacy/security scope; architecture sketch | **charter signed** — sponsor, scope, budget, success measures | you cannot phase what you have not scoped; the charter also stops scope creep |
 | **1 Foundation** | source extracts, staging, core warehouse, conformed dimensions, master data for customer/product, DQ rules, metadata catalogue | **data dictionary approved and warehouse loaded** with a DQ baseline | every later phase is a query against this; skipping it is why pilots fail late |
 | **2 First dashboards** | semantic layer; 3–5 KPIs; one dashboard for a named decision-maker; row-level security; refresh schedule | **first dashboard in production use**, with a decision that changed | the pilot proves the template and buys political capital |
 | **3 Scale & extend** | second and third subject area on the same template; more sources; training and champions; release cycle | **second domain live** using the same model and definitions | proves it is a platform, not a one-off |
@@ -152,32 +203,34 @@ Three planning points examiners look for:
 2. **Each phase ends with something usable.** A foundation phase that produces nothing visible for six months is the failure mode of practice 3.
 3. **Timeboxes are indicative.** Say "roughly 8–12 weeks" and explain what would compress or extend it — never present a schedule as a promise.
 
-## 6.5 Case studies — what "successful implementation" looks like
+---
+
+## 6.5 Case Studies — What "Successful Implementation" Looks Like 🎯 5-mark
 
 The syllabus asks for case studies. Use three well-documented ones as **patterns**, not as current claims about those companies: each shows one best practice at industrial scale.
 
-### Case 1 — Walmart: share the data with the supplier
+### Case 1 — Walmart: Share the Data With the Supplier
 
 **Situation:** a retailer with thousands of stores and thousands of suppliers, each guessing what to ship.
 **What was built:** a central retail data warehouse, and a supplier-facing portal that let vendors see store-level sales and stock for their own products.
 **Why it worked:** it turned BI into an *inter-organisational* process. The supplier's decision (what to manufacture) was improved with the retailer's data, so both sides gained, and the retailer's data became a condition of doing business.
 **Exam use:** the best illustration of "BI changes a decision outside the company", and of governance — vendors see only their own rows, which is row-level security as a commercial mechanism.
 
-### Case 2 — Tesco: the loyalty card as a data asset
+### Case 2 — Tesco: The Loyalty Card as a Data Asset
 
 **Situation:** a grocer with a loyalty scheme that most retailers treated as a discount mechanism.
 **What was built:** basket-level analysis of card transactions, linking what was bought together, by whom, over time — the association-rule and segmentation machinery of Unit 3, applied at scale.
 **Why it worked:** the scheme was designed as a *data collection instrument* first and a discount second, and the analysis was tied to specific decisions — targeting, range, promotions, store clustering.
 **Exam use:** ties Unit 3 to Unit 6; the classic answer to "how does a retailer turn transactions into decisions".
 
-### Case 3 — Harrah's (now Caesars): value the customer, not the visit
+### Case 3 — Harrah's (now Caesars): Value the Customer, Not the Visit
 
 **Situation:** a casino operator with a loyalty programme but no view of which customers were worth retaining.
 **What was built:** a customer data warehouse with predictive models of customer value and attrition, used to decide who gets an offer, and how much.
 **Why it worked:** the analysis was commissioned by the executive who could act on it (practice 2), and success was measured in behaviour change, not in reports shipped.
 **Exam use:** the cleanest example that BI's value is in the *decision and the incentive*, not the dashboard.
 
-### Case 4 — the Nepali pattern (constructed, not a named company)
+### Case 4 — the Nepali Pattern (Constructed, Not a Named Company)
 
 **Situation:** a mid-size commercial bank with core banking, a card switch, mobile banking and a spreadsheet-based MIS.
 **What would be built:** a warehouse fed nightly from core banking; star schemas for deposits, loans, channels and branches; a board pack and a branch performance dashboard with row-level security; a DQ scorecard for account and customer data.
@@ -186,7 +239,9 @@ The syllabus asks for case studies. Use three well-documented ones as **patterns
 
 ⚠ **How to use a case in an answer.** Never tell the story for its own sake. The pattern is: *situation → what was built → which best practice it demonstrates → the transferable lesson*. Four lines. A paragraph of company history earns nothing.
 
-## 6.6 Worked case — D21, the retailer end-to-end
+---
+
+## 6.6 Worked Case — D21, the Retailer End-to-End 🎯 10-mark
 
 > *"A mid-size retail company wants to implement a BI solution to improve sales forecasting and inventory planning. Propose an end-to-end BI approach covering data sources, ETL strategy, data modelling, choice of BI tools, visualization/dashboarding, and governance. Explain why each component is chosen and how they integrate to deliver business value."*
 
@@ -205,61 +260,9 @@ The question hands you the structure in its own list. Answer in that order, one 
 
 **Then say how you would know it worked.** Forecast error falling, stock cover inside target, exception lists cleared within the week, and the planners actually using it. A case answer without a success measure is a build plan, not an implementation.
 
-## 6.7 Worked case — D22, the healthcare phased plan
+---
 
-> *"A healthcare provider plans to deploy a BI platform. Discuss major implementation best practices and potential challenges — technical, organizational, and data-related. Provide a phased implementation plan (high level) with key milestones."*
-
-Same skeleton, different content, and the sector adds two constraints: **patient safety** makes wrong numbers a clinical risk, and **consent and privacy** make data use a legal question, not a preference.
-
-**Best practices, sector-specific.** Clinician ownership of clinical metrics (practice 2); definitions agreed with the clinical governance committee, not IT (practice 4); a named patient identifier and consistent coding (practice 5); role-based access so a ward nurse and a finance officer see different rows (practice 8); start with operational flows, where the decisions are daily (practice 3).
-
-**Challenges, by family.**
-
-| Family | Healthcare-specific examples |
-|---|---|
-| **Technical** | hospital management systems and laboratory systems that do not interoperate; batch-only extracts; imaging and unstructured notes outside the warehouse; identity matching across registrations |
-| **Organisational** | clinicians who distrust numbers they did not produce; competing priorities during a service surge; no analytics staff; governance split between clinical, finance and IT |
-| **Data-related** | inconsistent clinical coding; duplicate patient records; missing outcomes; consent and purpose limitation under the privacy law; historical data that predates a system change |
-
-**The phased plan.**
-
-| Phase | Focus | Milestone |
-|---|---|---|
-| 0 · Discover (3–4 weeks) | clinical and operational decision inventory; privacy and consent scope; data profiling | **charter signed by the medical director and the CFO** |
-| 1 · Foundation (8–12 weeks) | master patient index; encounters, admissions, pharmacy and lab data in a warehouse; data dictionary with clinical coding rules | **data dictionary approved by clinical governance; DQ baseline published** |
-| 2 · Operational dashboards (6–8 weeks) | bed occupancy, OPD waiting time, theatre utilisation, pharmacy stock and expiry | **first dashboard used in the daily operations huddle** |
-| 3 · Clinical quality (8 weeks) | average length of stay, readmissions, infection rate, mortality review, cost per case | **quality indicators agreed and reconciled with the clinical audit** |
-| 4 · Predict and extend (ongoing) | demand forecasting, no-show prediction, capacity planning; other departments on the template | **adoption target met; quarterly roadmap in place** |
-
-**The close.** Name the one thing that would make you pause the programme: a patient-identity problem. If the same patient appears twice, every clinical metric downstream is wrong, so fixing the master patient index is a gate before any clinical dashboard, not a later enhancement. A case answer that names its own gate condition reads as professional judgement.
-
-## 6.8 Answer skeletons
-
-### B16 · "Outline key challenges organizations face when implementing BI solutions." [3]
-
-> *Shape: name the three families, one instance each, one line of consequence. ~110 words.*
-
-> Organisations meet three families of challenge. **Data:** source systems disagree — duplicate customers, inconsistent product codes and three definitions of "active customer" — so the warehouse is technically correct and commercially untrusted. **Technical:** legacy and pack-standard systems offer only batch, undocumented extracts, and dashboard performance degrades as history grows. **Organisational:** the commonest failure is not technical at all — no executive sponsor, no named owner for each metric, and a skills gap that leaves one analyst holding the programme. The usual result is a dashboard delivered on time and never used.
-
-*(108 words)*
-
-### C1 · "Explain challenges in BI implementation with example." [5]
-
-> *Shape: three families × (challenge + example) → the organisational point → what mitigation looks like. ~220 words, one organisation throughout.*
-
-> Take a mid-size commercial bank implementing BI over core banking, cards and mobile channels.
->
-> **Technical.** Extracts arrive as overnight batch files with undocumented fields, and the card switch has no shared customer key, so the warehouse cannot join channels without a mapping layer. Mitigation: a staging layer, vendor extract agreements and master data management.
->
-> **Data-related.** Three definitions of "active account" exist — by balance, by transaction, by login — and customer records duplicate across branches. A dashboard built on any one of them will be disputed in the first meeting. Mitigation: a governed glossary, one definition signed off by the business owner, and DQ rules tested in the pipeline.
->
-> **Organisational.** The programme is sponsored by a middle manager without budget, branch managers keep their own spreadsheets because they trust them, and a single analyst holds all the tool knowledge. This is where most implementations fail, and no technology choice fixes it. Mitigation: an executive steering group, named metric owners, two trained analysts per domain, and a pilot whose result a manager actually used.
->
-> The pattern to state: data and technical problems are solvable with time and money; organisational problems need sponsorship and adoption, which is why they decide whether the programme survives.
-
-*(219 words)*
-
-### D21 · Retailer end-to-end [10]
+### D21 · Retailer End-to-End [10] 🎯 10-mark
 
 > *Shape: the six components the question lists, one short block each with the reason, then integration, then the success measure. ~380 words.*
 
@@ -279,9 +282,41 @@ Same skeleton, different content, and the sector adds two constraints: **patient
 >
 > **Sequencing.** Phase 0 agrees the decisions the dashboards must serve; Phase 1 loads the two facts with DQ rules; Phase 2 ships the planning dashboard for one category; Phase 3 extends it to all categories on the same template. Value therefore arrives in Phase 2, not at the end of the programme.
 
-*(348 words)*
+---
 
-### D22 · Healthcare phased plan [10]
+## 6.7 Worked Case — D22, the Healthcare Phased Plan 🎯 10-mark
+
+> *"A healthcare provider plans to deploy a BI platform. Discuss major implementation best practices and potential challenges — technical, organizational, and data-related. Provide a phased implementation plan (high level) with key milestones."*
+
+Same skeleton, different content, and the sector adds two constraints: **patient safety** makes wrong numbers a clinical risk, and **consent and privacy** make data use a legal question, not a preference.
+
+### Best Practices, Sector-Specific
+
+Clinician ownership of clinical metrics (practice 2); definitions agreed with the clinical governance committee, not IT (practice 4); a named patient identifier and consistent coding (practice 5); role-based access so a ward nurse and a finance officer see different rows (practice 8); start with operational flows, where the decisions are daily (practice 3).
+
+### Challenges, by Family
+
+| Family | Healthcare-specific examples |
+|---|---|
+| **Technical** | hospital management systems and laboratory systems that do not interoperate; batch-only extracts; imaging and unstructured notes outside the warehouse; identity matching across registrations |
+| **Organisational** | clinicians who distrust numbers they did not produce; competing priorities during a service surge; no analytics staff; governance split between clinical, finance and IT |
+| **Data-related** | inconsistent clinical coding; duplicate patient records; missing outcomes; consent and purpose limitation under the privacy law; historical data that predates a system change |
+
+### The Phased Plan
+
+| Phase | Focus | Milestone |
+|---|---|---|
+| 0 · Discover (3–4 weeks) | clinical and operational decision inventory; privacy and consent scope; data profiling | **charter signed by the medical director and the CFO** |
+| 1 · Foundation (8–12 weeks) | master patient index; encounters, admissions, pharmacy and lab data in a warehouse; data dictionary with clinical coding rules | **data dictionary approved by clinical governance; DQ baseline published** |
+| 2 · Operational dashboards (6–8 weeks) | bed occupancy, OPD waiting time, theatre utilisation, pharmacy stock and expiry | **first dashboard used in the daily operations huddle** |
+| 3 · Clinical quality (8 weeks) | average length of stay, readmissions, infection rate, mortality review, cost per case | **quality indicators agreed and reconciled with the clinical audit** |
+| 4 · Predict and extend (ongoing) | demand forecasting, no-show prediction, capacity planning; other departments on the template | **adoption target met; quarterly roadmap in place** |
+
+**The close.** Name the one thing that would make you pause the programme: a patient-identity problem. If the same patient appears twice, every clinical metric downstream is wrong, so fixing the master patient index is a gate before any clinical dashboard, not a later enhancement. A case answer that names its own gate condition reads as professional judgement.
+
+---
+
+### D22 · Healthcare Phased Plan [10] 🎯 10-mark
 
 > *Shape: best practices (sector-specific) → challenges by the paper's own three families → four phases with an evidence milestone each → the gate condition. ~380 words.*
 
@@ -295,15 +330,37 @@ Same skeleton, different content, and the sector adds two constraints: **patient
 >
 > **Sequencing and risk.** Operational dashboards deliberately precede clinical quality: counting beds and waiting times is simpler and builds the clinicians' trust that the quality indicators will later spend. If the DQ baseline is not met at the Phase 1 gate, Phase 3 slips rather than shipping rates the clinical audit will contradict.
 
-*(325 words)*
+---
 
-### Group D · the 20-mark implementation case
+## 6.8 Answer Skeletons
 
-The board paper's Group D is **one 20-mark case with four sub-questions**. When the case is an implementation story, the four parts are almost always: **(a) what is the problem and what would you build, (b) what data and architecture, (c) how do you deliver it and in what order, (d) what can go wrong — risk, ethics, governance.** That is 5 marks each, and (c) and (d) are this unit.
+### B16 · "Outline key challenges organizations face when implementing BI solutions." [3] 🎯 3-mark
 
-> **Scaffold to memorise:** (a) decision and gap → (b) sources, ETL, star schema → (c) phases with evidence milestones → (d) three challenge families, plus privacy/ethics, plus the success measure.
+> *Shape: name the three families, one instance each, one line of consequence. ~110 words.*
 
-⚠ **Do not write one long essay for a 20-mark case.** Four labelled parts, each opening with its own topic sentence, is faster to mark and easier to keep inside the time. Unit 1's §1.5 holds the Amazon case rehearsal; this unit holds the implementation half.
+> Organisations meet three families of challenge. **Data:** source systems disagree — duplicate customers, inconsistent product codes and three definitions of "active customer" — so the warehouse is technically correct and commercially untrusted. **Technical:** legacy and pack-standard systems offer only batch, undocumented extracts, and dashboard performance degrades as history grows. **Organisational:** the commonest failure is not technical at all — no executive sponsor, no named owner for each metric, and a skills gap that leaves one analyst holding the programme. The usual result is a dashboard delivered on time and never used.
+
+*(108 words)*
+
+---
+
+### C1 · "Explain challenges in BI implementation with example." [5] 🎯 5-mark
+
+> *Shape: three families × (challenge + example) → the organisational point → what mitigation looks like. ~220 words, one organisation throughout.*
+
+> Take a mid-size commercial bank implementing BI over core banking, cards and mobile channels.
+>
+> **Technical.** Extracts arrive as overnight batch files with undocumented fields, and the card switch has no shared customer key, so the warehouse cannot join channels without a mapping layer. Mitigation: a staging layer, vendor extract agreements and master data management.
+>
+> **Data-related.** Three definitions of "active account" exist — by balance, by transaction, by login — and customer records duplicate across branches. A dashboard built on any one of them will be disputed in the first meeting. Mitigation: a governed glossary, one definition signed off by the business owner, and DQ rules tested in the pipeline.
+>
+> **Organisational.** The programme is sponsored by a middle manager without budget, branch managers keep their own spreadsheets because they trust them, and a single analyst holds all the tool knowledge. This is where most implementations fail, and no technology choice fixes it. Mitigation: an executive steering group, named metric owners, two trained analysts per domain, and a pilot whose result a manager actually used.
+>
+> The pattern to state: data and technical problems are solvable with time and money; organisational problems need sponsorship and adoption, which is why they decide whether the programme survives.
+
+*(219 words)*
+
+---
 
 ## 6.9 Traps
 
@@ -320,7 +377,9 @@ The board paper's Group D is **one 20-mark case with four sub-questions**. When 
 | Naming a real Nepali bank's systems | unverifiable and risks being wrong | describe the pattern; say it is a pattern |
 | Forgetting the success measure | a build plan is not an implementation | close with adoption and outcome metrics |
 
-## 6.10 Self-test (answers collapsed)
+---
+
+## 6.10 Self-Test (Answers Collapsed)
 
 1. Define BI implementation in one sentence, and name the one word that separates it from a BI project. *(1 mark)*
 2. Give three challenges of BI implementation, one from each family. *(3 marks — B16)*
@@ -347,9 +406,9 @@ The board paper's Group D is **one 20-mark case with four sub-questions**. When 
 
 ---
 
-## 6.11 Sixty-second check
+## 6.11 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] Define BI implementation, and say why "programme" and "operated" matter
 - [ ] Draw the four implementation layers
@@ -365,4 +424,4 @@ If all nine are there, this unit's **25 board marks and 23 model marks** are cov
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 249, Unit 6, 8 LHs) · TU 2026 paper (C1, Group D) · official TU/FOM model question 2026 (B16, D21, D22) · best-practice structure and the implementation lifecycle from Sherman, Business Intelligence Guidebook (a syllabus reading) and Kimball & Ross, The Data Warehouse Toolkit (also a syllabus reading) — both textbook-level, not fetched this session. The Individual Privacy Act, 2075 (2018) is described at the level of what it regulates (collection, storage, processing of personal information, applicable to corporate entities), confirmed against public legal summaries, not against the statute text. The Walmart, Tesco and Harrah's case boxes describe the commonly published account of what each organisation built and why; no current figures, market positions or unverifiable claims are asserted, and the Nepali bank case is explicitly a constructed pattern, not a claim about a named institution.*
+*Sources: TU FOM syllabus (IT 249, Unit 6, 8 LHs) · TU 2026 paper (C1, Group D) · TU/FOM model question 2026 (B16, D21, D22) · Best-practice structure and the implementation lifecycle from Sherman, Business Intelligence Guidebook (a syllabus reading) and Kimball & Ross, The Data Warehouse Toolkit (also a syllabus reading) — both textbook-level, not fetched this session. The Individual Privacy Act, 2075 (2018) is described at the level of what it regulates (collection, storage, processing of personal information, applicable to corporate entities), confirmed against public legal summaries, not against the statute text. The Walmart, Tesco and Harrah's case boxes describe the commonly published account of what each organisation built and why; no current figures, market positions or unverifiable claims are asserted, and the Nepali bank case is explicitly a constructed pattern, not a claim about a named institution.*

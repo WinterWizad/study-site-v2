@@ -11,10 +11,10 @@ const DIST_DIR = path.join(__dirname, 'dist');
 
 // Exam Routine — single source of truth (8th Semester NC only, from Dean's Office 2083/07/28)
 const EXAM_ROUTINE = [
-  { iso: '2026-12-01', bs: 'Mangsir 15, 2083', day: 'Tuesday', code: 'IT 248', title: 'IT Entrepreneurship & Management (NC)', subjectId: 'entrepreneurship', isOurs: true },
-  { iso: '2026-12-03', bs: 'Mangsir 17, 2083', day: 'Thursday', code: 'IT 250', title: 'Digital Economy (NC)', subjectId: 'de', isOurs: true },
-  { iso: '2026-12-06', bs: 'Mangsir 20, 2083', day: 'Sunday', code: 'IT 249', title: 'Business Intelligence (NC)', subjectId: 'bi', isOurs: true },
-  { iso: '2026-12-10', bs: 'Mangsir 24, 2083', day: 'Thursday', code: 'IT 277', title: 'Cloud Computing (NC)', subjectId: 'cloud', isOurs: true },
+  { iso: '2026-12-01', bs: 'Mangsir 15, 2083', day: 'Tuesday', code: 'IT 248', short: 'Entrepreneur', color: '#dc2626', title: 'IT Entrepreneurship & Management (NC)', subjectId: 'entrepreneurship', isOurs: true },
+  { iso: '2026-12-03', bs: 'Mangsir 17, 2083', day: 'Thursday', code: 'IT 250', short: 'Digital Economy', color: '#059669', title: 'Digital Economy (NC)', subjectId: 'de', isOurs: true },
+  { iso: '2026-12-06', bs: 'Mangsir 20, 2083', day: 'Sunday', code: 'IT 249', short: 'Business Intel.', color: '#2563eb', title: 'Business Intelligence (NC)', subjectId: 'bi', isOurs: true },
+  { iso: '2026-12-10', bs: 'Mangsir 24, 2083', day: 'Thursday', code: 'IT 277', short: 'Cloud Computing', color: '#7c3aed', title: 'Cloud Computing (NC)', subjectId: 'cloud', isOurs: true },
 ];
 
 // Two real cinema releases on 18 Dec 2026. Kept out of EXAM_ROUTINE so the
@@ -902,14 +902,14 @@ function railStationHtml(stop, left, row) {
   const when = parseIsoLocal(stop.iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const names = stop.isMovie
     ? stop.view.map(n => `<span class="station-code">${n}</span>`).join('')
-    : `<span class="station-code">${stop.code}</span>`;
+    : `<span class="station-code" style="color:${stop.color}">${stop.short || stop.code}</span>`;
   const kind = stop.isMovie ? '<span class="station-kind">films</span>' : '';
   const inner = `
         <span class="station-card">
           ${kind}${names}
           <span class="station-when">${when}</span>
         </span>
-        <span class="station-dot"></span>`;
+        <span class="station-dot"${stop.color ? ` style="border-color:${stop.color}"` : ''}></span>`;
   const cls = 'rail-station ' + (stop.isMovie ? 'is-movie' : 'is-ours') + (row % 2 ? ' row-b' : '');
   const attrs = `class="${cls}" style="left:${left}%" data-iso="${stop.iso}" title="${stop.title}"`;
   return stop.subjectId
@@ -944,7 +944,7 @@ function railHeroHtml(rail) {
       <section class="rail-hero" id="timetable" aria-label="Exam timetable rail">
         <div class="rail-counter">
           <span class="counter-label">Next</span>
-          <span class="counter-code" id="code">IT 248</span>
+          <span class="counter-code" id="code">Entrepreneur</span>
           <span class="counter-time" aria-hidden="true"><b id="days">0</b>d <b id="hours">00</b>:<b id="mins">00</b>:<b id="secs">00</b></span>
           <span class="sr-only" id="sr"></span>
         </div>
@@ -964,6 +964,98 @@ function railHeroHtml(rail) {
           </div>
         </div>
         <span class="sr-only">Exam routine: Dean's Office, 2083/07/28. Films: Dune: Part Three and Avengers: Doomsday, both 18 December 2026.</span>
+      </section>`;
+}
+
+// Short wheel labels. The full official unit title is always shown after a spin.
+const WHEEL_LABELS = {
+  bi: {
+    1: 'Intro to BI', 2: 'Data Warehousing', 3: 'Data Mining',
+    4: 'Data Visualization', 5: 'BI Tools & Tech', 6: 'BI Implementation'
+  },
+  de: {
+    1: 'Digital Econ. Intro', 2: 'Digital Econ. Basics', 3: 'Digital Markets',
+    4: 'Digital Transform.', 5: 'Info Economics', 6: 'Nepal Perspective'
+  },
+  cloud: {
+    1: 'Intro to Cloud', 2: 'Cloud Architecture', 3: 'Cloud Applications',
+    4: 'Virtualization', 5: 'MapReduce', 6: 'Cloud Security', 7: 'Cloud Platforms'
+  },
+  entrepreneurship: {
+    1: 'Foundations', 2: 'Idea & Market', 3: 'Business Model',
+    4: 'Legal & Compliance', 5: 'Finance & Marketing', 6: 'Leadership & CSR'
+  }
+};
+
+function wheelLabel(subjectId, unit) {
+  const custom = (WHEEL_LABELS[subjectId] || {})[unit.num];
+  if (custom) return custom;
+  const t = unit.title.replace(/^Introduction to /, 'Intro to ');
+  return t.length <= 19 ? t : t.slice(0, 18).trimEnd() + '…';
+}
+
+// One slice per unit, grouped by subject colour. The wheel is the button.
+function spinWheelHtml() {
+  const slices = [];
+  SUBJECT_ORDER.forEach(s => {
+    const label = (getSubjectExam(s.id) || {}).short || s.name;
+    s.units.forEach(u => slices.push({ subject: s.id, subjectName: label, color: s.color, num: u.num, title: u.title, label: wheelLabel(s.id, u) }));
+  });
+  const n = slices.length;
+  const step = 360 / n;
+  const R = 84, C = 100;
+  const segments = slices.map((slice, i) => {
+    const rad = a => a * Math.PI / 180;
+    const pt = a => [C + R * Math.cos(rad(a - 90)), C + R * Math.sin(rad(a - 90))];
+    const [x0, y0] = pt(i * step);
+    const [x1, y1] = pt((i + 1) * step);
+    const d = `M ${C} ${C} L ${x0.toFixed(2)} ${y0.toFixed(2)} A ${R} ${R} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z`;
+    const mid = i * step + step / 2;
+    const flip = mid < 180 ? ` rotate(180 ${C} 50)` : '';
+    const text = slice.label.replace(/&/g, '&amp;');
+    return `<path d="${d}" fill="${slice.color}" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="${C}" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(${mid.toFixed(2)} ${C} ${C}) rotate(90 ${C} 50)${flip}">${text}</text>`;
+  }).join('');
+  const legend = SUBJECT_ORDER.map(s => {
+    const label = (getSubjectExam(s.id) || {}).short || s.name;
+    return `<li><i style="background:${s.color}"></i>${label.replace(/&/g, '&amp;')}</li>`;
+  }).join('');
+
+  return `
+      <section class="spin-section" id="spin" aria-labelledby="spinTitle">
+        <h2 id="spinTitle" class="section-title">What should I study?</h2>
+        <div class="spin-layout">
+          <div class="wheel-stage">
+            <span class="wheel-pointer" aria-hidden="true"></span>
+            <button class="wheel-wrap" id="spinBtn" type="button" aria-label="Spin the wheel to pick a unit">
+              <svg class="wheel" id="wheel" viewBox="0 0 200 200" focusable="false" aria-hidden="true" style="transform:rotate(${(-180 / n).toFixed(2)}deg)">
+                ${segments}
+                <circle cx="100" cy="100" r="84" fill="none" stroke="var(--border)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="15" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="4" fill="var(--accent)"/>
+              </svg>
+            </button>
+          </div>
+          <div class="spin-panel">
+            <ul class="wheel-legend" aria-hidden="true">${legend}</ul>
+            <button class="sound-btn" id="soundBtn" type="button" aria-pressed="false">Sound off</button>
+            <p class="spin-result" id="spinResult" aria-live="polite"><span id="spinSubject">Tap the wheel to pick today's unit.</span><span class="spin-unit" id="spinUnit"></span></p>
+            <a class="spin-link" id="spinLink" href="#" hidden>Open the unit &rarr;</a>
+          </div>
+        </div>
+
+        <dialog class="spin-modal" id="spinModal" aria-labelledby="spinModalTitle">
+          <div class="spin-modal-body">
+            <button class="spin-modal-x" id="spinModalClose" type="button" aria-label="Close">&times;</button>
+            <span class="spin-modal-kicker">Today's pick</span>
+            <h3 class="spin-modal-title" id="spinModalTitle"><i id="spinModalDot"></i><span id="spinModalSubject">Subject</span></h3>
+            <p class="spin-modal-unit"><strong id="spinModalNum">Unit 1</strong><span id="spinModalUnit">Unit title</span></p>
+            <div class="spin-modal-actions">
+              <a class="spin-modal-open" id="spinModalLink" href="#">Open the unit &rarr;</a>
+              <button class="spin-modal-again" id="spinModalAgain" type="button">Spin again</button>
+            </div>
+          </div>
+        </dialog>
       </section>`;
 }
 
@@ -990,7 +1082,7 @@ function generateMainIndexHtml() {
         <a href="bi/cheat-sheet.html">Cheat sheet</a>
       </nav>
       <span class="header-clock" id="headerClock" aria-live="off">
-        <span class="clock-code" id="htCode">IT 248</span>
+        <span class="clock-code" id="htCode" style="color:#dc2626">Entrepreneur</span>
         <span class="clock-val" id="htVal">--d --:--:--</span>
       </span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
@@ -1033,6 +1125,7 @@ function generateMainIndexHtml() {
       </section>
 
       ${railHeroHtml(rail)}
+      ${spinWheelHtml()}
 
       <section class="doors" id="subjects" aria-labelledby="doorsTitle">
         <h2 id="doorsTitle" class="section-title">Open your notes</h2>
@@ -1123,6 +1216,13 @@ function generateMainIndexHtml() {
     // only the far end of the line; the counter still counts exam papers.
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
     const RAIL_LAST_ISO = ${JSON.stringify(RAIL_STOPS[RAIL_STOPS.length - 1].iso)};
+    const WHEEL_SLICES = ${JSON.stringify(SUBJECT_ORDER.flatMap(s => s.units.map(u => ({
+      id: s.id,
+      subject: (getSubjectExam(s.id) || {}).short || s.name,
+      color: s.color,
+      num: u.num,
+      title: u.title,
+    }))))};
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
       return new Date(y, m - 1, d);
@@ -1184,7 +1284,7 @@ function generateMainIndexHtml() {
         const el = document.getElementById(name);
         if (el) el.textContent = value;
       };
-      setText('code', next ? next.code : 'All papers done');
+      setText('code', next ? (next.short || next.code) : 'All papers done');
       setText('days', days);
       setText('hours', pad2(hours));
       setText('mins', pad2(mins));
@@ -1204,11 +1304,130 @@ function generateMainIndexHtml() {
 
       const htCode = document.getElementById('htCode');
       const htVal = document.getElementById('htVal');
-      if (htCode) htCode.textContent = next ? next.code : 'Done';
+      if (htCode) {
+        htCode.textContent = next ? (next.short || next.code) : 'Done';
+        if (next && next.color) htCode.style.color = next.color;
+      }
       if (htVal) htVal.textContent = clockText;
     }
     updateRail();
     setInterval(updateRail, 1000);
+
+    // Study picker: one spin chooses a subject, then a unit inside it.
+    (function () {
+      const wheel = document.getElementById('wheel');
+      const spinBtn = document.getElementById('spinBtn');
+      const soundBtn = document.getElementById('soundBtn');
+      if (!wheel || !spinBtn) return;
+
+      const subjectEl = document.getElementById('spinSubject');
+      const unitEl = document.getElementById('spinUnit');
+      const link = document.getElementById('spinLink');
+      const modal = document.getElementById('spinModal');
+      const modalSubject = document.getElementById('spinModalSubject');
+      const modalDot = document.getElementById('spinModalDot');
+      const modalNum = document.getElementById('spinModalNum');
+      const modalUnit = document.getElementById('spinModalUnit');
+      const modalLink = document.getElementById('spinModalLink');
+      const modalAgain = document.getElementById('spinModalAgain');
+      const modalClose = document.getElementById('spinModalClose');
+      let rotation = -180 / WHEEL_SLICES.length;
+      let spinning = false;
+      let pending = 0;
+      let audio = null;
+      let soundOn = localStorage.getItem('wheelSound') === 'on';
+
+      if (modalClose) modalClose.addEventListener('click', () => modal.close());
+      if (modalAgain) modalAgain.addEventListener('click', () => {
+        modal.close();
+        spinBtn.click();
+      });
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.close();
+      });
+
+      function syncSound() {
+        soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off';
+        soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+      }
+      syncSound();
+
+      function tone(freq, duration, delay, type) {
+        if (!soundOn) return;
+        try {
+          audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+          const osc = audio.createOscillator();
+          const gain = audio.createGain();
+          osc.type = type || 'sine';
+          osc.frequency.value = freq;
+          osc.connect(gain);
+          gain.connect(audio.destination);
+          const t = audio.currentTime + delay;
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(0.08, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+          osc.start(t);
+          osc.stop(t + duration + 0.02);
+        } catch (e) { /* audio is a nice-to-have */ }
+      }
+      function spinSound() {
+        for (let i = 0; i < 7; i++) tone(280 + i * 55, 0.07, i * 0.07, 'triangle');
+      }
+      function landSound() {
+        tone(784, 0.16, 0, 'sine');
+        tone(1175, 0.22, 0.07, 'sine');
+      }
+
+      soundBtn.addEventListener('click', function () {
+        soundOn = !soundOn;
+        localStorage.setItem('wheelSound', soundOn ? 'on' : 'off');
+        syncSound();
+        if (soundOn) tone(660, 0.08, 0, 'sine');
+      });
+
+      function settle(index) {
+        const slice = WHEEL_SLICES[index];
+        const unitUrl = slice.id + '/unit-' + slice.num + '.html';
+        subjectEl.textContent = slice.subject;
+        unitEl.textContent = 'Unit ' + slice.num + ' · ' + slice.title;
+        link.href = unitUrl;
+        link.hidden = false;
+        landSound();
+        spinning = false;
+        spinBtn.disabled = false;
+
+        modalSubject.textContent = slice.subject;
+        modalSubject.style.color = slice.color;
+        modalDot.style.background = slice.color;
+        modalNum.textContent = 'Unit ' + slice.num;
+        modalUnit.textContent = slice.title;
+        modalLink.href = unitUrl;
+        if (!modal.open) {
+          if (typeof modal.showModal === 'function') modal.showModal();
+          else modal.setAttribute('open', '');
+        }
+      }
+
+      spinBtn.addEventListener('click', function () {
+        if (spinning) return;
+        spinning = true;
+        spinBtn.disabled = true;
+        link.hidden = true;
+        pending = Math.floor(Math.random() * WHEEL_SLICES.length);
+        const step = 360 / WHEEL_SLICES.length;
+        const target = pending * step + step / 2;
+        const delta = ((360 - target - rotation) % 360 + 360) % 360;
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        rotation += reduced ? delta : 5 * 360 + delta;
+        wheel.style.transform = 'rotate(' + rotation + 'deg)';
+        spinSound();
+        if (reduced) settle(pending);
+      });
+
+      wheel.addEventListener('transitionend', function (e) {
+        if (e.propertyName === 'transform' && spinning) settle(pending);
+      });
+    })();
 
   </script>
 </body>

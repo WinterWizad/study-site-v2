@@ -18,7 +18,7 @@
         <a href="bi/cheat-sheet.html">Cheat sheet</a>
       </nav>
       <span class="header-clock" id="headerClock" aria-live="off">
-        <span class="clock-code" id="htCode">IT 248</span>
+        <span class="clock-code" id="htCode" style="color:#dc2626">Entrepreneur</span>
         <span class="clock-val" id="htVal">--d --:--:--</span>
       </span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
@@ -79,11 +79,10 @@
       </section>
 
       
-      <section class="rail-hero" id="timetable" aria-labelledby="railTitle">
-        <h2 id="railTitle" class="variant-title">Exams &rarr; films</h2>
+      <section class="rail-hero" id="timetable" aria-label="Exam timetable rail">
         <div class="rail-counter">
           <span class="counter-label">Next</span>
-          <span class="counter-code" id="code">IT 248</span>
+          <span class="counter-code" id="code">Entrepreneur</span>
           <span class="counter-time" aria-hidden="true"><b id="days">0</b>d <b id="hours">00</b>:<b id="mins">00</b>:<b id="secs">00</b></span>
           <span class="sr-only" id="sr"></span>
         </div>
@@ -132,28 +131,28 @@
             <span class="rail-tick" style="left:100.000%" data-iso="2026-12-18"><i></i><em>18</em></span>
             <a class="rail-station is-ours" style="left:39.286%" data-iso="2026-12-01" title="IT Entrepreneurship & Management (NC)" href="entrepreneurship/">
         <span class="station-card">
-          <span class="station-code">IT 248</span>
+          <span class="station-code" style="color:#dc2626">Entrepreneur</span>
           <span class="station-when">Tue, Dec 1</span>
         </span>
-        <span class="station-dot"></span>
+        <span class="station-dot" style="border-color:#dc2626"></span>
       </a><a class="rail-station is-ours row-b" style="left:46.429%" data-iso="2026-12-03" title="Digital Economy (NC)" href="de/">
         <span class="station-card">
-          <span class="station-code">IT 250</span>
+          <span class="station-code" style="color:#059669">Digital Economy</span>
           <span class="station-when">Thu, Dec 3</span>
         </span>
-        <span class="station-dot"></span>
+        <span class="station-dot" style="border-color:#059669"></span>
       </a><a class="rail-station is-ours" style="left:57.143%" data-iso="2026-12-06" title="Business Intelligence (NC)" href="bi/">
         <span class="station-card">
-          <span class="station-code">IT 249</span>
+          <span class="station-code" style="color:#2563eb">Business Intel.</span>
           <span class="station-when">Sun, Dec 6</span>
         </span>
-        <span class="station-dot"></span>
+        <span class="station-dot" style="border-color:#2563eb"></span>
       </a><a class="rail-station is-ours row-b" style="left:71.429%" data-iso="2026-12-10" title="Cloud Computing (NC)" href="cloud/">
         <span class="station-card">
-          <span class="station-code">IT 277</span>
+          <span class="station-code" style="color:#7c3aed">Cloud Computing</span>
           <span class="station-when">Thu, Dec 10</span>
         </span>
-        <span class="station-dot"></span>
+        <span class="station-dot" style="border-color:#7c3aed"></span>
       </a><div class="rail-station is-movie" style="left:100.000%" data-iso="2026-12-18" title="Dune: Part Three + Avengers: Doomsday — both in cinemas 18 December 2026">
         <span class="station-card">
           <span class="station-kind">films</span><span class="station-code">Dune 3</span><span class="station-code">Avengers</span>
@@ -179,6 +178,67 @@
           </div>
         </div>
         <span class="sr-only">Exam routine: Dean's Office, 2083/07/28. Films: Dune: Part Three and Avengers: Doomsday, both 18 December 2026.</span>
+      </section>
+      
+      <section class="spin-section" id="spin" aria-labelledby="spinTitle">
+        <h2 id="spinTitle" class="section-title">What should I study?</h2>
+        <div class="spin-layout">
+          <div class="wheel-stage">
+            <span class="wheel-pointer" aria-hidden="true"></span>
+            <button class="wheel-wrap" id="spinBtn" type="button" aria-label="Spin the wheel to pick a unit">
+              <svg class="wheel" id="wheel" viewBox="0 0 200 200" focusable="false" aria-hidden="true" style="transform:rotate(-7.20deg)">
+                <path d="M 100 100 L 100.00 16.00 A 84 84 0 0 1 120.89 18.64 Z" fill="#dc2626" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(7.20 100 100) rotate(90 100 50) rotate(180 100 50)">Foundations</text><path d="M 100 100 L 120.89 18.64 A 84 84 0 0 1 140.47 26.39 Z" fill="#dc2626" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(21.60 100 100) rotate(90 100 50) rotate(180 100 50)">Idea &amp; Market</text><path d="M 100 100 L 140.47 26.39 A 84 84 0 0 1 157.50 38.77 Z" fill="#dc2626" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(36.00 100 100) rotate(90 100 50) rotate(180 100 50)">Business Model</text><path d="M 100 100 L 157.50 38.77 A 84 84 0 0 1 170.92 54.99 Z" fill="#dc2626" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(50.40 100 100) rotate(90 100 50) rotate(180 100 50)">Legal &amp; Compliance</text><path d="M 100 100 L 170.92 54.99 A 84 84 0 0 1 179.89 74.04 Z" fill="#dc2626" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(64.80 100 100) rotate(90 100 50) rotate(180 100 50)">Finance &amp; Marketing</text><path d="M 100 100 L 179.89 74.04 A 84 84 0 0 1 183.83 94.73 Z" fill="#dc2626" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(79.20 100 100) rotate(90 100 50) rotate(180 100 50)">Leadership &amp; CSR</text><path d="M 100 100 L 183.83 94.73 A 84 84 0 0 1 182.51 115.74 Z" fill="#059669" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(93.60 100 100) rotate(90 100 50) rotate(180 100 50)">Digital Econ. Intro</text><path d="M 100 100 L 182.51 115.74 A 84 84 0 0 1 176.01 135.77 Z" fill="#059669" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(108.00 100 100) rotate(90 100 50) rotate(180 100 50)">Digital Econ. Basics</text><path d="M 100 100 L 176.01 135.77 A 84 84 0 0 1 164.72 153.54 Z" fill="#059669" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(122.40 100 100) rotate(90 100 50) rotate(180 100 50)">Digital Markets</text><path d="M 100 100 L 164.72 153.54 A 84 84 0 0 1 149.37 167.96 Z" fill="#059669" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(136.80 100 100) rotate(90 100 50) rotate(180 100 50)">Digital Transform.</text><path d="M 100 100 L 149.37 167.96 A 84 84 0 0 1 130.92 178.10 Z" fill="#059669" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(151.20 100 100) rotate(90 100 50) rotate(180 100 50)">Info Economics</text><path d="M 100 100 L 130.92 178.10 A 84 84 0 0 1 110.53 183.34 Z" fill="#059669" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(165.60 100 100) rotate(90 100 50) rotate(180 100 50)">Nepal Perspective</text><path d="M 100 100 L 110.53 183.34 A 84 84 0 0 1 89.47 183.34 Z" fill="#2563eb" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(180.00 100 100) rotate(90 100 50)">Intro to BI</text><path d="M 100 100 L 89.47 183.34 A 84 84 0 0 1 69.08 178.10 Z" fill="#2563eb" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(194.40 100 100) rotate(90 100 50)">Data Warehousing</text><path d="M 100 100 L 69.08 178.10 A 84 84 0 0 1 50.63 167.96 Z" fill="#2563eb" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(208.80 100 100) rotate(90 100 50)">Data Mining</text><path d="M 100 100 L 50.63 167.96 A 84 84 0 0 1 35.28 153.54 Z" fill="#2563eb" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(223.20 100 100) rotate(90 100 50)">Data Visualization</text><path d="M 100 100 L 35.28 153.54 A 84 84 0 0 1 23.99 135.77 Z" fill="#2563eb" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(237.60 100 100) rotate(90 100 50)">BI Tools &amp; Tech</text><path d="M 100 100 L 23.99 135.77 A 84 84 0 0 1 17.49 115.74 Z" fill="#2563eb" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(252.00 100 100) rotate(90 100 50)">BI Implementation</text><path d="M 100 100 L 17.49 115.74 A 84 84 0 0 1 16.17 94.73 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(266.40 100 100) rotate(90 100 50)">Intro to Cloud</text><path d="M 100 100 L 16.17 94.73 A 84 84 0 0 1 20.11 74.04 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(280.80 100 100) rotate(90 100 50)">Cloud Architecture</text><path d="M 100 100 L 20.11 74.04 A 84 84 0 0 1 29.08 54.99 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(295.20 100 100) rotate(90 100 50)">Cloud Applications</text><path d="M 100 100 L 29.08 54.99 A 84 84 0 0 1 42.50 38.77 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(309.60 100 100) rotate(90 100 50)">Virtualization</text><path d="M 100 100 L 42.50 38.77 A 84 84 0 0 1 59.53 26.39 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(324.00 100 100) rotate(90 100 50)">MapReduce</text><path d="M 100 100 L 59.53 26.39 A 84 84 0 0 1 79.11 18.64 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(338.40 100 100) rotate(90 100 50)">Cloud Security</text><path d="M 100 100 L 79.11 18.64 A 84 84 0 0 1 100.00 16.00 Z" fill="#7c3aed" stroke="var(--card-bg)" stroke-width="0.6"/>
+          <text x="100" y="50" text-anchor="middle" dominant-baseline="middle" fill="#fff" font-size="5.2" font-weight="700" transform="rotate(352.80 100 100) rotate(90 100 50)">Cloud Platforms</text>
+                <circle cx="100" cy="100" r="84" fill="none" stroke="var(--border)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="15" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
+                <circle cx="100" cy="100" r="4" fill="var(--accent)"/>
+              </svg>
+            </button>
+          </div>
+          <div class="spin-panel">
+            <ul class="wheel-legend" aria-hidden="true"><li><i style="background:#dc2626"></i>Entrepreneur</li><li><i style="background:#059669"></i>Digital Economy</li><li><i style="background:#2563eb"></i>Business Intel.</li><li><i style="background:#7c3aed"></i>Cloud Computing</li></ul>
+            <button class="sound-btn" id="soundBtn" type="button" aria-pressed="false">Sound off</button>
+            <p class="spin-result" id="spinResult" aria-live="polite"><span id="spinSubject">Tap the wheel to pick today's unit.</span><span class="spin-unit" id="spinUnit"></span></p>
+            <a class="spin-link" id="spinLink" href="#" hidden>Open the unit &rarr;</a>
+          </div>
+        </div>
+
+        <dialog class="spin-modal" id="spinModal" aria-labelledby="spinModalTitle">
+          <div class="spin-modal-body">
+            <button class="spin-modal-x" id="spinModalClose" type="button" aria-label="Close">&times;</button>
+            <span class="spin-modal-kicker">Today's pick</span>
+            <h3 class="spin-modal-title" id="spinModalTitle"><i id="spinModalDot"></i><span id="spinModalSubject">Subject</span></h3>
+            <p class="spin-modal-unit"><strong id="spinModalNum">Unit 1</strong><span id="spinModalUnit">Unit title</span></p>
+            <div class="spin-modal-actions">
+              <a class="spin-modal-open" id="spinModalLink" href="#">Open the unit &rarr;</a>
+              <button class="spin-modal-again" id="spinModalAgain" type="button">Spin again</button>
+            </div>
+          </div>
+        </dialog>
       </section>
 
       <section class="doors" id="subjects" aria-labelledby="doorsTitle">
@@ -304,8 +364,9 @@
 
     // One clock drives the rail, the header readout and the sidebar. Films are
     // only the far end of the line; the counter still counts exam papers.
-    const EXAM_ROUTINE_JS = [{"iso":"2026-12-01","bs":"Mangsir 15, 2083","day":"Tuesday","code":"IT 248","title":"IT Entrepreneurship & Management (NC)","subjectId":"entrepreneurship","isOurs":true},{"iso":"2026-12-03","bs":"Mangsir 17, 2083","day":"Thursday","code":"IT 250","title":"Digital Economy (NC)","subjectId":"de","isOurs":true},{"iso":"2026-12-06","bs":"Mangsir 20, 2083","day":"Sunday","code":"IT 249","title":"Business Intelligence (NC)","subjectId":"bi","isOurs":true},{"iso":"2026-12-10","bs":"Mangsir 24, 2083","day":"Thursday","code":"IT 277","title":"Cloud Computing (NC)","subjectId":"cloud","isOurs":true}];
+    const EXAM_ROUTINE_JS = [{"iso":"2026-12-01","bs":"Mangsir 15, 2083","day":"Tuesday","code":"IT 248","short":"Entrepreneur","color":"#dc2626","title":"IT Entrepreneurship & Management (NC)","subjectId":"entrepreneurship","isOurs":true},{"iso":"2026-12-03","bs":"Mangsir 17, 2083","day":"Thursday","code":"IT 250","short":"Digital Economy","color":"#059669","title":"Digital Economy (NC)","subjectId":"de","isOurs":true},{"iso":"2026-12-06","bs":"Mangsir 20, 2083","day":"Sunday","code":"IT 249","short":"Business Intel.","color":"#2563eb","title":"Business Intelligence (NC)","subjectId":"bi","isOurs":true},{"iso":"2026-12-10","bs":"Mangsir 24, 2083","day":"Thursday","code":"IT 277","short":"Cloud Computing","color":"#7c3aed","title":"Cloud Computing (NC)","subjectId":"cloud","isOurs":true}];
     const RAIL_LAST_ISO = "2026-12-18";
+    const WHEEL_SLICES = [{"id":"entrepreneurship","subject":"Entrepreneur","color":"#dc2626","num":1,"title":"Foundations of Entrepreneurship"},{"id":"entrepreneurship","subject":"Entrepreneur","color":"#dc2626","num":2,"title":"Idea Generation & Market Analysis"},{"id":"entrepreneurship","subject":"Entrepreneur","color":"#dc2626","num":3,"title":"Business Model Development"},{"id":"entrepreneurship","subject":"Entrepreneur","color":"#dc2626","num":4,"title":"Legal & Compliance"},{"id":"entrepreneurship","subject":"Entrepreneur","color":"#dc2626","num":5,"title":"Finance & Marketing"},{"id":"entrepreneurship","subject":"Entrepreneur","color":"#dc2626","num":6,"title":"Leadership & CSR"},{"id":"de","subject":"Digital Economy","color":"#059669","num":1,"title":"Introduction to Digital Economy"},{"id":"de","subject":"Digital Economy","color":"#059669","num":2,"title":"Fundamentals of Digital Economy"},{"id":"de","subject":"Digital Economy","color":"#059669","num":3,"title":"Digital Markets and Strategy"},{"id":"de","subject":"Digital Economy","color":"#059669","num":4,"title":"Digital Transformation"},{"id":"de","subject":"Digital Economy","color":"#059669","num":5,"title":"Economics of Information"},{"id":"de","subject":"Digital Economy","color":"#059669","num":6,"title":"Nepal Perspective"},{"id":"bi","subject":"Business Intel.","color":"#2563eb","num":1,"title":"Introduction to Business Intelligence"},{"id":"bi","subject":"Business Intel.","color":"#2563eb","num":2,"title":"Data Warehousing"},{"id":"bi","subject":"Business Intel.","color":"#2563eb","num":3,"title":"Data Mining"},{"id":"bi","subject":"Business Intel.","color":"#2563eb","num":4,"title":"Data Visualization"},{"id":"bi","subject":"Business Intel.","color":"#2563eb","num":5,"title":"BI Tools and Technologies"},{"id":"bi","subject":"Business Intel.","color":"#2563eb","num":6,"title":"BI Implementation"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":1,"title":"Introduction to Cloud Computing"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":2,"title":"Cloud Architecture"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":3,"title":"Cloud Applications"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":4,"title":"Virtualization"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":5,"title":"MapReduce"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":6,"title":"Cloud Security"},{"id":"cloud","subject":"Cloud Computing","color":"#7c3aed","num":7,"title":"Cloud Platforms"}];
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
       return new Date(y, m - 1, d);
@@ -367,7 +428,7 @@
         const el = document.getElementById(name);
         if (el) el.textContent = value;
       };
-      setText('code', next ? next.code : 'All papers done');
+      setText('code', next ? (next.short || next.code) : 'All papers done');
       setText('days', days);
       setText('hours', pad2(hours));
       setText('mins', pad2(mins));
@@ -387,11 +448,130 @@
 
       const htCode = document.getElementById('htCode');
       const htVal = document.getElementById('htVal');
-      if (htCode) htCode.textContent = next ? next.code : 'Done';
+      if (htCode) {
+        htCode.textContent = next ? (next.short || next.code) : 'Done';
+        if (next && next.color) htCode.style.color = next.color;
+      }
       if (htVal) htVal.textContent = clockText;
     }
     updateRail();
     setInterval(updateRail, 1000);
+
+    // Study picker: one spin chooses a subject, then a unit inside it.
+    (function () {
+      const wheel = document.getElementById('wheel');
+      const spinBtn = document.getElementById('spinBtn');
+      const soundBtn = document.getElementById('soundBtn');
+      if (!wheel || !spinBtn) return;
+
+      const subjectEl = document.getElementById('spinSubject');
+      const unitEl = document.getElementById('spinUnit');
+      const link = document.getElementById('spinLink');
+      const modal = document.getElementById('spinModal');
+      const modalSubject = document.getElementById('spinModalSubject');
+      const modalDot = document.getElementById('spinModalDot');
+      const modalNum = document.getElementById('spinModalNum');
+      const modalUnit = document.getElementById('spinModalUnit');
+      const modalLink = document.getElementById('spinModalLink');
+      const modalAgain = document.getElementById('spinModalAgain');
+      const modalClose = document.getElementById('spinModalClose');
+      let rotation = -180 / WHEEL_SLICES.length;
+      let spinning = false;
+      let pending = 0;
+      let audio = null;
+      let soundOn = localStorage.getItem('wheelSound') === 'on';
+
+      if (modalClose) modalClose.addEventListener('click', () => modal.close());
+      if (modalAgain) modalAgain.addEventListener('click', () => {
+        modal.close();
+        spinBtn.click();
+      });
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.close();
+      });
+
+      function syncSound() {
+        soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off';
+        soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+      }
+      syncSound();
+
+      function tone(freq, duration, delay, type) {
+        if (!soundOn) return;
+        try {
+          audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+          const osc = audio.createOscillator();
+          const gain = audio.createGain();
+          osc.type = type || 'sine';
+          osc.frequency.value = freq;
+          osc.connect(gain);
+          gain.connect(audio.destination);
+          const t = audio.currentTime + delay;
+          gain.gain.setValueAtTime(0.0001, t);
+          gain.gain.exponentialRampToValueAtTime(0.08, t + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t + duration);
+          osc.start(t);
+          osc.stop(t + duration + 0.02);
+        } catch (e) { /* audio is a nice-to-have */ }
+      }
+      function spinSound() {
+        for (let i = 0; i < 7; i++) tone(280 + i * 55, 0.07, i * 0.07, 'triangle');
+      }
+      function landSound() {
+        tone(784, 0.16, 0, 'sine');
+        tone(1175, 0.22, 0.07, 'sine');
+      }
+
+      soundBtn.addEventListener('click', function () {
+        soundOn = !soundOn;
+        localStorage.setItem('wheelSound', soundOn ? 'on' : 'off');
+        syncSound();
+        if (soundOn) tone(660, 0.08, 0, 'sine');
+      });
+
+      function settle(index) {
+        const slice = WHEEL_SLICES[index];
+        const unitUrl = slice.id + '/unit-' + slice.num + '.html';
+        subjectEl.textContent = slice.subject;
+        unitEl.textContent = 'Unit ' + slice.num + ' · ' + slice.title;
+        link.href = unitUrl;
+        link.hidden = false;
+        landSound();
+        spinning = false;
+        spinBtn.disabled = false;
+
+        modalSubject.textContent = slice.subject;
+        modalSubject.style.color = slice.color;
+        modalDot.style.background = slice.color;
+        modalNum.textContent = 'Unit ' + slice.num;
+        modalUnit.textContent = slice.title;
+        modalLink.href = unitUrl;
+        if (!modal.open) {
+          if (typeof modal.showModal === 'function') modal.showModal();
+          else modal.setAttribute('open', '');
+        }
+      }
+
+      spinBtn.addEventListener('click', function () {
+        if (spinning) return;
+        spinning = true;
+        spinBtn.disabled = true;
+        link.hidden = true;
+        pending = Math.floor(Math.random() * WHEEL_SLICES.length);
+        const step = 360 / WHEEL_SLICES.length;
+        const target = pending * step + step / 2;
+        const delta = ((360 - target - rotation) % 360 + 360) % 360;
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        rotation += reduced ? delta : 5 * 360 + delta;
+        wheel.style.transform = 'rotate(' + rotation + 'deg)';
+        spinSound();
+        if (reduced) settle(pending);
+      });
+
+      wheel.addEventListener('transitionend', function (e) {
+        if (e.propertyName === 'transform' && spinning) settle(pending);
+      });
+    })();
 
   </script>
 </body>
