@@ -970,11 +970,11 @@ function generateMainIndexHtml() {
       return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
     function updateCountdown() {
-      const now = new Date(); now.setHours(0,0,0,0);
+      const now = new Date();
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
         const d = parseLocal(e.iso);
-        if (d >= now) { next = e; break; }
+        if (d > now) { next = e; break; }
       }
       const el = document.getElementById('examCountdown');
       if (!el) return;
@@ -982,12 +982,33 @@ function generateMainIndexHtml() {
         el.innerHTML = '<span class="countdown-text">All papers complete</span>';
         return;
       }
-      const days = Math.ceil((parseLocal(next.iso) - now) / 86400000);
+      const target = parseLocal(next.iso);
+      const diff = target - now;
+      if (diff <= 0) {
+        updateCountdown();
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
       const subjectLink = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
-      el.innerHTML = '<span class="countdown-text">Next: ' + subjectLink + ' — ' + fmtDate(next.iso) + ' · <strong>' + days + '</strong> day' + (days !== 1 ? 's' : '') + '</span>';
+      el.innerHTML = '<div class="countdown-big">' +
+        '<span class="countdown-label">Next paper: ' + subjectLink + '</span>' +
+        '<span class="countdown-date">' + fmtDate(next.iso) + '</span>' +
+        '<div class="countdown-timer">' +
+          '<div class="timer-unit"><span class="timer-value" id="cd-days">' + days + '</span><span class="timer-label">days</span></div>' +
+          '<span class="timer-sep">:</span>' +
+          '<div class="timer-unit"><span class="timer-value" id="cd-hours">' + String(hours).padStart(2, '0') + '</span><span class="timer-label">hrs</span></div>' +
+          '<span class="timer-sep">:</span>' +
+          '<div class="timer-unit"><span class="timer-value" id="cd-mins">' + String(mins).padStart(2, '0') + '</span><span class="timer-label">min</span></div>' +
+          '<span class="timer-sep">:</span>' +
+          '<div class="timer-unit"><span class="timer-value" id="cd-secs">' + String(secs).padStart(2, '0') + '</span><span class="timer-label">sec</span></div>' +
+        '</div>' +
+      '</div>';
     }
     updateCountdown();
-    setInterval(updateCountdown, 3600000);
+    setInterval(updateCountdown, 1000);
 
   </script>
 </body>
