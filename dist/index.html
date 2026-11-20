@@ -10,266 +10,260 @@
 <body>
   <header class="site-header">
     <div class="header-content">
-      <h1 class="site-title">BIM 8th Semester</h1>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <a class="site-title" href="./">BIM 8th Semester</a>
+      <nav class="site-nav" aria-label="Sections">
+        <a href="#timetable">Timetable</a>
+        <a href="#subjects">Notes</a>
+        <a href="#pattern">Pattern</a>
+        <a href="bi/cheat-sheet.html">Cheat sheet</a>
+      </nav>
+      <span class="header-clock" id="headerClock" aria-live="off">
+        <span class="clock-code" id="htCode">IT 248</span>
+        <span class="clock-val" id="htVal">--d --:--:--</span>
+      </span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
   <div class="layout">
     <aside class="sidebar" id="sidebar">
-      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
       <div class="sidebar-overlay" onclick="closeSidebar()"></div>
       <div class="sidebar-content">
-        <h3>Subjects</h3>
+        <h3>This semester</h3>
         <ul class="subject-list">
-          
-            <li>
-              <a href="bi/" style="border-left-color: #2563eb">
-                <span class="subject-code">IT 249</span>
-                <span class="subject-name">Business Intelligence</span>
-              </a>
-            </li>
-          
-            <li>
-              <a href="de/" style="border-left-color: #059669">
-                <span class="subject-code">IT 250</span>
-                <span class="subject-name">Digital Economy</span>
-              </a>
-            </li>
-          
-            <li>
-              <a href="cloud/" style="border-left-color: #7c3aed">
-                <span class="subject-code">IT 277</span>
-                <span class="subject-name">Cloud Computing</span>
-              </a>
-            </li>
           
             <li>
               <a href="entrepreneurship/" style="border-left-color: #dc2626">
                 <span class="subject-code">IT 248</span>
                 <span class="subject-name">IT Entrepreneurship & Management</span>
+                <span class="subject-exam" data-iso="2026-12-01" data-label="Tue, Dec 1">Tue, Dec 1 &middot; 11 days</span>
               </a>
             </li>
-          
+            <li>
+              <a href="de/" style="border-left-color: #059669">
+                <span class="subject-code">IT 250</span>
+                <span class="subject-name">Digital Economy</span>
+                <span class="subject-exam" data-iso="2026-12-03" data-label="Thu, Dec 3">Thu, Dec 3 &middot; 13 days</span>
+              </a>
+            </li>
+            <li>
+              <a href="bi/" style="border-left-color: #2563eb">
+                <span class="subject-code">IT 249</span>
+                <span class="subject-name">Business Intelligence</span>
+                <span class="subject-exam" data-iso="2026-12-06" data-label="Sun, Dec 6">Sun, Dec 6 &middot; 16 days</span>
+              </a>
+            </li>
+            <li>
+              <a href="cloud/" style="border-left-color: #7c3aed">
+                <span class="subject-code">IT 277</span>
+                <span class="subject-name">Cloud Computing</span>
+                <span class="subject-exam" data-iso="2026-12-10" data-label="Thu, Dec 10">Thu, Dec 10 &middot; 20 days</span>
+              </a>
+            </li>
         </ul>
         <div class="sidebar-footer">
           <div class="progress-summary">
-            <span>4 Subjects</span>
-            <span>25 Units</span>
-            <span>320 Marks Total</span>
+            <span>25 units</span>
+            <span>320 marks</span>
           </div>
+          <a class="footer-link" href="bi/cheat-sheet.html">BI cheat sheet</a>
         </div>
       </div>
     </aside>
 
     <main class="content" role="main">
-      <!-- Masthead with hero image -->
-      <section class="masthead" data-scene="masthead">
-        <div class="masthead-image">
-          <img src="assets/tribhuvan-university-of-nepal-img-9531.jpg" width="1920" height="1280" alt="Tribhuvan University campus, Kirtipur" aria-hidden="true">
+      <section class="page-head">
+        <h1>Examination timetable</h1>
+        <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; 1&ndash;10 December 2026 &middot; centre Kirtipur</p>
+      </section>
+
+      <section class="timetable" id="timetable" aria-labelledby="timetableTitle">
+        <h2 id="timetableTitle" class="section-title">Ten days, five papers</h2>
+        <div class="chart" id="chart">
+          <div class="chart-marker" id="chartMarker" style="grid-column: 1 / span 3">
+            <span class="marker-label">Next paper</span>
+            <span class="marker-code" id="markerCode">IT 248</span>
+            <span class="marker-time" id="markerTime" aria-hidden="true"><b id="cdDays">0</b>d <b id="cdHours">00</b>:<b id="cdMins">00</b>:<b id="cdSecs">00</b></span>
+            <span class="sr-only" id="markerSr">Next paper in ten days</span>
+          </div>
+          <div class="chart-month">December 2026 &middot; Mangsir 2083</div>
+          <a class="chart-day is-paper" href="entrepreneurship/" data-iso="2026-12-01" title="IT Entrepreneurship & Management (NC)">
+              <span class="day-when">
+                <span class="day-num">1</span>
+                <span class="day-name">Tue</span>
+                <span class="day-bs">Mangsir 15</span>
+              </span>
+              <span class="day-what">
+                <span class="day-paper">IT 248</span><span class="day-subject">Entrepreneur</span>
+              </span></a><div class="chart-day is-free" data-iso="2026-12-02" title="No paper">
+              <span class="day-when">
+                <span class="day-num">2</span>
+                <span class="day-name">Wed</span>
+                
+              </span>
+              <span class="day-what">
+                <span class="day-free">free</span>
+              </span></div><a class="chart-day is-paper" href="de/" data-iso="2026-12-03" title="Digital Economy (NC)">
+              <span class="day-when">
+                <span class="day-num">3</span>
+                <span class="day-name">Thu</span>
+                <span class="day-bs">Mangsir 17</span>
+              </span>
+              <span class="day-what">
+                <span class="day-paper">IT 250</span><span class="day-subject">Digital Economy</span>
+              </span></a><div class="chart-day is-free" data-iso="2026-12-04" title="No paper">
+              <span class="day-when">
+                <span class="day-num">4</span>
+                <span class="day-name">Fri</span>
+                
+              </span>
+              <span class="day-what">
+                <span class="day-free">free</span>
+              </span></div><div class="chart-day is-free" data-iso="2026-12-05" title="No paper">
+              <span class="day-when">
+                <span class="day-num">5</span>
+                <span class="day-name">Sat</span>
+                
+              </span>
+              <span class="day-what">
+                <span class="day-free">free</span>
+              </span></div><a class="chart-day is-paper" href="bi/" data-iso="2026-12-06" title="Business Intelligence (NC)">
+              <span class="day-when">
+                <span class="day-num">6</span>
+                <span class="day-name">Sun</span>
+                <span class="day-bs">Mangsir 20</span>
+              </span>
+              <span class="day-what">
+                <span class="day-paper">IT 249</span><span class="day-subject">Business Intelligence</span>
+              </span></a><div class="chart-day is-free" data-iso="2026-12-07" title="No paper">
+              <span class="day-when">
+                <span class="day-num">7</span>
+                <span class="day-name">Mon</span>
+                
+              </span>
+              <span class="day-what">
+                <span class="day-free">free</span>
+              </span></div><div class="chart-day is-paper is-other" data-iso="2026-12-08" title=".NET Technologies (NC) / Database Administration (NC)">
+              <span class="day-when">
+                <span class="day-num">8</span>
+                <span class="day-name">Tue</span>
+                <span class="day-bs">Mangsir 22</span>
+              </span>
+              <span class="day-what">
+                <span class="day-paper">IT 275 / IT 276</span><span class="day-subject">.NET / DBA</span>
+              </span></div><div class="chart-day is-free" data-iso="2026-12-09" title="No paper">
+              <span class="day-when">
+                <span class="day-num">9</span>
+                <span class="day-name">Wed</span>
+                
+              </span>
+              <span class="day-what">
+                <span class="day-free">free</span>
+              </span></div><a class="chart-day is-paper" href="cloud/" data-iso="2026-12-10" title="Cloud Computing (NC)">
+              <span class="day-when">
+                <span class="day-num">10</span>
+                <span class="day-name">Thu</span>
+                <span class="day-bs">Mangsir 24</span>
+              </span>
+              <span class="day-what">
+                <span class="day-paper">IT 277</span><span class="day-subject">Cloud Computing</span>
+              </span></a>
         </div>
-        <div class="masthead-inner">
-          <h1>Four papers. Ten days.</h1>
-          <p class="standfirst">BIM 8th semester, Tribhuvan University. IT 248, 250, 249, 277 — 1 to 10 December 2026.</p>
-          <div class="masthead-countdown" id="mastheadCountdown" aria-live="off" aria-atomic="true">
-            <div class="masthead-countdown-label">Next paper</div>
-            <div class="masthead-countdown-subject" id="mcdSubject">—</div>
-            <div class="masthead-countdown-timer" id="mcdTimer" aria-hidden="true">
-              <span class="mcd-unit" id="mcdDays">0</span>
-              <span class="mcd-sep">days</span>
-              <span class="mcd-unit" id="mcdHours">00</span>
-              <span class="mcd-sep">:</span>
-              <span class="mcd-unit" id="mcdMins">00</span>
-              <span class="mcd-sep">:</span>
-              <span class="mcd-unit" id="mcdSecs">00</span>
+        <p class="chart-note">Your papers fall every other day. The five empty days are the ones you can still use. Routine: Dean's Office, 2083/07/28.</p>
+      </section>
+
+      <section class="doors" id="subjects" aria-labelledby="doorsTitle">
+        <h2 id="doorsTitle" class="section-title">Open your notes</h2>
+        <ul class="doors-list">
+          
+            <li class="door">
+              <div class="door-head">
+                <span class="door-code" style="border-color: #dc2626">IT 248</span>
+                <span class="door-name">IT Entrepreneurship & Management</span>
+              </div>
+              <p class="door-meta">6 units &middot; 100 marks &middot; pass 50 &middot; Tue, Dec 1</p>
+              <div class="door-links">
+                <a href="entrepreneurship/">Notes</a>
+                <a href="entrepreneurship/question-bank.html">Question bank</a>
+                <a href="entrepreneurship/model-question-answers.html">Model answers</a>
+                
+              </div>
+            </li>
+            <li class="door">
+              <div class="door-head">
+                <span class="door-code" style="border-color: #059669">IT 250</span>
+                <span class="door-name">Digital Economy</span>
+              </div>
+              <p class="door-meta">6 units &middot; 100 marks &middot; pass 50 &middot; Thu, Dec 3</p>
+              <div class="door-links">
+                <a href="de/">Notes</a>
+                <a href="de/question-bank.html">Question bank</a>
+                <a href="de/model-question-answers.html">Model answers</a>
+                
+              </div>
+            </li>
+            <li class="door">
+              <div class="door-head">
+                <span class="door-code" style="border-color: #2563eb">IT 249</span>
+                <span class="door-name">Business Intelligence</span>
+              </div>
+              <p class="door-meta">6 units &middot; 60 marks &middot; pass 30 &middot; Sun, Dec 6</p>
+              <div class="door-links">
+                <a href="bi/">Notes</a>
+                <a href="bi/question-bank.html">Question bank</a>
+                <a href="bi/model-question-answers.html">Model answers</a>
+                <a href="bi/cheat-sheet.html">Cheat sheet</a>
+              </div>
+            </li>
+            <li class="door">
+              <div class="door-head">
+                <span class="door-code" style="border-color: #7c3aed">IT 277</span>
+                <span class="door-name">Cloud Computing</span>
+              </div>
+              <p class="door-meta">7 units &middot; 60 marks &middot; pass 30 &middot; Thu, Dec 10</p>
+              <div class="door-links">
+                <a href="cloud/">Notes</a>
+                <a href="cloud/question-bank.html">Question bank</a>
+                <a href="cloud/model-question-answers.html">Model answers</a>
+                
+              </div>
+            </li>
+        </ul>
+      </section>
+
+      <section class="pattern" id="pattern" aria-labelledby="patternTitle">
+        <h2 id="patternTitle" class="section-title">What each paper is worth</h2>
+        <div class="pattern-grid">
+          <div class="marks-block">
+            <div class="marks-scroll">
+              <table class="marks-table">
+                <thead>
+                  <tr><th scope="col">Paper</th><th scope="col">Code</th><th scope="col">Full</th><th scope="col">Pass</th><th scope="col">Groups</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Business Intelligence</td><td>IT 249</td><td>60</td><td><strong>30</strong></td><td>A:10&times;1, B:5&times;3, C:3&times;5, D:2&times;10</td></tr>
+                  <tr><td>Digital Economy</td><td>IT 250</td><td>100</td><td><strong>50</strong></td><td>A:10&times;2, B:6&times;5, C:3&times;10, D:1&times;20</td></tr>
+                  <tr><td>Cloud Computing</td><td>IT 277</td><td>60</td><td><strong>30</strong></td><td>A:10&times;1, B:5&times;3, C:3&times;5, D:2&times;10</td></tr>
+                  <tr><td>IT Entrepreneurship</td><td>IT 248</td><td>100</td><td><strong>50</strong></td><td>A:10&times;2, B:6&times;5, C:3&times;10, D:1&times;20</td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="masthead-countdown-date" id="mcdDate">—</div>
+          </div>
+          <div class="rules-block">
+            <h3>Hall rules</h3>
+            <ul class="rules-list">
+              <li>Exam centre: Kirtipur (Tribhuvan University). Time will be notified by campus.</li><li>No mobile phones, smart watches, or digital watches allowed in exam hall.</li><li>Graph / chart / log paper may be used only with prior written approval.</li><li>Admit card is mandatory for every paper. No admit card = no entry.</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <!-- Kirtipur context strip -->
-      <section class="context-strip" data-scene="context">
-        <div class="context-image">
-          <img src="assets/kirtipur-1950-1955.jpg" width="1228" height="850" alt="Kirtipur town, 1950-1955" aria-hidden="true">
-        </div>
-        <div class="context-content">
-          <h2>Kirtipur — the exam centre</h2>
-          <p>Five kilometres southwest of Kathmandu, the ancient town of Kirtipur has been the examination centre for Tribhuvan University since its founding. The Dean's Office notice (2083/07/28) names it plainly: your papers are written here.</p>
-        </div>
-      </section>
-
-      <section class="routine" aria-labelledby="routineTitle">
-        <h2 id="routineTitle">Examination Routine</h2>
-        <div class="routine-table-wrapper">
-          <table class="routine-table">
-            <caption>BIM 8th Semester NC papers — Dean's Office, 2083/07/28</caption>
-            <thead>
-              <tr>
-                <th scope="col">Date (BS)</th>
-                <th scope="col">Day</th>
-                <th scope="col">Code</th>
-                <th scope="col">Paper</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-                <tr class="ours" data-code="IT 248" data-iso="2026-12-01">
-                  <td>Mangsir 15, 2083</td>
-                  <td>Tuesday</td>
-                  <td><code>IT 248</code></td>
-                  <td>
-                    <a href="entrepreneurship/">IT Entrepreneurship & Management (NC)</a>
-                  </td>
-                </tr>
-                <tr class="ours" data-code="IT 250" data-iso="2026-12-03">
-                  <td>Mangsir 17, 2083</td>
-                  <td>Thursday</td>
-                  <td><code>IT 250</code></td>
-                  <td>
-                    <a href="de/">Digital Economy (NC)</a>
-                  </td>
-                </tr>
-                <tr class="ours" data-code="IT 249" data-iso="2026-12-06">
-                  <td>Mangsir 20, 2083</td>
-                  <td>Sunday</td>
-                  <td><code>IT 249</code></td>
-                  <td>
-                    <a href="bi/">Business Intelligence (NC)</a>
-                  </td>
-                </tr>
-                <tr class="other" data-code="IT 275 / IT 276" data-iso="2026-12-08">
-                  <td>Mangsir 22, 2083</td>
-                  <td>Tuesday</td>
-                  <td><code>IT 275 / IT 276</code></td>
-                  <td>
-                    .NET Technologies (NC) / Database Administration (NC)
-                  </td>
-                </tr>
-                <tr class="ours" data-code="IT 277" data-iso="2026-12-10">
-                  <td>Mangsir 24, 2083</td>
-                  <td>Thursday</td>
-                  <td><code>IT 277</code></td>
-                  <td>
-                    <a href="cloud/">Cloud Computing (NC)</a>
-                  </td>
-                </tr>
-            </tbody>
-          </table>
-        </div>
-        <ul class="routine-rules" aria-label="Exam hall rules">
-          <li>Centre: Kirtipur (Tribhuvan University). Time notified by campus.</li>
-          <li>No mobile phones, smart watches, or digital watches in the exam hall.</li>
-          <li>Graph / chart / log paper only with prior written approval.</li>
-          <li>Admit card mandatory for every paper. No admit card = no entry.</li>
-        </ul>
-      </section>
-
-      <!-- Exam hall atmosphere -->
-      <section class="exam-hall" data-scene="exam-hall">
-        <div class="exam-hall-image">
-          <img src="assets/ncea-exam-papers.jpg" width="1920" height="1440" alt="Pile of exam booklets, marked and returned" aria-hidden="true">
-        </div>
-        <div class="exam-hall-content">
-          <h2>What the hall looks like</h2>
-          <p>Rows of desks. The same answer booklet for every paper. The invigilator's bell. Your admit card on the corner. The clock on the wall — the only timepiece allowed. This is where the ten days happen.</p>
-        </div>
-      </section>
-
-      <section class="subjects-list" aria-labelledby="subjectsTitle">
-        <h2 id="subjectsTitle">Your notes</h2>
-        <ul class="subject-rows">
-          
-            <li class="subject-row" style="--subject-accent: #2563eb">
-              <div class="subject-row-label">
-                <code>IT 249</code>
-                <span class="subject-row-name">Business Intelligence</span>
-              </div>
-              <div class="subject-row-meta">
-                <span class="subject-row-marks"><strong>60</strong> marks</span>
-                <span class="subject-row-pass">pass <strong>30</strong></span>
-                <span class="subject-row-units">6 units</span>
-              </div>
-              <a href="bi/" class="subject-row-link">Notes →</a>
-            </li>
-          
-            <li class="subject-row" style="--subject-accent: #059669">
-              <div class="subject-row-label">
-                <code>IT 250</code>
-                <span class="subject-row-name">Digital Economy</span>
-              </div>
-              <div class="subject-row-meta">
-                <span class="subject-row-marks"><strong>100</strong> marks</span>
-                <span class="subject-row-pass">pass <strong>50</strong></span>
-                <span class="subject-row-units">6 units</span>
-              </div>
-              <a href="de/" class="subject-row-link">Notes →</a>
-            </li>
-          
-            <li class="subject-row" style="--subject-accent: #7c3aed">
-              <div class="subject-row-label">
-                <code>IT 277</code>
-                <span class="subject-row-name">Cloud Computing</span>
-              </div>
-              <div class="subject-row-meta">
-                <span class="subject-row-marks"><strong>60</strong> marks</span>
-                <span class="subject-row-pass">pass <strong>30</strong></span>
-                <span class="subject-row-units">7 units</span>
-              </div>
-              <a href="cloud/" class="subject-row-link">Notes →</a>
-            </li>
-          
-            <li class="subject-row" style="--subject-accent: #dc2626">
-              <div class="subject-row-label">
-                <code>IT 248</code>
-                <span class="subject-row-name">IT Entrepreneurship & Management</span>
-              </div>
-              <div class="subject-row-meta">
-                <span class="subject-row-marks"><strong>100</strong> marks</span>
-                <span class="subject-row-pass">pass <strong>50</strong></span>
-                <span class="subject-row-units">6 units</span>
-              </div>
-              <a href="entrepreneurship/" class="subject-row-link">Notes →</a>
-            </li>
-          
-        </ul>
-      </section>
-
-      <section class="exam-pattern" aria-labelledby="patternTitle">
-        <h2 id="patternTitle">Exam Pattern</h2>
-        <div class="pattern-table-wrapper">
-          <table class="pattern-table">
-            <thead>
-              <tr><th>Subject</th><th>Code</th><th>Full Marks</th><th>Pass Marks</th><th>Groups</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Business Intelligence</td><td>IT 249</td><td>60</td><td class="pass-cell"><strong>30</strong></td><td>A:10×1, B:5×3, C:3×5, D:2×10</td></tr>
-              <tr><td>Digital Economy</td><td>IT 250</td><td>100</td><td class="pass-cell"><strong>50</strong></td><td>A:10×2, B:6×5, C:3×10, D:1×20</td></tr>
-              <tr><td>Cloud Computing</td><td>IT 277</td><td>60</td><td class="pass-cell"><strong>30</strong></td><td>A:10×1, B:5×3, C:3×5, D:2×10</td></tr>
-              <tr><td>IT Entrepreneurship</td><td>IT 248</td><td>100</td><td class="pass-cell"><strong>50</strong></td><td>A:10×2, B:6×5, C:3×10, D:1×20</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Historical exam paper texture -->
-      <section class="paper-texture" data-scene="paper">
-        <div class="paper-image">
-          <img src="assets/history-exam-paper-1967-001.jpg" width="1920" height="2133" alt="History examination paper from 1967" aria-hidden="true">
-        </div>
-        <div class="paper-content">
-          <h2>The paper in your hand</h2>
-          <p>Every generation sits the same ritual. The questions change; the format, the silence, the weight of the pen — those don't. Your IT 249 paper will feel like this 1967 history paper: same lines, same margins, same silence.</p>
-        </div>
-      </section>
-
-      <footer class="site-close">
-        <div class="close-links">
-          <a href="bi/cheat-sheet.html" class="close-link">📋 BI Cheat Sheet — print on A5</a>
-          <button class="close-link" onclick="window.print()">🖨️ Print this page</button>
-        </div>
-        <p class="close-name">BIM 8th Semester Study Materials</p>
+      <footer class="page-foot">
+        <p>Routine source: Dean's Office, 2083/07/28. Centre: Kirtipur.</p>
+        <button class="foot-btn" onclick="window.print()">Print this page</button>
       </footer>
+
     </main>
   </div>
 
@@ -288,7 +282,7 @@
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -297,80 +291,107 @@
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
-    // Exam countdown + hero elements
+    // Exam clock
     const EXAM_ROUTINE_JS = [{"iso":"2026-12-01","bs":"Mangsir 15, 2083","day":"Tuesday","code":"IT 248","title":"IT Entrepreneurship & Management (NC)","subjectId":"entrepreneurship","isOurs":true},{"iso":"2026-12-03","bs":"Mangsir 17, 2083","day":"Thursday","code":"IT 250","title":"Digital Economy (NC)","subjectId":"de","isOurs":true},{"iso":"2026-12-06","bs":"Mangsir 20, 2083","day":"Sunday","code":"IT 249","title":"Business Intelligence (NC)","subjectId":"bi","isOurs":true},{"iso":"2026-12-08","bs":"Mangsir 22, 2083","day":"Tuesday","code":"IT 275 / IT 276","title":".NET Technologies (NC) / Database Administration (NC)","subjectId":null,"isOurs":false},{"iso":"2026-12-10","bs":"Mangsir 24, 2083","day":"Thursday","code":"IT 277","title":"Cloud Computing (NC)","subjectId":"cloud","isOurs":true}];
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
       return new Date(y, m - 1, d);
     }
-    function fmtDate(iso) {
-      const [y, m, d] = iso.split('-').map(Number);
-      const dt = new Date(y, m - 1, d);
-      return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function isoOf(date) {
+      return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
     }
-    function getExamPeriod() {
-      const ours = EXAM_ROUTINE_JS.filter(e => e.isOurs);
-      const start = parseLocal(ours[0].iso);
-      const end = parseLocal(ours[ours.length - 1].iso);
-      end.setHours(23, 59, 59, 999);
-      return { start, end };
-    }
-    function updateHero() {
+    let lastSrDay = -1;
+    let lastSrCode = '';
+
+    function updateClock() {
       const now = new Date();
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
-        const d = parseLocal(e.iso);
-        if (d > now) { next = e; break; }
+        if (parseLocal(e.iso) > now) { next = e; break; }
       }
 
-      // Masthead countdown elements
-      const mcdSubject = document.getElementById('mcdSubject');
-      const mcdTimer = document.getElementById('mcdTimer');
-      const mcdDays = document.getElementById('mcdDays');
-      const mcdHours = document.getElementById('mcdHours');
-      const mcdMins = document.getElementById('mcdMins');
-      const mcdSecs = document.getElementById('mcdSecs');
-      const mcdDate = document.getElementById('mcdDate');
+      const todayIso = isoOf(now);
 
-      // Routine table: highlight next paper row
-      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
-        const iso = tr.dataset.iso;
-        const isNext = next && iso === next.iso;
-        tr.classList.toggle('next-paper', isNext);
+      document.querySelectorAll('.chart-day[data-iso]').forEach(el => {
+        el.classList.toggle('is-next', !!next && next.iso === el.dataset.iso);
+        el.classList.toggle('is-today', el.dataset.iso === todayIso);
+        el.classList.toggle('is-past', el.dataset.iso !== todayIso && parseLocal(el.dataset.iso) < now);
       });
 
+      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
+        tr.classList.toggle('is-next-row', !!next && tr.dataset.iso === next.iso);
+      });
+
+      // Keep the sidebar's day counts in sync with the live counter.
+      document.querySelectorAll('.subject-exam[data-iso]').forEach(el => {
+        const target = parseLocal(el.dataset.iso);
+        const left = Math.floor((target - now) / 86400000);
+        const sameDay = isoOf(target) === todayIso;
+        const state = sameDay ? 'today' : left < 0 ? 'done' : left + (left === 1 ? ' day' : ' days');
+        el.textContent = el.dataset.label + ' · ' + state;
+      });
+
+      const marker = document.getElementById('chartMarker');
+      const codeEl = document.getElementById('markerCode');
+      const daysEl = document.getElementById('cdDays');
+      const hoursEl = document.getElementById('cdHours');
+      const minsEl = document.getElementById('cdMins');
+      const secsEl = document.getElementById('cdSecs');
+      const srEl = document.getElementById('markerSr');
+      const htCode = document.getElementById('htCode');
+      const htVal = document.getElementById('htVal');
+
       if (!next) {
-        if (mcdSubject) mcdSubject.textContent = 'All papers complete';
-        if (mcdDate) mcdDate.textContent = 'Exam period over';
-        if (mcdDays) mcdDays.textContent = '0';
-        if (mcdHours) mcdHours.textContent = '00';
-        if (mcdMins) mcdMins.textContent = '00';
-        if (mcdSecs) mcdSecs.textContent = '00';
+        if (codeEl) codeEl.textContent = 'All papers done';
+        if (daysEl) daysEl.textContent = '0';
+        if (hoursEl) hoursEl.textContent = '00';
+        if (minsEl) minsEl.textContent = '00';
+        if (secsEl) secsEl.textContent = '00';
+        if (htCode) htCode.textContent = 'Done';
+        if (htVal) htVal.textContent = '';
+        if (srEl) srEl.textContent = 'All papers are finished';
         return;
       }
 
       const target = parseLocal(next.iso);
       const diff = target - now;
-      if (diff <= 0) { updateHero(); return; }
-
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
 
-      // Update masthead countdown
-      if (mcdSubject) mcdSubject.innerHTML = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
-      if (mcdDate) mcdDate.textContent = fmtDate(next.iso);
-      if (mcdDays) mcdDays.textContent = days;
-      if (mcdHours) mcdHours.textContent = String(hours).padStart(2, '0');
-      if (mcdMins) mcdMins.textContent = String(mins).padStart(2, '0');
-      if (mcdSecs) mcdSecs.textContent = String(secs).padStart(2, '0');
+      if (daysEl) daysEl.textContent = days;
+      if (hoursEl) hoursEl.textContent = pad2(hours);
+      if (minsEl) minsEl.textContent = pad2(mins);
+      if (secsEl) secsEl.textContent = pad2(secs);
+
+      const clockText = days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs);
+      if (htVal) htVal.textContent = clockText;
+
+      if (codeEl) codeEl.textContent = next.code;
+      if (htCode) htCode.textContent = next.code;
+
+      // Move the marker above the next paper's column (it spans three columns).
+      if (marker) {
+        const dayNum = Number(next.iso.slice(8, 10));
+        const span = 3;
+        const start = Math.min(Math.max(dayNum, 1), 11 - span);
+        marker.style.gridColumn = start + ' / span ' + span;
+        marker.style.setProperty('--pointer', (((dayNum - start + 0.5) / span) * 100).toFixed(1) + '%');
+      }
+
+      if (srEl && (days !== lastSrDay || next.code !== lastSrCode)) {
+        lastSrDay = days;
+        lastSrCode = next.code;
+        srEl.textContent = 'Next paper ' + next.code + ', ' + next.title + ', on ' + target.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days');
+      }
     }
-    updateHero();
-    setInterval(updateHero, 1000);
+    updateClock();
+    setInterval(updateClock, 1000);
 
   </script>
 </body>

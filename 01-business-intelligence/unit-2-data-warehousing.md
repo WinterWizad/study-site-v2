@@ -57,21 +57,6 @@
 
 ---
 
-## Exam Mapping (Quick Reference)
-
-| Q | Topic | Marks | Section |
-|---|-------|-------|---------|
-| A2 | Non-volatile | 1 | 2.1 |
-| A3 | Transformation Quality | 1 | 2.3 |
-| A6 | Data Modelling | 1 | 2.4 |
-| A10 | Metadata | 1 | 2.5 |
-| B2 / B11 | ETL Process | 3 | 2.3 |
-| B12 | Star Schema | 3 | 2.4 |
-| C2 / C17 | DW Architecture | 5 | 2.2 |
-| D21 | Retailer End-to-End | 10 | 2.2 + 2.3 + 2.4 |
-
----
-
 ## 2.1 What a Data Warehouse Is
 
 > **A data warehouse is a subject-oriented, integrated, time-variant and non-volatile collection of data, built to support management's decision-making rather than day-to-day transactions.**

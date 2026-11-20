@@ -15,7 +15,7 @@
     <div class="header-content">
       <a href="../index.html" class="site-title">BIM 8th Semester</a>
       <span class="subject-badge" style="background: #2563eb">IT 249</span>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
@@ -102,7 +102,7 @@
 <tr>
 <td><strong>TU/FOM official model question 2026</strong> — the Dean&#39;s Office statement of the paper&#39;s shape</td>
 <td>verbatim in its own file</td>
-<td><a href="model-question.md" target="_blank" rel="noopener"><code>model-question.md</code></a></td>
+<td><a href="model-question.html" target="_blank" rel="noopener"><code>model-question.html</code></a></td>
 </tr>
 </tbody></table></div><p>Both are official. They are different documents with different authority: the board paper is what was asked, the model question is what the Dean&#39;s Office said would be asked. Neither is a prediction.</p>
 <blockquote class="custom-blockquote"><p>⚠ Honest limitation: only <strong>one</strong> board paper for this subject exists publicly (the new-syllabus 8th semester was first examined in 2026). The pattern below is an inference from <strong>n=1</strong> — a strong one, because the model question independently confirms the 10/5/3 structure and the unit weighting. It is still not a guarantee.</p>
@@ -235,7 +235,7 @@
 </tbody></table></div><h3 id="group-d-case-analysis-20"><a href="#group-d-case-analysis-20" class="heading-anchor">#</a>Group D — Case analysis (20)</h3><blockquote class="custom-blockquote"><p>You&#39;re on Amazon, and it knows precisely what you want before you do. It&#39;s like having a mind reading shopping assistant. Amazon uses data to forecast what products will be super popular. This means they always have the stuff you want ready to ship. Fast delivery, great prices, and a wide selection, that&#39;s the Amazon promise.</p>
 <p>When Amazon suggests products you might like, it&#39;s not a coincidence. They&#39;ve studied your past purchases and browsing history. Their recommendations make shopping more accessible and more enjoyable. It&#39;s as if Amazon is saying, &quot;Hey, we found these cool things that you&#39;ll love!&quot;</p>
 </blockquote><p>a. How does Amazon use Business Intelligence to predict product demand?<br>b. What types of data are involved, and how do these recommendations influence buying behavior on Amazon?<br>c. How do features like personalized suggestions and fast delivery contribute to customer loyalty?<br>d. What potential challenges or ethical issues (such as data privacy or over personalization) might arise from collecting and analyzing customer data?</p>
-<hr class="custom-hr"><h2 id="official-model-question-coverage-of-units-1-5"><a href="#official-model-question-coverage-of-units-1-5" class="heading-anchor">#</a>Official model question — coverage of Units 1–5</h2><p>Full paper: <a href="model-question.md" target="_blank" rel="noopener"><code>model-question.md</code></a>. This table is the <strong>checker</strong>: can the unit&#39;s notes alone answer the question?</p>
+<hr class="custom-hr"><h2 id="official-model-question-coverage-of-units-1-5"><a href="#official-model-question-coverage-of-units-1-5" class="heading-anchor">#</a>Official model question — coverage of Units 1–5</h2><p>Full paper: <a href="model-question.html" target="_blank" rel="noopener"><code>model-question.html</code></a>. This table is the <strong>checker</strong>: can the unit&#39;s notes alone answer the question?</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Q</th>
 <th>Model question</th>
@@ -487,7 +487,7 @@
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -496,7 +496,7 @@
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
     // Trailing slash redirect for subject index pages

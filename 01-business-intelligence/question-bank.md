@@ -5,7 +5,7 @@
 | Source | Status | Where |
 |---|---|---|
 | **TU 2026 board paper** — the exam actually sat | verbatim below | §"Real paper — TU 2026" |
-| **TU/FOM official model question 2026** — the Dean's Office statement of the paper's shape | verbatim in its own file | [`model-question.md`](model-question.md) |
+| **TU/FOM official model question 2026** — the Dean's Office statement of the paper's shape | verbatim in its own file | [`model-question.html`](model-question.html) |
 
 Both are official. They are different documents with different authority: the board paper is what was asked, the model question is what the Dean's Office said would be asked. Neither is a prediction.
 
@@ -65,7 +65,7 @@ d. What potential challenges or ethical issues (such as data privacy or over per
 
 ## Official model question — coverage of Units 1–5
 
-Full paper: [`model-question.md`](model-question.md). This table is the **checker**: can the unit's notes alone answer the question?
+Full paper: [`model-question.html`](model-question.html). This table is the **checker**: can the unit's notes alone answer the question?
 
 | Q | Model question | Unit | Answerable from that unit's notes alone? |
 |---|---|---|---|

@@ -13,9 +13,9 @@
 <body class="unit-page">
   <header class="site-header">
     <div class="header-content">
-      <a href="../../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">BIM 8th Semester</a>
       <span class="subject-badge" style="background: #2563eb">IT 249</span>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
@@ -72,7 +72,7 @@
           
         </ul>
         <div class="sidebar-footer">
-          <a href="../../index.html" class="footer-link">← All Subjects</a>
+          <a href="../index.html" class="footer-link">← All Subjects</a>
         </div>
       </div>
     </aside>
@@ -162,61 +162,7 @@
 ├── ELT vs ETL
 ├── CDC / Change Data Capture
 ├── Real-time / Near-real-time DW
-└── Cloud DW Patterns (Partitioning, Scaling)</code></pre></div><hr class="custom-hr"><h2 id="exam-mapping-quick-reference"><a href="#exam-mapping-quick-reference" class="heading-anchor">#</a>Exam Mapping (Quick Reference)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
-<th>Q</th>
-<th>Topic</th>
-<th>Marks</th>
-<th>Section</th>
-</tr>
-</thead><tbody><tr>
-<td>A2</td>
-<td>Non-volatile</td>
-<td>1</td>
-<td>2.1</td>
-</tr>
-<tr>
-<td>A3</td>
-<td>Transformation Quality</td>
-<td>1</td>
-<td>2.3</td>
-</tr>
-<tr>
-<td>A6</td>
-<td>Data Modelling</td>
-<td>1</td>
-<td>2.4</td>
-</tr>
-<tr>
-<td>A10</td>
-<td>Metadata</td>
-<td>1</td>
-<td>2.5</td>
-</tr>
-<tr>
-<td>B2 / B11</td>
-<td>ETL Process</td>
-<td>3</td>
-<td>2.3</td>
-</tr>
-<tr>
-<td>B12</td>
-<td>Star Schema</td>
-<td>3</td>
-<td>2.4</td>
-</tr>
-<tr>
-<td>C2 / C17</td>
-<td>DW Architecture</td>
-<td>5</td>
-<td>2.2</td>
-</tr>
-<tr>
-<td>D21</td>
-<td>Retailer End-to-End</td>
-<td>10</td>
-<td>2.2 + 2.3 + 2.4</td>
-</tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="2-1-what-a-data-warehouse-is"><a href="#2-1-what-a-data-warehouse-is" class="heading-anchor">#</a>2.1 What a Data Warehouse Is</h2><blockquote class="custom-blockquote"><p><strong>A data warehouse is a subject-oriented, integrated, time-variant and non-volatile collection of data, built to support management&#39;s decision-making rather than day-to-day transactions.</strong></p>
+└── Cloud DW Patterns (Partitioning, Scaling)</code></pre></div><hr class="custom-hr"><h2 id="2-1-what-a-data-warehouse-is"><a href="#2-1-what-a-data-warehouse-is" class="heading-anchor">#</a>2.1 What a Data Warehouse Is</h2><blockquote class="custom-blockquote"><p><strong>A data warehouse is a subject-oriented, integrated, time-variant and non-volatile collection of data, built to support management&#39;s decision-making rather than day-to-day transactions.</strong></p>
 </blockquote><p>That is <strong>Inmon&#39;s</strong> definition. Every clause is a mark.</p>
 <h3 id="the-four-characteristics-learn-each-as-quot-means-why-quot"><a href="#the-four-characteristics-learn-each-as-quot-means-why-quot" class="heading-anchor">#</a>The Four Characteristics — learn each as &quot;means + why&quot;</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Characteristic</th>
@@ -744,7 +690,7 @@
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -753,7 +699,7 @@
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
   </script>
 </body>

@@ -19,6 +19,14 @@ const EXAM_ROUTINE = [
 ];
 
 const EXAM_CENTRE = 'Kirtipur';
+
+const SYLLABUS_FILES = {
+  'IT 248': 'it248-it-entrepreneurship-management.md',
+  'IT 249': 'it249-business-intelligence.md',
+  'IT 250': 'it250-digital-economy.md',
+  'IT 277': 'it277-cloud-computing.md',
+};
+
 const EXAM_NOTES = [
   'Exam centre: Kirtipur (Tribhuvan University). Time will be notified by campus.',
   'No mobile phones, smart watches, or digital watches allowed in exam hall.',
@@ -161,7 +169,7 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
     <div class="header-content">
       <a href="../index.html" class="site-title">BIM 8th Semester</a>
       <span class="subject-badge" style="background: #2563eb">IT 249</span>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">☀️</button>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
@@ -344,7 +352,6 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
 
   <button class="print-btn print-hide" onclick="window.print()" aria-label="Print cheat sheet">🖨️ Print / Save as PDF</button>
 
-  <script src="../app.js"></script>
   <script>
     document.querySelectorAll('pre code').forEach(el => hljs.highlightElement(el));
     if (typeof mermaid !== 'undefined') {
@@ -435,6 +442,13 @@ function getSubjectExam(subjectId) {
   return EXAM_ROUTINE.find(e => e.subjectId === subjectId) || null;
 }
 
+// Subjects in exam order: the next paper always appears first.
+const SUBJECT_ORDER = Object.values(SUBJECTS).slice().sort((a, b) => {
+  const ea = getSubjectExam(a.id);
+  const eb = getSubjectExam(b.id);
+  return (ea ? ea.iso : '9999-12-31').localeCompare(eb ? eb.iso : '9999-12-31');
+});
+
 function readMarkdownFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8');
   const { attributes, body } = fm(content);
@@ -476,9 +490,9 @@ function generateUnitHtml(subject, unit, htmlContent) {
 <body class="unit-page">
   <header class="site-header">
     <div class="header-content">
-      <a href="../../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">BIM 8th Semester</a>
       <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
@@ -500,7 +514,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
           `).join('')}
         </ul>
         <div class="sidebar-footer">
-          <a href="../../index.html" class="footer-link">← All Subjects</a>
+          <a href="../index.html" class="footer-link">← All Subjects</a>
         </div>
       </div>
     </aside>
@@ -560,7 +574,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -569,7 +583,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
   </script>
 </body>
@@ -594,7 +608,7 @@ function generateResourceHtml(subject, title, htmlContent) {
     <div class="header-content">
       <a href="../index.html" class="site-title">BIM 8th Semester</a>
       <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
@@ -669,7 +683,7 @@ function generateResourceHtml(subject, title, htmlContent) {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -678,7 +692,7 @@ function generateResourceHtml(subject, title, htmlContent) {
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
     // Trailing slash redirect for subject index pages
@@ -706,7 +720,7 @@ function generateSubjectIndexHtml(subject) {
     <div class="header-content">
       <a href="../index.html" class="site-title">BIM 8th Semester</a>
       <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
@@ -717,7 +731,7 @@ function generateSubjectIndexHtml(subject) {
       <div class="sidebar-content">
         <h3>All Subjects</h3>
         <ul class="subject-list">
-          ${Object.values(SUBJECTS).map(s => `
+          ${SUBJECT_ORDER.map(s => `
             <li>
               <a href="../${s.id}/" class="${s.id === subject.id ? 'active' : ''}" style="border-left-color: ${s.color}">
                 <span class="subject-code">${s.code}</span>
@@ -761,7 +775,7 @@ function generateSubjectIndexHtml(subject) {
             <li><a href="model-question-answers.html">Model Question Answers</a></li>
             <li><a href="question-bank.html">Question Bank</a></li>
             ${subject.id === 'bi' ? `<li><a href="cheat-sheet.html">&#x1F4CB; Cheat Sheet</a></li>` : ''}
-            <li><a href="../_syllabus/${subject.code.toLowerCase().replace(' ', '-')}-${subject.name.toLowerCase().replace(/\s+/g, '-')}.md" target="_blank">Syllabus</a></li>
+            <li><a href="../_syllabus/${SYLLABUS_FILES[subject.code] || ''}" target="_blank">Syllabus</a></li>
           </ul>
         </section>
       </article>
@@ -783,7 +797,7 @@ function generateSubjectIndexHtml(subject) {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -792,7 +806,7 @@ function generateSubjectIndexHtml(subject) {
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
     // Trailing slash redirect for subject index pages
@@ -806,6 +820,25 @@ function generateSubjectIndexHtml(subject) {
 }
 
 function generateMainIndexHtml() {
+  const CHART_START = EXAM_ROUTINE[0].iso.split('-').map(Number);
+  const chartDays = Array.from({ length: 10 }, (_, k) => {
+    const dt = new Date(CHART_START[0], CHART_START[1] - 1, CHART_START[2] + k);
+    const iso = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+    return {
+      d: dt.getDate(),
+      iso,
+      exam: EXAM_ROUTINE.find(e => e.iso === iso) || null,
+      dow: dt.toLocaleDateString('en-US', { weekday: 'short' }),
+    };
+  });
+  const SHORT_LABEL = {
+    'IT 248': 'Entrepreneur',
+    'IT 250': 'Digital Economy',
+    'IT 249': 'Business Intelligence',
+    'IT 275 / IT 276': '.NET / DBA',
+    'IT 277': 'Cloud Computing',
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -818,181 +851,144 @@ function generateMainIndexHtml() {
 <body>
   <header class="site-header">
     <div class="header-content">
-      <h1 class="site-title">BIM 8th Semester</h1>
-      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
+      <a class="site-title" href="./">BIM 8th Semester</a>
+      <nav class="site-nav" aria-label="Sections">
+        <a href="#timetable">Timetable</a>
+        <a href="#subjects">Notes</a>
+        <a href="#pattern">Pattern</a>
+        <a href="bi/cheat-sheet.html">Cheat sheet</a>
+      </nav>
+      <span class="header-clock" id="headerClock" aria-live="off">
+        <span class="clock-code" id="htCode">IT 248</span>
+        <span class="clock-val" id="htVal">--d --:--:--</span>
+      </span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
   </header>
 
   <div class="layout">
     <aside class="sidebar" id="sidebar">
-      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
       <div class="sidebar-overlay" onclick="closeSidebar()"></div>
       <div class="sidebar-content">
-        <h3>Subjects</h3>
+        <h3>This semester</h3>
         <ul class="subject-list">
-          ${Object.values(SUBJECTS).map(s => `
+          ${SUBJECT_ORDER.map(s => {
+            const ex = getSubjectExam(s.id);
+            return `
             <li>
               <a href="${s.id}/" style="border-left-color: ${s.color}">
                 <span class="subject-code">${s.code}</span>
                 <span class="subject-name">${s.name}</span>
+                ${ex ? `<span class="subject-exam" data-iso="${ex.iso}" data-label="${formatExamDate(ex.iso).replace(/, 2026$/, '')}">${formatExamDate(ex.iso).replace(/, 2026$/, '')} &middot; ${daysUntil(ex.iso)} days</span>` : ''}
               </a>
-            </li>
-          `).join('')}
+            </li>`;
+          }).join('')}
         </ul>
         <div class="sidebar-footer">
           <div class="progress-summary">
-            <span>4 Subjects</span>
-            <span>25 Units</span>
-            <span>320 Marks Total</span>
+            <span>25 units</span>
+            <span>320 marks</span>
           </div>
+          <a class="footer-link" href="bi/cheat-sheet.html">BI cheat sheet</a>
         </div>
       </div>
     </aside>
 
     <main class="content" role="main">
-      <!-- Masthead with hero image -->
-      <section class="masthead" data-scene="masthead">
-        <div class="masthead-image">
-          <img src="assets/tribhuvan-university-of-nepal-img-9531.jpg" width="1920" height="1280" alt="Tribhuvan University campus, Kirtipur" aria-hidden="true">
+      <section class="page-head">
+        <h1>Examination timetable</h1>
+        <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; 1&ndash;10 December 2026 &middot; centre ${EXAM_CENTRE}</p>
+      </section>
+
+      <section class="timetable" id="timetable" aria-labelledby="timetableTitle">
+        <h2 id="timetableTitle" class="section-title">Ten days, five papers</h2>
+        <div class="chart" id="chart">
+          <div class="chart-marker" id="chartMarker" style="grid-column: 1 / span 3">
+            <span class="marker-label">Next paper</span>
+            <span class="marker-code" id="markerCode">IT 248</span>
+            <span class="marker-time" id="markerTime" aria-hidden="true"><b id="cdDays">0</b>d <b id="cdHours">00</b>:<b id="cdMins">00</b>:<b id="cdSecs">00</b></span>
+            <span class="sr-only" id="markerSr">Next paper in ten days</span>
+          </div>
+          <div class="chart-month">December 2026 &middot; Mangsir 2083</div>
+          ${chartDays.map(c => {
+            const exam = c.exam;
+            const isLink = exam && exam.subjectId;
+            const cls = "chart-day" + (exam ? " is-paper" : " is-free") + (exam && !exam.isOurs ? " is-other" : "");
+            const inner = `
+              <span class="day-when">
+                <span class="day-num">${c.d}</span>
+                <span class="day-name">${c.dow}</span>
+                ${exam ? `<span class="day-bs">${exam.bs.replace(/, 2083$/, '')}</span>` : ''}
+              </span>
+              <span class="day-what">
+                ${exam
+                  ? `<span class="day-paper">${exam.code}</span><span class="day-subject">${SHORT_LABEL[exam.code] || exam.title}</span>`
+                  : `<span class="day-free">free</span>`}
+              </span>`;
+            return isLink
+              ? `<a class="${cls}" href="${exam.subjectId}/" data-iso="${c.iso}" title="${exam.title}">${inner}</a>`
+              : `<div class="${cls}" data-iso="${c.iso}" title="${exam ? exam.title : 'No paper'}">${inner}</div>`;
+          }).join('')}
         </div>
-        <div class="masthead-inner">
-          <h1>Four papers. Ten days.</h1>
-          <p class="standfirst">BIM 8th semester, Tribhuvan University. IT 248, 250, 249, 277 — 1 to 10 December 2026.</p>
-          <div class="masthead-countdown" id="mastheadCountdown" aria-live="off" aria-atomic="true">
-            <div class="masthead-countdown-label">Next paper</div>
-            <div class="masthead-countdown-subject" id="mcdSubject">—</div>
-            <div class="masthead-countdown-timer" id="mcdTimer" aria-hidden="true">
-              <span class="mcd-unit" id="mcdDays">0</span>
-              <span class="mcd-sep">days</span>
-              <span class="mcd-unit" id="mcdHours">00</span>
-              <span class="mcd-sep">:</span>
-              <span class="mcd-unit" id="mcdMins">00</span>
-              <span class="mcd-sep">:</span>
-              <span class="mcd-unit" id="mcdSecs">00</span>
+        <p class="chart-note">Your papers fall every other day. The five empty days are the ones you can still use. Routine: Dean's Office, 2083/07/28.</p>
+      </section>
+
+      <section class="doors" id="subjects" aria-labelledby="doorsTitle">
+        <h2 id="doorsTitle" class="section-title">Open your notes</h2>
+        <ul class="doors-list">
+          ${SUBJECT_ORDER.map(s => {
+            const ex = getSubjectExam(s.id);
+            return `
+            <li class="door">
+              <div class="door-head">
+                <span class="door-code" style="border-color: ${s.color}">${s.code}</span>
+                <span class="door-name">${s.name}</span>
+              </div>
+              <p class="door-meta">${s.units.length} units &middot; ${s.marks} marks &middot; pass ${s.passMarks}${ex ? ` &middot; ${formatExamDate(ex.iso).replace(/, 2026$/, '')}` : ''}</p>
+              <div class="door-links">
+                <a href="${s.id}/">Notes</a>
+                <a href="${s.id}/question-bank.html">Question bank</a>
+                <a href="${s.id}/model-question-answers.html">Model answers</a>
+                ${s.id === 'bi' ? '<a href="bi/cheat-sheet.html">Cheat sheet</a>' : ''}
+              </div>
+            </li>`;
+          }).join('')}
+        </ul>
+      </section>
+
+      <section class="pattern" id="pattern" aria-labelledby="patternTitle">
+        <h2 id="patternTitle" class="section-title">What each paper is worth</h2>
+        <div class="pattern-grid">
+          <div class="marks-block">
+            <div class="marks-scroll">
+              <table class="marks-table">
+                <thead>
+                  <tr><th scope="col">Paper</th><th scope="col">Code</th><th scope="col">Full</th><th scope="col">Pass</th><th scope="col">Groups</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Business Intelligence</td><td>IT 249</td><td>60</td><td><strong>30</strong></td><td>A:10&times;1, B:5&times;3, C:3&times;5, D:2&times;10</td></tr>
+                  <tr><td>Digital Economy</td><td>IT 250</td><td>100</td><td><strong>50</strong></td><td>A:10&times;2, B:6&times;5, C:3&times;10, D:1&times;20</td></tr>
+                  <tr><td>Cloud Computing</td><td>IT 277</td><td>60</td><td><strong>30</strong></td><td>A:10&times;1, B:5&times;3, C:3&times;5, D:2&times;10</td></tr>
+                  <tr><td>IT Entrepreneurship</td><td>IT 248</td><td>100</td><td><strong>50</strong></td><td>A:10&times;2, B:6&times;5, C:3&times;10, D:1&times;20</td></tr>
+                </tbody>
+              </table>
             </div>
-            <div class="masthead-countdown-date" id="mcdDate">—</div>
+          </div>
+          <div class="rules-block">
+            <h3>Hall rules</h3>
+            <ul class="rules-list">
+              ${EXAM_NOTES.map(note => `<li>${note}</li>`).join('')}
+            </ul>
           </div>
         </div>
       </section>
 
-      <!-- Kirtipur context strip -->
-      <section class="context-strip" data-scene="context">
-        <div class="context-image">
-          <img src="assets/kirtipur-1950-1955.jpg" width="1228" height="850" alt="Kirtipur town, 1950-1955" aria-hidden="true">
-        </div>
-        <div class="context-content">
-          <h2>Kirtipur — the exam centre</h2>
-          <p>Five kilometres southwest of Kathmandu, the ancient town of Kirtipur has been the examination centre for Tribhuvan University since its founding. The Dean's Office notice (2083/07/28) names it plainly: your papers are written here.</p>
-        </div>
-      </section>
-
-      <section class="routine" aria-labelledby="routineTitle">
-        <h2 id="routineTitle">Examination Routine</h2>
-        <div class="routine-table-wrapper">
-          <table class="routine-table">
-            <caption>BIM 8th Semester NC papers — Dean's Office, 2083/07/28</caption>
-            <thead>
-              <tr>
-                <th scope="col">Date (BS)</th>
-                <th scope="col">Day</th>
-                <th scope="col">Code</th>
-                <th scope="col">Paper</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${EXAM_ROUTINE.map(exam => {
-                const isNext = false; // will be set by JS
-                const rowClass = exam.isOurs ? 'ours' : 'other';
-                const tick = exam.isOurs ? '' : '';
-                return `
-                <tr class="${rowClass}" data-code="${exam.code}" data-iso="${exam.iso}">
-                  <td>${exam.bs}</td>
-                  <td>${exam.day}</td>
-                  <td><code>${exam.code}</code></td>
-                  <td>
-                    ${exam.isOurs && exam.subjectId
-                      ? `<a href="${exam.subjectId}/">${exam.title}</a>`
-                      : exam.title}
-                  </td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-        <ul class="routine-rules" aria-label="Exam hall rules">
-          <li>Centre: Kirtipur (Tribhuvan University). Time notified by campus.</li>
-          <li>No mobile phones, smart watches, or digital watches in the exam hall.</li>
-          <li>Graph / chart / log paper only with prior written approval.</li>
-          <li>Admit card mandatory for every paper. No admit card = no entry.</li>
-        </ul>
-      </section>
-
-      <!-- Exam hall atmosphere -->
-      <section class="exam-hall" data-scene="exam-hall">
-        <div class="exam-hall-image">
-          <img src="assets/ncea-exam-papers.jpg" width="1920" height="1440" alt="Pile of exam booklets, marked and returned" aria-hidden="true">
-        </div>
-        <div class="exam-hall-content">
-          <h2>What the hall looks like</h2>
-          <p>Rows of desks. The same answer booklet for every paper. The invigilator's bell. Your admit card on the corner. The clock on the wall — the only timepiece allowed. This is where the ten days happen.</p>
-        </div>
-      </section>
-
-      <section class="subjects-list" aria-labelledby="subjectsTitle">
-        <h2 id="subjectsTitle">Your notes</h2>
-        <ul class="subject-rows">
-          ${Object.values(SUBJECTS).map(s => `
-            <li class="subject-row" style="--subject-accent: ${s.color}">
-              <div class="subject-row-label">
-                <code>${s.code}</code>
-                <span class="subject-row-name">${s.name}</span>
-              </div>
-              <div class="subject-row-meta">
-                <span class="subject-row-marks"><strong>${s.marks}</strong> marks</span>
-                <span class="subject-row-pass">pass <strong>${s.passMarks}</strong></span>
-                <span class="subject-row-units">${s.units.length} units</span>
-              </div>
-              <a href="${s.id}/" class="subject-row-link">Notes →</a>
-            </li>
-          `).join('')}
-        </ul>
-      </section>
-
-      <section class="exam-pattern" aria-labelledby="patternTitle">
-        <h2 id="patternTitle">Exam Pattern</h2>
-        <div class="pattern-table-wrapper">
-          <table class="pattern-table">
-            <thead>
-              <tr><th>Subject</th><th>Code</th><th>Full Marks</th><th>Pass Marks</th><th>Groups</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Business Intelligence</td><td>IT 249</td><td>60</td><td class="pass-cell"><strong>30</strong></td><td>A:10×1, B:5×3, C:3×5, D:2×10</td></tr>
-              <tr><td>Digital Economy</td><td>IT 250</td><td>100</td><td class="pass-cell"><strong>50</strong></td><td>A:10×2, B:6×5, C:3×10, D:1×20</td></tr>
-              <tr><td>Cloud Computing</td><td>IT 277</td><td>60</td><td class="pass-cell"><strong>30</strong></td><td>A:10×1, B:5×3, C:3×5, D:2×10</td></tr>
-              <tr><td>IT Entrepreneurship</td><td>IT 248</td><td>100</td><td class="pass-cell"><strong>50</strong></td><td>A:10×2, B:6×5, C:3×10, D:1×20</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Historical exam paper texture -->
-      <section class="paper-texture" data-scene="paper">
-        <div class="paper-image">
-          <img src="assets/history-exam-paper-1967-001.jpg" width="1920" height="2133" alt="History examination paper from 1967" aria-hidden="true">
-        </div>
-        <div class="paper-content">
-          <h2>The paper in your hand</h2>
-          <p>Every generation sits the same ritual. The questions change; the format, the silence, the weight of the pen — those don't. Your IT 249 paper will feel like this 1967 history paper: same lines, same margins, same silence.</p>
-        </div>
-      </section>
-
-      <footer class="site-close">
-        <div class="close-links">
-          <a href="bi/cheat-sheet.html" class="close-link">📋 BI Cheat Sheet — print on A5</a>
-          <button class="close-link" onclick="window.print()">🖨️ Print this page</button>
-        </div>
-        <p class="close-name">BIM 8th Semester Study Materials</p>
+      <footer class="page-foot">
+        <p>Routine source: Dean's Office, 2083/07/28. Centre: ${EXAM_CENTRE}.</p>
+        <button class="foot-btn" onclick="window.print()">Print this page</button>
       </footer>
+
     </main>
   </div>
 
@@ -1011,7 +1007,7 @@ function generateMainIndexHtml() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
     const themeBtn = document.querySelector('.theme-toggle');
-    if (themeBtn) themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
 
     window.toggleTheme = function() {
       const html = document.documentElement;
@@ -1020,80 +1016,107 @@ function generateMainIndexHtml() {
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
       const themeBtn = document.querySelector('.theme-toggle');
-      if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
-    // Exam countdown + hero elements
+    // Exam clock
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
       return new Date(y, m - 1, d);
     }
-    function fmtDate(iso) {
-      const [y, m, d] = iso.split('-').map(Number);
-      const dt = new Date(y, m - 1, d);
-      return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function isoOf(date) {
+      return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
     }
-    function getExamPeriod() {
-      const ours = EXAM_ROUTINE_JS.filter(e => e.isOurs);
-      const start = parseLocal(ours[0].iso);
-      const end = parseLocal(ours[ours.length - 1].iso);
-      end.setHours(23, 59, 59, 999);
-      return { start, end };
-    }
-    function updateHero() {
+    let lastSrDay = -1;
+    let lastSrCode = '';
+
+    function updateClock() {
       const now = new Date();
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
-        const d = parseLocal(e.iso);
-        if (d > now) { next = e; break; }
+        if (parseLocal(e.iso) > now) { next = e; break; }
       }
 
-      // Masthead countdown elements
-      const mcdSubject = document.getElementById('mcdSubject');
-      const mcdTimer = document.getElementById('mcdTimer');
-      const mcdDays = document.getElementById('mcdDays');
-      const mcdHours = document.getElementById('mcdHours');
-      const mcdMins = document.getElementById('mcdMins');
-      const mcdSecs = document.getElementById('mcdSecs');
-      const mcdDate = document.getElementById('mcdDate');
+      const todayIso = isoOf(now);
 
-      // Routine table: highlight next paper row
-      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
-        const iso = tr.dataset.iso;
-        const isNext = next && iso === next.iso;
-        tr.classList.toggle('next-paper', isNext);
+      document.querySelectorAll('.chart-day[data-iso]').forEach(el => {
+        el.classList.toggle('is-next', !!next && next.iso === el.dataset.iso);
+        el.classList.toggle('is-today', el.dataset.iso === todayIso);
+        el.classList.toggle('is-past', el.dataset.iso !== todayIso && parseLocal(el.dataset.iso) < now);
       });
 
+      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
+        tr.classList.toggle('is-next-row', !!next && tr.dataset.iso === next.iso);
+      });
+
+      // Keep the sidebar's day counts in sync with the live counter.
+      document.querySelectorAll('.subject-exam[data-iso]').forEach(el => {
+        const target = parseLocal(el.dataset.iso);
+        const left = Math.floor((target - now) / 86400000);
+        const sameDay = isoOf(target) === todayIso;
+        const state = sameDay ? 'today' : left < 0 ? 'done' : left + (left === 1 ? ' day' : ' days');
+        el.textContent = el.dataset.label + ' \u00b7 ' + state;
+      });
+
+      const marker = document.getElementById('chartMarker');
+      const codeEl = document.getElementById('markerCode');
+      const daysEl = document.getElementById('cdDays');
+      const hoursEl = document.getElementById('cdHours');
+      const minsEl = document.getElementById('cdMins');
+      const secsEl = document.getElementById('cdSecs');
+      const srEl = document.getElementById('markerSr');
+      const htCode = document.getElementById('htCode');
+      const htVal = document.getElementById('htVal');
+
       if (!next) {
-        if (mcdSubject) mcdSubject.textContent = 'All papers complete';
-        if (mcdDate) mcdDate.textContent = 'Exam period over';
-        if (mcdDays) mcdDays.textContent = '0';
-        if (mcdHours) mcdHours.textContent = '00';
-        if (mcdMins) mcdMins.textContent = '00';
-        if (mcdSecs) mcdSecs.textContent = '00';
+        if (codeEl) codeEl.textContent = 'All papers done';
+        if (daysEl) daysEl.textContent = '0';
+        if (hoursEl) hoursEl.textContent = '00';
+        if (minsEl) minsEl.textContent = '00';
+        if (secsEl) secsEl.textContent = '00';
+        if (htCode) htCode.textContent = 'Done';
+        if (htVal) htVal.textContent = '';
+        if (srEl) srEl.textContent = 'All papers are finished';
         return;
       }
 
       const target = parseLocal(next.iso);
       const diff = target - now;
-      if (diff <= 0) { updateHero(); return; }
-
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
 
-      // Update masthead countdown
-      if (mcdSubject) mcdSubject.innerHTML = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
-      if (mcdDate) mcdDate.textContent = fmtDate(next.iso);
-      if (mcdDays) mcdDays.textContent = days;
-      if (mcdHours) mcdHours.textContent = String(hours).padStart(2, '0');
-      if (mcdMins) mcdMins.textContent = String(mins).padStart(2, '0');
-      if (mcdSecs) mcdSecs.textContent = String(secs).padStart(2, '0');
+      if (daysEl) daysEl.textContent = days;
+      if (hoursEl) hoursEl.textContent = pad2(hours);
+      if (minsEl) minsEl.textContent = pad2(mins);
+      if (secsEl) secsEl.textContent = pad2(secs);
+
+      const clockText = days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs);
+      if (htVal) htVal.textContent = clockText;
+
+      if (codeEl) codeEl.textContent = next.code;
+      if (htCode) htCode.textContent = next.code;
+
+      // Move the marker above the next paper's column (it spans three columns).
+      if (marker) {
+        const dayNum = Number(next.iso.slice(8, 10));
+        const span = 3;
+        const start = Math.min(Math.max(dayNum, 1), 11 - span);
+        marker.style.gridColumn = start + ' / span ' + span;
+        marker.style.setProperty('--pointer', (((dayNum - start + 0.5) / span) * 100).toFixed(1) + '%');
+      }
+
+      if (srEl && (days !== lastSrDay || next.code !== lastSrCode)) {
+        lastSrDay = days;
+        lastSrCode = next.code;
+        srEl.textContent = 'Next paper ' + next.code + ', ' + next.title + ', on ' + target.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days');
+      }
     }
-    updateHero();
-    setInterval(updateHero, 1000);
+    updateClock();
+    setInterval(updateClock, 1000);
 
   </script>
 </body>
@@ -1113,13 +1136,6 @@ async function build() {
   // Copy CSS
   fs.copyFileSync(path.join(__dirname, 'styles.css'), path.join(DIST_DIR, 'styles.css'));
 
-  // Copy assets
-  const assetsSrc = path.join(__dirname, 'assets');
-  const assetsDest = path.join(DIST_DIR, 'assets');
-  if (fs.existsSync(assetsSrc)) {
-    fs.cpSync(assetsSrc, assetsDest, { recursive: true });
-    console.log('✅ Copied assets');
-  }
 
   // Generate main index
   const mainIndex = generateMainIndexHtml();
