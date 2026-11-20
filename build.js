@@ -819,9 +819,6 @@ function generateMainIndexHtml() {
   <header class="site-header">
     <div class="header-content">
       <h1 class="site-title">BIM 8th Semester</h1>
-      <div class="exam-info" id="examCountdown">
-        <span class="countdown-text">Loading…</span>
-      </div>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
     </div>
   </header>
@@ -854,8 +851,44 @@ function generateMainIndexHtml() {
 
     <main class="content" role="main">
       <section class="hero">
-        <h2>Study Materials</h2>
-        <p>Complete, exam-ready notes for all four subjects. Each unit includes exam analysis, structured content, diagrams, and model question answers.</p>
+        <div class="hero-content">
+          <div class="hero-badge">BIM 8th Semester · 2083 / 2026</div>
+          <h2>Exam Countdown</h2>
+          <p class="hero-tagline">The clock is ticking. Every hour counts.</p>
+          
+          <div class="hero-countdown" id="examCountdown">
+            <div class="countdown-big">
+              <div class="countdown-label">Next paper: <span id="cd-subject">Loading…</span></div>
+              <div class="countdown-date" id="cd-date">—</div>
+              <div class="countdown-timer">
+                <div class="timer-unit"><span class="timer-value" id="cd-days">00</span><span class="timer-label">days</span></div>
+                <span class="timer-sep">:</span>
+                <div class="timer-unit"><span class="timer-value" id="cd-hours">00</span><span class="timer-label">hrs</span></div>
+                <span class="timer-sep">:</span>
+                <div class="timer-unit"><span class="timer-value" id="cd-mins">00</span><span class="timer-label">min</span></div>
+                <span class="timer-sep">:</span>
+                <div class="timer-unit"><span class="timer-value" id="cd-secs">00</span><span class="timer-label">sec</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+              <div class="progress-markers" id="progressMarkers"></div>
+            </div>
+            <div class="progress-labels">
+              <span class="progress-start">Exam period starts</span>
+              <span class="progress-end">All papers done</span>
+            </div>
+          </div>
+
+          <div class="hero-focus" id="heroFocus">
+            <div class="focus-badge">🎯 Current Focus</div>
+            <div class="focus-subject" id="focusSubject">—</div>
+            <div class="focus-hint" id="focusHint">—</div>
+          </div>
+        </div>
       </section>
 
       <section class="exam-routine">
@@ -958,7 +991,7 @@ function generateMainIndexHtml() {
       if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
     };
 
-    // Exam countdown
+    // Exam countdown + hero elements
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
@@ -969,46 +1002,105 @@ function generateMainIndexHtml() {
       const dt = new Date(y, m - 1, d);
       return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
-    function updateCountdown() {
+    function getExamPeriod() {
+      const ours = EXAM_ROUTINE_JS.filter(e => e.isOurs);
+      const start = parseLocal(ours[0].iso);
+      const end = parseLocal(ours[ours.length - 1].iso);
+      end.setHours(23, 59, 59, 999);
+      return { start, end };
+    }
+    function updateHero() {
       const now = new Date();
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
         const d = parseLocal(e.iso);
         if (d > now) { next = e; break; }
       }
-      const el = document.getElementById('examCountdown');
-      if (!el) return;
+
+      // Countdown timer elements
+      const cdSubject = document.getElementById('cd-subject');
+      const cdDate = document.getElementById('cd-date');
+      const cdDays = document.getElementById('cd-days');
+      const cdHours = document.getElementById('cd-hours');
+      const cdMins = document.getElementById('cd-mins');
+      const cdSecs = document.getElementById('cd-secs');
+
+      // Progress bar
+      const period = getExamPeriod();
+      const total = period.end - period.start;
+      const elapsed = now - period.start;
+      const pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
+      const fill = document.getElementById('progressFill');
+      if (fill) fill.style.width = pct + '%';
+
+      // Progress markers (exam dates)
+      const markers = document.getElementById('progressMarkers');
+      if (markers && markers.children.length === 0) {
+        EXAM_ROUTINE_JS.filter(e => e.isOurs).forEach((exam, i) => {
+          const m = document.createElement('span');
+          m.className = 'progress-marker';
+          const mpct = ((parseLocal(exam.iso) - period.start) / total) * 100;
+          m.style.left = mpct + '%';
+          m.title = exam.title + ' — ' + fmtDate(exam.iso);
+          m.innerHTML = '<span class="marker-dot"></span><span class="marker-label">' + exam.code + '</span>';
+          markers.appendChild(m);
+        });
+      }
+
+      // Current focus
+      const focusSubject = document.getElementById('focusSubject');
+      const focusHint = document.getElementById('focusHint');
+
       if (!next) {
-        el.innerHTML = '<span class="countdown-text">All papers complete</span>';
+        if (cdSubject) cdSubject.textContent = 'All papers complete';
+        if (cdDate) cdDate.textContent = '🎉 Exam period over';
+        if (cdDays) cdDays.textContent = '00';
+        if (cdHours) cdHours.textContent = '00';
+        if (cdMins) cdMins.textContent = '00';
+        if (cdSecs) cdSecs.textContent = '00';
+        if (focusSubject) focusSubject.textContent = 'All done!';
+        if (focusHint) focusHint.textContent = 'Rest well. Results await.';
         return;
       }
+
       const target = parseLocal(next.iso);
       const diff = target - now;
-      if (diff <= 0) {
-        updateCountdown();
-        return;
-      }
+      if (diff <= 0) { updateHero(); return; }
+
       const days = Math.floor(diff / 86400000);
       const hours = Math.floor((diff % 86400000) / 3600000);
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
-      const subjectLink = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
-      el.innerHTML = '<div class="countdown-big">' +
-        '<span class="countdown-label">Next paper: ' + subjectLink + '</span>' +
-        '<span class="countdown-date">' + fmtDate(next.iso) + '</span>' +
-        '<div class="countdown-timer">' +
-          '<div class="timer-unit"><span class="timer-value" id="cd-days">' + days + '</span><span class="timer-label">days</span></div>' +
-          '<span class="timer-sep">:</span>' +
-          '<div class="timer-unit"><span class="timer-value" id="cd-hours">' + String(hours).padStart(2, '0') + '</span><span class="timer-label">hrs</span></div>' +
-          '<span class="timer-sep">:</span>' +
-          '<div class="timer-unit"><span class="timer-value" id="cd-mins">' + String(mins).padStart(2, '0') + '</span><span class="timer-label">min</span></div>' +
-          '<span class="timer-sep">:</span>' +
-          '<div class="timer-unit"><span class="timer-value" id="cd-secs">' + String(secs).padStart(2, '0') + '</span><span class="timer-label">sec</span></div>' +
-        '</div>' +
-      '</div>';
+
+      // Update countdown
+      if (cdSubject) cdSubject.innerHTML = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
+      if (cdDate) cdDate.textContent = fmtDate(next.iso);
+      if (cdDays) cdDays.textContent = days;
+      if (cdHours) cdHours.textContent = String(hours).padStart(2, '0');
+      if (cdMins) cdMins.textContent = String(mins).padStart(2, '0');
+      if (cdSecs) cdSecs.textContent = String(secs).padStart(2, '0');
+
+      // Current focus logic
+      const hoursUntil = diff / 3600000;
+      if (focusSubject) {
+        if (hoursUntil <= 48) {
+          focusSubject.textContent = next.title;
+          focusHint.textContent = 'Final revision mode. Practice past papers. Sleep well.';
+        } else if (hoursUntil <= 168) { // 1 week
+          focusSubject.textContent = next.title;
+          focusHint.textContent = 'This week: finish weak units, memorize formulas, do mock questions.';
+        } else {
+          // Find the subject that's furthest but still has time
+          const upcoming = EXAM_ROUTINE_JS.filter(e => e.isOurs && parseLocal(e.iso) > now);
+          if (upcoming.length > 0) {
+            focusSubject.textContent = upcoming[0].title;
+            focusHint.textContent = 'Start with fundamentals. Build notes → practice → mock.';
+          }
+        }
+      }
     }
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+    updateHero();
+    setInterval(updateHero, 1000);
 
   </script>
 </body>
