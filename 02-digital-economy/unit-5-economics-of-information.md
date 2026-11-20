@@ -3,28 +3,70 @@
 | | |
 |---|---|
 | **Lecture hours** | 8 |
-| **Marks carried in 2026 paper** | **12** — one 2-marker (A9 digital challenges to IP frameworks), one 10-marker (C21 effects of digitalization on consumer choice and labour markets) |
-| **Difficulty** | ★★★★☆ — thin on marks but **C21 is the only analytical 10-marker in the paper**. It cannot be bluffed from definitions; it needs the asymmetric-information machinery (adverse selection, moral hazard), the digitalisation link (how platforms change information structures), and the AI/labour-market mechanism. |
-| **Exam yield** | 🟡 thin — 8 hours, 12 marks, but **C21 is high-value** because it separates rote learners from those who can apply the economics |
+| **Marks in 2026 paper** | 12 — one 2-marker (A9 digital challenges to IP frameworks), one 10-marker (C21 effects of digitalization on consumer choice and labour markets) |
+| **Difficulty** | ★★★★☆ — thin on marks but **C21 is the only analytical 10-marker in the paper**. Cannot be bluffed from definitions; needs asymmetric-information machinery, digitalisation link, and AI/labour-market mechanism. |
+| **Exam yield** | 🟡 thin — 8 hours, 12 marks, but **C21 is high-value** — separates rote learners from those who can apply the economics |
 | **Prerequisite** | Unit 2 (platforms, network effects, data as asset) · Unit 3 (digital business models, value creation) |
-| **Syllabus bullets** | Asymmetric information: concepts and determinants · Asymmetric information and digitalization · Online search engines · Artificial intelligence · Strategy and the new economics of information · Effects of digitalization on consumer choice and labour markets · Intellectual property and digitalization |
+| **Syllabus** | Asymmetric information: concepts and determinants · Asymmetric information and digitalization · Online search engines · Artificial intelligence · Strategy and the new economics of information · Effects of digitalization on consumer choice and labour markets · Intellectual property and digitalization |
 
-> **Read this first:** this unit is **thin on marks (12) but thick on concepts**. The syllabus packs seven bullets into 8 hours. The paper only asks two questions: A9 (IP challenges — a 2-marker list) and C21 (consumer choice + labour markets — the only analytical 10-marker). **C21 is the gate**: if you cannot explain *how digitalisation changes information asymmetries in markets* and *how AI reshapes labour demand*, you will lose the 10 marks. The other bullets (search engines, AI strategy, IP) are vocabulary for C21 and for the case (Unit 6).
+> **Read this first:** This unit is **thin on marks (12) but thick on concepts**. The syllabus packs seven bullets into 8 hours. The paper only asks two questions: A9 (IP challenges — a 2-marker list) and C21 (consumer choice + labour markets — the only analytical 10-marker). **C21 is the gate**: if you cannot explain *how digitalisation changes information asymmetries in markets* and *how AI reshapes labour demand*, you will lose the 10 marks. The other bullets (search engines, AI strategy, IP) are vocabulary for C21 and for the case (Unit 6).
 
 ---
 
-## 5.1 Asymmetric information — concepts and determinants
+## Coverage Map
+
+```
+5.1 Asymmetric Information 🎯 3-mark
+├── Adverse selection (hidden characteristics, pre-transaction)
+├── Moral hazard (hidden actions, post-transaction)
+├── Five determinants: observability, verifiability, signalling cost, repeat interaction, intermediaries
+└── Platform's economic role: information intermediary reducing both problems
+
+5.2 Digitalisation Reshapes Asymmetry 🎯 5-mark
+├── Reduces (buyer-side): reviews, price comparison, verified badges
+├── Creates (platform-side): platform knows everything; user knows little about algorithm
+├── Creates (worker-side): algorithmic management — platform knows worker data; worker doesn't know dispatch logic
+└── Shifts (seller → platform): platform becomes trusted intermediary
+
+5.3 Online Search Engines 🎯 3-mark
+├── Two-sided platform: users ↔ advertisers
+├── Cross-side network effects
+├── Generalised second price auction: rank = bid × quality score
+└── Data feedback loop
+
+5.4 AI Economics 🎯 3-mark
+├── Prediction machine framework: prediction, judgment, action, data, computing
+├── Three shifts: rules→prediction, average→individual, human→machine judgment
+└── Judgment becomes more valuable when prediction is cheap
+
+5.5 Strategy & New Economics of Information
+├── Six properties of information goods: non-rivalry, high fixed/near-zero marginal cost, experience good, network effects, switching costs, standards
+└── These explain why Unit 3's business models look the way they do
+
+5.6 Effects of Digitalisation on Consumer Choice & Labour Markets — C21 🎯 10-mark
+├── Consumer choice: three mechanisms (search costs, asymmetry reallocation, behavioural targeting)
+├── Labour markets: three mechanisms (task automation, platform-mediated work, global arbitrage)
+└── Synthesis: asymmetry concentrates in the platform
+
+5.7 IP & Digitalisation — A9 🎯 2-mark
+├── Near-zero marginal cost of copying → enforcement impossible
+└── Generative AI and authorship → training data/output ownership/liability gap
+```
+
+---
+
+## 5.1 Asymmetric Information — Concepts and Determinants 🎯 3-mark
 
 > **Asymmetric information exists when one party in a transaction has more or better information than the other.** It is the *fundamental market failure* in digital economies — platforms exist largely to reduce it.
 
-### Two canonical problems
+### Two Canonical Problems
 
 | Problem | When it arises | Digital example |
 |---|---|---|
 | **Adverse selection** (hidden *characteristics*) | before the transaction: the informed party knows their *type* (quality, risk, ability); the uninformed party does not | a seller knows their product is defective; a borrower knows they are high-risk; a gig worker knows their skill level — the platform/buyer does not |
 | **Moral hazard** (hidden *actions*) | after the transaction: the informed party takes *actions* the uninformed party cannot observe | a driver takes a longer route; a borrower diverts loan funds; a freelancer outsources the work — the platform/client cannot monitor perfectly |
 
-### Determinants — what makes asymmetry better or worse
+### Determinants — What Makes Asymmetry Better or Worse
 
 | Factor | Increases asymmetry | Decreases asymmetry (platform mechanisms) |
 |---|---|---|
@@ -38,7 +80,7 @@
 
 ---
 
-## 5.2 Asymmetric information and digitalization
+## 5.2 Asymmetric Information and Digitalization 🎯 5-mark
 
 > **Digitalization reshapes information asymmetries in three directions: it reduces some, creates new ones, and shifts where the asymmetry sits.**
 
@@ -53,7 +95,7 @@
 
 ---
 
-## 5.3 Online search engines — the economics of search
+## 5.3 Online Search Engines — the Economics of Search 🎯 3-mark
 
 > **A search engine is a two-sided platform (users ↔ advertisers) that solves an information retrieval problem for users and an attention allocation problem for advertisers.** Its economics are a direct application of Unit 2–3 platform mechanics.
 
@@ -69,11 +111,11 @@
 
 ---
 
-## 5.4 Artificial intelligence — the economics of AI
+## 5.4 Artificial Intelligence — the Economics of AI 🎯 3-mark
 
 > **AI (specifically machine learning) is a prediction technology: it fills in missing information.** In economic terms, **AI lowers the cost of prediction**, which changes decisions, contracts, and labour markets.
 
-### The prediction machine framework (Agrawal, Gans, Goldfarb — standard reference)
+### The Prediction Machine Framework (Agrawal, Gans, Goldfarb — standard reference)
 
 | Component | What it is | Economic effect |
 |---|---|---|
@@ -83,7 +125,7 @@
 | **Data** | the fuel: training data + input data | becomes a strategic asset; data feedback loops create moats |
 | **Computing** | the engine: training + inference | cloud elasticity (Unit 4) makes it opex, not capex |
 
-### AI and the digital economy — three shifts
+### AI and the Digital Economy — Three Shifts
 
 1. **From rules to prediction.** Traditional software: `if X then Y`. ML: `predict Y given X`. The latter handles complexity (images, language, fraud patterns) that rules cannot.
 2. **From average to individual.** Personalisation at scale: pricing, recommendations, risk scoring, content — each user gets a *different* prediction.
@@ -91,7 +133,7 @@
 
 ---
 
-## 5.5 Strategy and the new economics of information
+## 5.5 Strategy and the New Economics of Information
 
 > **Information goods have distinct economic properties that dictate strategy.** The "new economics of information" (Shapiro & Varian, *Information Rules* — classic, not on syllabus but the ideas are) applies directly to digital business models (Unit 3).
 
@@ -108,31 +150,31 @@
 
 ---
 
-## 5.6 Effects of digitalization on consumer choice and labour markets — C21 (10 marks ≈ 380 words)
+## 5.6 Effects of Digitalization on Consumer Choice and Labour Markets — C21 🎯 10-mark
 
 > **Shape: consumer choice (three mechanisms) → labour markets (three mechanisms) → synthesis: the platform as the new information intermediary. ~380 words.**
 
 This is the **only analytical 10-marker in the paper**. It cannot be answered from definitions alone. You must apply the asymmetric-information machinery (adverse selection, moral hazard) and the AI/prediction framework to *how digitalisation changes the information structure* for consumers and workers.
 
-### Consumer choice — three mechanisms
+### Consumer Choice — Three Mechanisms
 
 1. **Reduced search costs and expanded consideration sets.** Price comparison, reviews, recommendations, and search engines lower the cost of finding alternatives. *Result:* consumers switch more, are less loyal, and demand better value. *But:* algorithmic curation (filter bubbles, personalised ranking) can *narrow* the effective choice set — the platform decides what you see.
 2. **Information asymmetry reallocation.** Traditional adverse selection (buyer doesn't know seller quality) is reduced by ratings/reviews/verification. *But* a *new* asymmetry emerges: the platform knows the consumer's willingness to pay, search intent, and behavioural profile; the consumer does not know the ranking algorithm or the personalised price. **Personalised pricing and dark patterns** are the moral hazard of the platform side.
 3. **Behavioural targeting and manipulation.** AI-driven recommendations optimise for *engagement* or *conversion*, not necessarily consumer welfare. The consumer's choice architecture is designed by the platform's objective function. *Regulatory implication:* the Individual Privacy Act, 2075 (consent, purpose limitation) and future digital consumer protection laws address this.
 
-### Labour markets — three mechanisms
+### Labour Markets — Three Mechanisms
 
 1. **Task-level automation and the "prediction" substitution.** AI lowers the cost of prediction (Agrawal et al.). Routine cognitive tasks (coding boilerplate, translation, summarisation, data entry, basic analysis, customer support tier-1) are automated. *Result:* demand shifts from *routine cognitive* to *non-routine cognitive* (problem definition, judgment, creativity, human interaction) and *non-routine manual* (care, trades, logistics last-mile).
-2. **Platform-mediated work and algorithmic management.** Gig platforms (Pathao, Tootle, Upwork, Fiverr) replace the firm with an algorithm: dispatch, pricing, rating, termination are automated. *Information asymmetry:* the platform knows the worker's real-time data; the worker does not know the dispatch/pricing logic. *Result:* flexibility without security; income volatility; no collective bargaining; the "partner" fiction.
+2. **Platform-mediated work and algorithmic management.** Gig platforms (Pathao, Tootle, Upwork, Fiverr) replace the firm with an algorithm: dispatch, pricing, rating, termination are automated. *Information asymmetry:* the platform knows the worker's real-time location, acceptance rate, speed; the worker does not know the dispatch/pricing logic. *Result:* flexibility without security; income volatility; no collective bargaining; the "partner" fiction.
 3. **Global labour arbitrage for digital tasks.** Digital delivery (Unit 4's Channel 1) lets a Kathmandu developer compete for London jobs. *Wage convergence* for digital skills: Nepali developers earn a fraction of Silicon Valley rates but a multiple of local averages. *Brain drain without migration:* the best talent works remotely for foreign firms, hollowing out the local innovation ecosystem.
 
-### Synthesis — the platform as the new information intermediary
+### Synthesis — the Platform as the New Information Intermediary
 
 Digitalisation does not eliminate asymmetric information. It **concentrates it in the platform**. The platform knows both sides better than they know each other, and better than they know the platform. Consumer choice is shaped by algorithmic curation; labour outcomes are shaped by algorithmic management. The policy response (Unit 1, Unit 6) must address: **data rights (Privacy Act, 2075), algorithmic transparency, gig-worker protections, and competition policy for platform dominance.**
 
 ---
 
-### C21 · "Analyze the effects of digitalization on consumer choice and labour markets." [10]
+### C21 · "Analyze the effects of digitalization on consumer choice and labour markets." [10] 🎯 10-mark
 
 > **Shape: consumer choice (3 mechanisms) → labour markets (3 mechanisms) → synthesis. ~380 words.**
 
@@ -146,7 +188,7 @@ Digitalisation does not eliminate asymmetric information. It **concentrates it i
 
 ---
 
-## 5.7 Intellectual property and digitalization — A9 (2 marks ≈ 55 words)
+## 5.7 Intellectual Property and Digitalization — A9 🎯 2-mark
 
 > **A9 answer (memorise this):** Two digital challenges to traditional IP frameworks: (1) **Near-zero marginal cost of copying** — digital goods replicate perfectly at near-zero cost, making enforcement of copyright/patent across borders practically impossible; traditional IP assumes physical scarcity. (2) **Generative AI and authorship** — AI models trained on copyrighted works produce outputs that blur the line between derivative work and original creation; current IP law has no clear framework for model training data, output ownership, or liability for infringement. (Other acceptable: open-source licensing conflicts, patent thickets in software, jurisdictional enforcement gaps, DRM vs fair use.)
 
@@ -154,27 +196,15 @@ Digitalisation does not eliminate asymmetric information. It **concentrates it i
 
 ---
 
-## 5.8 Answer skeletons
-
-### A9 · "Write any two digital challenges to traditional IP frameworks." [2]
+### A9 · "Write any two digital challenges to traditional IP frameworks." [2] 🎯 2-mark
 
 > (1) **Near-zero marginal cost of copying** — digital goods replicate perfectly at near-zero cost, making enforcement of copyright/patent across borders practically impossible; traditional IP assumes physical scarcity. (2) **Generative AI and authorship** — AI models trained on copyrighted works produce outputs that blur derivative work and original creation; current IP law has no clear framework for training data, output ownership, or infringement liability.
 
 *(58 words)*
 
-### C21 · "Analyze the effects of digitalization on consumer choice and labour markets." [10]
-
-> **Consumer choice.** (1) Reduced search costs expand consideration sets — price comparison, reviews, recommendations lower switching costs; but algorithmic curation narrows the effective choice set. (2) Asymmetry reallocation — traditional adverse selection (buyer vs seller) reduced by ratings; new asymmetry: platform knows willingness to pay, intent, behaviour; consumer does not know ranking algorithm or personalised price. Personalised pricing and dark patterns are platform moral hazard. (3) Behavioural targeting — AI optimises for engagement/conversion, not welfare; choice architecture designed by platform's objective. Privacy Act, 2075 (consent, purpose limitation) addresses this.
->
-> **Labour markets.** (1) Task-level automation — AI lowers prediction cost (Agrawal et al.). Routine cognitive tasks (coding boilerplate, translation, summarisation, data entry, tier-1 support) automated. Demand shifts to non-routine cognitive (judgment, creativity) and non-routine manual (care, trades). (2) Platform-mediated work — gig platforms (Pathao, Upwork) replace firm with algorithm: dispatch, pricing, rating, termination automated. Asymmetry: platform knows worker's real-time data; worker does not know dispatch logic. Flexibility without security, income volatility, no collective bargaining. (3) Global labour arbitrage — digital delivery lets Kathmandu developer compete for London jobs. Wage convergence for digital skills; brain drain without migration — talent works remotely for foreign firms, hollowing out local innovation.
->
-> **Synthesis.** Digitalisation does not eliminate asymmetric information; it **concentrates it in the platform**. Platform knows both sides better than they know each other, and better than they know the platform. Consumer choice shaped by algorithmic curation; labour outcomes by algorithmic management. Policy: data rights (Privacy Act, 2075), algorithmic transparency, gig-worker protections, competition policy for platform dominance.
-
-*(386 words)*
-
 ---
 
-## 5.9 Traps
+## 5.8 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -188,7 +218,7 @@ Digitalisation does not eliminate asymmetric information. It **concentrates it i
 
 ---
 
-## 5.10 Self-test (answers collapsed)
+## 5.9 Self-Test (Answers Collapsed)
 
 1. Define adverse selection and moral hazard with one digital example each. *(3 marks)*
 2. How does digitalisation reduce, create, and shift information asymmetries? Give one example each. *(5 marks)*
@@ -217,9 +247,9 @@ Digitalisation does not eliminate asymmetric information. It **concentrates it i
 
 ---
 
-## 5.11 Sixty-second check
+## 5.10 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] Adverse selection vs moral hazard + digital examples
 - [ ] Digitalisation: reduces / creates / shifts asymmetry + examples
@@ -235,4 +265,4 @@ If all nine are there, Unit 5's **12 marks** are covered — A9, C21.
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 250, Unit 5, 8 LHs) · TU 2026 board paper (A9, C21) · Overby & Audestad, Introduction to Digital Economics, ch. 10–11 (syllabus reading) · Maheshwari, Digital Transformation, ch. 8–9 (syllabus reading) · Agrawal, Gans & Goldfarb, *Prediction Machines* (standard AI economics reference, not fetched) · Shapiro & Varian, *Information Rules* (classic information economics, not fetched) · Individual Privacy Act, 2075 provisions from public legal summaries (pioneerlaw.com, pacmap.dev). Nepal gig platforms (Pathao, Tootle), freelance platforms (Upwork, Fiverr), and IT export figure (~USD 500m) are widely reported, stated as patterns. Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper.*
+*Sources: TU FOM syllabus (IT 250, Unit 5, 8 LHs) · TU 2026 board paper (A9, C21) · Overby & Audestad, Introduction to Digital Economics, ch. 10–11 (syllabus reading) · Maheshwari, Digital Transformation, ch. 8–9 (syllabus reading) · Agrawal, Gans & Goldfarb, *Prediction Machines* (standard AI economics reference, not fetched) · Shapiro & Varian, *Information Rules* (classic information economics, not fetched) · Individual Privacy Act, 2075 provisions from public legal summaries (pioneerlaw.com, pacmap.dev). Nepal gig platforms (Pathao, Tootle), freelance platforms (Upwork, Fiverr), and IT export figure (~USD 500m) are widely reported, stated as patterns. Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper.*

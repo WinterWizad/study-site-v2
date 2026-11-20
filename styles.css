@@ -23,6 +23,9 @@
   --sidebar-width-unit: 240px;
   --header-height: 64px;
   --transition: 0.2s ease;
+  --font-display: 'Newsreader', Georgia, serif;
+  --map-ray: rgba(37, 99, 235, 0.13);
+  --map-ring: rgba(37, 99, 235, 0.10);
 }
 
 [data-theme="dark"] {
@@ -39,6 +42,8 @@
   --shadow-lg: 0 4px 12px rgba(0,0,0,0.4);
   --hover-tint: #1e2a42;
   --accent-ink: #0b1220;
+  --map-ray: rgba(96, 165, 250, 0.16);
+  --map-ring: rgba(96, 165, 250, 0.12);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -424,14 +429,26 @@ body.unit-page .sidebar {
   min-width: 880px;
   margin: 0 120px;
 }
+/* The route is a stretch of sea, with a tinted band under the waterline. */
+.rail-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 138px;
+  height: 26px;
+  background: linear-gradient(180deg, rgba(37,99,235,0.05), rgba(37,99,235,0.18));
+  border-radius: 13px;
+  pointer-events: none;
+}
 .rail-line {
   position: absolute;
   left: 0;
   right: 0;
   top: 150px;
-  height: 3px;
-  background: var(--border);
-  border-radius: 2px;
+  height: 5px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+  border-radius: 3px;
 }
 .rail-origin {
   display: none;
@@ -529,7 +546,7 @@ body.unit-page .sidebar {
 
 .rail-traveller {
   position: absolute;
-  top: 90px;
+  top: 96px;
   z-index: 3;
   display: flex;
   flex-direction: column;
@@ -557,7 +574,7 @@ body.unit-page .sidebar {
 .speed-lines i:nth-child(1) { top: 1px; width: 40px; animation-delay: 0s; }
 .speed-lines i:nth-child(2) { top: 12px; width: 54px; animation-delay: 0.35s; }
 .speed-lines i:nth-child(3) { top: 23px; width: 32px; animation-delay: 0.7s; }
-.train-flat { display: block; }
+.ship { display: block; }
 .traveller-tag {
   order: -1;
   margin-bottom: 0.2rem;
@@ -570,20 +587,21 @@ body.unit-page .sidebar {
   line-height: 1.3;
 }
 
-/* Motion: the track draws once, the train idles, speed lines trail behind. */
-.rail-line { transform-origin: left center; animation: railDraw 0.7s ease-out both; }
+/* Motion: the sea shimmers, the ship bobs, speed lines trail as wake. */
+.rail-line { transform-origin: left center; animation: railDraw 0.7s ease-out both, seaShimmer 3s ease-in-out 0.7s infinite; }
 .rail-station { animation: stationIn 0.4s ease-out 0.15s both; }
-.train-flat { animation: trainIdle 1.8s ease-in-out infinite; }
+.ship { animation: shipBob 2.2s ease-in-out infinite; }
 @keyframes railDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes seaShimmer { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
 @keyframes stationIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes trainIdle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes shipBob { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-2px) rotate(0.6deg); } }
 @keyframes streak {
   0% { transform: translateX(12px); opacity: 0; }
   30% { opacity: 0.7; }
   100% { transform: translateX(-28px); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rail-line, .rail-station, .train-flat, .speed-lines i, .rail-mini-train::before { animation: none !important; }
+  .rail-line, .rail-station, .ship, .speed-lines i, .rail-mini-train::before { animation: none !important; }
   .speed-lines i { opacity: 0.5; }
   .rail-traveller, .rail-mini-train, .wheel { transition: none; }
   .spin-modal[open] { animation: none; }
@@ -624,12 +642,17 @@ body.unit-page .sidebar {
 .wheel-pointer {
   position: absolute;
   z-index: 2;
-  top: -14px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 20px solid var(--fg);
+  line-height: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.28));
+}
+.spin-kicker {
+  margin: -0.6rem 0 0.9rem;
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  text-align: center;
 }
 .spin-panel { min-width: 0; }
 .wheel-legend {
@@ -914,32 +937,31 @@ body.unit-page .sidebar {
     height: 24px;
     margin: 0.35rem 0 0.8rem;
   }
-  .rail-mini-line { position: absolute; left: 0; right: 0; top: 11px; height: 2px; background: var(--border); }
+  .rail-mini-line { position: absolute; left: 0; right: 0; top: 15px; height: 3px; background: var(--accent); opacity: 0.35; border-radius: 2px; }
   .rail-mini-train {
     position: absolute;
-    top: 4px;
-    width: 14px;
-    height: 14px;
+    top: 10px;
+    width: 18px;
+    height: 6px;
     background: var(--accent);
-    border-radius: 3px 7px 3px 3px;
+    border-radius: 1px 1px 6px 5px;
     transform: translateX(-50%);
     transition: left 0.9s linear;
   }
   .rail-mini-train::after {
     content: "";
     position: absolute;
-    right: -5px;
-    top: 4px;
-    border-left: 5px solid var(--accent);
-    border-top: 3px solid transparent;
-    border-bottom: 3px solid transparent;
+    left: 5px;
+    bottom: 100%;
+    border-top: 8px solid transparent;
+    border-left: 8px solid var(--accent);
   }
   .rail-mini-train::before {
     content: "";
     position: absolute;
     right: 100%;
-    top: 5px;
-    width: 16px;
+    top: 2px;
+    width: 14px;
     height: 2px;
     background: var(--accent);
     opacity: 0.6;
@@ -947,6 +969,7 @@ body.unit-page .sidebar {
   }
   .rail-viewport { overflow: visible; padding: 0; }
   .rail-track { min-width: 0; height: auto; margin: 0; padding-left: 26px; }
+  .rail-track::before { display: none; }
   .rail-line { left: 7px; right: auto; top: 8px; bottom: 8px; width: 3px; height: auto; animation: none; }
   .rail-origin { display: block; left: 0; top: -4px; }
   .rail-tick, .rail-gap { display: none; }
@@ -992,6 +1015,7 @@ body.unit-page .sidebar {
   .rail-hero { margin-top: 0; padding: 0; border: 0; }
   .rail-viewport { overflow: visible; padding: 0; }
   .rail-track { min-width: 0; height: auto; margin: 0; padding-left: 26px; }
+  .rail-track::before { display: none; }
   .rail-line { left: 7px; right: auto; top: 6px; bottom: 6px; width: 2px; height: auto; background: #666; animation: none; }
   .rail-station {
     position: relative;
@@ -1404,6 +1428,67 @@ body.unit-page .sidebar {
 }
 
 .mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================================
+   Display typography, focus rings, subject theming, homepage zones
+   ============================================================================ */
+
+.site-title,
+.page-head h1,
+.section-title,
+.subject-info h1,
+h1.unit-title,
+.spin-modal-title {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-feature-settings: "kern", "liga";
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+a:focus-visible, button:focus-visible { outline-offset: 3px; }
+
+/* Each subject's notes inherit its own colour via --accent. */
+body.unit-page[data-subject="bi"] { --accent: #2563eb; --accent-hover: #1d4ed8; }
+body.unit-page[data-subject="de"] { --accent: #059669; --accent-hover: #047857; }
+body.unit-page[data-subject="cloud"] { --accent: #7c3aed; --accent-hover: #6d28d9; }
+body.unit-page[data-subject="entrepreneurship"] { --accent: #dc2626; --accent-hover: #b91c1c; }
+
+[data-theme="dark"] body.unit-page[data-subject="bi"] { --accent: #60a5fa; --accent-hover: #93c5fd; }
+[data-theme="dark"] body.unit-page[data-subject="de"] { --accent: #34d399; --accent-hover: #6ee7b7; }
+[data-theme="dark"] body.unit-page[data-subject="cloud"] { --accent: #a78bfa; --accent-hover: #c4b5fd; }
+[data-theme="dark"] body.unit-page[data-subject="entrepreneurship"] { --accent: #f87171; --accent-hover: #fca5a5; }
+
+/* Homepage zones: rail = hero stripe, wheel = tinted card. */
+.rail-hero {
+  border-top: 4px solid transparent;
+  border-image: linear-gradient(90deg, #dc2626, #059669, #2563eb, #7c3aed) 1;
+}
+.spin-section {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--hover-tint), var(--card-bg));
+}
+/* Faint compass rose behind the wheel, like a corner of a treasure map. */
+.spin-section::before {
+  content: "";
+  position: absolute;
+  top: -70px;
+  right: -70px;
+  width: 280px;
+  height: 280px;
+  pointer-events: none;
+  opacity: 0.55;
+  background:
+    repeating-conic-gradient(from 0deg, var(--map-ray) 0deg 5deg, transparent 5deg 45deg),
+    radial-gradient(circle, transparent 38%, var(--map-ring) 38%, transparent 40%,
+      var(--map-ring) 41%, transparent 43%);
+  -webkit-mask-image: radial-gradient(circle, #000 42%, transparent 70%);
+  mask-image: radial-gradient(circle, #000 42%, transparent 70%);
+}
 
 /* ============================================================================
    Print Styles

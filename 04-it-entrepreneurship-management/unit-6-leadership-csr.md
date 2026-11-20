@@ -3,25 +3,76 @@
 | | |
 |---|---|
 | **Lecture hours** | 6 |
-| **Marks carried in model question** | **29** — two 2-markers (A9 leadership style, A10 CSR), one 5-marker (B17 conflict resolution), one 10-marker (C19 leadership styles), and two halves of split questions: C20a "motivate employees" (5 marks) and C21a "ethical marketing" (5 marks) |
+| **Marks in model question** | 29 — two 2-markers (A9 leadership style, A10 CSR), one 5-marker (B17 conflict resolution), one 10-marker (C19 leadership styles), and two halves of split questions: C20a "motivate employees" (5 marks) and C21a "ethical marketing" (5 marks) |
 | **Difficulty** | ★★★☆☆ — leadership styles and conflict resolution are standard frameworks; motivation and ethical marketing need Nepal context; CSR needs the Tata case |
 | **Exam yield** | 🔴 **highest in the paper (tied with Unit 2)** — 29 marks from 6 hours = best marks-per-hour |
 | **Prerequisite** | Unit 5 (team, culture) |
-| **Syllabus bullets** | Leadership Styles in Entrepreneurship · Building Effective Teams · Conflict Resolution Techniques · Motivating Employees in Startups · Networking Skills for Entrepreneurs · Corporate Social Responsibility (CSR) · Sustainability Practices for Startups · Ethical Marketing Strategies · Case Study: Tata Group's CSR initiatives in India |
+| **Syllabus** | Leadership Styles in Entrepreneurship · Building Effective Teams · Conflict Resolution Techniques · Motivating Employees in Startups · Networking Skills for Entrepreneurs · Corporate Social Responsibility (CSR) · Sustainability Practices for Startups · Ethical Marketing Strategies · Case Study: Tata Group's CSR initiatives in India |
 
-> **Read this first:** this unit is **the highest marks-per-hour in the paper** — 29 marks from 6 hours. A9 and A10 are 2-markers (definitions). B17 is a 5-marker on conflict resolution (framework). C19 is a 10-marker on leadership styles (explain 4–5 styles). C20a (half of C20) is motivation (5 marks). C21a (half of C21) is ethical marketing (5 marks). The Tata CSR case is a reference for CSR answer. **Memorise the frameworks and you secure 29 marks.**
+> **Read this first:** This unit is **the highest marks-per-hour in the paper** — 29 marks from 6 hours. A9 and A10 are 2-markers (definitions). B17 is a 5-marker on conflict resolution (framework). C19 is a 10-marker on leadership styles (explain 4–5 styles). C20a (half of C20) is motivation (5 marks). C21a (half of C21) is ethical marketing (5 marks). The Tata CSR case is a reference for CSR answer. **Memorise the frameworks and you secure 29 marks.**
 
 ---
 
-## 6.1 Leadership styles in entrepreneurship (A9, C19)
+## Coverage Map
 
-### A9 · "Define leadership style." [2]
+```
+6.1 Leadership Styles in Entrepreneurship (A9, C19) 🎯 2-mark / 🎯 10-mark
+├── A9: definition + spectrum (autocratic → democratic → laissez-faire) + modern variants (transformational, servant)
+├── C19: 5 styles with definition + when it works + startup context
+└── Reality: founders start autocratic → democratic → transformational → servant daily; best are situational
+
+6.2 Building Effective Teams
+├── 5 principles: hire for values, diverse perspectives, clear roles/shared goals, psychological safety, feedback culture
+└── Startup application per principle
+
+6.3 Conflict Resolution Techniques (B17) 🎯 5-mark
+├── 5 techniques: Collaborating, Compromising, Accommodating, Competing, Avoiding
+├── When to use each + startup example
+└── Startup rule: default to collaborating; compete only for safety/ethics/cash; avoid avoiding for strategic issues
+
+6.4 Motivating Employees in Startups (C20a) 🎯 5-mark
+├── 4 drivers: Purpose & Vision, Autonomy & Ownership, Mastery & Growth, Recognition & Fair Rewards
+├── Action + Nepal example per driver
+└Startup reality: cash tight; purpose, autonomy, mastery, recognition are affordable currency
+
+6.5 Networking Skills for Entrepreneurs
+├── 5 skills: strategic mapping, value-first approach, warm introductions, personal brand, follow-up discipline
+└── Startup application per skill
+
+6.6 Corporate Social Responsibility (CSR) (A10) 🎯 2-mark
+├── Definition: ethical commitment to sustainable development beyond compliance
+├── Voluntary actions: community, ecology, labour rights, governance
+└── For startups: not "charity after profit" but built into business model from day one
+
+6.7 Sustainability Practices for Startups
+├── 4 dimensions: environmental, social, governance, economic
+└── Startup example each
+
+6.8 Ethical Marketing Strategies (C21a) 🎯 5-mark
+├── 4 principles: Truthfulness & Transparency, Respect for Privacy, Inclusivity & Non-Discrimination, Social Responsibility
+├── Nepal ride-share example each
+└── Business case: ethical marketing builds brand trust — only defensible moat in commoditised market
+
+6.9 Case Study: Tata Group's CSR Initiatives (reference)
+├── CSR embedded since 1868, Tata Trusts (66% of Tata Sons equity funds philanthropy)
+├── Key initiatives: Tata Steel (tribal education, healthcare, water), TCS (adult literacy, STEM for girls), Tata Power (rural electrification, solar), Tata Chemicals (sustainable agriculture, water conservation)
+├── Governance: CSR committee at board level; 2%+ of avg net profit spent; impact measured, not just spend
+└── Key lesson: CSR is governance, not charity — integrated into strategy, measured, led from top
+```
+
+---
+
+## 6.1 Leadership Styles in Entrepreneurship (A9, C19) 🎯 2-mark / 🎯 10-mark
+
+### A9 · "Define leadership style." [2] 🎯 2-mark
 
 > Leadership style is the consistent pattern of behaviour a leader uses to influence, guide, and direct a team — encompassing decision-making approach, communication mode, delegation level, and motivation method. It ranges from **autocratic** (leader decides) to **democratic** (team decides) to **laissez-faire** (team self-directs), with **transformational** (inspire change) and **servant** (serve the team) as modern variants.
 
 *(52 words. Definition + spectrum + five named styles.)*
 
-### C19 · "Explain different leadership styles used in startups." [10]
+---
+
+### C19 · "Explain different leadership styles used in startups." [10] 🎯 10-mark
 
 > **Shape: 4–5 styles, each with definition + when it works + startup context. ~400 words.**
 
@@ -43,7 +94,7 @@
 
 ---
 
-## 6.2 Building effective teams
+## 6.2 Building Effective Teams
 
 | Principle | What it means | Startup application |
 |---|---|---|
@@ -55,11 +106,13 @@
 
 ---
 
-## 6.3 Conflict resolution techniques (B17)
+## 6.3 Conflict Resolution Techniques (B17) 🎯 5-mark
 
 > **Conflict in startups is inevitable — co-founder disputes, priority clashes, resource allocation, equity splits. The skill is resolving it fast without relationship damage.**
 
-### B17 · "Explain the conflict resolution techniques within the team." [5]
+---
+
+### B17 · "Explain the conflict resolution techniques within the team." [5] 🎯 5-mark
 
 > **Shape: 5 techniques, one-line each + when to use. ~200 words.**
 
@@ -81,11 +134,13 @@ Five conflict resolution techniques for startup teams:
 
 ---
 
-## 6.4 Motivating employees in startups (C20a)
+## 6.4 Motivating Employees in Startups (C20a) 🎯 5-mark
 
 > **C20 is a split question: "How do you motivate employees in startups? Explain the digital marketing and sales techniques." Answer in two headed halves.**
 
-### C20a · "How do you motivate employees in startups?" [5]
+---
+
+### C20a · "How do you motivate employees in startups?" [5] 🎯 5-mark
 
 > **Shape: 4 drivers of motivation + startup context + Nepal example. ~200 words.**
 
@@ -105,7 +160,7 @@ Motivation in startups comes from four drivers, not just salary:
 
 ---
 
-## 6.5 Networking skills for entrepreneurs
+## 6.5 Networking Skills for Entrepreneurs
 
 | Skill | What it means | Startup application |
 |---|---|---|
@@ -117,9 +172,9 @@ Motivation in startups comes from four drivers, not just salary:
 
 ---
 
-## 6.6 Corporate Social Responsibility (CSR) (A10)
+## 6.6 Corporate Social Responsibility (CSR) (A10) 🎯 2-mark
 
-### A10 · "What do you mean by corporate social responsibility (CSR)?" [2]
+### A10 · "What do you mean by corporate social responsibility (CSR)?" [2] 🎯 2-mark
 
 > CSR is a company's commitment to operate ethically and contribute to sustainable development — balancing profit with positive impact on society, environment, and stakeholders. It goes beyond compliance to **voluntary actions** addressing community, ecology, labour rights, and governance. For startups, CSR is not "charity after profit" but **building responsibility into the business model from day one**.
 
@@ -127,7 +182,7 @@ Motivation in startups comes from four drivers, not just salary:
 
 ---
 
-## 6.7 Sustainability practices for startups
+## 6.7 Sustainability Practices for Startups
 
 | Practice | What it means | Startup example |
 |---|---|---|
@@ -138,11 +193,13 @@ Motivation in startups comes from four drivers, not just salary:
 
 ---
 
-## 6.8 Ethical marketing strategies (C21a)
+## 6.8 Ethical Marketing Strategies (C21a) 🎯 5-mark
 
 > **C21 is a split question: "Discuss about ethical marketing strategies. What are the essential elements of a business plan?" Answer in two headed halves.**
 
-### C21a · "Discuss about ethical marketing strategies." [5]
+---
+
+### C21a · "Discuss about ethical marketing strategies." [5] 🎯 5-mark
 
 > **Shape: 4 principles + Nepal ride-share example. ~200 words.**
 
@@ -161,57 +218,13 @@ Ethical marketing means promoting truthfully, respecting user autonomy, and avoi
 
 ---
 
-## 6.9 Case study: Tata Group's CSR initiatives (reference)
+## 6.9 Case Study: Tata Group's CSR Initiatives (reference)
 
 > **Tata Group (India)** — CSR embedded since 1868. **Key initiatives:** Tata Trusts (66% of Tata Sons equity funds philanthropy), **Tata Steel** (tribal education, healthcare, water in Jharkhand/Odisha), **TCS** (adult literacy, STEM for girls), **Tata Power** (rural electrification, solar), **Tata Chemicals** (sustainable agriculture, water conservation). **Governance:** CSR committee at board level; 2%+ of avg net profit spent; impact measured, not just spend. **Key lesson:** CSR is **governance, not charity** — integrated into strategy, measured, and led from the top.
 
 ---
 
-## 6.10 Answer skeletons
-
-### A9 · "Define leadership style." [2]
-
-> Leadership style is the consistent pattern of behaviour a leader uses to influence, guide, and direct a team — encompassing decision-making, communication, delegation, and motivation. It ranges from **autocratic** (leader decides) to **democratic** (team decides) to **laissez-faire** (team self-directs), with **transformational** (inspire change) and **servant** (serve the team) as modern variants.
-
-*(52 words)*
-
-### A10 · "What do you mean by corporate social responsibility (CSR)?" [2]
-
-> CSR is a company's commitment to operate ethically and contribute to sustainable development — balancing profit with positive impact on society, environment, and stakeholders. It goes beyond compliance to **voluntary actions** addressing community, ecology, labour rights, and governance. For startups, CSR is not "charity after profit" but **building responsibility into the business model from day one**.
-
-*(54 words)*
-
-### B17 · "Explain the conflict resolution techniques within the team." [5]
-
-> Five techniques: (1) **Collaborating (Win-Win)** — both find solution meeting both needs; use for complex, relationship issues. (2) **Compromising** — split the difference; use for time pressure, equal power. (3) **Accommodating** — yield to preserve relationship; use when issue matters more to other. (4) **Competing** — assert own view; use for emergency, safety, ethics. (5) **Avoiding** — defer; use for trivial, emotional, need info. *Startup rule:* default to collaborating; compete only for safety/ethics/cash.
-
-*(208 words)*
-
-### C19 · "Explain different leadership styles used in startups." [10]
-
-> **1. Autocratic** — leader decides; for crisis, chaos, compliance, time-critical. *Startup:* founder sets safety/cash non-negotiables Year 1. **2. Democratic** — team decides via consensus; for complex problems, buy-in. *Startup:* product roadmap, hiring, culture values. **3. Transformational** — inspires vision, develops people; for scaling, culture change, pivot. *Startup:* "why we exist" rallying cry. **4. Servant** — serves team, removes blockers; for knowledge workers, autonomy. *Startup:* engineering leader clears blockers, advocates resources. **5. Situational** — flexes style per Hersey-Blanchard; the meta-skill. *Startup:* autocratic for safety/cash; democratic for product; transformational for vision; servant for team.
->
-> **Reality:** founders start autocratic → democratic → transformational → servant daily. Best are situational.
-
-*(404 words)*
-
-### C20a · "How do you motivate employees in startups?" [5]
-
-> Four drivers: (1) **Purpose & Vision** — compelling "why" (Pathao: "income with dignity"). (2) **Autonomy & Ownership** — control over *how* (OKRs, not micromanagement). (3) **Mastery & Growth** — learning budget, mentorship, stretch projects (learning Fridays, certs). (4) **Recognition & Fair Rewards** — spot bonuses, public shoutouts, transparent ESOP, performance bonus. *Startup reality:* cash tight; purpose, autonomy, mastery, recognition are affordable currency.
-
-*(204 words)*
-
-### C21a · "Discuss about ethical marketing strategies." [5]
-
-> Four principles: (1) **Truthfulness & Transparency** — no false claims, hidden fees, bait-and-switch (upfront fare, no surge surprise). (2) **Respect for Privacy** — consent-based data, no dark patterns, easy opt-out (rider data only for matching). (3) **Inclusivity & Non-Discrimination** — diverse representation, no stereotypes (women riders, accessibility, Nepali/English). (4) **Social Responsibility** — promotes positive behaviour (helmet use, driver welfare, no "drink and ride").
->
-> **Business case:** ethical marketing builds brand trust — the only defensible moat in commoditised market.
-
-*(204 words)*
-
----
-
-## 6.11 Traps
+## 6.10 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -225,7 +238,7 @@ Ethical marketing means promoting truthfully, respecting user autonomy, and avoi
 
 ---
 
-## 6.12 Self-test (answers collapsed)
+## 6.11 Self-Test (Answers Collapsed)
 
 1. Define leadership style and name five styles. *(2 marks — A9)*
 2. Explain autocratic, democratic, transformational, servant, situational with startup context. *(10 marks — C19)*
@@ -248,9 +261,9 @@ Ethical marketing means promoting truthfully, respecting user autonomy, and avoi
 
 ---
 
-## 6.13 Sixty-second check
+## 6.12 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] Leadership style definition + five names
 - [ ] C19: five styles with definition + startup context
@@ -264,4 +277,4 @@ If all seven are there, Unit 6's **29 marks** are covered — A9, A10, B17, C19,
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 248, Unit 6, 6 LHs) · TU/FOM model question 2026 (A9, A10, B17, C19, C20a, C21a) · Kuratko, Entrepreneurship ch. 11–12; Kawasaki, Art of the Start 2.0 ch. 8; Horowitz, Hard Thing About Hard Things (syllabus readings). Hersey-Blanchard situational leadership; Thomas-Kilmann conflict modes; Self-Determination Theory (Deci & Ryan) for motivation. Tata Group CSR from public Tata Trusts reports and Tata Sustainability Reports. Nepal startup motivation examples from Pathao/Tootle public narratives.*
+*Sources: TU FOM syllabus (IT 248, Unit 6, 6 LHs) · TU/FOM model question 2026 (A9, A10, B17, C19, C20a, C21a) · Kuratko, Entrepreneurship ch. 11–12; Kawasaki, Art of the Start 2.0 ch. 8; Horowitz, Hard Thing About Hard Things (syllabus readings). Hersey-Blanchard situational leadership; Thomas-Kilmann conflict modes; Self-Determination Theory (Deci & Ryan) for motivation. Tata Group CSR from public Tata Trusts reports and Tata Sustainability Reports. Nepal startup motivation examples from Pathao/Tootle public narratives.*

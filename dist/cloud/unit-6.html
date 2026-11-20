@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 6: Cloud Security | Cloud Computing | BIM 8th Semester</title>
-  <meta name="description" content="IT 277 - Unit 6: Cloud Security">
+  <title>Unit 6: Cloud Security | Cloud Computing | Worst Generation</title>
+  <meta name="description" content="IT 277 - Unit 6: Cloud Security — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="cloud">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #7c3aed">IT 277</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -113,8 +120,8 @@
 <td>6</td>
 </tr>
 <tr>
-<td><strong>Marks carried in model question</strong></td>
-<td><strong>25</strong> — two 1-markers (A7 VM security, A9 security monitoring), one 3-marker (B16 data security issues), two 5-markers (C18 cloud security concept, C20 security architecture), one 10-marker (D22 risks + mitigation)</td>
+<td><strong>Marks in model question</strong></td>
+<td>25 — two 1-markers (A7 VM security, A9 security monitoring), one 3-marker (B16 data security issues), two 5-markers (C18 cloud security concept, C20 security architecture), one 10-marker (D22 risks + mitigation)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
@@ -129,12 +136,46 @@
 <td>Units 1–4 (virtualization enables isolation; IaaS/PaaS/SaaS define shared responsibility boundaries)</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
+<td><strong>Syllabus</strong></td>
 <td>Cloud Security issues, challenges, and Risks · Software-as-a-Service Security · Security Monitoring · Security Architecture Design · Data and application Security · Virtual Machine Security · Legal issues and Aspects · Multi-tenancy issues</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit is <strong>the case engine</strong>. The model question puts 25 marks here including one Group D case (D22). The vocabulary is <strong>CIA triad</strong>, <strong>shared responsibility model</strong>, <strong>layered security architecture</strong>, and <strong>risk register</strong>. D22 asks for &quot;risks and mitigation strategies&quot; — you must produce a <strong>risk register</strong> (risk → likelihood × impact → control → residual risk) for cloud security. C18 and C20 are 5-markers on concept and architecture. A7 and A9 are 1-markers on VM security and security monitoring. B16 is a 3-marker on data security issues.</p>
-</blockquote><hr class="custom-hr"><h2 id="6-1-cloud-security-concept-cia-shared-responsibility-c18"><a href="#6-1-cloud-security-concept-cia-shared-responsibility-c18" class="heading-anchor">#</a>6.1 Cloud security concept — CIA + shared responsibility (C18)</h2><blockquote class="custom-blockquote"><p><strong>Cloud security is the set of policies, technologies, and controls deployed to protect data, applications, and infrastructure in cloud environments — addressing confidentiality, integrity, and availability (CIA) across the shared responsibility boundary.</strong></p>
-</blockquote><h3 id="cia-triad-in-cloud"><a href="#cia-triad-in-cloud" class="heading-anchor">#</a>CIA triad in cloud</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This unit is <strong>the case engine</strong>. The model question puts 25 marks here including one Group D case (D22). The vocabulary is <strong>CIA triad</strong>, <strong>shared responsibility model</strong>, <strong>layered security architecture</strong>, and <strong>risk register</strong>. D22 asks for &quot;risks and mitigation strategies&quot; — you must produce a <strong>risk register</strong> (risk → likelihood × impact → control → residual risk) for cloud security. C18 and C20 are 5-markers on concept and architecture. A7 and A9 are 1-markers on VM security and security monitoring. B16 is a 3-marker on data security issues.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">6.1 Cloud Security Concept — CIA + Shared Responsibility (C18) 🎯 5-mark
+├── CIA triad in cloud: confidentiality, integrity, availability with controls
+├── Shared responsibility model: provider vs customer for 7 layers
+└── Data and identity ALWAYS customer's responsibility
+
+6.2 Security Architecture Design — Layered (C20) 🎯 5-mark
+├── Five layers: Perimeter/Identity → Network → Host/Compute → Application/Runtime → Data
+├── Cross-cutting: logging, monitoring, alerting, IR playbooks
+└── Governance: policies, compliance, audit, tagging
+
+6.3 Data and Application Security (B16) 🎯 3-mark
+├── Six data security issues with mechanism + control
+└── Confidentiality breach, integrity violation, availability loss, data leakage, multi-tenancy residue, compliance failure
+
+6.4 Virtual Machine Security (A7) 🎯 1-mark
+├── Definition: guest/hypervisor boundary protection
+└── Five threat vectors: VM escape, side-channel, image compromise, snapshot theft, resource exhaustion
+
+6.5 SaaS Security
+├── Identity & access, data governance, configuration, threat protection, compliance
+└── CASB, anomaly detection, session risk
+
+6.6 Security Monitoring (A9) 🎯 1-mark
+├── Definition: continuous collection, analysis, alerting on security events
+├── Log sources: CloudTrail, VPC Flow Logs, GuardDuty, Config/Security Hub, app logs
+└── Detection → Response loop: collect → detect → alert → investigate → respond
+
+6.7 Legal Issues and Multi-Tenancy
+├── Data sovereignty, GDPR/privacy, industry regulations, contractual, e-discovery
+└── Multi-tenancy issues: noisy neighbour, data leakage, side-channel, compliance isolation
+
+6.8 D22 — Risks and Mitigation Strategies [10] 🎯 10-mark
+├── Risk register format: risk → L×I → control → residual risk
+├── 8 risks: misconfiguration, credential compromise, data breach, VM escape, DDoS, insider threat, supply chain, compliance
+└── Cross-cutting mitigations: SIEM, monitoring, IR playbooks, chaos engineering, red teaming</code></pre></div><hr class="custom-hr"><h2 id="6-1-cloud-security-concept-cia-shared-responsibility-c18-5-mark"><a href="#6-1-cloud-security-concept-cia-shared-responsibility-c18-5-mark" class="heading-anchor">#</a>6.1 Cloud Security Concept — CIA + Shared Responsibility (C18) 🎯 5-mark</h2><blockquote class="custom-blockquote"><p><strong>Cloud security is the set of policies, technologies, and controls deployed to protect data, applications, and infrastructure in cloud environments — addressing confidentiality, integrity, and availability (CIA) across the shared responsibility boundary.</strong></p>
+</blockquote><h3 id="cia-triad-in-cloud"><a href="#cia-triad-in-cloud" class="heading-anchor">#</a>CIA Triad in Cloud</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Pillar</th>
 <th>Cloud context</th>
 </tr>
@@ -150,7 +191,7 @@
 <td><strong>Availability</strong></td>
 <td>multi-AZ/region, auto-scaling, DDoS protection (Shield, Cloud Armor), backup/restore, chaos engineering</td>
 </tr>
-</tbody></table></div><h3 id="shared-responsibility-model-the-central-concept"><a href="#shared-responsibility-model-the-central-concept" class="heading-anchor">#</a>Shared responsibility model — the central concept</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h3 id="shared-responsibility-model-the-central-concept"><a href="#shared-responsibility-model-the-central-concept" class="heading-anchor">#</a>Shared Responsibility Model — the Central Concept</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Layer</th>
 <th><strong>Provider secures</strong> (security <em>of</em> the cloud)</th>
 <th><strong>Customer secures</strong> (security <em>in</em> the cloud)</th>
@@ -196,7 +237,7 @@
 <td>customer-specific compliance, evidence, audit</td>
 </tr>
 </tbody></table></div><p><strong>The rule:</strong> the lower the abstraction (IaaS), the more the customer owns. The higher (SaaS), the more the provider owns. <strong>But data and identity are ALWAYS the customer&#39;s responsibility.</strong></p>
-<h3 id="c18-quot-explain-the-concept-of-cloud-security-quot-5"><a href="#c18-quot-explain-the-concept-of-cloud-security-quot-5" class="heading-anchor">#</a>C18 · &quot;Explain the concept of cloud security.&quot; [5]</h3><blockquote class="custom-blockquote"><p><strong>Shape: CIA triad + shared responsibility model (table) + data/identity always customer. ~200 words.</strong></p>
+<hr class="custom-hr"><h3 id="c18-quot-explain-the-concept-of-cloud-security-quot-5-5-mark"><a href="#c18-quot-explain-the-concept-of-cloud-security-quot-5-5-mark" class="heading-anchor">#</a>C18 · &quot;Explain the concept of cloud security.&quot; [5] 🎯 5-mark</h3><blockquote class="custom-blockquote"><p><strong>Shape: CIA triad + shared responsibility model (table) + data/identity always customer. ~200 words.</strong></p>
 </blockquote><p>Cloud security protects data, applications, and infrastructure in cloud environments across <strong>CIA</strong>:</p>
 <ul>
 <li><strong>Confidentiality</strong> — encryption at rest (KMS, BYOK), in transit (TLS 1.3), tokenization, access control (IAM, ABAC).</li><li><strong>Integrity</strong> — checksums, digital signatures, immutable logs (CloudTrail), WORM storage.</li><li><strong>Availability</strong> — multi-AZ/region, auto-scaling, DDoS protection (Shield), backup/restore.</li></ul>
@@ -243,7 +284,7 @@
 </tr>
 </tbody></table></div><p><strong>Data and identity are ALWAYS the customer&#39;s responsibility</strong> — regardless of IaaS/PaaS/SaaS. The lower the abstraction (IaaS), the more customer owns; higher (SaaS), more provider owns.</p>
 <p><em>(208 words)</em></p>
-<hr class="custom-hr"><h2 id="6-2-security-architecture-design-layered-c20"><a href="#6-2-security-architecture-design-layered-c20" class="heading-anchor">#</a>6.2 Security architecture design — layered (C20)</h2><blockquote class="custom-blockquote"><p><strong>Shape: five-layer architecture from perimeter to data + cross-cutting controls. ~200 words.</strong></p>
+<hr class="custom-hr"><h2 id="6-2-security-architecture-design-layered-c20-5-mark"><a href="#6-2-security-architecture-design-layered-c20-5-mark" class="heading-anchor">#</a>6.2 Security Architecture Design — Layered (C20) 🎯 5-mark</h2><blockquote class="custom-blockquote"><p><strong>Shape: five-layer architecture from perimeter to data + cross-cutting controls. ~200 words.</strong></p>
 </blockquote><p>A <strong>layered security architecture</strong> (defence in depth) for cloud:</p>
 <div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">┌─────────────────────────────────────┐
 │  1. PERIMETER / IDENTITY            │  ← WAF, DDoS, DNS, IAM, MFA, SSO, federation
@@ -264,11 +305,11 @@
    CROSS-CUTTING:        GOVERNANCE:
    Logging (CloudTrail),  Policies (SCPs, Org policies),
    Monitoring (SIEM),     Compliance (Config, Security Hub),
-   Alerting, IR playbooks  Audit, Tagging, FinOps</code></pre></div><h3 id="c20-quot-describe-security-architecture-in-cloud-computing-quot-5"><a href="#c20-quot-describe-security-architecture-in-cloud-computing-quot-5" class="heading-anchor">#</a>C20 · &quot;Describe security architecture in cloud computing.&quot; [5]</h3><blockquote class="custom-blockquote"><p>Cloud security architecture is a <strong>layered defence-in-depth</strong> model:</p>
+   Alerting, IR playbooks  Audit, Tagging, FinOps</code></pre></div><hr class="custom-hr"><h3 id="c20-quot-describe-security-architecture-in-cloud-computing-quot-5-5-mark"><a href="#c20-quot-describe-security-architecture-in-cloud-computing-quot-5-5-mark" class="heading-anchor">#</a>C20 · &quot;Describe security architecture in cloud computing.&quot; [5] 🎯 5-mark</h3><blockquote class="custom-blockquote"><p>Cloud security architecture is a <strong>layered defence-in-depth</strong> model:</p>
 </blockquote><p><strong>1. Perimeter/Identity</strong> — WAF, DDoS, DNS, IAM, MFA, SSO, federation. First line; controls <em>who</em> enters.<br><strong>2. Network</strong> — VPC, subnets, security groups, NACLs, VPN/Direct Connect, micro-segmentation, service mesh mTLS, PrivateLink. Controls <em>where</em> traffic flows.<br><strong>3. Host/Compute</strong> — guest OS hardening, EDR/FIM agents, host firewall, image scanning, patch management, bastion/SSM. Controls <em>what</em> runs.<br><strong>4. Application/Runtime</strong> — secure coding, SAST/DAST/SCA, API gateway, WAF, secrets management (Vault, Secrets Manager), CI/CD gates. Controls <em>how</em> code behaves.<br><strong>5. Data</strong> — encryption (KMS/BYOK), classification, DLP, tokenization, access control (IAM/ABAC), lifecycle, backup, WORM. The <em>crown jewel</em>.</p>
 <p><strong>Cross-cutting:</strong> logging (CloudTrail), monitoring (SIEM), alerting, IR playbooks. <strong>Governance:</strong> policies (SCPs), compliance (Config, Security Hub), audit, tagging.</p>
 <p><em>(204 words)</em></p>
-<hr class="custom-hr"><h2 id="6-3-data-and-application-security"><a href="#6-3-data-and-application-security" class="heading-anchor">#</a>6.3 Data and application security</h2><h3 id="data-security-issues-b16"><a href="#data-security-issues-b16" class="heading-anchor">#</a>Data security issues (B16)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="6-3-data-and-application-security"><a href="#6-3-data-and-application-security" class="heading-anchor">#</a>6.3 Data and Application Security</h2><h3 id="data-security-issues-b16-3-mark"><a href="#data-security-issues-b16-3-mark" class="heading-anchor">#</a>Data Security Issues (B16) 🎯 3-mark</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Issue</th>
 <th>Mechanism</th>
 <th>Control</th>
@@ -303,13 +344,13 @@
 <td>data residency, retention, sovereignty</td>
 <td>region lock, Data Residency Guardrails, legal hold</td>
 </tr>
-</tbody></table></div><h3 id="b16-quot-what-are-common-data-security-issues-in-cloud-computing-quot-3"><a href="#b16-quot-what-are-common-data-security-issues-in-cloud-computing-quot-3" class="heading-anchor">#</a>B16 · &quot;What are common data security issues in cloud computing?&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Shape: six issues, one line each with mechanism + control. ~100 words.</strong></p>
+</tbody></table></div><hr class="custom-hr"><h3 id="b16-quot-what-are-common-data-security-issues-in-cloud-computing-quot-3-3-mark"><a href="#b16-quot-what-are-common-data-security-issues-in-cloud-computing-quot-3-3-mark" class="heading-anchor">#</a>B16 · &quot;What are common data security issues in cloud computing?&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><strong>Shape: six issues, one line each with mechanism + control. ~100 words.</strong></p>
 </blockquote><p>Common data security issues:</p>
 <ol>
 <li><strong>Confidentiality breach</strong> — unauthorised access to data at rest/in transit. <em>Control:</em> encryption (KMS/BYOK), IAM least privilege, VPC endpoints.</li><li><strong>Integrity violation</strong> — unauthorised modification. <em>Control:</em> checksums, signatures, WORM, immutable logs.</li><li><strong>Availability loss</strong> — deletion, ransomware, region outage. <em>Control:</em> multi-AZ replication, cross-region backup, versioning, MFA delete.</li><li><strong>Data leakage</strong> — misconfigured storage (public S3), logs, snapshots. <em>Control:</em> bucket policies, block public access, Macie, DLP.</li><li><strong>Multi-tenancy residue</strong> — data remnant after deallocation. <em>Control:</em> secure erase, key shredding, dedicated hosts.</li><li><strong>Compliance failure</strong> — data residency, retention, sovereignty. <em>Control:</em> region lock, residency guardrails, legal hold.</li></ol>
 <p><em>(104 words)</em></p>
-<hr class="custom-hr"><h2 id="6-4-virtual-machine-security-a7"><a href="#6-4-virtual-machine-security-a7" class="heading-anchor">#</a>6.4 Virtual Machine security (A7)</h2><blockquote class="custom-blockquote"><p><strong>VM security is the protection of the guest/hypervisor boundary — ensuring a compromised VM cannot escape to the host or other VMs, and the host cannot inspect/manipulate the guest without authorisation.</strong></p>
-</blockquote><h3 id="threat-vectors"><a href="#threat-vectors" class="heading-anchor">#</a>Threat vectors</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="6-4-virtual-machine-security-a7-1-mark"><a href="#6-4-virtual-machine-security-a7-1-mark" class="heading-anchor">#</a>6.4 Virtual Machine Security (A7) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>VM security is the protection of the guest/hypervisor boundary — ensuring a compromised VM cannot escape to the host or other VMs, and the host cannot inspect/manipulate the guest without authorisation.</strong></p>
+</blockquote><h3 id="threat-vectors"><a href="#threat-vectors" class="heading-anchor">#</a>Threat Vectors</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Vector</th>
 <th>Description</th>
 <th>Mitigation</th>
@@ -339,9 +380,9 @@
 <td>noisy neighbour, DoS on host</td>
 <td>resource quotas, limits, DRS, dedicated hosts</td>
 </tr>
-</tbody></table></div><h3 id="a7-quot-what-do-you-mean-by-virtual-machine-security-quot-1"><a href="#a7-quot-what-do-you-mean-by-virtual-machine-security-quot-1" class="heading-anchor">#</a>A7 · &quot;What do you mean by Virtual Machine Security?&quot; [1]</h3><blockquote class="custom-blockquote"><p>VM security protects the guest/hypervisor boundary — preventing VM escape (guest→host), side-channel attacks (Spectre/Meltdown), image compromise, snapshot theft, and resource exhaustion. Mitigations: hardware isolation (EPT, IOMMU, SEV), hypervisor patching, image signing/scanning, snapshot encryption, resource quotas.</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a7-quot-what-do-you-mean-by-virtual-machine-security-quot-1-1-mark"><a href="#a7-quot-what-do-you-mean-by-virtual-machine-security-quot-1-1-mark" class="heading-anchor">#</a>A7 · &quot;What do you mean by Virtual Machine Security?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>VM security protects the guest/hypervisor boundary — preventing VM escape (guest→host), side-channel attacks (Spectre/Meltdown), image compromise, snapshot theft, and resource exhaustion. Mitigations: hardware isolation (EPT, IOMMU, SEV), hypervisor patching, image signing/scanning, snapshot encryption, resource quotas.</p>
 </blockquote><p><em>(50 words. Definition + threat vectors + mitigations.)</em></p>
-<hr class="custom-hr"><h2 id="6-5-saas-security"><a href="#6-5-saas-security" class="heading-anchor">#</a>6.5 SaaS security</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="6-5-saas-security"><a href="#6-5-saas-security" class="heading-anchor">#</a>6.5 SaaS Security</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Concern</th>
 <th>Control</th>
 </tr>
@@ -365,8 +406,8 @@
 <td><strong>Compliance</strong></td>
 <td>provider certifications (SOC 2, ISO 27001), customer evidence, shared responsibility</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="6-6-security-monitoring-a9"><a href="#6-6-security-monitoring-a9" class="heading-anchor">#</a>6.6 Security monitoring (A9)</h2><blockquote class="custom-blockquote"><p><strong>Security monitoring is the continuous collection, analysis, and alerting on security-relevant events across the cloud estate — logs, metrics, threats, and compliance drift.</strong></p>
-</blockquote><h3 id="what-to-monitor-the-logs"><a href="#what-to-monitor-the-logs" class="heading-anchor">#</a>What to monitor (the logs)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="6-6-security-monitoring-a9-1-mark"><a href="#6-6-security-monitoring-a9-1-mark" class="heading-anchor">#</a>6.6 Security Monitoring (A9) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>Security monitoring is the continuous collection, analysis, and alerting on security-relevant events across the cloud estate — logs, metrics, threats, and compliance drift.</strong></p>
+</blockquote><h3 id="what-to-monitor-the-logs"><a href="#what-to-monitor-the-logs" class="heading-anchor">#</a>What to Monitor (the Logs)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Source</th>
 <th>Key events</th>
 </tr>
@@ -390,11 +431,11 @@
 <td><strong>Application logs</strong></td>
 <td>WAF blocks, auth failures, error rates, business logic anomalies</td>
 </tr>
-</tbody></table></div><h3 id="detection-response-loop"><a href="#detection-response-loop" class="heading-anchor">#</a>Detection → Response loop</h3><ol>
+</tbody></table></div><h3 id="detection-response-loop"><a href="#detection-response-loop" class="heading-anchor">#</a>Detection → Response Loop</h3><ol>
 <li><strong>Collect</strong> — centralised log sink (S3, CloudWatch, Logging, Log Analytics)</li><li><strong>Detect</strong> — rules (Sigma, KQL), ML (GuardDuty, Chronicle), correlation</li><li><strong>Alert</strong> — severity, enrichment, routing (PagerDuty, Slack, email)</li><li><strong>Investigate</strong> — timeline, blast radius, attribution</li><li><strong>Respond</strong> — contain (revoke keys, isolate SG), eradicate, recover, post-mortem</li></ol>
-<h3 id="a9-quot-what-do-you-mean-by-security-monitoring-quot-1"><a href="#a9-quot-what-do-you-mean-by-security-monitoring-quot-1" class="heading-anchor">#</a>A9 · &quot;What do you mean by Security Monitoring?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Security monitoring is the continuous collection, analysis, and alerting on security events across the cloud estate — CloudTrail/Audit Logs (API calls), VPC Flow Logs (network), GuardDuty (threats), Config/Security Hub (compliance drift), application logs. Loop: collect → detect (rules/ML) → alert → investigate → respond (contain/eradicate/recover).</p>
+<hr class="custom-hr"><h3 id="a9-quot-what-do-you-mean-by-security-monitoring-quot-1-1-mark"><a href="#a9-quot-what-do-you-mean-by-security-monitoring-quot-1-1-mark" class="heading-anchor">#</a>A9 · &quot;What do you mean by Security Monitoring?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>Security monitoring is the continuous collection, analysis, and alerting on security events across the cloud estate — CloudTrail/Audit Logs (API calls), VPC Flow Logs (network), GuardDuty (threats), Config/Security Hub (compliance drift), application logs. Loop: collect → detect (rules/ML) → alert → investigate → respond (contain/eradicate/recover).</p>
 </blockquote><p><em>(52 words. Definition + log sources + loop.)</em></p>
-<hr class="custom-hr"><h2 id="6-7-legal-issues-and-multi-tenancy"><a href="#6-7-legal-issues-and-multi-tenancy" class="heading-anchor">#</a>6.7 Legal issues and multi-tenancy</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="6-7-legal-issues-and-multi-tenancy"><a href="#6-7-legal-issues-and-multi-tenancy" class="heading-anchor">#</a>6.7 Legal Issues and Multi-Tenancy</h2><h3 id="legal-aspects"><a href="#legal-aspects" class="heading-anchor">#</a>Legal Aspects</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Legal aspect</th>
 <th>Cloud implication</th>
 </tr>
@@ -418,7 +459,7 @@
 <td><strong>E-discovery</strong></td>
 <td>legal hold, immutable logs, export capability, chain of custody</td>
 </tr>
-</tbody></table></div><h3 id="multi-tenancy-issues"><a href="#multi-tenancy-issues" class="heading-anchor">#</a>Multi-tenancy issues</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><h3 id="multi-tenancy-issues"><a href="#multi-tenancy-issues" class="heading-anchor">#</a>Multi-Tenancy Issues</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Issue</th>
 <th>Control</th>
 </tr>
@@ -438,7 +479,7 @@
 <td><strong>Compliance isolation</strong></td>
 <td>dedicated tenancy, gov cloud regions, HSM</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="6-8-d22-quot-explain-risks-and-mitigation-strategies-in-cloud-computing-security-quot-10"><a href="#6-8-d22-quot-explain-risks-and-mitigation-strategies-in-cloud-computing-security-quot-10" class="heading-anchor">#</a>6.8 D22 · &quot;Explain risks and mitigation strategies in cloud computing security.&quot; [10]</h2><blockquote class="custom-blockquote"><p><strong>Shape: risk register (risk → likelihood × impact → control → residual risk) for 6–8 cloud security risks. ~350 words.</strong></p>
+</tbody></table></div><hr class="custom-hr"><h2 id="6-8-d22-quot-explain-risks-and-mitigation-strategies-in-cloud-computing-security-quot-10-10-mark"><a href="#6-8-d22-quot-explain-risks-and-mitigation-strategies-in-cloud-computing-security-quot-10-10-mark" class="heading-anchor">#</a>6.8 D22 · &quot;Explain risks and mitigation strategies in cloud computing security.&quot; [10] 🎯 10-mark</h2><blockquote class="custom-blockquote"><p><strong>Shape: risk register (risk → likelihood × impact → control → residual risk) for 6–8 cloud security risks. ~350 words.</strong></p>
 </blockquote><p><strong>Risk register approach:</strong> each risk assessed as <strong>Likelihood (L/M/H) × Impact (L/M/H) = Risk Rating</strong>; then <strong>Control</strong> applied; <strong>Residual Risk</strong> after control.</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>#</th>
@@ -506,66 +547,7 @@
 </tbody></table></div><p><strong>Cross-cutting mitigations:</strong> centralised logging (SIEM), continuous monitoring (GuardDuty, Security Hub), IR playbooks (contain/eradicate/recover), chaos engineering (failure injection), red teaming.</p>
 <p><strong>Closing:</strong> the shared responsibility model means the customer <em>must</em> implement these controls — the provider secures the cloud, the customer secures <em>in</em> the cloud. A risk register is a living document, reviewed quarterly and after every incident.</p>
 <p><em>(356 words)</em></p>
-<hr class="custom-hr"><h2 id="6-9-answer-skeletons"><a href="#6-9-answer-skeletons" class="heading-anchor">#</a>6.9 Answer skeletons</h2><h3 id="a7-quot-what-do-you-mean-by-virtual-machine-security-quot-1"><a href="#a7-quot-what-do-you-mean-by-virtual-machine-security-quot-1" class="heading-anchor">#</a>A7 · &quot;What do you mean by Virtual Machine Security?&quot; [1]</h3><blockquote class="custom-blockquote"><p>VM security protects the guest/hypervisor boundary — preventing VM escape (guest→host), side-channel attacks (Spectre/Meltdown), image compromise, snapshot theft, and resource exhaustion. Mitigations: hardware isolation (EPT, IOMMU, SEV), hypervisor patching, image signing/scanning, snapshot encryption, resource quotas.</p>
-</blockquote><p><em>(50 words)</em></p>
-<h3 id="a9-quot-what-do-you-mean-by-security-monitoring-quot-1"><a href="#a9-quot-what-do-you-mean-by-security-monitoring-quot-1" class="heading-anchor">#</a>A9 · &quot;What do you mean by Security Monitoring?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Security monitoring is the continuous collection, analysis, and alerting on security events across the cloud estate — CloudTrail/Audit Logs (API calls), VPC Flow Logs (network), GuardDuty (threats), Config/Security Hub (compliance drift), application logs. Loop: collect → detect (rules/ML) → alert → investigate → respond (contain/eradicate/recover).</p>
-</blockquote><p><em>(52 words)</em></p>
-<h3 id="b16-quot-what-are-common-data-security-issues-in-cloud-computing-quot-3"><a href="#b16-quot-what-are-common-data-security-issues-in-cloud-computing-quot-3" class="heading-anchor">#</a>B16 · &quot;What are common data security issues in cloud computing?&quot; [3]</h3><blockquote class="custom-blockquote"><ol>
-<li><strong>Confidentiality breach</strong> — unauthorised access to data at rest/in transit. <em>Control:</em> encryption (KMS/BYOK), IAM least privilege, VPC endpoints.</li><li><strong>Integrity violation</strong> — unauthorised modification. <em>Control:</em> checksums, signatures, WORM, immutable logs.</li><li><strong>Availability loss</strong> — deletion, ransomware, region outage. <em>Control:</em> multi-AZ replication, cross-region backup, versioning, MFA delete.</li><li><strong>Data leakage</strong> — misconfigured storage (public S3), logs, snapshots. <em>Control:</em> bucket policies, block public access, Macie, DLP.</li><li><strong>Multi-tenancy residue</strong> — data remnant after deallocation. <em>Control:</em> secure erase, key shredding, dedicated hosts.</li><li><strong>Compliance failure</strong> — data residency, retention, sovereignty. <em>Control:</em> region lock, residency guardrails, legal hold.</li></ol>
-</blockquote><p><em>(104 words)</em></p>
-<h3 id="c18-quot-explain-the-concept-of-cloud-security-quot-5"><a href="#c18-quot-explain-the-concept-of-cloud-security-quot-5" class="heading-anchor">#</a>C18 · &quot;Explain the concept of cloud security.&quot; [5]</h3><blockquote class="custom-blockquote"><p>Cloud security protects data, applications, infrastructure across <strong>CIA</strong>: Confidentiality (encryption KMS/BYOK, TLS, IAM), Integrity (checksums, signatures, CloudTrail, WORM), Availability (multi-AZ, auto-scaling, DDoS protection, backup).</p>
-<p><strong>Shared responsibility model:</strong></p>
-<div class="table-wrapper"><table class="data-table"><thead><tr>
-<th>Layer</th>
-<th>Provider (security <em>of</em> cloud)</th>
-<th>Customer (security <em>in</em> cloud)</th>
-</tr>
-</thead><tbody><tr>
-<td>Physical</td>
-<td>data centre, hardware</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Network</td>
-<td>backbone, DDoS</td>
-<td>VPC, SGs, WAF</td>
-</tr>
-<tr>
-<td>Host</td>
-<td>hypervisor patching</td>
-<td>guest OS, agents</td>
-</tr>
-<tr>
-<td>Platform</td>
-<td>managed services</td>
-<td>app code, config</td>
-</tr>
-<tr>
-<td>Data</td>
-<td>encryption at rest</td>
-<td>keys, classification, access</td>
-</tr>
-<tr>
-<td>Identity</td>
-<td>IAM service, MFA</td>
-<td>policies, least privilege</td>
-</tr>
-<tr>
-<td>Application</td>
-<td>—</td>
-<td>secure coding, WAF, secrets</td>
-</tr>
-</tbody></table></div><p><strong>Data and identity are ALWAYS customer&#39;s responsibility.</strong></p>
-</blockquote><p><em>(208 words)</em></p>
-<h3 id="c20-quot-describe-security-architecture-in-cloud-computing-quot-5"><a href="#c20-quot-describe-security-architecture-in-cloud-computing-quot-5" class="heading-anchor">#</a>C20 · &quot;Describe security architecture in cloud computing.&quot; [5]</h3><blockquote class="custom-blockquote"><p>Layered defence-in-depth:<br><strong>1. Perimeter/Identity</strong> — WAF, DDoS, DNS, IAM, MFA, SSO. Controls <em>who</em>.<br><strong>2. Network</strong> — VPC, subnets, SGs, NACLs, VPN, micro-segmentation, service mesh mTLS. Controls <em>where</em>.<br><strong>3. Host/Compute</strong> — OS hardening, EDR/FIM, host firewall, image scanning, patching, bastion. Controls <em>what</em>.<br><strong>4. Application/Runtime</strong> — secure coding, SAST/DAST/SCA, API gateway, WAF, secrets (Vault), CI/CD gates. Controls <em>how</em>.<br><strong>5. Data</strong> — encryption (KMS/BYOK), classification, DLP, tokenization, access (IAM/ABAC), lifecycle, backup, WORM. The <em>crown jewel</em>.</p>
-<p><strong>Cross-cutting:</strong> logging (CloudTrail), monitoring (SIEM), alerting, IR. <strong>Governance:</strong> SCPs, Config, Security Hub, audit, tagging.</p>
-</blockquote><p><em>(204 words)</em></p>
-<h3 id="d22-quot-explain-risks-and-mitigation-strategies-in-cloud-computing-security-quot-10"><a href="#d22-quot-explain-risks-and-mitigation-strategies-in-cloud-computing-security-quot-10" class="heading-anchor">#</a>D22 · &quot;Explain risks and mitigation strategies in cloud computing security.&quot; [10]</h3><blockquote class="custom-blockquote"><p><strong>Risk register (L×I = Rating → Control → Residual):</strong></p>
-<ol>
-<li><strong>Misconfiguration</strong> (public S3, open SG, excessive IAM) — H×H=Critical → IaC, policy-as-code, drift detection, SCPs, least-privilege → M×M=Medium.</li><li><strong>Credential compromise</strong> (leaked keys, phishing, CI/CD secrets) — H×H=Critical → MFA, short-lived creds (STS), secret scanning, rotation → M×M=Medium.</li><li><strong>Data breach/exfiltration</strong> — M×H=High → encryption (KMS/BYOK), VPC endpoints, DLP, tokenization, egress filtering → L×M=Low.</li><li><strong>VM escape/side-channel</strong> (Spectre, hypervisor vuln) — L×H=Medium → hardware isolation (EPT, IOMMU, SEV-SNP), patching, dedicated hosts → L×M=Low.</li><li><strong>DDoS/availability</strong> — M×H=High → Shield/Cloud Armor, WAF, auto-scaling, Anycast → L×M=Low.</li><li><strong>Insider threat/privilege abuse</strong> — L×H=Medium → least privilege, JIT (PAM), UEBA, separation of duties → L×L=Low.</li><li><strong>Supply chain/dependency</strong> (Log4j) — M×H=High → SBOM, SCA, signed images, private registries, minimal bases → L×M=Low.</li><li><strong>Compliance/legal</strong> (GDPR, residency) — M×H=High → region lock, residency guardrails, DPA, legal hold → L×M=Low.</li></ol>
-<p><strong>Cross-cutting:</strong> centralised logging (SIEM), continuous monitoring (GuardDuty, Security Hub), IR playbooks, chaos engineering, red teaming. Shared responsibility: provider secures cloud, customer secures <em>in</em> cloud.</p>
-</blockquote><p><em>(356 words)</em></p>
-<hr class="custom-hr"><h2 id="6-10-traps"><a href="#6-10-traps" class="heading-anchor">#</a>6.10 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="6-9-traps"><a href="#6-9-traps" class="heading-anchor">#</a>6.9 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
@@ -615,7 +597,7 @@
 <td>it&#39;s the #1 ransomware protection</td>
 <td>&quot;versioning + MFA delete&quot; for S3/blob</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="6-11-self-test-answers-collapsed"><a href="#6-11-self-test-answers-collapsed" class="heading-anchor">#</a>6.11 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="6-10-self-test-answers-collapsed"><a href="#6-10-self-test-answers-collapsed" class="heading-anchor">#</a>6.10 Self-Test (Answers Collapsed)</h2><ol>
 <li>What are the three CIA pillars in cloud, with one control each? <em>(3 marks)</em></li><li>Draw the shared responsibility model table (provider vs customer for 5 layers). <em>(3 marks)</em></li><li>Why are data and identity ALWAYS the customer&#39;s responsibility? <em>(2 marks)</em></li><li>Draw the five-layer security architecture (perimeter → network → host → app → data). <em>(diagram — C20)</em></li><li>Name six data security issues with one control each. <em>(3 marks — B16)</em></li><li>What is VM security, and what are the five threat vectors? <em>(1 mark — A7)</em></li><li>What is the security monitoring loop? <em>(1 mark — A9)</em></li><li>Create a 4-row risk register for cloud security (risk → L×I → control → residual). <em>(5 marks — D22)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -624,11 +606,11 @@
 <li><strong>Confidentiality</strong> — encryption (KMS/BYOK), TLS, IAM. <strong>Integrity</strong> — checksums, signatures, CloudTrail, WORM. <strong>Availability</strong> — multi-AZ, auto-scaling, DDoS protection, backup.</li><li>Physical: provider (datacentre) / customer (—). Network: provider (backbone) / customer (VPC, SG). Host: provider (hypervisor) / customer (guest OS). Platform: provider (managed) / customer (app code). Data: provider (encryption at rest) / customer (keys, access).</li><li>Regardless of IaaS/PaaS/SaaS, the customer owns the <em>meaning</em> of the data (classification, access, lifecycle) and <em>who</em> accesses it (identity, least privilege). The provider only manages the <em>storage medium</em> and <em>identity service</em>.</li><li>Perimeter/Identity → Network → Host/Compute → Application/Runtime → Data. Cross-cutting: Logging, Monitoring, Alerting, IR. Governance: Policies, Compliance, Audit.</li><li>(1) Confidentiality breach → encryption/IAM. (2) Integrity violation → signatures/WORM. (3) Availability loss → multi-AZ/backup/MFA delete. (4) Data leakage → bucket policies/Macie. (5) Multi-tenancy residue → secure erase/key shredding. (6) Compliance failure → region lock/guardrails.</li><li>VM security = guest/hypervisor boundary protection. Vectors: VM escape, side-channel, image compromise, snapshot theft, resource exhaustion.</li><li>Collect (logs) → Detect (rules/ML) → Alert → Investigate → Respond (contain/eradicate/recover).</li><li>See D22 skeleton: Misconfiguration (Critical→Medium), Credential compromise (Critical→Medium), Data breach (High→Low), DDoS (High→Low).</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="6-12-sixty-second-check"><a href="#6-12-sixty-second-check" class="heading-anchor">#</a>6.12 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="6-11-sixty-second-check"><a href="#6-11-sixty-second-check" class="heading-anchor">#</a>6.11 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> CIA triad: three pillars + one cloud control each</li><li><input disabled="" type="checkbox"> Shared responsibility table: 5+ layers, provider vs customer</li><li><input disabled="" type="checkbox"> &quot;Data and identity ALWAYS customer&quot; — say why</li><li><input disabled="" type="checkbox"> Five-layer architecture diagram: perimeter → network → host → app → data</li><li><input disabled="" type="checkbox"> Six data security issues + controls</li><li><input disabled="" type="checkbox"> VM security: definition + five threat vectors</li><li><input disabled="" type="checkbox"> Security monitoring: collect → detect → alert → investigate → respond</li><li><input disabled="" type="checkbox"> Risk register format: risk → L×I → control → residual (4+ rows)</li></ul>
 <p>If all eight are there, Unit 6&#39;s <strong>25 marks</strong> are covered — A7, A9, B16, C18, C20, D22.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 6, 6 LHs) · TU/FOM model question 2026 (A7, A9, B16, C18, C20, D22) · Saurabh, Cloud Computing, ch. 11–12 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 11–12 (syllabus reading) · NIST SP 800-145 (shared responsibility), CSA Cloud Controls Matrix, AWS/Azure/GCP security documentation — standard references. AWS GuardDuty, Security Hub, Config, CloudTrail, KMS, Shield, WAF, IAM; Azure Security Center, Sentinel, Policy, Key Vault; GCP Security Command Center, Cloud Armor, KMS — standard service examples, not current feature claims.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 277, Unit 6, 6 LHs) · TU/FOM model question 2026 (A7, A9, B16, C18, C20, D22) · Saurabh, Cloud Computing, ch. 11–12 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 11–12 (syllabus reading) · NIST SP 800-145 (shared responsibility), CSA Cloud Controls Matrix, AWS/Azure/GCP security documentation — standard references. AWS GuardDuty, Security Hub, Config, CloudTrail, KMS, Shield, WAF, IAM; Azure Security Center, Sentinel, Policy, Key Vault; GCP Security Command Center, Cloud Armor, KMS — standard service examples, not current feature claims.</em></p>
 
         </div>
       </article>

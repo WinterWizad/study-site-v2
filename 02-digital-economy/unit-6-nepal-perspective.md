@@ -3,17 +3,52 @@
 | | |
 |---|---|
 | **Lecture hours** | 7 |
-| **Marks carried in 2026 paper** | **22** — one 2-marker (A10 e-governance definition), one 20-marker (D22 Agro-tech Concern case: issues, opportunities, revenue model, policy) |
-| **Difficulty** | ★★★★☆ — the case is **compulsory, 20 marks, and the only place a Nepali example is mandatory**. You must cite the six case facts and apply Units 1–5 concepts. |
-| **Exam yield** | 🔴 **owns the case** — 7 hours, 22 marks, and the case is the single biggest differentiator in the paper |
+| **Marks in 2026 paper** | 22 — one 2-marker (A10 e-governance definition), one 20-marker (D22 Agro-tech Concern case: issues, opportunities, revenue model, policy) |
+| **Difficulty** | ★★★★☆ — the case is **compulsory, 20 marks, and the only place a Nepali example is mandatory**. Must cite six case facts and apply Units 1–5 concepts. |
+| **Exam yield** | 🔴 **owns the case** — 7 hours, 22 marks, the single biggest differentiator in the paper |
 | **Prerequisite** | Units 1–5 (every concept in the case answer comes from earlier units) |
-| **Syllabus bullets** | E-governance: concepts, process, and structure · E-governance practices in Nepal · Digital financial inclusion in Nepalese financial markets · Opportunities and challenges for digital transformation in the public sector · Digital transformation and the economic performance in trade, tourism, agriculture, and SMEs |
+| **Syllabus** | E-governance: concepts, process, structure · E-governance practices in Nepal · Digital financial inclusion · Opportunities and challenges for digital transformation in public sector · Digital transformation and economic performance in trade, tourism, agriculture, SMEs |
 
-> **Read this first:** this unit is **the case unit**. The 20-mark case (D22) is compulsory — there is no choice. The case narrative gives you six facts (reach, price transparency, data reliability, funding dependency, digital divide, policy). Your answer must **cite each fact** and **apply the concepts from Units 1–5** (4IR, digital transformation drivers, platform economics, asymmetric information, digital currencies, IP, Privacy Act). A generic case answer that does not use the six facts and does not name-drop earlier units will fail.
+> **Read this first:** This unit is **the case unit**. The 20-mark case (D22) is compulsory — no choice. The case narrative gives six facts (reach, price transparency, data reliability, funding dependency, digital divide, policy). Your answer must **cite each fact** and **apply concepts from Units 1–5** (4IR, digital transformation drivers, platform economics, asymmetric information, digital currencies, IP, Privacy Act). A generic case answer that does not use the six facts and does not name-drop earlier units will fail.
 
 ---
 
-## 6.1 E-governance — concepts, process, and structure
+## Coverage Map
+
+```
+6.1 E-Governance 🎯 2-mark
+├── Definition + three dimensions: concepts, process, structure
+├── Nepal illustrations: Nagarik, connectIPS, X-Road, Mero Kitta
+└── Three stages: digitisation → digitalisation → digital transformation
+
+6.2 E-Governance Practices in Nepal
+├── Nagarik (digital ID), connectIPS (govt payments), Mero Kitta (land), X-Road (data exchange)
+├── Digital Nepal Framework (policy), IT Bill (legal), Cybersecurity Bylaw (security)
+└── Link each to Agro-tech case: farmer identity, fee collection, land collateral, data exchange
+
+6.3 Digital Financial Inclusion
+├── Mobile wallets (eSewa, Khalti), agent banking (10k+ agents), digital banking
+├── Fintech lending (alt credit scoring), insurtech (parametric), remittance digitisation
+└── Case link: 0.3% take rate unsustainable → need higher take rate on value-added services
+
+6.4 Public Sector Digital Transformation: Opportunities & Challenges
+├── Opportunities: leapfrog delivery, data-driven targeting, financial inclusion, transparency, ecosystem innovation
+├── Challenges: digital divide, data reliability, funding dependency, capacity, policy gaps
+└── All mapped to Agro-tech facts + Unit concepts
+
+6.5 Sectoral Digital Drivers: Trade, Tourism, Agriculture, SMEs
+└── Name drivers per sector + one mechanism + apply to case
+
+6.6 Agro-tech Concern Case — D22 [20 marks] 🎯 20-mark
+├── (a) Six issues citing case facts + unit concepts
+├── (b) Three opportunities + three challenges with evidence
+├── (c) Four-layer revenue model: marketplace, fintech, SaaS, logistics
+└── (d) Four policy pillars: DPI integration, agri-data governance, blended finance, outcome-based contracts
+```
+
+---
+
+## 6.1 E-Governance — Concepts, Process, and Structure 🎯 2-mark
 
 > **E-governance (electronic governance) is the application of information and communication technologies (ICT) to transform the structures, processes, and relationships of government — with the goals of improving service delivery, increasing transparency and accountability, enabling citizen participation, and reducing corruption.**
 
@@ -21,11 +56,13 @@ It has **three dimensions** (the "concepts, process, and structure" the syllabus
 
 | Dimension | What it means | Nepal illustration |
 |---|---|---|
-| **Concepts (the *what*)** | G2C (government-to-citizen), G2B (government-to-business), G2G (government-to-government), G2E (government-to-employee) — the four interaction types | Nagarik (G2C: digital ID, certificates); connectIPS (G2B: tax, customs, licence fees); X-Road pilot (G2G: data exchange); e-attendance (G2E) |
-| **Process (the *how*)** | digitisation → digitalisation → digital transformation: (1) paper to digital, (2) process re-engineering, (3) organisational and business model change | most Nepali ministries are at stage 1 (digitisation: PDF forms, basic portals); Nagarik/connectIPS are stage 2 (process re-engineering); no ministry is at stage 3 yet |
-| **Structure (the *architecture*)** | the technical and institutional stack: (1) **digital infrastructure** (broadband, data centres, cloud), (2) **shared platforms** (digital ID, payments, data exchange, document management), (3) **applications** (sectoral portals, services), (4) **governance** (policy, standards, security, privacy, capacity) | (1) National Data Centre, Ntc/Ncell 4G; (2) Nagarik, connectIPS, X-Road, Mero Kitta; (3) Mero Kitta (land), Nagarik (certificates), DoL (labour), DoI (industry); (4) Digital Nepal Framework, IT Bill, Privacy Act 2075, Cybersecurity Bylaw 2077 |
+| **Concepts (the *what*)** | G2C, G2B, G2G, G2E — the four interaction types | Nagarik (G2C: digital ID, certificates); connectIPS (G2B: tax, customs, licence fees); X-Road pilot (G2G: data exchange); e-attendance (G2E) |
+| **Process (the *how*)** | digitisation → digitalisation → digital transformation: (1) paper to digital, (2) process re-engineering, (3) organisational and business model change | most Nepali ministries at stage 1 (digitisation: PDF forms, basic portals); Nagarik/connectIPS at stage 2 (process re-engineering); no ministry at stage 3 yet |
+| **Structure (the *architecture*)** | technical and institutional stack: (1) **digital infrastructure** (broadband, data centres, cloud), (2) **shared platforms** (digital ID, payments, data exchange, document management), (3) **applications** (sectoral portals, services), (4) **governance** (policy, standards, security, privacy, capacity) | (1) National Data Centre, Ntc/Ncell 4G; (2) Nagarik, connectIPS, X-Road, Mero Kitta; (3) Mero Kitta (land), Nagarik (certificates), DoL (labour), DoI (industry); (4) Digital Nepal Framework, IT Bill, Privacy Act 2075, Cybersecurity Bylaw 2077 |
 
-### A10 · "What is e-governance?" [2]
+---
+
+### A10 · "What is e-governance?" [2] 🎯 2-mark
 
 > **Shape: definition + three dimensions + one illustration each. ~55 words.**
 
@@ -35,17 +72,17 @@ It has **three dimensions** (the "concepts, process, and structure" the syllabus
 
 ---
 
-## 6.2 E-governance practices in Nepal
+## 6.2 E-Governance Practices in Nepal
 
-The syllabus asks for "practices" — these are the **live implementations** you cite as evidence in the case answer and in any e-governance question.
+The syllabus asks for "practices" — these are the **live implementations** you cite as evidence in the case answer.
 
 | Practice | What it does | Status (2026) | Relevance to Agro-tech Concern case |
 |---|---|---|---|
-| **Nagarik App** | digital national ID, birth/death/marriage certificates, voter registration, social security | 2M+ downloads; the *de facto* digital ID backbone | farmer identity verification for subsidies, insurance, market access |
+| **Nagarik App** | digital national ID, birth/death/marriage certificates, voter registration, social security | 2M+ downloads; *de facto* digital ID backbone | farmer identity verification for subsidies, insurance, market access |
 | **connectIPS** | unified payment gateway for government revenue (tax, customs, fees, licences) | mandatory for all govt payments; 100+ banks connected | fee collection for agri-services; subsidy disbursement |
 | **Mero Kitta** | online land records, ownership certificates, mutation, revenue payment | 30+ land revenue offices onboarded; digitising legacy records | land collateral for agri-loans; tenure security for farmers |
 | **X-Road pilot** | data exchange layer between government systems (Estonia model) | pilot phase; NRB, MOF, MOICS, NID participating | interoperability: farmer data across agriculture, finance, local govt |
-| **Digital Nepal Framework (2019)** | 8 sectors, 80 initiatives: digital foundation, agriculture, health, education, tourism, finance, urban, governance | implementation uneven; some initiatives delivered (Nagarik, connectIPS), many stalled | the policy umbrella — the case's "policy measures" question asks to operationalise this |
+| **Digital Nepal Framework (2019)** | 8 sectors, 80 initiatives: digital foundation, agriculture, health, education, tourism, finance, urban, governance | implementation uneven; some delivered (Nagarik, connectIPS), many stalled | the policy umbrella — the case's "policy measures" question asks to operationalise this |
 | **IT Bill (under discussion)** | legal framework for digital signatures, cybercrime, data protection, e-commerce, intermediary liability | not yet enacted; Privacy Act 2075 exists separately | the case's "policy measures" needs this law for legal certainty |
 | **Cybersecurity Bylaw 2077** | critical information infrastructure protection, incident reporting, CERT | CERT-Nepal operational; bylaw enforced for banks/telecoms | data reliability in the case — price data integrity needs cybersecurity |
 
@@ -53,11 +90,11 @@ The syllabus asks for "practices" — these are the **live implementations** you
 
 ---
 
-## 6.3 Digital financial inclusion in Nepalese financial markets
+## 6.3 Digital Financial Inclusion in Nepalese Financial Markets
 
 > **Digital financial inclusion is the use of digital technologies (mobile money, digital banking, agent banking, fintech) to extend financial services — payments, savings, credit, insurance, investment — to the unbanked and underbanked.**
 
-### The Nepal landscape (2026)
+### The Nepal Landscape (2026)
 
 | Channel | Scale / key players | What it enables for the case |
 |---|---|---|
@@ -74,7 +111,7 @@ The syllabus asks for "practices" — these are the **live implementations** you
 
 ---
 
-## 6.4 Opportunities and challenges for digital transformation in the public sector
+## 6.4 Opportunities and Challenges for Digital Transformation in the Public Sector
 
 This is the **diagnostic lens** for the case's part (b) — "evaluate opportunities and challenges of digital transformation in agriculture sector using Agro-tech Concern".
 
@@ -100,7 +137,7 @@ This is the **diagnostic lens** for the case's part (b) — "evaluate opportunit
 
 ---
 
-## 6.5 Digital transformation and economic performance in trade, tourism, agriculture, and SMEs
+## 6.5 Digital Transformation and Economic Performance in Trade, Tourism, Agriculture, and SMEs
 
 This is the **sectoral evidence base** for the case and for any "digital transformation in Nepal" question.
 
@@ -115,7 +152,7 @@ This is the **sectoral evidence base** for the case and for any "digital transfo
 
 ---
 
-## 6.6 The Agro-tech Concern case — worked answer for D22 [20 marks ≈ 750 words]
+## 6.6 The Agro-tech Concern Case — Worked Answer for D22 [20 marks] 🎯 20-mark
 
 > **Shape: four sub-parts (a–d), each 150–200 words, each citing case facts + unit concepts. ~750 words total.**
 
@@ -174,29 +211,7 @@ The Agro-tech Concern case reveals **six structural issues**, each traceable to 
 
 ---
 
-## 6.7 Answer skeletons
-
-### A10 · "What is e-governance?" [2]
-
-> E-governance is the application of ICT to transform government structures, processes, and relationships — improving service delivery, transparency, accountability, participation, and reducing corruption. Three dimensions: **concepts** — G2C, G2B, G2G, G2E (e.g., Nagarik for G2C, connectIPS for G2B); **process** — digitisation → digitalisation → digital transformation (most Nepali ministries at stage 1); **structure** — infrastructure (National Data Centre), shared platforms (Nagarik, connectIPS, X-Road), applications (Mero Kitta, DoL), governance (Digital Nepal Framework, Privacy Act 2075).
-
-*(58 words)*
-
-### D22 · Agro-tech Concern case [20]
-
-> **(a) Major issues.** (1) **Reach gap** — near-zero reach in hill/mountain districts (Unit 1: digital divide = development divide). (2) **Price transparency with data reliability failure** — 16% gain proves asymmetry reduction (Unit 5), but manual price errors = platform moral hazard (Unit 5). (3) **Funding dependency** — NPR 16m fees on NPR 489m transactions = 0.3% take rate; value finance broken (Unit 3). (4) **Farmer identity** — no Nagarik/connectIPS/Mero Kitta integration for verification/credit (Unit 6.1). (5) **Peer-to-peer sustainability** — unpaid contributions decay without incentives (Unit 3: generative platform). (6) **Policy vacuum** — no agri-data ownership, agri-fintech licensing, platform liability framework (Unit 1 regulatory, Unit 6.1 IT Bill).
->
-> **(b) Opportunities & challenges.** *Opportunities:* (1) Leapfrogging extension — weather/price to 85k farmers without officers (Unit 4 driver 4, Unit 1 4IR leapfrogging). (2) Market efficiency — 16% price gain = asymmetry reduction; NPR 489m direct = marketplace model (Unit 3). (3) Financial inclusion gateway — registered farmers = de-risked pool for fintech via Nagarik/Mero Kitta/wallet data (Unit 6.3, Unit 5). *Challenges:* (1) Infrastructure divide — hill/mountain exclusion deepens inequality (Unit 1 4IR challenge). (2) Data integrity — manual errors undermine trust; need automated feeds (Unit 5 platform moral hazard). (3) Business model unsustainability — 0.3% take rate, donor-dependent, optimises for metrics not unit economics (Unit 3 value finance).
->
-> **(c) Sustainable revenue model.** Shift to four-layer platform ecosystem revenue stack: (1) **Marketplace commission** 1.5–2.5% on matched transactions (raises take rate, aligns with value). (2) **Financial services partnership** — referral/revenue share from input credit, parametric insurance, equipment leasing (platform data de-risks lending; Unit 6.3, Unit 5). (3) **Premium analytics SaaS** — subscriptions from traders, input companies, government for demand forecasts/regional demand/policy dashboards (Unit 3 data/attention → B2B SaaS). (4) **Logistics enablement** — fee per shipment for integrated cold chain/aggregation via 3PL partners (Unit 4 ecosystem economics). *Governance:* farmer consent + Privacy Act 2075 compliance.
->
-> **(d) Policy measures for Ministry of Agriculture.** (1) **Mandate DPI integration** — all agri-platforms integrate with Nagarik (identity), connectIPS (payments), Mero Kitta (land), X-Road (data exchange) (Unit 6.1 shared platforms). (2) **Agri-data governance framework** — farmer data ownership (farmer owns, platform processes), price data standards (automated feeds), platform liability for erroneous signals (Unit 6.1 governance + Privacy Act 2075). (3) **Blended finance for agri-fintech** — credit guarantee fund for platform-verified farmers; parametric insurance via connectIPS (Unit 6.3 + Unit 4 value finance). (4) **Outcome-based contracts + open APIs** — pay for verified income increase/transaction volume/financial inclusion; mandate open APIs for innovators (Unit 4 operating model, Unit 3 platform business).
-
-*(~750 words total across four sub-parts)*
-
----
-
-## 6.8 Traps
+## 6.7 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -210,7 +225,7 @@ The Agro-tech Concern case reveals **six structural issues**, each traceable to 
 
 ---
 
-## 6.9 Self-test (answers collapsed)
+## 6.8 Self-Test (Answers Collapsed)
 
 1. Define e-governance with its three dimensions (concepts, process, structure). *(2 marks — A10)*
 2. Name four e-governance practices in Nepal and say what each does. *(3 marks)*
@@ -237,9 +252,9 @@ The Agro-tech Concern case reveals **six structural issues**, each traceable to 
 
 ---
 
-## 6.10 Sixty-second check
+## 6.9 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] E-governance definition: three dimensions + one illustration each
 - [ ] Four e-governance practices in Nepal + function
@@ -254,4 +269,4 @@ If all eight are there, Unit 6's **22 marks** are covered — A10, D22.
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 250, Unit 6, 7 LHs) · TU 2026 board paper (A10, D22) · Overby & Audestad, Introduction to Digital Economics, ch. 12 (syllabus reading) · Maheshwari, Digital Transformation, ch. 10 (syllabus reading) · Adhikari, Digital Economics (syllabus reading) · Digital Nepal Framework (2019), NRB directives, connectIPS/Nagarik/Mero Kitta/X-Road public documentation, Privacy Act 2075 public summaries (pioneerlaw.com, pacmap.dev). Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper. Nepal digital financial inclusion figures (~65% account ownership, ~35% active usage) are widely reported industry patterns, not audited statistics.*
+*Sources: TU FOM syllabus (IT 250, Unit 6, 7 LHs) · TU 2026 board paper (A10, D22) · Overby & Audestad, Introduction to Digital Economics, ch. 12 (syllabus reading) · Maheshwari, Digital Transformation, ch. 10 (syllabus reading) · Adhikari, Digital Economics (syllabus reading) · Digital Nepal Framework (2019), NRB directives, connectIPS/Nagarik/Mero Kitta/X-Road public documentation, Privacy Act 2075 public summaries (pioneerlaw.com, pacmap.dev). Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper. Nepal digital financial inclusion figures (~65% account ownership, ~35% active usage) are widely reported industry patterns, not audited statistics.*

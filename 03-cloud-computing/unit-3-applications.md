@@ -3,17 +3,46 @@
 | | |
 |---|---|
 | **Lecture hours** | 5 |
-| **Marks carried in model question** | **0** — but **insurance for a board paper**. A board setter could easily put a 5-marker on migration, licensing, cost model, SLA, or web application design. |
+| **Marks in model question** | 0 — but **insurance for a board paper**. A board setter could easily put a 5-marker on migration, licensing, cost model, SLA, or web application design. |
 | **Difficulty** | ★★★☆☆ — practical topics; the concepts are straightforward but need structured answers |
 | **Exam yield** | 🟢 low in model question, **high insurance value** — 5 hours, read once, be ready for any 5-marker |
 | **Prerequisite** | Units 1–2 (service models, deployment models, cloud service requirements) |
-| **Syllabus bullets** | Migrating to the cloud · Software licenses · Cloud cost model · Service levels for cloud applications — security · Web applications design |
+| **Syllabus** | Migrating to the cloud · Software licenses · Cloud cost model · Service levels for cloud applications — security · Web applications design |
 
-> **Read this first:** this unit carries **zero marks in the model question**, but that is *one sample*. A board paper can put a 5-marker on any of these five bullets. Read it once, know the six migration strategies, the three license models, the cost model components, the SLA structure, and the web app design principles. That is your insurance.
+> **Read this first:** This unit carries **zero marks in the model question**, but that is *one sample*. A board paper can put a 5-marker on any of these five bullets. Read it once, know the six migration strategies, the three license models, the cost model components, the SLA structure, and the web app design principles. That is your insurance.
 
 ---
 
-## 3.1 Migrating to the cloud — the six strategies
+## Coverage Map
+
+```
+3.1 Migrating to the Cloud — Six Strategies
+├── Rehost, Replatform, Refactor, Repurchase, Retire, Retain
+├── When to use each + trade-off
+└── Migration process: assess → pilot → migrate → optimise → govern
+
+3.2 Software Licenses in the Cloud
+├── BYOL, License-included, Subscription/SaaS, Open source
+└── Key trap: license mobility — not all on-prem licences allow cloud use
+
+3.3 Cloud Cost Model
+├── Five components: compute, storage, network, managed services, support
+├── Hidden costs: data egress, API calls, idle resources, over-provisioning
+└── FinOps discipline: visibility, optimisation, governance, culture
+
+3.4 Service Levels for Cloud Applications — Security
+├── SLA vs SLO vs SLI
+├── Five SLA elements: availability, performance, durability, support, credits
+└── Security SLA: encryption, compliance, incident response, vulnerability mgmt, data sovereignty
+
+3.5 Web Applications Design — Cloud-Native Principles
+├── Six principles: statelessness, horizontal scaling, resilience, observability, CI/CD, security by default
+└── Twelve-Factor App summary
+```
+
+---
+
+## 3.1 Migrating to the Cloud — the Six Strategies
 
 | Strategy | What it means | When to use | Trade-off |
 |---|---|---|---|
@@ -28,7 +57,7 @@
 
 ---
 
-## 3.2 Software licenses in the cloud
+## 3.2 Software Licenses in the Cloud
 
 | License model | Cloud implication | Example |
 |---|---|---|
@@ -41,7 +70,7 @@
 
 ---
 
-## 3.3 Cloud cost model
+## 3.3 Cloud Cost Model
 
 > **Cloud cost = compute + storage + network + managed services + support + (hidden: data egress, API calls, idle resources, over-provisioning).**
 
@@ -55,7 +84,7 @@
 | **Managed services** | RDS, Redis, Kafka, Kubernetes control plane — pay for convenience | evaluate build vs buy; serverless (pay-per-request) for variable load |
 | **Support** | Business/Enterprise tiers (AWS Support, Azure Support) | match tier to criticality; developer tier for non-prod |
 
-### FinOps — the discipline
+### FinOps — the Discipline
 
 1. **Visibility** — tagging (owner, env, project), cost allocation, dashboards
 2. **Optimisation** — rightsizing, reserved/spot, storage tiering, delete waste
@@ -64,11 +93,11 @@
 
 ---
 
-## 3.4 Service levels for cloud applications — security
+## 3.4 Service Levels for Cloud Applications — Security
 
 > **SLA (Service Level Agreement)** = provider's commitment on availability, performance, support. **SLO (Service Level Objective)** = internal target. **SLI (Service Level Indicator)** = the metric measured.
 
-### Standard SLA structure
+### Standard SLA Structure
 
 | Element | What it covers |
 |---|---|
@@ -90,7 +119,7 @@
 
 ---
 
-## 3.5 Web applications design — cloud-native principles
+## 3.5 Web Applications Design — Cloud-Native Principles
 
 | Principle | What it means | Cloud implementation |
 |---|---|---|
@@ -101,7 +130,7 @@
 | **CI/CD** | automated build, test, deploy; infrastructure as code | GitHub Actions, GitLab CI, CodePipeline, ArgoCD, Terraform |
 | **Security by default** | least privilege IAM, secrets management, WAF, DDoS protection | AWS Secrets Manager, Vault, AWS WAF, Shield |
 
-### Twelve-Factor App (summary)
+### Twelve-Factor App (Summary)
 
 1. **Codebase** — one repo, many deploys
 2. **Dependencies** — explicit, isolated
@@ -118,46 +147,7 @@
 
 ---
 
-## 3.6 Answer skeletons (insurance — not in model question)
-
-### "Explain the six cloud migration strategies with when to use each." [5]
-
-> **Shape: table of six strategies + when to use + trade-off. ~200 words.**
->
-> | Strategy | What it means | When to use | Trade-off |
-> |---|---|---|---|
-> | **Rehost** | move VMs as-is to IaaS | speed, low risk, legacy apps | no cloud-native benefits |
-> | **Replatform** | minor optimisations (managed DB, containers) | moderate effort, some benefits | limited modernisation |
-> | **Refactor** | rewrite for cloud-native (microservices, serverless) | long-term agility, scalability | high effort, risk, reward |
-> | **Repurchase** | replace with SaaS (CRM → Salesforce) | commoditised function | data migration, process change |
-> | **Retire** | decommission unused apps | reduce cost, attack surface | must identify dependencies |
-> | **Retain** | keep on-prem (latency, compliance) | valid reasons exist | revisit periodically |
->
-> Migration process: assess → pilot → migrate (wave by wave) → optimise (rightsizing, FinOps) → govern (guardrails, tagging).
-
-*(~180 words)*
-
-### "Describe the cloud cost model and three optimisation techniques." [5]
-
-> Cloud cost = compute + storage + network + managed services + support + hidden (egress, API calls, idle resources). **Three optimisations:** (1) **Compute** — reserved instances (1–3 yr, 30–72% off), spot (90% off, interruptible), rightsizing, autoscaling. (2) **Storage** — lifecycle policies (hot→cool→archive), delete orphaned snapshots, tiered redundancy. (3) **Network** — CDN/CloudFront for egress, VPC endpoints for private access, region selection, compression. **FinOps discipline:** tagging for visibility, budgets/alerts for governance, engineer-owned cost culture.
-
-*(185 words)*
-
-### "What is an SLA? Explain its elements with focus on security." [5]
-
-> SLA = provider's commitment on availability, performance, support. **Elements:** availability (% uptime, e.g., 99.9% = 8.76h/yr), performance (latency p50/p95/p99, throughput), durability (data loss probability), support (response time by severity), credits (service credits for breach). **Security SLA:** encryption at rest (AES-256)/in transit (TLS 1.2+), key management (BYOK), compliance certs (SOC 2, ISO 27001, PCI DSS), incident response (breach notification timeline, e.g., GDPR 72h), vulnerability management (patching cadence, scanning), data sovereignty (region lock, residency guarantees).
-
-*(190 words)*
-
-### "Describe cloud-native web application design principles." [5]
-
-> **Principles:** (1) **Statelessness** — no session affinity; state in Redis/DB/S3; enables horizontal scaling. (2) **Horizontal scaling** — add instances, not bigger ones; auto-scaling, K8s HPA, serverless. (3) **Resilience** — timeouts, retries, circuit breakers, bulkheads (Polly, Istio, X-Ray). (4) **Observability** — logs, metrics, traces (CloudWatch, Prometheus, OpenTelemetry). (5) **CI/CD** — automated build/test/deploy, IaC (Terraform, ArgoCD). (6) **Security by default** — least-privilege IAM, secrets management (Vault, Secrets Manager), WAF, DDoS protection. **Twelve-Factor App** summarises: codebase, dependencies, config (env vars), backing services, build/release/run, processes, port binding, concurrency, disposability, dev/prod parity, logs, admin processes.
-
-*(195 words)*
-
----
-
-## 3.7 Traps
+## 3.6 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -170,7 +160,7 @@
 
 ---
 
-## 3.8 Self-test (answers collapsed)
+## 3.7 Self-Test (Answers Collapsed)
 
 1. Name the six cloud migration strategies. *(2 marks)*
 2. When would you choose refactor over replatform? *(2 marks)*
@@ -197,9 +187,9 @@
 
 ---
 
-## 3.9 Sixty-second check
+## 3.8 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] Six migration strategies: name + when to use + trade-off
 - [ ] Three license models: BYOL, license-included, subscription/SaaS
@@ -211,4 +201,4 @@ If all five are there, Unit 3's **insurance** is covered — ready for any board
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 277, Unit 3, 5 LHs) · Saurabh, Cloud Computing, ch. 5–6 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 6–7 (syllabus reading) · AWS/Azure/GCP migration frameworks, Well-Architected Framework, FinOps Foundation — standard industry practices. AWS/Azure/Google service names are standard examples, not current feature claims.*
+*Sources: TU FOM syllabus (IT 277, Unit 3, 5 LHs) · Saurabh, Cloud Computing, ch. 5–6 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 6–7 (syllabus reading) · AWS/Azure/GCP migration frameworks, Well-Architected Framework, FinOps Foundation — standard industry practices. AWS/Azure/Google service names are standard examples, not current feature claims.*

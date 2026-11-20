@@ -3,17 +3,54 @@
 | | |
 |---|---|
 | **Lecture hours** | 8 |
-| **Marks carried in 2026 paper** | **22** — one 2-marker (A8 types of digital currency), two 5-markers (B16 technological revolution → globalisation & growth, B17 regulatory challenges of digital currencies), one 10-marker (C20 digital transformation + drivers) |
-| **Difficulty** | ★★★★☆ — digital transformation drivers is a structured list; digital currencies (types + regulatory challenges) is a specific knowledge area; technological revolution → globalisation needs the economic mechanism, not just a list |
-| **Exam yield** | 🔴 high — 8 hours, 22 marks, and digital transformation is the *verb* that Units 1–3 noun-ified; the case (Unit 6) leans heavily on transformation drivers |
+| **Marks in 2026 paper** | 22 — one 2-marker (A8 digital currency types), two 5-markers (B16 tech revolution → globalisation, B17 digital currency regulation), one 10-marker (C20 digital transformation + drivers) |
+| **Difficulty** | ★★★★☆ — digital transformation drivers is a structured list; digital currencies (types + regulatory challenges) is specific knowledge; tech revolution → globalisation needs the economic mechanism, not just a list |
+| **Exam yield** | 🔴 high — 8 hours, 22 marks, digital transformation is the *verb* that Units 1–3 noun-ified; the case (Unit 6) leans heavily on transformation drivers |
 | **Prerequisite** | Units 1–3 (the digital economy mechanics — this unit is the application) |
-| **Syllabus bullets** | Digital transformation: concepts and drivers · Accelerating SDGs through digital transformation · Role of technological revolution in the world economy · Globalization and economic growth in the digital age · Digital currencies: concepts and types |
+| **Syllabus** | Digital transformation: concepts and drivers · Accelerating SDGs through digital transformation · Role of technological revolution in world economy · Globalization and economic growth in digital age · Digital currencies: concepts and types |
 
-> **Read this first:** this unit answers "so what?" for Units 1–3. Digital transformation is the *process* of applying the mechanics (platforms, network effects, data, innovation) to change how an organisation or economy works. The 10-marker C20 asks for *drivers* — memorise the six drivers with one-line mechanisms. Digital currencies (A8, B17) are a self-contained topic: know the four types and the three regulatory challenges. B16 (tech revolution → globalisation) needs the *transmission mechanism*: lower transaction costs → trade → specialisation → growth.
+> **Read this first:** This unit answers "so what?" for Units 1–3. Digital transformation is the *process* of applying the mechanics (platforms, network effects, data, innovation) to change how an organisation or economy works. The 10-marker C20 asks for *drivers* — memorise the six drivers with one-line mechanisms. Digital currencies (A8, B17) are a self-contained topic: know the four types and the three regulatory challenges. B16 (tech revolution → globalisation) needs the *transmission mechanism*: lower transaction costs → trade → specialisation → growth.
 
 ---
 
-## 4.1 What digital transformation is
+## Coverage Map
+
+```
+4.1 Digital Transformation Definition 🎯 2-mark
+├── Three clauses: fundamental rewiring, changes three layers, uses digital technologies
+└── "Not merely digitising" exclusion
+
+4.2 Six Drivers of Digital Transformation 🎯 10-mark
+├── 1. Changing customer expectations → instant/personalised/omnichannel
+├── 2. Data as strategic asset → AI, personalisation, predictive maintenance
+├── 3. Platform/ecosystem economics → network effects, complementor innovation
+├── 4. Cloud elasticity → capex→opex, global reach
+├── 5. AI and automation → cognitive tasks automated
+└── 6. Competitive pressure → digital-native entrants attack profit pools
+
+4.3 Three Layers of Impact
+├── Business model: product sales → platform/subscription/data-driven
+├── Operating model: hierarchical/siloed → cross-functional/agile/data-driven
+└── Customer experience: channel-specific/reactive → omnichannel/proactive/personalised
+
+4.4 SDG Acceleration 🎯 3-5-mark
+├── Three mechanisms: lower transaction costs, expanded inclusion, data-driven targeting
+└── Three Nepal examples
+
+4.5 Tech Revolution → Globalisation → Growth 🎯 5-mark
+├── Transmission mechanism: lower transaction costs → trade → specialisation → growth
+├── Three channels: services trade, GVC coordination, knowledge diffusion
+└── Nepal context: IT exports >USD 500m, Digital Nepal Framework, AI tools access
+
+4.6 Digital Currencies 🎯 2-mark / 🎯 5-mark
+├── Four types: CBDC, cryptocurrency, stablecoin, private/platform money
+└── Three regulatory challenges: sovereignty/stability, consumer protection, AML/CFT
+    └── Regulatory trilemma: cannot have open capital account + monetary sovereignty + unrestricted digital currency
+```
+
+---
+
+## 4.1 What Digital Transformation Is 🎯 2-mark
 
 > **Digital transformation is the fundamental rewiring of how an organisation creates and delivers value, using digital technologies (data, platforms, AI, cloud, connectivity) to change its business model, operating model, and customer experience — not merely digitising existing processes.**
 
@@ -21,11 +58,13 @@ Three clauses carry that definition:
 
 | Clause | What it means | Why it matters for the exam |
 |---|---|---|
-| **fundamental rewiring** | not "add a website" or "scan the forms" — the value logic changes | C20 says "explain its drivers" — the drivers are what forces the rewiring |
-| **changes business model, operating model, customer experience** | three layers: how you make money, how you work, how the customer experiences it | a complete answer to C20 touches all three |
-| **using digital technologies** | data, platforms, AI, cloud, connectivity — the toolkit from Units 1–3 | the drivers are *why* these technologies are adopted now |
+| **Fundamental rewiring** | not "add a website" or "scan the forms" — the value logic changes | C20 says "explain its drivers" — the drivers are what forces the rewiring |
+| **Changes business model, operating model, customer experience** | three layers: how you make money, how you work, how the customer experiences it | a complete answer to C20 touches all three |
+| **Using digital technologies** | data, platforms, AI, cloud, connectivity — the toolkit from Units 1–3 | the drivers are *why* these technologies are adopted now |
 
-### C20 · "What is digital transformation? Explain its drivers." [10]
+---
+
+### C20 · "What is digital transformation? Explain its drivers." [10] 🎯 10-mark
 
 > **Shape: definition → six drivers with mechanism → three layers of impact (business model, operating model, customer experience) → Nepal anchor. ~380 words.**
 
@@ -54,7 +93,7 @@ Three clauses carry that definition:
 
 ---
 
-## 4.2 Accelerating SDGs through digital transformation
+## 4.2 Accelerating SDGs Through Digital Transformation 🎯 3-5-mark
 
 The syllabus links digital transformation to the **Sustainable Development Goals (SDGs)**. The mapping is not a list — it is a *mechanism* answer: digital transformation accelerates SDGs by **lowering transaction costs, expanding inclusion, and enabling data-driven targeting**.
 
@@ -73,7 +112,7 @@ The syllabus links digital transformation to the **Sustainable Development Goals
 
 ---
 
-## 4.3 Technological revolution, globalisation and economic growth — B16 (5 marks ≈ 200 words)
+## 4.3 Technological Revolution, Globalisation and Economic Growth — B16 🎯 5-mark
 
 > **Shape: transmission mechanism (lower transaction costs → trade → specialisation → growth) → three channels → Nepal context. ~200 words.**
 
@@ -87,21 +126,37 @@ The **technological revolution** (digital technologies: internet, cloud, AI, pla
 
 **Nepal context.** Nepal's **IT exports exceed USD 500m/year** (services, not goods) — this is Channel 1 in action. The **Digital Nepal Framework** targets Channel 2 (GVC insertion via special economic zones and ICT parks). Channel 3 is the *opportunity*: every Nepali developer with internet access has the same AI tools as Silicon Valley. The *growth* comes from converting that access into exportable services and products.
 
+---
+
+### B16 · "How does technological revolution affect globalization and economic growth? Explain." [5] 🎯 5-mark
+
+> The technological revolution lowers transaction costs of cross-border activity, expanding trade, enabling finer specialisation, and raising productivity. Three channels: (1) **Trade in services** — digital platforms (Upwork, AWS) let a Kathmandu developer sell to London without visa/shipment; services trade grows faster than goods. (2) **GVC coordination** — cloud ERP, IoT, blockchain let firms slice production across countries; Nepal inserts at the digital slice (coding, BPO, data annotation). (3) **Knowledge diffusion** — open-source, MOOCs, AI model hubs (Hugging Face) make frontier knowledge accessible at near-zero cost; absorption capacity is the constraint. Nepal's IT exports >USD 500m/year is Channel 1; Digital Nepal Framework targets Channel 2; Channel 3 is the opportunity — same AI tools as Silicon Valley.
+
 *(208 words)*
 
 ---
 
-## 4.4 Digital currencies — A8 (2 marks) and B17 (5 marks)
+## 4.4 Digital Currencies — A8 🎯 2-mark and B17 🎯 5-mark
 
 > **A digital currency is a value representation that exists only in digital form, issued and transferred electronically, without a physical counterpart.** The syllabus asks for **concepts and types** (A8) and **regulatory challenges** (B17).
 
-### Four types — the list A8 expects (2 marks ≈ 55 words)
+### Four Types — the list A8 expects (2 marks ≈ 55 words)
 
 > **Four types of digital currency:** (1) **Central Bank Digital Currency (CBDC)** — a digital form of fiat money, issued and backed by the central bank, legal tender (e.g., China's e-CNY, Bahamas' Sand Dollar; Nepal Rastra Bank studying). (2) **Cryptocurrency** — decentralised, blockchain-based, not backed by a sovereign (e.g., Bitcoin, Ethereum, stablecoins like USDT/USDC). (3) **Stablecoin** — a cryptocurrency pegged to a stable asset (fiat, commodity, algorithmic) to minimise volatility (e.g., USDT, USDC, DAI). (4) **Private / platform digital money** — closed-loop or semi-closed value issued by a platform (e.g., M-Pesa float, eSewa/Khalti wallet balance, Amazon Coins, Meta's discontinued Libra/Diem).
 
 *(59 words. Four types, one line each with example.)*
 
-### Regulatory challenges — the three B17 expects (5 marks ≈ 200 words)
+---
+
+### A8 · "Mention the types of digital currency." [2] 🎯 2-mark
+
+> Four types: (1) **Central Bank Digital Currency (CBDC)** — digital fiat issued by the central bank, legal tender (e.g., China's e-CNY, Bahamas' Sand Dollar; NRB studying). (2) **Cryptocurrency** — decentralised, blockchain-based, not sovereign-backed (e.g., Bitcoin, Ethereum). (3) **Stablecoin** — cryptocurrency pegged to a stable asset (fiat, commodity, algorithmic) to minimise volatility (e.g., USDT, USDC, DAI). (4) **Private/platform digital money** — closed-loop value issued by a platform (e.g., M-Pesa float, eSewa/Khalti wallet balance, Amazon Coins).
+
+*(59 words)*
+
+---
+
+### Regulatory Challenges — the three B17 expects (5 marks ≈ 200 words)
 
 > **Shape: name the three challenges → mechanism for each → Nepal context. ~200 words.**
 
@@ -117,41 +172,15 @@ Digital currencies pose **three core regulatory challenges**:
 
 ---
 
-## 4.5 Answer skeletons
-
-### A8 · "Mention the types of digital currency." [2]
-
-> Four types: (1) **Central Bank Digital Currency (CBDC)** — digital fiat issued by the central bank, legal tender (e.g., China's e-CNY, Bahamas' Sand Dollar; NRB studying). (2) **Cryptocurrency** — decentralised, blockchain-based, not sovereign-backed (e.g., Bitcoin, Ethereum). (3) **Stablecoin** — cryptocurrency pegged to a stable asset (fiat, commodity, algorithmic) to minimise volatility (e.g., USDT, USDC, DAI). (4) **Private/platform digital money** — closed-loop value issued by a platform (e.g., M-Pesa float, eSewa/Khalti wallet balance, Amazon Coins).
-
-*(59 words)*
-
-### B16 · "How does technological revolution affect globalization and economic growth? Explain." [5]
-
-> The technological revolution lowers transaction costs of cross-border activity, expanding trade, enabling finer specialisation, and raising productivity. Three channels: (1) **Trade in services** — digital platforms (Upwork, AWS) let a Kathmandu developer sell to London without visa/shipment; services trade grows faster than goods. (2) **GVC coordination** — cloud ERP, IoT, blockchain let firms slice production across countries; Nepal inserts at the digital slice (coding, BPO, data annotation). (3) **Knowledge diffusion** — open-source, MOOCs, AI model hubs (Hugging Face) make frontier knowledge accessible at near-zero cost; absorption capacity is the constraint. Nepal's IT exports >USD 500m/year is Channel 1; Digital Nepal Framework targets Channel 2; Channel 3 is the opportunity — same AI tools as Silicon Valley.
-
-*(208 words)*
-
-### B17 · "Explain the regulatory challenges of digital currencies." [5]
+### B17 · "Explain the regulatory challenges of digital currencies." [5] 🎯 5-mark
 
 > Three core challenges: (1) **Monetary sovereignty and financial stability** — CBDCs/stablecoins disintermediate banks, weaken monetary policy, enable capital flight. Nepal: NRB's cautious CBDC study; crypto trading banned (2021) partly to prevent capital outflow and rupee substitution. (2) **Consumer protection and market integrity** — 24/7 unregulated markets, fraud, rug pulls, exchange failures; retail investors lose savings with no recourse. Nepal: 2021 ban cites "illegal transactions" and "investor risk"; no licensing for crypto exchanges. (3) **AML/CFT** — pseudonymous, cross-border, instant transfers attract illicit flows; FATF Travel Rule requires VASP data sharing; compliance uneven. Nepal: banks directed to block crypto transactions; FIU monitors but capacity limited. The regulatory trilemma: cannot simultaneously have open capital account, monetary sovereignty, and unrestricted digital currency access.
 
 *(212 words)*
 
-### C20 · "What is digital transformation? Explain its drivers." [10]
-
-> Digital transformation is the fundamental rewiring of how an organisation creates and delivers value, using digital technologies (data, platforms, AI, cloud, connectivity) to change its business model, operating model, and customer experience — not merely digitising existing processes.
->
-> **Six drivers.** (1) **Changing customer expectations** — users demand instant, personalised, omnichannel; incumbents match digital-native benchmarks (bank mobile onboarding vs branch). (2) **Data as strategic asset** — behavioural/transactional data feeds AI, personalisation, predictive maintenance, new revenue (telecom CDR for credit scoring). (3) **Platform/ecosystem economics** — network effects, near-zero marginal cost, complementor innovation (local firms on AWS/Android; Agro-tech Concern on payment rails). (4) **Cloud elasticity** — capex→opex, scale in minutes, global reach (Nepali startups deploy globally on AWS/GCP). (5) **AI and automation** — cognitive tasks automated, marginal cost of intelligence falling (BPOs move up value chain). (6) **Competitive pressure** — digital-native entrants attack profit pools (fintech vs banks, Daraz vs retail, Pathao vs taxis).
->
-> **Three layers of impact.** Business model: product sales → platform/subscription/data-driven. Operating model: hierarchical/siloed → cross-functional/agile/data-driven. Customer experience: channel-specific/reactive → omnichannel/proactive/personalised.
->
-> **Nepal anchor.** Digital Nepal Framework, IT Bill, 2% DST, connectIPS, Nagarik, X-Road pilot are policy rails. Private sector (fintechs, e-commerce, ride-hailing, agri-tech) transforms faster than policy. Gap: talent retention (brain drain) and regulatory certainty (sandbox, data protection enforcement).
-
-*(386 words)*
-
 ---
 
-## 4.6 Traps
+## 4.5 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -165,7 +194,7 @@ Digital currencies pose **three core regulatory challenges**:
 
 ---
 
-## 4.7 Self-test (answers collapsed)
+## 4.6 Self-Test (Answers Collapsed)
 
 1. Define digital transformation in three clauses, and say what "not merely digitising" excludes. *(2 marks)*
 2. Name the six drivers of digital transformation with one-line mechanisms. *(5–10 marks)*
@@ -192,9 +221,9 @@ Digital currencies pose **three core regulatory challenges**:
 
 ---
 
-## 4.8 Sixty-second check
+## 4.7 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] Digital transformation definition: three clauses + "not merely digitising"
 - [ ] Six drivers: name + mechanism + Nepal illustration
@@ -208,4 +237,4 @@ If all seven are there, Unit 4's **22 marks** are covered — A8, B16, B17, C20.
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 250, Unit 4, 8 LHs) · TU 2026 board paper (A8, B16, B17, C20) · Overby & Audestad, Introduction to Digital Economics, ch. 8–9 (syllabus reading) · Maheshwari, Digital Transformation, ch. 1–2, 6–7 (syllabus reading) · Digital Nepal Framework (2019) — public document · NRB directives on cryptocurrency (2021) — public circular · FATF Travel Rule guidance (public) · Nepal IT export figure (~USD 500m) — widely reported industry aggregate, stated as pattern. Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper.*
+*Sources: TU FOM syllabus (IT 250, Unit 4, 8 LHs) · TU 2026 board paper (A8, B16, B17, C20) · Overby & Audestad, Introduction to Digital Economics, ch. 8–9 (syllabus reading) · Maheshwari, Digital Transformation, ch. 1–2, 6–7 (syllabus reading) · Digital Nepal Framework (2019) — public document · NRB directives on cryptocurrency (2021) — public circular · FATF Travel Rule guidance (public) · Nepal IT export figure (~USD 500m) — widely reported industry aggregate, stated as pattern. Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper.*

@@ -3,17 +3,69 @@
 | | |
 |---|---|
 | **Lecture hours** | 10 |
-| **Marks carried in model question** | **24** — two 2-markers (A7 funding sources, A8 digital marketing), one 5-marker (B16 CRM), one 10-marker (C18 funding sources — explain any three), and half of C20 (digital marketing and sales techniques — 5 marks) |
+| **Marks in model question** | 24 — two 2-markers (A7 funding sources, A8 digital marketing), one 5-marker (B16 CRM), one 10-marker (C18 funding sources — explain any three), and half of C20 (digital marketing and sales techniques — 5 marks) |
 | **Difficulty** | ★★★☆☆ — funding sources and digital marketing are standard lists; CRM is a framework; the 10-marker C18 needs three sources explained with mechanism + Nepal context |
 | **Exam yield** | 🔴 high — 24 marks from 10 hours, and the C18 10-marker is a major differentiator |
 | **Prerequisite** | Unit 3 (business model → revenue streams, cost structure) · Unit 4 (taxation, legal structure) |
-| **Syllabus bullets** | Funding Sources for Startups · Budgeting Techniques for New Ventures · Cash Flow Management Essentials · Financial Reporting Requirements · Developing a Marketing Strategy · Digital Marketing Techniques · Sales Techniques for Startups · Customer Relationship Management (CRM) · Brand Building Essentials · Case Study: MakeMyTrip's growth |
+| **Syllabus** | Funding Sources for Startups · Budgeting Techniques for New Ventures · Cash Flow Management Essentials · Financial Reporting Requirements · Developing a Marketing Strategy · Digital Marketing Techniques · Sales Techniques for Startups · Customer Relationship Management (CRM) · Brand Building Essentials · Case Study: MakeMyTrip's growth |
 
-> **Read this first:** this unit carries **24 marks** — the third highest. A7 and A8 are 2-markers (lists with one-line each). B16 is a 5-marker on CRM (framework + Nepal example). C18 is a 10-marker — pick **three funding sources** and explain each with mechanism, pros/cons, and Nepal example. C20b (half of C20) is digital marketing and sales techniques — framework + Nepal example. The MakeMyTrip case is a marketing case study reference.
+> **Read this first:** This unit carries **24 marks** — the third highest. A7 and A8 are 2-markers (lists with one-line each). B16 is a 5-marker on CRM (framework + Nepal example). C18 is a 10-marker — pick **three funding sources** and explain each with mechanism, pros/cons, and Nepal example. C20b (half of C20) is digital marketing and sales techniques — framework + Nepal example. The MakeMyTrip case is a marketing case study reference.
 
 ---
 
-## 5.1 Funding sources for startups (A7, C18)
+## Coverage Map
+
+```
+5.1 Funding Sources for Startups (A7, C18) 🎯 2-mark / 🎯 10-mark
+├── 10 sources: bootstrapping, friends/family, angels, VC, grants, bank loans, revenue-based financing, crowdfunding, strategic/corporate, government schemes
+├── Each with mechanism, pros, cons, Nepal example
+├── A7: pick any two, one-line each
+└── C18: pick three, explain with mechanism + pros/cons + Nepal example
+
+5.2 Budgeting Techniques for New Ventures
+├── Zero-based, rolling forecast, top-down+bottom-up, milestone-based, contingency buffer
+└── When to use each
+
+5.3 Cash Flow Management Essentials
+├── 5 principles: cash is king, shorten cash conversion cycle, maintain runway, separate accounts, scenario planning
+└── Nepal ride-share examples: rider prepaid wallet, driver weekly payout
+
+5.4 Financial Reporting Requirements
+├── 6 reports: cash flow (weekly), P&L (monthly), balance sheet (quarterly), burn rate (weekly), unit economics (monthly), tax filings (monthly/quarterly/annual)
+└── Audience per report
+
+5.5 Developing a Marketing Strategy
+├── 7 components: positioning, target segments, value proposition, channels, funnel metrics, budget allocation, brand building
+└── Nepal ride-share decisions
+
+5.6 Digital Marketing Techniques (A8, C20b) 🎯 2-mark / 🎯 5-mark
+├── A8: definition + 7 channels (search, social, email, content, influencer, affiliate, mobile)
+├── C20b: 4 digital channels + 3 sales techniques + Nepal example
+└── Pathao example: referral virality + FB safety content + corporate pitches
+
+5.7 Sales Techniques for Startups
+├── 5 techniques: founder-led, inbound/product-led, channel/partnership, referral/viral, outbound/cold
+└── Nepal ride-share example each
+
+5.8 Customer Relationship Management (CRM) (B16) 🎯 5-mark
+├── Definition + 3 roles: acquisition tracking, retention & engagement, expansion & feedback
+├── Nepal example each: track CAC by channel, dormant rider reactivation, upsell monthly pass
+└── CRM tools for Nepali startups: HubSpot, Zoho, Freshsales, custom (Sheets → Airtable → HubSpot)
+
+5.9 Brand Building Essentials
+├── 6 elements: brand purpose, positioning, visual identity, voice & tone, consistency, community
+└── Nepal ride-share: safety blue, caring/clear/confident voice, rider/driver communities
+
+5.10 Case Study: MakeMyTrip's Growth (reference)
+├── B2B travel agent (2000) → B2C online booking (2005)
+├── SEO dominance for "flight booking India", content marketing (travel guides)
+├── Mobile-first (app 60%+ bookings), loyalty programme (MMT Black), corporate travel (Quest2Travel)
+└── Key lesson: channel mastery (SEO → mobile → corporate) + brand trust (cancellation protection, 24/7 support) = market leadership
+```
+
+---
+
+## 5.1 Funding Sources for Startups (A7, C18) 🎯 2-mark / 🎯 10-mark
 
 > **A7 asks for any two. C18 asks for any three, explained.** Memorise the full menu, pick the three you can explain best.
 
@@ -30,13 +82,17 @@
 | **Strategic / Corporate Investment** | corporate invests for strategic fit | distribution, credibility, resources | strategic alignment required | e.g., telecom investing in fintech |
 | **Government Schemes** | subsidised loans, equity funds | low cost, policy support | bureaucracy, conditions | Youth Self-Employment Fund, SME loans |
 
-### A7 · "List any two funding sources for startups." [2]
+---
+
+### A7 · "List any two funding sources for startups." [2] 🎯 2-mark
 
 > Two funding sources: (1) **Bootstrapping** — founder savings and revenue reinvestment; full control, no dilution, but slow growth. (2) **Angel Investors** — high-net-worth individuals invest own money for equity; provide mentorship and network, but cause dilution and valuation pressure.
 
 *(54 words. Two names + mechanism + one pro/con each.)*
 
-### C18 · "What are the different sources of funding for startups? Explain any three." [10]
+---
+
+### C18 · "What are the different sources of funding for startups? Explain any three." [10] 🎯 10-mark
 
 > **Shape: three sources, each with mechanism + pros/cons + Nepal example. ~400 words.**
 
@@ -52,7 +108,7 @@ Three major funding sources for startups:
 
 ---
 
-## 5.2 Budgeting techniques for new ventures
+## 5.2 Budgeting Techniques for New Ventures
 
 | Technique | Description | When to use |
 |---|---|---|
@@ -64,7 +120,7 @@ Three major funding sources for startups:
 
 ---
 
-## 5.3 Cash flow management essentials
+## 5.3 Cash Flow Management Essentials
 
 | Principle | What it means |
 |---|---|
@@ -76,7 +132,7 @@ Three major funding sources for startups:
 
 ---
 
-## 5.4 Financial reporting requirements
+## 5.4 Financial Reporting Requirements
 
 | Report | Frequency | Audience |
 |---|---|---|
@@ -89,7 +145,7 @@ Three major funding sources for startups:
 
 ---
 
-## 5.5 Developing a marketing strategy
+## 5.5 Developing a Marketing Strategy
 
 | Component | Decision |
 |---|---|
@@ -103,15 +159,17 @@ Three major funding sources for startups:
 
 ---
 
-## 5.6 Digital marketing techniques (A8, C20b)
+## 5.6 Digital Marketing Techniques (A8, C20b) 🎯 2-mark / 🎯 5-mark
 
-### A8 · "What is digital marketing?" [2]
+### A8 · "What is digital marketing?" [2] 🎯 2-mark
 
 > Digital marketing is the promotion of products/services using digital channels — **search (SEO/SEM), social media (FB/Instagram/LinkedIn), email, content, influencer, affiliate, and mobile (SMS/app push)** — to reach, engage, and convert target audiences, with measurable ROI through analytics.
 
 *(52 words. Definition + seven named channels + measurable ROI.)*
 
-### C20b (half) · "Explain the digital marketing and sales techniques." [5]
+---
+
+### C20b (half) · "Explain the digital marketing and sales techniques." [5] 🎯 5-mark
 
 > **Shape: digital marketing (4 channels) + sales (3 techniques) + Nepal example. ~200 words.**
 
@@ -134,7 +192,7 @@ Three major funding sources for startups:
 
 ---
 
-## 5.7 Sales techniques for startups
+## 5.7 Sales Techniques for Startups
 
 | Technique | When it works | Nepal ride-share example |
 |---|---|---|
@@ -146,11 +204,13 @@ Three major funding sources for startups:
 
 ---
 
-## 5.8 Customer Relationship Management (CRM) (B16)
+## 5.8 Customer Relationship Management (CRM) (B16) 🎯 5-mark
 
 > **CRM is the system and process for managing all interactions with current and potential customers — across acquisition, retention, and expansion — to maximise lifetime value.**
 
-### B16 · "What is the role of CRM in startups?" [5]
+---
+
+### B16 · "What is the role of CRM in startups?" [5] 🎯 5-mark
 
 > **Shape: definition → three roles → Nepal example. ~200 words.**
 
@@ -168,7 +228,7 @@ CRM (Customer Relationship Management) is the system and process for managing al
 
 ---
 
-## 5.9 Brand building essentials
+## 5.9 Brand Building Essentials
 
 | Element | What to decide |
 |---|---|
@@ -181,55 +241,13 @@ CRM (Customer Relationship Management) is the system and process for managing al
 
 ---
 
-## 5.10 Case study: MakeMyTrip's growth (reference)
+## 5.10 Case Study: MakeMyTrip's Growth (reference)
 
 > **MakeMyTrip (India)** — started as B2B travel agent (2000), pivoted to B2C online booking (2005), built **SEO dominance** for "flight booking India", **content marketing** (travel guides), **mobile-first** (app 60%+ bookings), **loyalty programme** (MMT Black), **corporate travel** (Quest2Travel). **Key lesson:** channel mastery (SEO → mobile → corporate) + brand trust (cancellation protection, 24/7 support) = market leadership.
 
 ---
 
-## 5.11 Answer skeletons
-
-### A7 · "List any two funding sources for startups." [2]
-
-> (1) **Bootstrapping** — founder savings and revenue reinvestment; full control, no dilution, but slow growth. (2) **Angel Investors** — HNIs invest own money for equity; mentorship + network, but dilution and valuation pressure.
-
-*(54 words)*
-
-### A8 · "What is digital marketing?" [2]
-
-> Digital marketing is the promotion of products/services using digital channels — search (SEO/SEM), social media (FB/Instagram/LinkedIn), email, content, influencer, affiliate, and mobile (SMS/app push) — to reach, engage, and convert target audiences, with measurable ROI through analytics.
-
-*(52 words)*
-
-### B16 · "What is the role of CRM in startups?" [5]
-
-> CRM manages all customer interactions across acquisition, retention, expansion to maximise LTV. **Three roles:** (1) **Acquisition tracking** — lead source, funnel, CAC by channel. *Nepal:* track FB ad vs referral vs corporate; double down on lowest CAC. (2) **Retention & engagement** — frequency, churn risk, NPS, reactivation. *Nepal:* dormant 30 days → push with NPR 50 credit. (3) **Expansion & feedback** — upsell (pass), cross-sell, NPS, feature requests. *Nepal:* 20+ rides/month → monthly pass 15% off; NPS after 10th ride.
-
-*(208 words)*
-
-### C18 · "What are the different sources of funding for startups? Explain any three." [10]
-
-> **1. Bootstrapping** — founder savings + revenue reinvestment. *Mechanism:* zero external capital. *Pros:* full control, no dilution. *Cons:* slow growth, personal risk. *Nepal:* SastoDeal bootstrapped years before investment.
->
-> **2. Angel Investors** — HNIs invest own money for equity (NPR 50L–2Cr, 5–15%). *Mechanism:* smart capital + mentorship. *Pros:* network, flexible terms. *Cons:* dilution, limited follow-on. *Nepal:* One Ladder, Business Oxygen, individual angels.
->
-> **3. Venture Capital** — professional funds (NPR 2Cr–50Cr+, 10–30%). *Mechanism:* board seat, liquidation preference. *Pros:* scale capital, credibility, follow-on. *Cons:* high dilution, control loss, exit pressure. *Nepal:* Dolma, True North — few formal VCs; most rounds are angel syndicates.
-
-*(404 words)*
-
-### C20b · "Explain the digital marketing and sales techniques." [5]
-
-> **Digital marketing:** (1) **Search (SEO/SEM)** — optimise "ride sharing Kathmandu"; Google Ads on high-intent keywords. (2) **Social (Meta/Instagram)** — safety content, driver stories, referral campaigns, targeted ads (professionals 25–40). (3) **Referral / Viral** — "Give 100, Get 100" — low CAC, high trust. (4) **Content/Email/Push** — onboarding, receipts, safety tips, reactivation.
->
-> **Sales:** (1) **B2B Corporate** — pitch "employee commute solution" to HR/Finance; monthly billing, dashboard. (2) **Driver acquisition** — on-ground camps, referral bonus, vehicle financing partnerships. (3) **Partnership/Channel** — hotel/airline/event integration.
->
-> *Nepal example:* Pathao used referral + FB safety content + corporate pitches to dominate Kathmandu.
-
-*(208 words)*
-
----
-
-## 5.12 Traps
+## 5.11 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -243,7 +261,7 @@ CRM (Customer Relationship Management) is the system and process for managing al
 
 ---
 
-## 5.13 Self-test (answers collapsed)
+## 5.12 Self-Test (Answers Collapsed)
 
 1. Name any two funding sources with one-line mechanism each. *(2 marks — A7)*
 2. Explain bootstrapping, angel investors, and VC with pros/cons each. *(10 marks — C18)*
@@ -266,9 +284,9 @@ CRM (Customer Relationship Management) is the system and process for managing al
 
 ---
 
-## 5.14 Sixty-second check
+## 5.13 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] Three funding sources explained: bootstrapping, angels, VC (mechanism + pros/cons + Nepal example)
 - [ ] A7: two sources with one-line each
@@ -281,4 +299,4 @@ If all six are there, Unit 5's **24 marks** are covered — A7, A8, B16, C18, C2
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 248, Unit 5, 10 LHs) · TU/FOM model question 2026 (A7, A8, B16, C18, C20b) · Kuratko, Entrepreneurship ch. 9–10; Kawasaki, Art of the Start 2.0 ch. 6–7; Ries, Lean Startup ch. 8–9 (syllabus readings). Nepal funding landscape (One Ladder, Business Oxygen, Dolma, True North, SastoDeal, Pathao) from public media coverage and startup ecosystem reports. MakeMyTrip case from public company history and case studies.*
+*Sources: TU FOM syllabus (IT 248, Unit 5, 10 LHs) · TU/FOM model question 2026 (A7, A8, B16, C18, C20b) · Kuratko, Entrepreneurship ch. 9–10; Kawasaki, Art of the Start 2.0 ch. 6–7; Ries, Lean Startup ch. 8–9 (syllabus readings). Nepal funding landscape (One Ladder, Business Oxygen, Dolma, True North, SastoDeal, Pathao) from public media coverage and startup ecosystem reports. MakeMyTrip case from public company history and case studies.*

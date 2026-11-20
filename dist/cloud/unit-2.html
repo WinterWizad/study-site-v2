@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 2: Cloud Architecture | Cloud Computing | BIM 8th Semester</title>
-  <meta name="description" content="IT 277 - Unit 2: Cloud Architecture">
+  <title>Unit 2: Cloud Architecture | Cloud Computing | Worst Generation</title>
+  <meta name="description" content="IT 277 - Unit 2: Cloud Architecture — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="cloud">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #7c3aed">IT 277</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -113,12 +120,12 @@
 <td>5</td>
 </tr>
 <tr>
-<td><strong>Marks carried in model question</strong></td>
-<td><strong>11</strong> — three 1-markers (A2 SaaS, A3 private cloud, A5 SOA), one 3-marker (B11 PaaS vs IaaS + public cloud), one 5-marker (C17 cloud service requirements)</td>
+<td><strong>Marks in model question</strong></td>
+<td>11 — three 1-markers (A2 SaaS, A3 private cloud, A5 SOA), one 3-marker (B11 PaaS vs IaaS + public cloud), one 5-marker (C17 cloud service requirements)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
-<td>★★★☆☆ — service/deployment models are standard; SOA is a specific Linthicum reading; C17 requires the six requirements from Unit 1 §1.6 restated with examples</td>
+<td>★★★☆☆ — service/deployment models are standard; SOA is a specific Linthicum reading; C17 requires the six requirements from Unit 1 restated with examples</td>
 </tr>
 <tr>
 <td><strong>Exam yield</strong></td>
@@ -129,11 +136,32 @@
 <td>Unit 1 (NIST five characteristics, service model definitions, deployment model definitions)</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
+<td><strong>Syllabus</strong></td>
 <td>Platform as a Service (PaaS) · Software as a Service (SaaS) · Infrastructure as a Service (IaaS) · Public clouds, Private clouds, Community cloud, Hybrid clouds · Cloud design and implementation using SOA · Security, trust, and privacy</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit is the <strong>vocabulary layer</strong> for the whole paper. The model question tests SaaS (A2), private cloud (A3), SOA (A5) as 1-markers, then PaaS vs IaaS + public cloud (B11) as a 3-marker, and cloud service requirements (C17) as a 5-marker. <strong>C17 is the only 5-marker in this unit</strong> — it must be structured: six requirements, each with a one-line mechanism and a concrete cloud example.</p>
-</blockquote><hr class="custom-hr"><h2 id="2-1-service-models-the-three-layers-recap-depth"><a href="#2-1-service-models-the-three-layers-recap-depth" class="heading-anchor">#</a>2.1 Service models — the three layers (recap + depth)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This unit is the <strong>vocabulary layer</strong> for the whole paper. The model question tests SaaS (A2), private cloud (A3), SOA (A5) as 1-markers, then PaaS vs IaaS + public cloud (B11) as a 3-marker, and cloud service requirements (C17) as a 5-marker. <strong>C17 is the only 5-marker in this unit</strong> — it must be structured: six requirements, each with a one-line mechanism and a concrete cloud example.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">2.1 Service Models (recap + depth)
+├── IaaS/PaaS/SaaS: what consumer manages, NIST characteristic each relies on
+└── A2: SaaS definition
+
+2.2 PaaS vs IaaS — B11 🎯 3-mark
+├── Three-row table: abstraction, control, lock-in
+└── Public cloud definition (part of B11)
+
+2.3 Deployment Models (recap + depth) 🎯 1-mark
+└── A3: private cloud definition
+
+2.4 SOA — Service-Oriented Architecture (A5) 🎯 1-mark
+├── Definition + four tenets (Linthicum)
+└── SOA + Cloud convergence
+
+2.5 Security, Trust, Privacy in Architecture
+├── Multi-tenancy isolation, data residency, trust boundaries, compliance by design
+└── Architectural concerns only (security details in Unit 6)
+
+2.6 Cloud Services Requirements — C17 🎯 5-mark
+├── Six requirements: availability, elasticity, performance, security, manageability, portability
+└── Each with mechanism + concrete cloud product example</code></pre></div><hr class="custom-hr"><h2 id="2-1-service-models-the-three-layers-recap-depth"><a href="#2-1-service-models-the-three-layers-recap-depth" class="heading-anchor">#</a>2.1 Service Models — the Three Layers (Recap + Depth)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Model</th>
 <th>Consumer manages</th>
 <th>Provider manages</th>
@@ -157,9 +185,9 @@
 <td>application, runtime, middleware, OS, virtualisation, physical</td>
 <td>All five</td>
 </tr>
-</tbody></table></div><h3 id="a2-quot-what-do-you-mean-by-saas-quot-1"><a href="#a2-quot-what-do-you-mean-by-saas-quot-1" class="heading-anchor">#</a>A2 · &quot;What do you mean by SaaS?&quot; [1]</h3><blockquote class="custom-blockquote"><p>SaaS (Software as a Service) delivers a complete application over the internet — the consumer uses the software without managing the underlying infrastructure, platform, or runtime. The provider manages everything: application, runtime, middleware, OS, virtualisation, and physical hardware. Example: <strong>Gmail / Microsoft 365 / Salesforce</strong> — you log in and use it; the provider runs the servers, patches the OS, scales the database, and handles availability.</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a2-quot-what-do-you-mean-by-saas-quot-1-1-mark"><a href="#a2-quot-what-do-you-mean-by-saas-quot-1-1-mark" class="heading-anchor">#</a>A2 · &quot;What do you mean by SaaS?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>SaaS (Software as a Service) delivers a complete application over the internet — the consumer uses the software without managing the underlying infrastructure, platform, or runtime. The provider manages everything: application, runtime, middleware, OS, virtualisation, and physical hardware. Example: <strong>Gmail / Microsoft 365 / Salesforce</strong> — you log in and use it; the provider runs the servers, patches the OS, scales the database, and handles availability.</p>
 </blockquote><p><em>(52 words. Definition + what consumer doesn&#39;t manage + one-line example.)</em></p>
-<h3 id="paas-vs-iaas-the-comparison-b11-demands"><a href="#paas-vs-iaas-the-comparison-b11-demands" class="heading-anchor">#</a>PaaS vs IaaS — the comparison B11 demands</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h3 id="paas-vs-iaas-the-comparison-b11-demands"><a href="#paas-vs-iaas-the-comparison-b11-demands" class="heading-anchor">#</a>PaaS vs IaaS — the Comparison B11 Demands</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Dimension</th>
 <th><strong>IaaS</strong></th>
 <th><strong>PaaS</strong></th>
@@ -189,8 +217,8 @@
 <td>lower (standard VM images, portable)</td>
 <td>higher (proprietary APIs, platform-specific services)</td>
 </tr>
-</tbody></table></div><h3 id="public-cloud-the-definition-b11-also-asks-for"><a href="#public-cloud-the-definition-b11-also-asks-for" class="heading-anchor">#</a>Public cloud — the definition B11 also asks for</h3><blockquote class="custom-blockquote"><p>A <strong>public cloud</strong> is a cloud deployment model where the infrastructure is owned and operated by a third-party provider and shared across multiple organisations (multi-tenant). Consumers access resources over the internet, pay per use, and have no capital expenditure. Examples: <strong>AWS, Microsoft Azure, Google Cloud Platform</strong>.</p>
-</blockquote><hr class="custom-hr"><h3 id="b11-quot-compare-paas-with-iaas-what-do-you-mean-by-public-cloud-quot-3"><a href="#b11-quot-compare-paas-with-iaas-what-do-you-mean-by-public-cloud-quot-3" class="heading-anchor">#</a>B11 · &quot;Compare PaaS with IaaS. What do you mean by public cloud?&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Shape: PaaS vs IaaS table (3 rows) + public cloud definition. ~100 words.</strong></p>
+</tbody></table></div><hr class="custom-hr"><h3 id="public-cloud-the-definition-b11-also-asks-for"><a href="#public-cloud-the-definition-b11-also-asks-for" class="heading-anchor">#</a>Public Cloud — the Definition B11 Also Asks For</h3><blockquote class="custom-blockquote"><p>A <strong>public cloud</strong> is a cloud deployment model where the infrastructure is owned and operated by a third-party provider and shared across multiple organisations (multi-tenant). Consumers access resources over the internet, pay per use, and have no capital expenditure. Examples: <strong>AWS, Microsoft Azure, Google Cloud Platform</strong>.</p>
+</blockquote><hr class="custom-hr"><h3 id="b11-quot-compare-paas-with-iaas-what-do-you-mean-by-public-cloud-quot-3-3-mark"><a href="#b11-quot-compare-paas-with-iaas-what-do-you-mean-by-public-cloud-quot-3-3-mark" class="heading-anchor">#</a>B11 · &quot;Compare PaaS with IaaS. What do you mean by public cloud?&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><strong>Shape: PaaS vs IaaS table (3 rows) + public cloud definition. ~100 words.</strong></p>
 </blockquote><p><strong>PaaS vs IaaS:</strong></p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th></th>
@@ -214,7 +242,7 @@
 </tr>
 </tbody></table></div><p><strong>Public cloud:</strong> infrastructure owned/operated by a third-party provider, shared across multiple organisations (multi-tenant), accessed over the internet, pay-per-use, no capex. Examples: AWS, Azure, GCP.</p>
 <p><em>(108 words)</em></p>
-<hr class="custom-hr"><h2 id="2-2-deployment-models-the-four-types-recap-depth"><a href="#2-2-deployment-models-the-four-types-recap-depth" class="heading-anchor">#</a>2.2 Deployment models — the four types (recap + depth)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="2-2-deployment-models-the-four-types-recap-depth-1-mark"><a href="#2-2-deployment-models-the-four-types-recap-depth-1-mark" class="heading-anchor">#</a>2.2 Deployment Models — the Four Types (Recap + Depth) 🎯 1-mark</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Model</th>
 <th>Definition</th>
 <th>Key trait</th>
@@ -244,11 +272,11 @@
 <td>workload portability, burst to public</td>
 <td>Azure Arc, Google Anthos, AWS Outposts</td>
 </tr>
-</tbody></table></div><h3 id="a3-quot-define-private-cloud-quot-1"><a href="#a3-quot-define-private-cloud-quot-1" class="heading-anchor">#</a>A3 · &quot;Define private cloud.&quot; [1]</h3><blockquote class="custom-blockquote"><p>A private cloud is a cloud deployment model where the infrastructure is operated solely for a single organisation — whether on-premises or hosted by a third party. It is single-tenant, giving the organisation greater control over security, compliance, and data locality, at the cost of higher capital expenditure and operational responsibility compared to a public cloud.</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a3-quot-define-private-cloud-quot-1-1-mark"><a href="#a3-quot-define-private-cloud-quot-1-1-mark" class="heading-anchor">#</a>A3 · &quot;Define private cloud.&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>A private cloud is a cloud deployment model where the infrastructure is operated solely for a single organisation — whether on-premises or hosted by a third party. It is single-tenant, giving the organisation greater control over security, compliance, and data locality, at the cost of higher capital expenditure and operational responsibility compared to a public cloud.</p>
 </blockquote><p><em>(53 words. Definition + single-tenant + control vs cost trade-off.)</em></p>
-<hr class="custom-hr"><h2 id="2-3-soa-service-oriented-architecture-a5"><a href="#2-3-soa-service-oriented-architecture-a5" class="heading-anchor">#</a>2.3 SOA — Service-Oriented Architecture (A5)</h2><blockquote class="custom-blockquote"><p><strong>SOA (Service-Oriented Architecture) is an architectural style where business functionality is exposed as a set of loosely coupled, reusable, interoperable services — each with a well-defined interface (contract), communicating via standard protocols, and orchestrated to compose applications.</strong></p>
+<hr class="custom-hr"><h2 id="2-3-soa-service-oriented-architecture-a5-1-mark"><a href="#2-3-soa-service-oriented-architecture-a5-1-mark" class="heading-anchor">#</a>2.3 SOA — Service-Oriented Architecture (A5) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>SOA (Service-Oriented Architecture) is an architectural style where business functionality is exposed as a set of loosely coupled, reusable, interoperable services — each with a well-defined interface (contract), communicating via standard protocols, and orchestrated to compose applications.</strong></p>
 </blockquote><p>— <em>Linthicum, &quot;Cloud Computing and SOA Convergence&quot; (syllabus reading)</em></p>
-<h3 id="the-four-tenets-of-soa-linthicum"><a href="#the-four-tenets-of-soa-linthicum" class="heading-anchor">#</a>The four tenets of SOA (Linthicum)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<h3 id="the-four-tenets-of-soa-linthicum"><a href="#the-four-tenets-of-soa-linthicum" class="heading-anchor">#</a>The Four Tenets of SOA (Linthicum)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Tenet</th>
 <th>What it means</th>
 </tr>
@@ -268,7 +296,7 @@
 <td><strong>Composability</strong></td>
 <td>services are orchestrated (centralised) or choreographed (decentralised) to build composite applications</td>
 </tr>
-</tbody></table></div><h3 id="soa-and-cloud-the-convergence"><a href="#soa-and-cloud-the-convergence" class="heading-anchor">#</a>SOA and Cloud — the convergence</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h3 id="soa-and-cloud-the-convergence"><a href="#soa-and-cloud-the-convergence" class="heading-anchor">#</a>SOA and Cloud — the Convergence</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>SOA provides</th>
 <th>Cloud provides</th>
 </tr>
@@ -285,9 +313,9 @@
 <td>serverless workflows (Step Functions, Logic Apps)</td>
 </tr>
 </tbody></table></div><p><strong>The convergence:</strong> SOA is the <em>architectural discipline</em>; cloud is the <em>execution platform</em>. A cloud-native application <em>is</em> an SOA application deployed on cloud infrastructure — microservices are the modern realisation of SOA services.</p>
-<h3 id="a5-quot-define-soa-quot-1"><a href="#a5-quot-define-soa-quot-1" class="heading-anchor">#</a>A5 · &quot;Define SOA.&quot; [1]</h3><blockquote class="custom-blockquote"><p>SOA (Service-Oriented Architecture) is an architectural style where business functionality is exposed as loosely coupled, reusable, interoperable services with well-defined contracts, communicating via standard protocols (HTTP/REST, SOAP, gRPC). Four tenets: loose coupling, reusability, interoperability, composability. In cloud, SOA is the architectural discipline; cloud provides the elastic execution platform — microservices are the modern realisation.</p>
+<hr class="custom-hr"><h3 id="a5-quot-define-soa-quot-1-1-mark"><a href="#a5-quot-define-soa-quot-1-1-mark" class="heading-anchor">#</a>A5 · &quot;Define SOA.&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>SOA (Service-Oriented Architecture) is an architectural style where business functionality is exposed as loosely coupled, reusable, interoperable services with well-defined contracts, communicating via standard protocols (HTTP/REST, SOAP, gRPC). Four tenets: loose coupling, reusability, interoperability, composability. In cloud, SOA is the architectural discipline; cloud provides the elastic execution platform — microservices are the modern realisation.</p>
 </blockquote><p><em>(54 words. Definition + four tenets + cloud convergence one-liner.)</em></p>
-<hr class="custom-hr"><h2 id="2-4-security-trust-and-privacy-in-architecture"><a href="#2-4-security-trust-and-privacy-in-architecture" class="heading-anchor">#</a>2.4 Security, trust, and privacy in architecture</h2><p>The syllabus lists this as a Unit 2 bullet, but the model question puts security in Unit 6. Here, cover the <strong>architectural</strong> aspects only:</p>
+<hr class="custom-hr"><h2 id="2-4-security-trust-and-privacy-in-architecture"><a href="#2-4-security-trust-and-privacy-in-architecture" class="heading-anchor">#</a>2.4 Security, Trust, and Privacy in Architecture</h2><p>The syllabus lists this as a Unit 2 bullet, but the model question puts security in Unit 6. Here, cover the <strong>architectural</strong> aspects only:</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Architectural concern</th>
 <th>Mechanism</th>
@@ -308,8 +336,8 @@
 <td><strong>Compliance by design</strong></td>
 <td>guardrails (SCPs, Azure Policy), audit logging (CloudTrail, Audit Logs), config rules</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="2-5-cloud-services-requirements-c17-5-marks-200-words"><a href="#2-5-cloud-services-requirements-c17-5-marks-200-words" class="heading-anchor">#</a>2.5 Cloud services requirements — C17 (5 marks ≈ 200 words)</h2><blockquote class="custom-blockquote"><p><strong>Shape: six requirements, each with mechanism + cloud example. ~200 words.</strong></p>
-</blockquote><p>From Unit 1 §1.6, a cloud service must satisfy six requirements. C17 asks you to <strong>explain with example</strong> — so each requirement gets a one-line mechanism and a concrete product feature.</p>
+</tbody></table></div><hr class="custom-hr"><h2 id="2-5-cloud-services-requirements-c17-5-mark"><a href="#2-5-cloud-services-requirements-c17-5-mark" class="heading-anchor">#</a>2.5 Cloud Services Requirements — C17 🎯 5-mark</h2><blockquote class="custom-blockquote"><p><strong>Shape: six requirements, each with mechanism + cloud example. ~200 words.</strong></p>
+</blockquote><p>From Unit 1, a cloud service must satisfy six requirements. C17 asks you to <strong>explain with example</strong> — so each requirement gets a one-line mechanism and a concrete product feature.</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Requirement</th>
 <th>Mechanism</th>
@@ -345,40 +373,9 @@
 <td>standards-based APIs, container support (OCI, CRI), open formats (Parquet, ORC), no vendor lock-in</td>
 <td>Kubernetes (EKS, AKS, GKE), Knative, CloudEvents, S3-compatible APIs</td>
 </tr>
-</tbody></table></div><h3 id="c17-quot-explain-the-cloud-services-requirements-with-example-quot-5"><a href="#c17-quot-explain-the-cloud-services-requirements-with-example-quot-5" class="heading-anchor">#</a>C17 · &quot;Explain the Cloud services requirements with example.&quot; [5]</h3><blockquote class="custom-blockquote"><p>A cloud service must satisfy six requirements. (1) <strong>Availability</strong> — SLA-backed uptime with multi-AZ failover (e.g., AWS RDS Multi-AZ, S3 99.99% SLA). (2) <strong>Elasticity</strong> — automatic scale-out/in via metrics, no manual intervention (e.g., EC2 Auto Scaling, Kubernetes HPA). (3) <strong>Performance</strong> — matched instance types, placement groups, enhanced networking (e.g., AWS C7i compute-optimised, ENA Express). (4) <strong>Security</strong> — encryption at rest/in transit, IAM least-privilege, VPC isolation, compliance certs (e.g., AWS KMS, IAM conditions, Security Hub). (5) <strong>Manageability</strong> — monitoring, logging, IaC, backup/restore (e.g., CloudWatch, CloudTrail, CloudFormation, AWS Backup). (6) <strong>Portability</strong> — standards-based APIs, container support, open formats, S3-compatible APIs (e.g., Kubernetes on EKS/AKS/GKE, Knative, MinIO).</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="c17-quot-explain-the-cloud-services-requirements-with-example-quot-5-5-mark"><a href="#c17-quot-explain-the-cloud-services-requirements-with-example-quot-5-5-mark" class="heading-anchor">#</a>C17 · &quot;Explain the Cloud services requirements with example.&quot; [5] 🎯 5-mark</h3><blockquote class="custom-blockquote"><p>A cloud service must satisfy six requirements. (1) <strong>Availability</strong> — SLA-backed uptime with multi-AZ failover (e.g., AWS RDS Multi-AZ, S3 99.99% SLA). (2) <strong>Elasticity</strong> — automatic scale-out/in via metrics, no manual intervention (e.g., EC2 Auto Scaling, Kubernetes HPA). (3) <strong>Performance</strong> — matched instance types, placement groups, enhanced networking (e.g., AWS C7i compute-optimised, ENA Express). (4) <strong>Security</strong> — encryption at rest/in transit, IAM least-privilege, VPC isolation, compliance certs (e.g., AWS KMS, IAM conditions, Security Hub). (5) <strong>Manageability</strong> — monitoring, logging, IaC, backup/restore (e.g., CloudWatch, CloudTrail, CloudFormation, AWS Backup). (6) <strong>Portability</strong> — standards-based APIs, container support, open formats, S3-compatible APIs (e.g., Kubernetes on EKS/AKS/GKE, Knative, MinIO).</p>
 </blockquote><p><em>(208 words)</em></p>
-<hr class="custom-hr"><h2 id="2-6-answer-skeletons"><a href="#2-6-answer-skeletons" class="heading-anchor">#</a>2.6 Answer skeletons</h2><h3 id="a2-quot-what-do-you-mean-by-saas-quot-1"><a href="#a2-quot-what-do-you-mean-by-saas-quot-1" class="heading-anchor">#</a>A2 · &quot;What do you mean by SaaS?&quot; [1]</h3><blockquote class="custom-blockquote"><p>SaaS delivers a complete application over the internet — the consumer uses it without managing infrastructure, platform, or runtime. Provider manages everything: application, runtime, middleware, OS, virtualisation, physical hardware. Example: Gmail / Microsoft 365 / Salesforce.</p>
-</blockquote><p><em>(52 words)</em></p>
-<h3 id="a3-quot-define-private-cloud-quot-1"><a href="#a3-quot-define-private-cloud-quot-1" class="heading-anchor">#</a>A3 · &quot;Define private cloud.&quot; [1]</h3><blockquote class="custom-blockquote"><p>A private cloud is a deployment model where infrastructure is operated solely for one organisation — on-premises or hosted. Single-tenant, greater control over security/compliance/data locality, at the cost of higher capex and operational responsibility vs public cloud.</p>
-</blockquote><p><em>(53 words)</em></p>
-<h3 id="a5-quot-define-soa-quot-1"><a href="#a5-quot-define-soa-quot-1" class="heading-anchor">#</a>A5 · &quot;Define SOA.&quot; [1]</h3><blockquote class="custom-blockquote"><p>SOA is an architectural style where business functionality is exposed as loosely coupled, reusable, interoperable services with well-defined contracts, communicating via standard protocols (HTTP/REST, SOAP, gRPC). Four tenets: loose coupling, reusability, interoperability, composability. In cloud, SOA is the architectural discipline; cloud provides the elastic execution platform — microservices are the modern realisation.</p>
-</blockquote><p><em>(54 words)</em></p>
-<h3 id="b11-quot-compare-paas-with-iaas-what-do-you-mean-by-public-cloud-quot-3"><a href="#b11-quot-compare-paas-with-iaas-what-do-you-mean-by-public-cloud-quot-3" class="heading-anchor">#</a>B11 · &quot;Compare PaaS with IaaS. What do you mean by public cloud?&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>PaaS vs IaaS:</strong></p>
-<div class="table-wrapper"><table class="data-table"><thead><tr>
-<th></th>
-<th>IaaS</th>
-<th>PaaS</th>
-</tr>
-</thead><tbody><tr>
-<td><strong>Abstraction</strong></td>
-<td>VMs, storage, network — you manage OS, runtime, middleware</td>
-<td>Platform — runtime, frameworks, DB, CI/CD managed; you provide code + data</td>
-</tr>
-<tr>
-<td><strong>Control</strong></td>
-<td>full OS/middleware control; you handle scaling, patching</td>
-<td>platform handles scaling, patching, runtime; you control app logic</td>
-</tr>
-<tr>
-<td><strong>Lock-in</strong></td>
-<td>lower — standard VM images portable</td>
-<td>higher — proprietary APIs, platform services</td>
-</tr>
-</tbody></table></div><p><strong>Public cloud:</strong> infrastructure owned/operated by third-party, shared multi-tenant, pay-per-use, no capex. Examples: AWS, Azure, GCP.</p>
-</blockquote><p><em>(108 words)</em></p>
-<h3 id="c17-quot-explain-the-cloud-services-requirements-with-example-quot-5"><a href="#c17-quot-explain-the-cloud-services-requirements-with-example-quot-5" class="heading-anchor">#</a>C17 · &quot;Explain the Cloud services requirements with example.&quot; [5]</h3><blockquote class="custom-blockquote"><p>Six requirements: (1) <strong>Availability</strong> — SLA-backed uptime, multi-AZ failover (RDS Multi-AZ, S3 99.99%). (2) <strong>Elasticity</strong> — auto-scale via metrics, no manual intervention (EC2 Auto Scaling, K8s HPA). (3) <strong>Performance</strong> — matched instance types, placement groups, enhanced networking (C7i, ENA Express). (4) <strong>Security</strong> — encryption at rest/in transit, IAM least-privilege, VPC isolation, certs (KMS, IAM conditions, Security Hub). (5) <strong>Manageability</strong> — monitoring, logging, IaC, backup/restore (CloudWatch, CloudTrail, CloudFormation, Backup). (6) <strong>Portability</strong> — standards APIs, containers, open formats, S3-compatible (K8s on EKS/AKS/GKE, Knative, MinIO).</p>
-</blockquote><p><em>(208 words)</em></p>
-<hr class="custom-hr"><h2 id="2-7-traps"><a href="#2-7-traps" class="heading-anchor">#</a>2.7 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="2-6-traps"><a href="#2-6-traps" class="heading-anchor">#</a>2.6 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
@@ -418,7 +415,7 @@
 <td>it&#39;s the sixth requirement; often omitted</td>
 <td>standards APIs, containers, open formats, S3-compatible</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="2-8-self-test-answers-collapsed"><a href="#2-8-self-test-answers-collapsed" class="heading-anchor">#</a>2.8 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="2-7-self-test-answers-collapsed"><a href="#2-7-self-test-answers-collapsed" class="heading-anchor">#</a>2.7 Self-Test (Answers Collapsed)</h2><ol>
 <li>What does the consumer manage in IaaS vs PaaS vs SaaS? <em>(1 mark)</em></li><li>Compare PaaS and IaaS in a three-row table. <em>(3 marks — part of B11)</em></li><li>Define public cloud in one sentence. <em>(1 mark — part of B11)</em></li><li>Define private cloud. <em>(1 mark — A3)</em></li><li>What are the four tenets of SOA (Linthicum)? <em>(2 marks)</em></li><li>Define SOA and its convergence with cloud. <em>(1 mark — A5)</em></li><li>Name the six cloud service requirements, and give one cloud example for each. <em>(5 marks — C17)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -427,11 +424,11 @@
 <li><strong>IaaS:</strong> OS, runtime, middleware, data, applications. <strong>PaaS:</strong> data, applications. <strong>SaaS:</strong> user config only.</li><li><strong>Abstraction:</strong> IaaS = VMs/storage/network; PaaS = platform (runtime, frameworks, DB). <strong>Control:</strong> IaaS = full OS control; PaaS = platform handles scaling/patching. <strong>Lock-in:</strong> IaaS = lower (portable VMs); PaaS = higher (proprietary APIs).</li><li>Public cloud = third-party owned, multi-tenant, pay-per-use, no capex. Examples: AWS, Azure, GCP.</li><li>Private cloud = infrastructure operated solely for one organisation (on-premises or hosted), single-tenant, greater control, higher cost.</li><li>Loose coupling, reusability, interoperability, composability.</li><li>SOA = loosely coupled, reusable, interoperable services with contracts, standard protocols. Four tenets above. Convergence: SOA is architectural discipline; cloud is elastic execution platform; microservices are modern realisation.</li><li>(1) Availability — RDS Multi-AZ. (2) Elasticity — EC2 Auto Scaling. (3) Performance — C7i instances. (4) Security — KMS + IAM. (5) Manageability — CloudWatch + CloudFormation. (6) Portability — K8s on EKS/AKS/GKE.</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="2-9-sixty-second-check"><a href="#2-9-sixty-second-check" class="heading-anchor">#</a>2.9 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="2-8-sixty-second-check"><a href="#2-8-sixty-second-check" class="heading-anchor">#</a>2.8 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> IaaS/PaaS/SaaS: what consumer manages in each</li><li><input disabled="" type="checkbox"> PaaS vs IaaS: three-row table (abstraction, control, lock-in)</li><li><input disabled="" type="checkbox"> Public cloud definition + examples</li><li><input disabled="" type="checkbox"> Private cloud definition (single-tenant, on-prem or hosted)</li><li><input disabled="" type="checkbox"> SOA: four tenets + cloud convergence one-liner</li><li><input disabled="" type="checkbox"> Six cloud service requirements + one product example each</li></ul>
 <p>If all six are there, Unit 2&#39;s <strong>11 marks</strong> are covered — A2, A3, A5, B11, C17.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 2, 5 LHs) · TU/FOM model question 2026 (A2, A3, A5, B11, C17) · Saurabh, Cloud Computing, ch. 2–3 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 2–4 (syllabus reading) · Linthicum, Cloud Computing and SOA Convergence (syllabus reading). AWS/Azure/Google service names are standard category examples, not current feature claims.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 277, Unit 2, 5 LHs) · TU/FOM model question 2026 (A2, A3, A5, B11, C17) · Saurabh, Cloud Computing, ch. 2–3 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 2–4 (syllabus reading) · Linthicum, Cloud Computing and SOA Convergence (syllabus reading). AWS/Azure/Google service names are standard category examples, not current feature claims.</em></p>
 
         </div>
       </article>

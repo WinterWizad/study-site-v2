@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 4: Virtualization | Cloud Computing | BIM 8th Semester</title>
-  <meta name="description" content="IT 277 - Unit 4: Virtualization">
+  <title>Unit 4: Virtualization | Cloud Computing | Worst Generation</title>
+  <meta name="description" content="IT 277 - Unit 4: Virtualization — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="cloud">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #7c3aed">IT 277</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -113,8 +120,8 @@
 <td>8</td>
 </tr>
 <tr>
-<td><strong>Marks carried in model question</strong></td>
-<td><strong>17</strong> — one 1-marker (A6 virtualization definition), two 3-markers (B13 hypervisor types, B14 virtualization types), one 10-marker (D21 virtualization role + hypervisor types)</td>
+<td><strong>Marks in model question</strong></td>
+<td>17 — one 1-marker (A6 virtualization definition), two 3-markers (B13 hypervisor types, B14 virtualization types), one 10-marker (D21 virtualization role + hypervisor types)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
@@ -129,14 +136,70 @@
 <td>Unit 1 (NIST five characteristics — virtualization enables resource pooling, rapid elasticity, measured service)</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
+<td><strong>Syllabus</strong></td>
 <td>Introduction to Virtualization · Different types of Virtualization · Implementation Levels of Virtualization Structures · Benefits of virtualization · Server virtualization · Virtualization software · Types of Hypervisor · Load balancing · Infrastructure requirement for virtualization</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit is <strong>the diagram engine</strong>. You must be able to draw <strong>two diagrams cold in under 90 seconds each</strong>: (1) <strong>Type 1 vs Type 2 hypervisor architecture</strong> — labelled with VMM, host OS, guest OS, hardware, and real products (ESXi, Hyper-V, KVM, VirtualBox, VMware Workstation). (2) <strong>Virtualization types</strong> — server, storage, network, desktop, application. D21 is the 10-mark rewrite of B13/B14 — same content, triple depth: add <strong>role in cloud economics</strong> (multi-tenancy, elasticity, isolation), <strong>both hypervisor diagrams</strong>, and <strong>closing judgement</strong>.</p>
-</blockquote><hr class="custom-hr"><h2 id="4-1-what-virtualization-is-a6"><a href="#4-1-what-virtualization-is-a6" class="heading-anchor">#</a>4.1 What virtualization is (A6)</h2><blockquote class="custom-blockquote"><p><strong>Virtualization is the abstraction of physical computing resources (CPU, memory, storage, network) into logical/virtual resources, enabling multiple isolated environments to run on a single physical host.</strong></p>
-</blockquote><h3 id="a6-quot-what-is-virtualization-quot-1"><a href="#a6-quot-what-is-virtualization-quot-1" class="heading-anchor">#</a>A6 · &quot;What is Virtualization?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Virtualization is the abstraction of physical computing resources (CPU, memory, storage, network) into logical/virtual resources, enabling multiple isolated environments (VMs) to run on a single physical host. It is the foundation of cloud computing — enabling resource pooling, rapid elasticity, and multi-tenancy.</p>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This unit is <strong>the diagram engine</strong>. You must be able to draw <strong>two diagrams cold in under 90 seconds each</strong>: (1) <strong>Type 1 vs Type 2 hypervisor architecture</strong> — labelled with VMM, host OS, guest OS, hardware, and real products (ESXi, Hyper-V, KVM, VirtualBox, VMware Workstation). (2) <strong>Virtualization types</strong> — server, storage, network, desktop, application. D21 is the 10-mark rewrite of B13/B14 — same content, triple depth: add <strong>role in cloud economics</strong> (multi-tenancy, elasticity, isolation), <strong>both hypervisor diagrams</strong>, and <strong>closing judgement</strong>.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">4.1 What Virtualization Is (A6) 🎯 1-mark
+├── Definition: abstraction of physical resources into logical resources
+└── Cloud link: enables resource pooling, rapid elasticity, multi-tenancy
+
+4.2 Types of Virtualization (B14) 🎯 3-mark
+├── Five types: server, storage, network, desktop (VDI), application
+└── One example each
+
+4.3 Hypervisors — Type 1 vs Type 2 (B13, D21) 🎯 3-mark / 🎯 10-mark
+├── Type 1 (Bare Metal): runs on hardware, no host OS, near-native performance
+│   └── Products: ESXi, Hyper-V, KVM, Xen
+├── Type 2 (Hosted): runs on host OS, higher overhead
+│   └── Products: Workstation, VirtualBox, Parallels, QEMU
+├── Diagram 1: Hardware → VMM → VMs (Type 1)
+├── Diagram 2: Hardware → Host OS → VMM → VMs (Type 2)
+└── Labels mandatory: Hardware, VMM, Host OS, Guest OS, Products
+
+4.4 Implementation Levels of Virtualization Structures
+├── ISA, HAL, OS, Application, Library/User-level
+└── One example each
+
+4.5 Benefits of Virtualization — Cloud Economics Link (D21)
+├── Multi-tenancy → resource pooling (NIST)
+├── Isolation → trust, compliance
+├── Elasticity → rapid elasticity (NIST)
+├── Hardware independence → live migration, DR, measured service
+├── Consolidation → capex reduction, energy efficiency
+└── Snapshot/backup → DR, testing, patch rollback
+
+4.6 Server Virtualization Key Concepts
+├── vCPU, vRAM, Virtual NIC, Virtual disk, Live migration, HA/DRS
+└── Thin/thick provisioning, snapshots, cloning
+
+4.7 Virtualization Software Landscape
+├── Enterprise bare-metal: vSphere, Hyper-V, RHV, Citrix, Oracle VM
+├── Cloud provider: AWS Nitro, Google Cloud (KVM), Azure (Hyper-V)
+├── Open source: KVM+libvirt, oVirt, Proxmox, OpenStack, Harvester
+└── Desktop/Dev: Workstation, VirtualBox, Parallels, UTM, Lima
+
+4.8 Load Balancing in Virtualized Environments
+├── VM-level: DRS, Dynamic Optimization
+├── Application-level: ALB, NLB, HAProxy, NGINX
+├── Network-level: vSwitch, OVS, NSX
+└── Storage-level: Storage DRS, IOPS balancing
+
+4.9 Infrastructure Requirements
+├── CPU: VT-x/AMD-V, EPT/RVI, multiple cores
+├── Memory: sufficient RAM, ECC, NUMA awareness
+├── Storage: shared storage for live migration, IOPS, thin provisioning
+├── Network: 10GbE+, VLAN/VXLAN, dedicated management network
+└── Power/Cooling: density increases power/heat, redundant PSU, UPS
+
+4.10 D21 — Virtualization Role + Hypervisor Types [10] 🎯 10-mark
+├── Definition + cloud economics role (4 pillars)
+├── Type 1 diagram + products
+├── Type 2 diagram + products
+└── Judgement table: scenario → choose Type 1/2 → why</code></pre></div><hr class="custom-hr"><h2 id="4-1-what-virtualization-is-a6-1-mark"><a href="#4-1-what-virtualization-is-a6-1-mark" class="heading-anchor">#</a>4.1 What Virtualization Is (A6) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>Virtualization is the abstraction of physical computing resources (CPU, memory, storage, network) into logical/virtual resources, enabling multiple isolated environments to run on a single physical host.</strong></p>
+</blockquote><hr class="custom-hr"><h3 id="a6-quot-what-is-virtualization-quot-1-1-mark"><a href="#a6-quot-what-is-virtualization-quot-1-1-mark" class="heading-anchor">#</a>A6 · &quot;What is Virtualization?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>Virtualization is the abstraction of physical computing resources (CPU, memory, storage, network) into logical/virtual resources, enabling multiple isolated environments (VMs) to run on a single physical host. It is the foundation of cloud computing — enabling resource pooling, rapid elasticity, and multi-tenancy.</p>
 </blockquote><p><em>(50 words. Definition + what it enables + cloud link.)</em></p>
-<hr class="custom-hr"><h2 id="4-2-types-of-virtualization-b14"><a href="#4-2-types-of-virtualization-b14" class="heading-anchor">#</a>4.2 Types of virtualization (B14)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="4-2-types-of-virtualization-b14-3-mark"><a href="#4-2-types-of-virtualization-b14-3-mark" class="heading-anchor">#</a>4.2 Types of Virtualization (B14) 🎯 3-mark</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Type</th>
 <th>What is virtualised</th>
 <th>Key benefit</th>
@@ -172,7 +235,7 @@
 <td>conflict-free, portable, streamed</td>
 <td>Docker, App-V, ThinApp, Flatpak</td>
 </tr>
-</tbody></table></div><h3 id="b14-quot-discuss-types-of-virtualization-with-example-quot-3"><a href="#b14-quot-discuss-types-of-virtualization-with-example-quot-3" class="heading-anchor">#</a>B14 · &quot;Discuss types of virtualization with example.&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Shape: table of five types + one example each. ~100 words.</strong></p>
+</tbody></table></div><hr class="custom-hr"><h3 id="b14-quot-discuss-types-of-virtualization-with-example-quot-3-3-mark"><a href="#b14-quot-discuss-types-of-virtualization-with-example-quot-3-3-mark" class="heading-anchor">#</a>B14 · &quot;Discuss types of virtualization with example.&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><strong>Shape: table of five types + one example each. ~100 words.</strong></p>
 </blockquote><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Type</th>
 <th>What is virtualised</th>
@@ -204,7 +267,7 @@
 <td>Docker, App-V, ThinApp, Flatpak</td>
 </tr>
 </tbody></table></div><p><em>(98 words. Five types, one line each, one example each.)</em></p>
-<hr class="custom-hr"><h2 id="4-3-hypervisors-type-1-vs-type-2-b13-d21"><a href="#4-3-hypervisors-type-1-vs-type-2-b13-d21" class="heading-anchor">#</a>4.3 Hypervisors — Type 1 vs Type 2 (B13, D21)</h2><blockquote class="custom-blockquote"><p><strong>A hypervisor (Virtual Machine Monitor / VMM) is the software layer that creates and runs VMs, managing hardware resource allocation and isolation between guests.</strong></p>
+<hr class="custom-hr"><h2 id="4-3-hypervisors-type-1-vs-type-2-b13-d21-3-mark-10-mark"><a href="#4-3-hypervisors-type-1-vs-type-2-b13-d21-3-mark-10-mark" class="heading-anchor">#</a>4.3 Hypervisors — Type 1 vs Type 2 (B13, D21) 🎯 3-mark / 🎯 10-mark</h2><blockquote class="custom-blockquote"><p><strong>A hypervisor (Virtual Machine Monitor / VMM) is the software layer that creates and runs VMs, managing hardware resource allocation and isolation between guests.</strong></p>
 </blockquote><h3 id="type-1-bare-metal"><a href="#type-1-bare-metal" class="heading-anchor">#</a>Type 1 — Bare Metal</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Aspect</th>
 <th>Detail</th>
@@ -230,8 +293,8 @@
 <td>production, enterprise, cloud providers</td>
 </tr>
 </tbody></table></div><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> HARDWARE
-    │
-    ▼
+     │
+     ▼
 ┌───────────────┐
 │   TYPE 1 VMM  │  ← ESXi, Hyper-V, KVM, Xen
 │  (ESXi kernel)│
@@ -242,7 +305,7 @@
 ┌──────┐   ┌──────┐
 │ VM 1 │   │ VM 2 │  Guest OSs
 │ Linux│   │Windows│
-└──────┘   └──────┘</code></pre></div><h3 id="type-2-hosted"><a href="#type-2-hosted" class="heading-anchor">#</a>Type 2 — Hosted</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+└──────┘   └──────┘</code></pre></div><hr class="custom-hr"><h3 id="type-2-hosted"><a href="#type-2-hosted" class="heading-anchor">#</a>Type 2 — Hosted</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Aspect</th>
 <th>Detail</th>
 </tr>
@@ -267,8 +330,8 @@
 <td>development, testing, desktop, education</td>
 </tr>
 </tbody></table></div><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> HARDWARE
-    │
-    ▼
+     │
+     ▼
 ┌───────────────┐
 │   HOST OS     │  ← Windows, macOS, Linux
 │  (Windows 11) │
@@ -285,7 +348,7 @@
 ┌──────┐   ┌──────┐
 │ VM 1 │   │ VM 2 │
 │ Linux│   │Windows│
-└──────┘   └──────┘</code></pre></div><h3 id="b13-quot-explain-the-different-types-of-hypervisor-quot-3"><a href="#b13-quot-explain-the-different-types-of-hypervisor-quot-3" class="heading-anchor">#</a>B13 · &quot;Explain the different types of Hypervisor.&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Shape: Type 1 vs Type 2 comparison + diagram description + products. ~100 words.</strong></p>
+└──────┘   └──────┘</code></pre></div><hr class="custom-hr"><h3 id="b13-quot-explain-the-different-types-of-hypervisor-quot-3-3-mark"><a href="#b13-quot-explain-the-different-types-of-hypervisor-quot-3-3-mark" class="heading-anchor">#</a>B13 · &quot;Explain the different types of Hypervisor.&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><strong>Shape: Type 1 vs Type 2 comparison + diagram description + products. ~100 words.</strong></p>
 </blockquote><p><strong>Type 1 (Bare Metal):</strong> runs directly on hardware; no host OS. VMM = minimal kernel + drivers + VM management. <strong>Near-native performance.</strong> Products: <strong>VMware ESXi</strong>, <strong>Hyper-V</strong>, <strong>KVM</strong>, <strong>Xen</strong>. Use case: production, cloud providers.</p>
 <p><strong>Type 2 (Hosted):</strong> runs as application on host OS. Host OS schedules hypervisor process → higher overhead (double context switch). Products: <strong>VMware Workstation</strong>, <strong>VirtualBox</strong>, <strong>Parallels</strong>, <strong>QEMU</strong>. Use case: dev/test, desktop.</p>
 <p><strong>Diagram:</strong> Type 1: Hardware → VMM (ESXi) → VMs. Type 2: Hardware → Host OS → VMM (Workstation) → VMs.</p>
@@ -320,7 +383,7 @@
 <td>API interception → sandboxing</td>
 <td>gVisor, seccomp, Firecracker</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-5-benefits-of-virtualization-cloud-economics-link-for-d21"><a href="#4-5-benefits-of-virtualization-cloud-economics-link-for-d21" class="heading-anchor">#</a>4.5 Benefits of virtualization (cloud economics link for D21)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-5-benefits-of-virtualization-cloud-economics-link-for-d21"><a href="#4-5-benefits-of-virtualization-cloud-economics-link-for-d21" class="heading-anchor">#</a>4.5 Benefits of Virtualization — Cloud Economics Link for D21</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Benefit</th>
 <th>Cloud economics role</th>
 </tr>
@@ -352,7 +415,7 @@
 <td><strong>Legacy support</strong></td>
 <td>old OS/apps on modern hardware → extend life</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-6-server-virtualization-key-concepts"><a href="#4-6-server-virtualization-key-concepts" class="heading-anchor">#</a>4.6 Server virtualization — key concepts</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-6-server-virtualization-key-concepts"><a href="#4-6-server-virtualization-key-concepts" class="heading-anchor">#</a>4.6 Server Virtualization — Key Concepts</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Concept</th>
 <th>What it is</th>
 </tr>
@@ -380,7 +443,7 @@
 <td><strong>HA / DRS</strong></td>
 <td>High Availability (restart on failure), Distributed Resource Scheduler (load balance)</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-7-virtualization-software-the-landscape"><a href="#4-7-virtualization-software-the-landscape" class="heading-anchor">#</a>4.7 Virtualization software — the landscape</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-7-virtualization-software-the-landscape"><a href="#4-7-virtualization-software-the-landscape" class="heading-anchor">#</a>4.7 Virtualization Software — the Landscape</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Category</th>
 <th>Products</th>
 </tr>
@@ -400,7 +463,7 @@
 <td><strong>Desktop / Dev</strong></td>
 <td>VMware Workstation/Fusion, VirtualBox, Parallels, UTM (macOS), Lima</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-8-load-balancing-in-virtualized-environments"><a href="#4-8-load-balancing-in-virtualized-environments" class="heading-anchor">#</a>4.8 Load balancing in virtualized environments</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-8-load-balancing-in-virtualized-environments"><a href="#4-8-load-balancing-in-virtualized-environments" class="heading-anchor">#</a>4.8 Load Balancing in Virtualized Environments</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Layer</th>
 <th>Mechanism</th>
 </tr>
@@ -420,7 +483,7 @@
 <td><strong>Storage-level</strong></td>
 <td>Storage DRS / IOPS balancing — move vDisks across datastores</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-9-infrastructure-requirements-for-virtualization"><a href="#4-9-infrastructure-requirements-for-virtualization" class="heading-anchor">#</a>4.9 Infrastructure requirements for virtualization</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-9-infrastructure-requirements-for-virtualization"><a href="#4-9-infrastructure-requirements-for-virtualization" class="heading-anchor">#</a>4.9 Infrastructure Requirements for Virtualization</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Requirement</th>
 <th>Detail</th>
 </tr>
@@ -444,15 +507,15 @@
 <td><strong>Power/Cooling</strong></td>
 <td>density increases power/heat per rack; redundant PSU, UPS</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-10-d21-quot-explain-virtualization-and-its-role-in-cloud-computing-and-also-explain-the-hypervisor-types-and-examples-quot-10"><a href="#4-10-d21-quot-explain-virtualization-and-its-role-in-cloud-computing-and-also-explain-the-hypervisor-types-and-examples-quot-10" class="heading-anchor">#</a>4.10 D21 · &quot;Explain virtualization and its role in cloud computing, and also explain the hypervisor types and examples.&quot; [10]</h2><blockquote class="custom-blockquote"><p><strong>Shape: definition + cloud economics role (4 benefits) + Type 1 diagram + Type 2 diagram + products + judgement. ~350 words.</strong></p>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-10-d21-quot-explain-virtualization-and-its-role-in-cloud-computing-and-also-explain-the-hypervisor-types-and-examples-quot-10-10-mark"><a href="#4-10-d21-quot-explain-virtualization-and-its-role-in-cloud-computing-and-also-explain-the-hypervisor-types-and-examples-quot-10-10-mark" class="heading-anchor">#</a>4.10 D21 · &quot;Explain virtualization and its role in cloud computing, and also explain the hypervisor types and examples.&quot; [10] 🎯 10-mark</h2><blockquote class="custom-blockquote"><p><strong>Shape: definition + cloud economics role (4 benefits) + Type 1 diagram + Type 2 diagram + products + judgement. ~350 words.</strong></p>
 </blockquote><p><strong>Virtualization</strong> is the abstraction of physical computing resources (CPU, memory, storage, network) into logical/virtual resources, enabling multiple isolated environments (VMs) to run on a single physical host.</p>
 <p><strong>Role in cloud computing — four pillars:</strong></p>
 <ol>
 <li><strong>Multi-tenancy</strong> — virtualization creates the isolation boundary that allows multiple customers to share physical hardware safely. This is the <em>enabler</em> of NIST&#39;s <strong>resource pooling</strong>.</li><li><strong>Elasticity</strong> — VMs can be provisioned, scaled, and terminated in seconds. This is the <em>enabler</em> of NIST&#39;s <strong>rapid elasticity</strong> and <strong>on-demand self-service</strong>.</li><li><strong>Isolation &amp; security</strong> — hardware-enforced boundaries (EPT, IOMMU) between VMs provide the trust foundation for multi-tenant clouds.</li><li><strong>Hardware independence</strong> — VMs encapsulate OS + app + state into portable files (.vmdk, .vhdx). This enables live migration, disaster recovery, cloud burst, and <strong>measured service</strong> (metering per VM).</li></ol>
 <hr class="custom-hr"><p><strong>Hypervisor types — with diagrams and products:</strong></p>
 <h3 id="type-1-bare-metal-production-cloud-providers"><a href="#type-1-bare-metal-production-cloud-providers" class="heading-anchor">#</a>Type 1 (Bare Metal) — production, cloud providers</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> HARDWARE
-    │
-    ▼
+     │
+     ▼
 ┌───────────────┐
 │   TYPE 1 VMM  │  ← ESXi, Hyper-V, KVM, Xen
 └───────┬───────┘
@@ -462,9 +525,9 @@
 ┌──────┐   ┌──────┐
 │ VM 1 │   │ VM 2 │  Guest OSs
 └──────┘   └──────┘</code></pre></div><p><strong>Products:</strong> <strong>VMware ESXi</strong> (enterprise standard), <strong>Microsoft Hyper-V</strong> (Windows Server role), <strong>KVM</strong> (Linux kernel module, used by AWS, Google, OpenStack), <strong>Xen</strong> (Citrix Hypervisor), <strong>Oracle VM</strong>.</p>
-<h3 id="type-2-hosted-development-testing-desktop"><a href="#type-2-hosted-development-testing-desktop" class="heading-anchor">#</a>Type 2 (Hosted) — development, testing, desktop</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> HARDWARE
-    │
-    ▼
+<hr class="custom-hr"><h3 id="type-2-hosted-development-testing-desktop"><a href="#type-2-hosted-development-testing-desktop" class="heading-anchor">#</a>Type 2 (Hosted) — development, testing, desktop</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> HARDWARE
+     │
+     ▼
 ┌───────────────┐
 │   HOST OS     │  ← Windows, macOS, Linux
 └───────┬───────┘
@@ -502,52 +565,7 @@
 </tr>
 </tbody></table></div><p><strong>Closing line:</strong> Virtualization is not optional for cloud — it is the <em>substrate</em> that turns physical hardware into the pooled, elastic, metered, multi-tenant resource that the NIST definition describes. Type 1 is the production standard; Type 2 is the developer tool.</p>
 <p><em>(386 words)</em></p>
-<hr class="custom-hr"><h2 id="4-11-answer-skeletons"><a href="#4-11-answer-skeletons" class="heading-anchor">#</a>4.11 Answer skeletons</h2><h3 id="a6-quot-what-is-virtualization-quot-1"><a href="#a6-quot-what-is-virtualization-quot-1" class="heading-anchor">#</a>A6 · &quot;What is Virtualization?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Virtualization is the abstraction of physical computing resources (CPU, memory, storage, network) into logical/virtual resources, enabling multiple isolated environments (VMs) to run on a single physical host. It is the foundation of cloud computing — enabling resource pooling, rapid elasticity, and multi-tenancy.</p>
-</blockquote><p><em>(50 words)</em></p>
-<h3 id="b13-quot-explain-the-different-types-of-hypervisor-quot-3"><a href="#b13-quot-explain-the-different-types-of-hypervisor-quot-3" class="heading-anchor">#</a>B13 · &quot;Explain the different types of Hypervisor.&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Type 1 (Bare Metal):</strong> runs directly on hardware; no host OS. VMM = minimal kernel + drivers + VM management. Near-native performance. Products: <strong>VMware ESXi</strong>, <strong>Hyper-V</strong>, <strong>KVM</strong>, <strong>Xen</strong>. Use case: production, cloud providers.</p>
-<p><strong>Type 2 (Hosted):</strong> runs as application on host OS. Host OS schedules hypervisor process → higher overhead (double context switch). Products: <strong>VMware Workstation</strong>, <strong>VirtualBox</strong>, <strong>Parallels</strong>, <strong>QEMU</strong>. Use case: dev/test, desktop.</p>
-<p><strong>Diagram:</strong> Type 1: Hardware → VMM (ESXi) → VMs. Type 2: Hardware → Host OS → VMM (Workstation) → VMs.</p>
-</blockquote><p><em>(104 words)</em></p>
-<h3 id="b14-quot-discuss-types-of-virtualization-with-example-quot-3"><a href="#b14-quot-discuss-types-of-virtualization-with-example-quot-3" class="heading-anchor">#</a>B14 · &quot;Discuss types of virtualization with example.&quot; [3]</h3><blockquote class="custom-blockquote"><div class="table-wrapper"><table class="data-table"><thead><tr>
-<th>Type</th>
-<th>What is virtualised</th>
-<th>Example</th>
-</tr>
-</thead><tbody><tr>
-<td><strong>Server</strong></td>
-<td>physical server → multiple VMs</td>
-<td>VMware ESXi, Hyper-V, KVM</td>
-</tr>
-<tr>
-<td><strong>Storage</strong></td>
-<td>physical disks → logical pools</td>
-<td>vSAN, NetApp ONTAP, Ceph, EBS</td>
-</tr>
-<tr>
-<td><strong>Network</strong></td>
-<td>physical net → virtual nets (VXLAN, SDN)</td>
-<td>NSX, ACI, AWS VPC, Azure VNet</td>
-</tr>
-<tr>
-<td><strong>Desktop</strong> (VDI)</td>
-<td>desktop OS hosted in datacenter</td>
-<td>Horizon, Citrix, Windows 365</td>
-</tr>
-<tr>
-<td><strong>Application</strong></td>
-<td>app + deps → isolated package</td>
-<td>Docker, App-V, ThinApp, Flatpak</td>
-</tr>
-</tbody></table></div></blockquote><p><em>(98 words)</em></p>
-<h3 id="d21-quot-explain-virtualization-and-its-role-in-cloud-computing-and-also-explain-the-hypervisor-types-and-examples-quot-10"><a href="#d21-quot-explain-virtualization-and-its-role-in-cloud-computing-and-also-explain-the-hypervisor-types-and-examples-quot-10" class="heading-anchor">#</a>D21 · &quot;Explain virtualization and its role in cloud computing, and also explain the hypervisor types and examples.&quot; [10]</h3><blockquote class="custom-blockquote"><p>Virtualization = abstraction of physical resources into logical resources, enabling multiple isolated VMs on one host.</p>
-<p><strong>Role in cloud (four pillars):</strong> (1) <strong>Multi-tenancy</strong> — isolation boundary enables resource pooling (NIST). (2) <strong>Elasticity</strong> — VMs provisioned in seconds → rapid elasticity (NIST). (3) <strong>Isolation &amp; security</strong> — hardware boundaries (EPT, IOMMU) → trust for multi-tenancy. (4) <strong>Hardware independence</strong> — VMs as portable files → live migration, DR, measured service.</p>
-<p><strong>Hypervisor types:</strong></p>
-<p><strong>Type 1 (Bare Metal):</strong> Hardware → VMM (ESXi/Hyper-V/KVM) → VMs. Products: ESXi, Hyper-V, KVM, Xen. Production, cloud providers.</p>
-<p><strong>Type 2 (Hosted):</strong> Hardware → Host OS → VMM (Workstation/VirtualBox) → VMs. Products: Workstation, VirtualBox, Parallels, QEMU. Dev/test, desktop.</p>
-<p><strong>Judgement:</strong> Type 1 for production (performance, security). Type 2 for developer laptop, CI/CD, education. Nested virtualization needs Type 1 on Type 1.</p>
-<p>Virtualization is the substrate that turns physical hardware into the pooled, elastic, metered, multi-tenant resource the NIST definition describes.</p>
-</blockquote><p><em>(386 words)</em></p>
-<hr class="custom-hr"><h2 id="4-12-traps"><a href="#4-12-traps" class="heading-anchor">#</a>4.12 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="4-11-traps"><a href="#4-11-traps" class="heading-anchor">#</a>4.11 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
@@ -587,7 +605,7 @@
 <td>unlabelled diagram = no marks</td>
 <td>label: Hardware, VMM, Host OS, Guest OS, Products</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="4-13-self-test-answers-collapsed"><a href="#4-13-self-test-answers-collapsed" class="heading-anchor">#</a>4.13 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="4-12-self-test-answers-collapsed"><a href="#4-12-self-test-answers-collapsed" class="heading-anchor">#</a>4.12 Self-Test (Answers Collapsed)</h2><ol>
 <li>Define virtualization in one sentence, and name the three NIST characteristics it enables. <em>(1 mark — A6)</em></li><li>Name the five types of virtualization with one example each. <em>(3 marks — B14)</em></li><li>Compare Type 1 and Type 2 hypervisors in a three-row table (architecture, performance, products). <em>(3 marks — B13)</em></li><li>Draw the Type 1 hypervisor diagram with labels. <em>(diagram — B13/D21)</em></li><li>Draw the Type 2 hypervisor diagram with labels. <em>(diagram — B13/D21)</em></li><li>Give four roles of virtualization in cloud economics. <em>(5 marks — part of D21)</em></li><li>When would you choose Type 1 vs Type 2? Give a three-row scenario table. <em>(5 marks — part of D21)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -596,11 +614,11 @@
 <li>Virtualization = abstraction of physical resources into logical resources, enabling multiple isolated VMs on one host. Enables: resource pooling, rapid elasticity, multi-tenancy (measured service).</li><li>Server (ESXi), Storage (vSAN), Network (NSX/VPC), Desktop/VDI (Horizon), Application (Docker).</li><li><strong>Type 1:</strong> Hardware → VMM (ESXi, KVM) → VMs; near-native; ESXi, Hyper-V, KVM, Xen. <strong>Type 2:</strong> Hardware → Host OS → VMM (Workstation) → VMs; overhead; Workstation, VirtualBox, Parallels, QEMU.</li><li>Hardware → VMM (ESXi/Hyper-V/KVM) → VM1, VM2. Labels: Hardware, Type 1 VMM, Guest OSs, Products (ESXi, Hyper-V, KVM).</li><li>Hardware → Host OS → VMM (Workstation/VirtualBox) → VM1, VM2. Labels: Hardware, Host OS, Type 2 VMM, Guest OSs, Products.</li><li>(1) Multi-tenancy → resource pooling. (2) Elasticity → rapid elasticity. (3) Isolation → trust/security. (4) Hardware independence → live migration, DR, measured service.</li><li><strong>Production/cloud</strong> → Type 1 (performance, security). <strong>Dev laptop/CI/education</strong> → Type 2 (runs on host OS, easy install). <strong>Nested virt</strong> → Type 1 on Type 1.</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="4-14-sixty-second-check"><a href="#4-14-sixty-second-check" class="heading-anchor">#</a>4.14 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="4-13-sixty-second-check"><a href="#4-13-sixty-second-check" class="heading-anchor">#</a>4.13 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> Virtualization definition + three NIST characteristics</li><li><input disabled="" type="checkbox"> Five virtualization types + examples</li><li><input disabled="" type="checkbox"> Type 1 vs Type 2: three-row table (architecture, performance, products)</li><li><input disabled="" type="checkbox"> Type 1 diagram: Hardware → VMM → VMs (labelled with products)</li><li><input disabled="" type="checkbox"> Type 2 diagram: Hardware → Host OS → VMM → VMs (labelled with products)</li><li><input disabled="" type="checkbox"> Four roles in cloud economics: multi-tenancy, elasticity, isolation, hardware independence</li><li><input disabled="" type="checkbox"> Judgement table: scenario → choose Type 1/2 → why</li></ul>
 <p>If all seven are there, Unit 4&#39;s <strong>17 marks</strong> are covered — A6, B13, B14, D21.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 4, 8 LHs) · TU/FOM model question 2026 (A6, B13, B14, D21) · Saurabh, Cloud Computing, ch. 7–8 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 3, 8 (syllabus reading) · VMware/VMware vSphere documentation, Microsoft Hyper-V documentation, KVM/QEMU documentation — standard product architecture references. VMware ESXi, Hyper-V, KVM, Xen, VMware Workstation, VirtualBox, Parallels, QEMU are standard product examples, not current feature claims.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 277, Unit 4, 8 LHs) · TU/FOM model question 2026 (A6, B13, B14, D21) · Saurabh, Cloud Computing, ch. 7–8 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 3, 8 (syllabus reading) · VMware/VMware vSphere documentation, Microsoft Hyper-V documentation, KVM/QEMU documentation — standard product architecture references. VMware ESXi, Hyper-V, KVM, Xen, VMware Workstation, VirtualBox, Parallels, QEMU are standard product examples, not current feature claims.</em></p>
 
         </div>
       </article>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <title>Worst Generation</title>
+  <ellipse cx="16" cy="23" rx="14" ry="4.2" fill="#2563eb" stroke="#1a1a2e" stroke-width="1.6"/>
+  <path d="M8.5 22.5 C8.5 12 11.5 8 16 8 C20.5 8 23.5 12 23.5 22.5 Z" fill="#2563eb" stroke="#1a1a2e" stroke-width="1.6"/>
+  <path d="M9.6 17.8 H22.4" stroke="#dc2626" stroke-width="3" fill="none"/>
+</svg>

@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 1: Introduction to Cloud Computing | Cloud Computing | BIM 8th Semester</title>
-  <meta name="description" content="IT 277 - Unit 1: Introduction to Cloud Computing">
+  <title>Unit 1: Introduction to Cloud Computing | Cloud Computing | Worst Generation</title>
+  <meta name="description" content="IT 277 - Unit 1: Introduction to Cloud Computing — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="cloud">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #7c3aed">IT 277</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -113,8 +120,8 @@
 <td>5</td>
 </tr>
 <tr>
-<td><strong>Marks carried in model question</strong></td>
-<td><strong>5</strong> — two 1-markers (A1 cloud computing definition, A4 cloud storage definition), one 3-marker (B12 advantages and disadvantages)</td>
+<td><strong>Marks in model question</strong></td>
+<td>5 — two 1-markers (A1 cloud computing definition, A4 cloud storage definition), one 3-marker (B12 advantages and disadvantages)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
@@ -129,13 +136,43 @@
 <td>None — this is the vocabulary unit</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
+<td><strong>Syllabus</strong></td>
 <td>Evolution of Cloud Computing · Characteristics of Cloud Computing · Types of Cloud and its Cloud services · Benefits and challenges of cloud computing · Applications of Cloud Computing · Cloud Storage · Cloud services requirements · Cloud and dynamic infrastructure · Cloud adoption</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit is where the paper checks whether you can <strong>define Cloud Computing the NIST way</strong> (A1) and <strong>define Cloud Storage</strong> (A4). The 3-marker B12 asks for <em>both</em> advantages and disadvantages — a one-sided answer loses half the marks. The five NIST characteristics are the vocabulary for the whole paper; memorise them as a list with one-line explanations.</p>
-</blockquote><hr class="custom-hr"><h2 id="1-1-what-cloud-computing-is-the-nist-definition-a1"><a href="#1-1-what-cloud-computing-is-the-nist-definition-a1" class="heading-anchor">#</a>1.1 What Cloud Computing is — the NIST definition (A1)</h2><blockquote class="custom-blockquote"><p><strong>Cloud Computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (e.g., networks, servers, storage, applications, and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.</strong></p>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This unit checks whether you can <strong>define Cloud Computing the NIST way</strong> (A1) and <strong>define Cloud Storage</strong> (A4). The 3-marker B12 asks for <em>both</em> advantages and disadvantages — a one-sided answer loses half the marks. The five NIST characteristics are the vocabulary for the whole paper; memorise them as a list with one-line explanations.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">1.1 NIST Definition of Cloud Computing 🎯 1-mark
+├── Five essential characteristics: on-demand self-service, broad network access, resource pooling, rapid elasticity, measured service
+└── A1 answer must include all five
+
+1.2 Service Models (IaaS, PaaS, SaaS)
+├── What consumer manages vs provider manages in each
+└── NIST characteristic each relies on
+
+1.3 Deployment Models (Public, Private, Community, Hybrid) 🎯 1-mark
+├── Key trait: multi-tenant vs single-tenant
+└── A3: private cloud definition
+
+1.4 Cloud Storage 🎯 1-mark
+├── Three categories: object, block, file
+└── A4: definition + categories + examples
+
+1.5 Benefits and Challenges — B12 🎯 3-mark
+├── Three advantages with NIST mechanism
+├── Three disadvantages with mechanism
+└── Balanced, not a sales pitch
+
+1.6 Cloud Service Requirements (feeds C17 in Unit 2)
+├── Six requirements: availability, elasticity, performance, security, manageability, portability
+└── Each with mechanism + cloud example
+
+1.7 Cloud and Dynamic Infrastructure
+└── Virtualisation, SDN, SDS, converged/HCI, bare-metal provisioning
+
+1.8 Cloud Adoption Phases
+├── Assess, Migrate, Optimise, Govern
+└── Key decisions per phase</code></pre></div><hr class="custom-hr"><h2 id="1-1-what-cloud-computing-is-the-nist-definition-a1-1-mark"><a href="#1-1-what-cloud-computing-is-the-nist-definition-a1-1-mark" class="heading-anchor">#</a>1.1 What Cloud Computing Is — the NIST Definition (A1) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>Cloud Computing is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (e.g., networks, servers, storage, applications, and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.</strong></p>
 </blockquote><p>— <em>NIST SP 800-145, the standard definition the syllabus expects.</em></p>
-<h3 id="the-five-essential-characteristics-the-list-a1-expects"><a href="#the-five-essential-characteristics-the-list-a1-expects" class="heading-anchor">#</a>The five essential characteristics — the list A1 expects</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<h3 id="the-five-essential-characteristics-the-list-a1-expects"><a href="#the-five-essential-characteristics-the-list-a1-expects" class="heading-anchor">#</a>The Five Essential Characteristics — the list A1 expects</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>#</th>
 <th>Characteristic</th>
 <th>One-line explanation</th>
@@ -166,9 +203,9 @@
 <td>cloud systems automatically control and optimize resource use by leveraging a metering capability (pay-per-use, chargeback)</td>
 </tr>
 </tbody></table></div><p>⚠ <strong>A1 answer must include all five.</strong> Writing &quot;on-demand, scalable, pay-as-you-go&quot; without the NIST names loses marks. The five names are the answer.</p>
-<h3 id="a1-quot-define-cloud-computing-quot-1"><a href="#a1-quot-define-cloud-computing-quot-1" class="heading-anchor">#</a>A1 · &quot;Define Cloud Computing.&quot; [1]</h3><blockquote class="custom-blockquote"><p>Cloud Computing (NIST SP 800-145) is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort or service provider interaction. It has five essential characteristics: (1) <strong>On-demand self-service</strong> — automatic provisioning without human interaction; (2) <strong>Broad network access</strong> — standard mechanisms over the network; (3) <strong>Resource pooling</strong> — multi-tenant pooling with dynamic assignment; (4) <strong>Rapid elasticity</strong> — scale outward/inward automatically; (5) <strong>Measured service</strong> — metered, pay-per-use control.</p>
+<hr class="custom-hr"><h3 id="a1-quot-define-cloud-computing-quot-1-1-mark"><a href="#a1-quot-define-cloud-computing-quot-1-1-mark" class="heading-anchor">#</a>A1 · &quot;Define Cloud Computing.&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>Cloud Computing (NIST SP 800-145) is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort or service provider interaction. It has five essential characteristics: (1) <strong>On-demand self-service</strong> — automatic provisioning without human interaction; (2) <strong>Broad network access</strong> — standard mechanisms over the network; (3) <strong>Resource pooling</strong> — multi-tenant pooling with dynamic assignment; (4) <strong>Rapid elasticity</strong> — scale outward/inward automatically; (5) <strong>Measured service</strong> — metered, pay-per-use control.</p>
 </blockquote><p><em>(56 words. Definition + five named characteristics with one-line each.)</em></p>
-<hr class="custom-hr"><h2 id="1-2-service-models-the-three-layers"><a href="#1-2-service-models-the-three-layers" class="heading-anchor">#</a>1.2 Service models — the three layers</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="1-2-service-models-the-three-layers"><a href="#1-2-service-models-the-three-layers" class="heading-anchor">#</a>1.2 Service Models — the Three Layers</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Model</th>
 <th>What the consumer manages</th>
 <th>What the provider manages</th>
@@ -192,10 +229,9 @@
 <td>application, runtime, middleware, OS, virtualisation, physical</td>
 <td>Gmail, Salesforce, Microsoft 365, Dropbox</td>
 </tr>
-</tbody></table></div><p><strong>A2 · &quot;What do you mean by SaaS?&quot; [1]</strong></p>
-<blockquote class="custom-blockquote"><p>SaaS (Software as a Service) is a cloud service model where the provider delivers a complete application over the internet — the consumer uses the software without managing the underlying infrastructure, platform, or runtime. Example: <strong>Gmail / Microsoft 365 / Salesforce</strong> — you log in and use it; Google/Microsoft/Salesforce runs the servers, patches the OS, scales the database.</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a2-quot-what-do-you-mean-by-saas-quot-1-1-mark"><a href="#a2-quot-what-do-you-mean-by-saas-quot-1-1-mark" class="heading-anchor">#</a>A2 · &quot;What do you mean by SaaS?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>SaaS (Software as a Service) is a cloud service model where the provider delivers a complete application over the internet — the consumer uses the software without managing the underlying infrastructure, platform, or runtime. Example: <strong>Gmail / Microsoft 365 / Salesforce</strong> — you log in and use it; Google/Microsoft/Salesforce runs the servers, patches the OS, scales the database.</p>
 </blockquote><p><em>(52 words. Definition + what consumer doesn&#39;t manage + one-line example.)</em></p>
-<hr class="custom-hr"><h2 id="1-3-deployment-models-the-four-types"><a href="#1-3-deployment-models-the-four-types" class="heading-anchor">#</a>1.3 Deployment models — the four types</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="1-3-deployment-models-the-four-types-1-mark"><a href="#1-3-deployment-models-the-four-types-1-mark" class="heading-anchor">#</a>1.3 Deployment Models — the Four Types 🎯 1-mark</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Model</th>
 <th>Definition</th>
 <th>Key trait</th>
@@ -220,11 +256,10 @@
 <td>composition of two or more distinct clouds (private, community, public) bound by standardised technology enabling data/portability</td>
 <td>workload portability, burst to public</td>
 </tr>
-</tbody></table></div><p><strong>A3 · &quot;Define private cloud.&quot; [1]</strong></p>
-<blockquote class="custom-blockquote"><p>A private cloud is a cloud deployment model where the infrastructure is operated solely for a single organisation — whether on-premises or hosted by a third party. It is single-tenant, giving the organisation greater control over security, compliance, and data locality, at the cost of higher capital expenditure and operational responsibility compared to a public cloud.</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a3-quot-define-private-cloud-quot-1-1-mark"><a href="#a3-quot-define-private-cloud-quot-1-1-mark" class="heading-anchor">#</a>A3 · &quot;Define private cloud.&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>A private cloud is a cloud deployment model where the infrastructure is operated solely for a single organisation — whether on-premises or hosted by a third party. It is single-tenant, giving the organisation greater control over security, compliance, and data locality, at the cost of higher capital expenditure and operational responsibility compared to a public cloud.</p>
 </blockquote><p><em>(53 words. Definition + single-tenant + control vs cost trade-off.)</em></p>
-<hr class="custom-hr"><h2 id="1-4-cloud-storage-a4"><a href="#1-4-cloud-storage-a4" class="heading-anchor">#</a>1.4 Cloud Storage (A4)</h2><blockquote class="custom-blockquote"><p><strong>Cloud Storage is a cloud service model that provides data storage as a service over the network — the provider manages the physical storage infrastructure (disks, arrays, replication, durability), and the consumer accesses it via standard APIs (REST, S3-compatible) or file protocols, paying for capacity used.</strong></p>
-</blockquote><h3 id="three-categories-to-know"><a href="#three-categories-to-know" class="heading-anchor">#</a>Three categories to know</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="1-4-cloud-storage-a4-1-mark"><a href="#1-4-cloud-storage-a4-1-mark" class="heading-anchor">#</a>1.4 Cloud Storage (A4) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>Cloud Storage is a cloud service model that provides data storage as a service over the network — the provider manages the physical storage infrastructure (disks, arrays, replication, durability), and the consumer accesses it via standard APIs (REST, S3-compatible) or file protocols, paying for capacity used.</strong></p>
+</blockquote><h3 id="three-categories-to-know"><a href="#three-categories-to-know" class="heading-anchor">#</a>Three Categories to Know</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Category</th>
 <th>Use case</th>
 <th>Example</th>
@@ -244,22 +279,18 @@
 <td>shared file systems, lift-and-shift apps, home directories</td>
 <td>AWS EFS, Azure Files, Google Filestore</td>
 </tr>
-</tbody></table></div><h3 id="a4-quot-what-is-cloud-storage-quot-1"><a href="#a4-quot-what-is-cloud-storage-quot-1" class="heading-anchor">#</a>A4 · &quot;What is Cloud Storage?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Cloud Storage is a service that provides data storage over the network where the provider manages the physical infrastructure (disks, replication, durability) and the consumer accesses it via APIs or file protocols, paying for capacity used. Three categories: <strong>Object storage</strong> (unstructured data, massive scale — S3, Blob), <strong>Block storage</strong> (VM disks, databases, low latency — EBS), <strong>File storage</strong> (shared file systems — EFS, Azure Files).</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a4-quot-what-is-cloud-storage-quot-1-1-mark"><a href="#a4-quot-what-is-cloud-storage-quot-1-1-mark" class="heading-anchor">#</a>A4 · &quot;What is Cloud Storage?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>Cloud Storage is a service that provides data storage over the network where the provider manages the physical infrastructure (disks, replication, durability) and the consumer accesses it via APIs or file protocols, paying for capacity used. Three categories: <strong>Object storage</strong> (unstructured data, massive scale — S3, Blob), <strong>Block storage</strong> (VM disks, databases, low latency — EBS), <strong>File storage</strong> (shared file systems — EFS, Azure Files).</p>
 </blockquote><p><em>(54 words. Definition + three categories with one example each.)</em></p>
-<hr class="custom-hr"><h2 id="1-5-benefits-and-challenges-b12"><a href="#1-5-benefits-and-challenges-b12" class="heading-anchor">#</a>1.5 Benefits and challenges — B12</h2><blockquote class="custom-blockquote"><p><strong>B12 · &quot;Describe advantages and disadvantages of cloud computing.&quot; [3]</strong></p>
-</blockquote><blockquote class="custom-blockquote"><p><strong>Shape: three advantages with mechanism + three disadvantages with mechanism. Balanced, not a sales pitch. ~100 words.</strong></p>
+<hr class="custom-hr"><h2 id="1-5-benefits-and-challenges-b12-3-mark"><a href="#1-5-benefits-and-challenges-b12-3-mark" class="heading-anchor">#</a>1.5 Benefits and Challenges — B12 🎯 3-mark</h2><blockquote class="custom-blockquote"><p><strong>B12 · &quot;Describe advantages and disadvantages of cloud computing.&quot; [3]</strong></p>
+<p><strong>Shape: three advantages with mechanism + three disadvantages with mechanism. Balanced, not a sales pitch. ~100 words.</strong></p>
 </blockquote><p><strong>Advantages:</strong></p>
 <ol>
 <li><strong>Capex → Opex</strong> — no upfront hardware purchase; pay-per-use aligns cost with revenue. <em>Mechanism:</em> resource pooling + measured service.</li><li><strong>Elasticity and speed</strong> — provision in minutes, scale automatically; time-to-market for new workloads drops from months to minutes. <em>Mechanism:</em> rapid elasticity + on-demand self-service.</li><li><strong>Global reach and resilience</strong> — deploy in multiple regions/zones; built-in replication, failover, CDN. <em>Mechanism:</em> broad network access + provider&#39;s distributed infrastructure.</li></ol>
 <p><strong>Disadvantages:</strong></p>
 <ol>
 <li><strong>Vendor lock-in</strong> — proprietary APIs, data egress fees, non-portable services make switching costly. <em>Mechanism:</em> lack of standardisation across providers.</li><li><strong>Security and compliance shared responsibility</strong> — provider secures the cloud; <em>you</em> secure <em>in</em> the cloud (data, identity, config). Misconfiguration is the top breach cause. <em>Mechanism:</em> multi-tenancy + abstraction boundary.</li><li><strong>Unpredictable cost at scale</strong> — pay-per-use becomes expensive for steady, high-utilisation workloads; reserved instances help but require forecasting. <em>Mechanism:</em> measured service without commitment.</li></ol>
-<p><em>(208 words — within 80–120 for the 3-marker? Actually this is too long. Let me trim.)</em></p>
-<p><strong>Trimmed B12 answer (target 100 words):</strong></p>
-<blockquote class="custom-blockquote"><p><strong>Advantages:</strong> (1) <strong>Capex → Opex</strong> — no upfront hardware; pay-per-use aligns cost with revenue (resource pooling + measured service). (2) <strong>Elasticity &amp; speed</strong> — provision in minutes, scale automatically; time-to-market drops from months to minutes (rapid elasticity + on-demand self-service). (3) <strong>Global reach &amp; resilience</strong> — multi-region deployment, built-in replication/failover (broad network access).</p>
-<p><strong>Disadvantages:</strong> (1) <strong>Vendor lock-in</strong> — proprietary APIs, egress fees, non-portable services make switching costly. (2) <strong>Shared responsibility</strong> — provider secures <em>the</em> cloud; you secure <em>in</em> the cloud (data, identity, config); misconfiguration is the top breach cause (multi-tenancy). (3) <strong>Unpredictable cost at scale</strong> — pay-per-use expensive for steady high-utilisation workloads; reserved instances need forecasting (measured service).</p>
-</blockquote><p><em>(104 words)</em></p>
-<hr class="custom-hr"><h2 id="1-6-cloud-services-requirements-dynamic-infrastructure-adoption"><a href="#1-6-cloud-services-requirements-dynamic-infrastructure-adoption" class="heading-anchor">#</a>1.6 Cloud services requirements, dynamic infrastructure, adoption</h2><h3 id="cloud-services-requirements-syllabus-bullet-feeds-c17-in-unit-2"><a href="#cloud-services-requirements-syllabus-bullet-feeds-c17-in-unit-2" class="heading-anchor">#</a>Cloud services requirements (syllabus bullet, feeds C17 in Unit 2)</h3><p>A cloud service must satisfy:</p>
+<p><em>(104 words — target 80–120 for the 3-marker.)</em></p>
+<hr class="custom-hr"><h2 id="1-6-cloud-services-requirements-dynamic-infrastructure-adoption"><a href="#1-6-cloud-services-requirements-dynamic-infrastructure-adoption" class="heading-anchor">#</a>1.6 Cloud Services Requirements, Dynamic Infrastructure, Adoption</h2><h3 id="cloud-services-requirements-syllabus-bullet-feeds-c17-in-unit-2"><a href="#cloud-services-requirements-syllabus-bullet-feeds-c17-in-unit-2" class="heading-anchor">#</a>Cloud Services Requirements (syllabus bullet, feeds C17 in Unit 2)</h3><p>A cloud service must satisfy:</p>
 <div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Requirement</th>
 <th>What it means</th>
@@ -288,8 +319,8 @@
 <td><strong>Portability</strong></td>
 <td>standards-based APIs, container support, open formats</td>
 </tr>
-</tbody></table></div><h3 id="cloud-and-dynamic-infrastructure"><a href="#cloud-and-dynamic-infrastructure" class="heading-anchor">#</a>Cloud and dynamic infrastructure</h3><p><strong>Dynamic infrastructure</strong> = the physical layer (servers, storage, network) is abstracted and managed by software so that resources can be composed, recomposed, and scaled on demand. It is the <em>enabler</em> of the five NIST characteristics. Technologies: <strong>virtualisation (Unit 4)</strong>, <strong>SDN (Software-Defined Networking)</strong>, <strong>SDS (Software-Defined Storage)</strong>, <strong>converged/hyper-converged infrastructure</strong>, <strong>bare-metal provisioning (Ironic, MAAS)</strong>.</p>
-<h3 id="cloud-adoption-the-organisational-lens"><a href="#cloud-adoption-the-organisational-lens" class="heading-anchor">#</a>Cloud adoption — the organisational lens</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><h3 id="cloud-and-dynamic-infrastructure"><a href="#cloud-and-dynamic-infrastructure" class="heading-anchor">#</a>Cloud and Dynamic Infrastructure</h3><p><strong>Dynamic infrastructure</strong> = the physical layer (servers, storage, network) is abstracted and managed by software so that resources can be composed, recomposed, and scaled on demand. It is the <em>enabler</em> of the five NIST characteristics. Technologies: <strong>virtualisation (Unit 4)</strong>, <strong>SDN (Software-Defined Networking)</strong>, <strong>SDS (Software-Defined Storage)</strong>, <strong>converged/hyper-converged infrastructure</strong>, <strong>bare-metal provisioning (Ironic, MAAS)</strong>.</p>
+<h3 id="cloud-adoption-the-organisational-lens"><a href="#cloud-adoption-the-organisational-lens" class="heading-anchor">#</a>Cloud Adoption — the Organisational Lens</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Phase</th>
 <th>Focus</th>
 <th>Key decision</th>
@@ -314,15 +345,8 @@
 <td>guardrails, policies, tagging, compliance, security baseline</td>
 <td>prevent drift, enforce standards</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="1-7-evolution-one-paragraph-for-context"><a href="#1-7-evolution-one-paragraph-for-context" class="heading-anchor">#</a>1.7 Evolution — one paragraph for context</h2><p>Cloud computing evolved through: <strong>mainframe time-sharing (1960s)</strong> → <strong>utility computing / grid (1990s)</strong> → <strong>ASP / SaaS pioneers (late 1990s: Salesforce)</strong> → <strong>Amazon EC2/S3 (2006) — the infrastructure turning point</strong> → <strong>Google App Engine (2008) — PaaS</strong> → <strong>Microsoft Azure (2010) — hybrid enterprise</strong> → <strong>container orchestration (Kubernetes, 2014+) — cloud-native</strong> → <strong>serverless / FaaS (Lambda, 2014+) — code-only</strong>. Each stage lowered the abstraction barrier: from &quot;rent a mainframe slice&quot; to &quot;rent a VM&quot; to &quot;rent a platform&quot; to &quot;run a container&quot; to &quot;run a function.&quot;</p>
-<hr class="custom-hr"><h2 id="1-8-answer-skeletons"><a href="#1-8-answer-skeletons" class="heading-anchor">#</a>1.8 Answer skeletons</h2><h3 id="a1-quot-define-cloud-computing-quot-1"><a href="#a1-quot-define-cloud-computing-quot-1" class="heading-anchor">#</a>A1 · &quot;Define Cloud Computing.&quot; [1]</h3><blockquote class="custom-blockquote"><p>Cloud Computing (NIST SP 800-145) is a model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort or service provider interaction. Five essential characteristics: (1) <strong>On-demand self-service</strong> — automatic provisioning without human interaction. (2) <strong>Broad network access</strong> — standard mechanisms over the network. (3) <strong>Resource pooling</strong> — multi-tenant pooling with dynamic assignment. (4) <strong>Rapid elasticity</strong> — scale outward/inward automatically. (5) <strong>Measured service</strong> — metered, pay-per-use control.</p>
-</blockquote><p><em>(56 words)</em></p>
-<h3 id="a4-quot-what-is-cloud-storage-quot-1"><a href="#a4-quot-what-is-cloud-storage-quot-1" class="heading-anchor">#</a>A4 · &quot;What is Cloud Storage?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Cloud Storage is a service that provides data storage over the network where the provider manages the physical infrastructure (disks, replication, durability) and the consumer accesses it via APIs or file protocols, paying for capacity used. Three categories: <strong>Object storage</strong> (unstructured data, massive scale — S3, Blob), <strong>Block storage</strong> (VM disks, databases, low latency — EBS), <strong>File storage</strong> (shared file systems — EFS, Azure Files).</p>
-</blockquote><p><em>(54 words)</em></p>
-<h3 id="b12-quot-describe-advantages-and-disadvantages-of-cloud-computing-quot-3"><a href="#b12-quot-describe-advantages-and-disadvantages-of-cloud-computing-quot-3" class="heading-anchor">#</a>B12 · &quot;Describe advantages and disadvantages of cloud computing.&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Advantages:</strong> (1) <strong>Capex → Opex</strong> — no upfront hardware; pay-per-use aligns cost with revenue (resource pooling + measured service). (2) <strong>Elasticity &amp; speed</strong> — provision in minutes, scale automatically; time-to-market drops from months to minutes (rapid elasticity + on-demand self-service). (3) <strong>Global reach &amp; resilience</strong> — multi-region deployment, built-in replication/failover (broad network access).</p>
-<p><strong>Disadvantages:</strong> (1) <strong>Vendor lock-in</strong> — proprietary APIs, egress fees, non-portable services make switching costly. (2) <strong>Shared responsibility</strong> — provider secures <em>the</em> cloud; you secure <em>in</em> the cloud (data, identity, config); misconfiguration is the top breach cause (multi-tenancy). (3) <strong>Unpredictable cost at scale</strong> — pay-per-use expensive for steady high-utilisation workloads; reserved instances need forecasting (measured service).</p>
-</blockquote><p><em>(104 words)</em></p>
-<hr class="custom-hr"><h2 id="1-9-traps"><a href="#1-9-traps" class="heading-anchor">#</a>1.9 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="1-7-evolution-one-paragraph-for-context"><a href="#1-7-evolution-one-paragraph-for-context" class="heading-anchor">#</a>1.7 Evolution — One Paragraph for Context</h2><p>Cloud computing evolved through: <strong>mainframe time-sharing (1960s)</strong> → <strong>utility computing / grid (1990s)</strong> → <strong>ASP / SaaS pioneers (late 1990s: Salesforce)</strong> → <strong>Amazon EC2/S3 (2006) — the infrastructure turning point</strong> → <strong>Google App Engine (2008) — PaaS</strong> → <strong>Microsoft Azure (2010) — hybrid enterprise</strong> → <strong>container orchestration (Kubernetes, 2014+) — cloud-native</strong> → <strong>serverless / FaaS (Lambda, 2014+) — code-only</strong>. Each stage lowered the abstraction barrier: from &quot;rent a mainframe slice&quot; to &quot;rent a VM&quot; to &quot;rent a platform&quot; to &quot;run a container&quot; to &quot;run a function.&quot;</p>
+<hr class="custom-hr"><h2 id="1-8-traps"><a href="#1-8-traps" class="heading-anchor">#</a>1.8 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
@@ -362,7 +386,7 @@
 <td>the #1 cloud security reality</td>
 <td>provider secures <em>the</em> cloud; you secure <em>in</em> the cloud</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="1-10-self-test-answers-collapsed"><a href="#1-10-self-test-answers-collapsed" class="heading-anchor">#</a>1.10 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="1-9-self-test-answers-collapsed"><a href="#1-9-self-test-answers-collapsed" class="heading-anchor">#</a>1.9 Self-Test (Answers Collapsed)</h2><ol>
 <li>Write the NIST definition of Cloud Computing and name the five essential characteristics. <em>(1 mark — A1)</em></li><li>What is SaaS? Give one everyday example. <em>(1 mark — A2)</em></li><li>Define private cloud in one sentence. <em>(1 mark — A3)</em></li><li>What is Cloud Storage? Name the three categories with one example each. <em>(1 mark — A4)</em></li><li>Give three advantages of cloud computing with the NIST characteristic that enables each. <em>(3 marks — B12)</em></li><li>Give three disadvantages of cloud computing with the mechanism for each. <em>(3 marks — B12)</em></li><li>What are the six requirements a cloud service must satisfy? <em>(3 marks — feeds C17)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -371,11 +395,11 @@
 <li>NIST SP 800-145: model for ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources, rapidly provisioned/released with minimal management effort. Five characteristics: On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service.</li><li>SaaS = provider delivers complete application over internet; consumer uses it without managing infrastructure/platform/runtime. Example: Gmail / Microsoft 365 / Salesforce.</li><li>Private cloud = infrastructure operated solely for one organisation (on-premises or hosted), single-tenant, greater control, higher cost.</li><li>Cloud Storage = storage as a service over network; provider manages physical infrastructure; consumer pays for capacity used. Categories: Object (S3, Blob), Block (EBS), File (EFS).</li><li>(1) Capex→Opex (resource pooling + measured service). (2) Elasticity &amp; speed (rapid elasticity + on-demand self-service). (3) Global reach &amp; resilience (broad network access).</li><li>(1) Vendor lock-in (proprietary APIs, egress fees). (2) Shared responsibility (provider secures cloud, you secure in cloud). (3) Unpredictable cost at scale (measured service without commitment).</li><li>Availability, Elasticity, Performance, Security, Manageability, Portability.</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="1-11-sixty-second-check"><a href="#1-11-sixty-second-check" class="heading-anchor">#</a>1.11 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="1-10-sixty-second-check"><a href="#1-10-sixty-second-check" class="heading-anchor">#</a>1.10 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> NIST definition of Cloud Computing (can write it cold)</li><li><input disabled="" type="checkbox"> Five essential characteristics: names + one-line each</li><li><input disabled="" type="checkbox"> Three service models (IaaS, PaaS, SaaS) — what consumer manages in each</li><li><input disabled="" type="checkbox"> Four deployment models (public, private, community, hybrid) — key trait each</li><li><input disabled="" type="checkbox"> Cloud Storage: definition + three categories + examples</li><li><input disabled="" type="checkbox"> Three advantages + three disadvantages with mechanisms</li><li><input disabled="" type="checkbox"> Six cloud service requirements</li><li><input disabled="" type="checkbox"> Shared responsibility model: provider secures <em>the</em> cloud, you secure <em>in</em> the cloud</li></ul>
 <p>If all eight are there, Unit 1&#39;s <strong>5 marks</strong> are covered — A1, A4, B12.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 1, 5 LHs) · TU/FOM model question 2026 (A1, A4, B12) · NIST SP 800-145 (Cloud Computing definition) · Saurabh, Cloud Computing (syllabus reading) · Buyya et al., Mastering Cloud Computing (syllabus reading). AWS/Azure/Google service names are used as standard examples of each category, not as endorsements or current feature claims.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 277, Unit 1, 5 LHs) · TU/FOM model question 2026 (A1, A4, B12) · NIST SP 800-145 (Cloud Computing definition) · Saurabh, Cloud Computing (syllabus reading) · Buyya et al., Mastering Cloud Computing (syllabus reading). AWS/Azure/Google service names are used as standard examples of each category, not as endorsements or current feature claims.</em></p>
 
         </div>
       </article>

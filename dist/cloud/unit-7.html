@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 7: Cloud Platforms | Cloud Computing | BIM 8th Semester</title>
-  <meta name="description" content="IT 277 - Unit 7: Cloud Platforms">
+  <title>Unit 7: Cloud Platforms | Cloud Computing | Worst Generation</title>
+  <meta name="description" content="IT 277 - Unit 7: Cloud Platforms — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="cloud">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #7c3aed">IT 277</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -113,8 +120,8 @@
 <td>12</td>
 </tr>
 <tr>
-<td><strong>Marks carried in model question</strong></td>
-<td><strong>1</strong> — one 1-marker (A10 AppEngine definition)</td>
+<td><strong>Marks in model question</strong></td>
+<td>1 — one 1-marker (A10 AppEngine definition)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
@@ -129,11 +136,46 @@
 <td>Units 1–2 (service models, deployment models)</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
+<td><strong>Syllabus</strong></td>
 <td>Web services · AppEngine · Azure Platform · Aneka · Open challenges · Scientific applications · Business and Consumer applications</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit is <strong>12 hours for 1 mark</strong> in the model question. The only model question is A10: &quot;Define AppEngine.&quot; That&#39;s it. But a board setter could easily put a 5-marker on &quot;Compare AppEngine, Azure, and Aneka&quot; or &quot;Describe web services in cloud&quot; or &quot;Explain open challenges in cloud platforms.&quot; Read it once, know the four platforms + web services + challenges, and you&#39;re insured.</p>
-</blockquote><hr class="custom-hr"><h2 id="7-1-web-services"><a href="#7-1-web-services" class="heading-anchor">#</a>7.1 Web services</h2><blockquote class="custom-blockquote"><p><strong>Web services are standardised interfaces that allow applications to communicate over the network — typically using HTTP/HTTPS, with SOAP (XML) or REST (JSON) as the message format.</strong></p>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This unit is <strong>12 hours for 1 mark</strong> in the model question. The only model question is A10: &quot;Define AppEngine.&quot; That&#39;s it. But a board setter could easily put a 5-marker on &quot;Compare AppEngine, Azure, and Aneka&quot; or &quot;Describe web services in cloud&quot; or &quot;Explain open challenges in cloud platforms.&quot; Read it once, know the four platforms + web services + challenges, and you&#39;re insured.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">7.1 Web Services
+├── SOAP vs REST vs gRPC vs GraphQL: protocol, data format, use case
+├── Key standards: WSDL, OpenAPI/Swagger, UDDI, WS-Security/WS-*
+└── SOAP = enterprise/XML; REST = web/mobile/JSON
+
+7.2 AppEngine (A10) — Google's PaaS 🎯 1-mark
+├── Fully managed PaaS, code-only deploy
+├── Two environments: Standard (instance-based) + Flexible (Docker)
+├── Languages: Python, Java, Node.js, Go, PHP, Ruby, .NET, custom runtimes
+├── Services: Datastore, Cloud SQL, Cloud Storage, Memcache, Task Queues, Pub/Sub
+└── Deployment: gcloud app deploy — versioned, traffic splitting, rollback
+
+7.3 Azure Platform — Microsoft's Cloud
+├── IaaS + PaaS + SaaS, deep Microsoft ecosystem integration
+├── Key PaaS: App Service, Functions, Container Apps, AKS, Azure SQL, Cosmos DB
+├── Hybrid/Enterprise: Azure Arc, Azure Stack, Entra ID, Microsoft 365 integration
+└── Dev toolchain: Visual Studio, GitHub, DevOps
+
+7.4 Aneka — Managed PaaS for .NET
+├── .NET-specific PaaS, Manjrasoft, commercial licence
+├── Programming models: Task, Thread, MapReduce, Grid, Parameter Sweep
+├── Deployment: Windows Server, Azure, AWS, private cloud
+└── Visual Studio plugin integration
+
+7.5 Open Challenges in Cloud Platforms
+├── Vendor lock-in, multi-cloud complexity, security/compliance, cost management
+├── Skills gap, performance variability, legacy migration, governance, sustainability
+└── 9 challenges listed
+
+7.6 Scientific Applications
+├── Genomics/bioinformatics, climate/weather, physics/particle, astronomy, AI/ML training
+└── Cloud fit: burst to cloud, HPC on cloud, petabyte processing, distributed training
+
+7.7 Business and Consumer Applications
+├── SaaS productivity, e-commerce, streaming/media, FinTech/payments, IoT/edge
+└── Cloud value: elastic scaling, global CDN, compliance, personalisation, device management</code></pre></div><hr class="custom-hr"><h2 id="7-1-web-services"><a href="#7-1-web-services" class="heading-anchor">#</a>7.1 Web Services</h2><blockquote class="custom-blockquote"><p><strong>Web services are standardised interfaces that allow applications to communicate over the network — typically using HTTP/HTTPS, with SOAP (XML) or REST (JSON) as the message format.</strong></p>
 </blockquote><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Type</th>
 <th>Protocol</th>
@@ -164,7 +206,7 @@
 <td>JSON</td>
 <td>flexible queries, frontend-driven APIs</td>
 </tr>
-</tbody></table></div><h3 id="key-standards"><a href="#key-standards" class="heading-anchor">#</a>Key standards</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><h3 id="key-standards"><a href="#key-standards" class="heading-anchor">#</a>Key Standards</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Standard</th>
 <th>Purpose</th>
 </tr>
@@ -181,11 +223,11 @@
 <td>Universal Description, Discovery, Integration — registry for SOAP services (legacy)</td>
 </tr>
 <tr>
-<td>*<em>WS-Security / WS-</em></td>
+<td><strong>WS-Security / WS-</strong>*</td>
 <td>SOAP extensions for security, reliability, transactions</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="7-2-appengine-a10-google-39-s-paas"><a href="#7-2-appengine-a10-google-39-s-paas" class="heading-anchor">#</a>7.2 AppEngine (A10) — Google&#39;s PaaS</h2><blockquote class="custom-blockquote"><p><strong>AppEngine is Google Cloud&#39;s fully managed Platform-as-a-Service (PaaS) — developers deploy code (Python, Java, Node.js, Go, PHP, Ruby, .NET) and Google manages the infrastructure: servers, scaling, load balancing, patching, and availability.</strong></p>
-</blockquote><h3 id="key-characteristics"><a href="#key-characteristics" class="heading-anchor">#</a>Key characteristics</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="7-2-appengine-a10-google-39-s-paas-1-mark"><a href="#7-2-appengine-a10-google-39-s-paas-1-mark" class="heading-anchor">#</a>7.2 AppEngine (A10) — Google&#39;s PaaS 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>AppEngine is Google Cloud&#39;s fully managed Platform-as-a-Service (PaaS) — developers deploy code (Python, Java, Node.js, Go, PHP, Ruby, .NET) and Google manages the infrastructure: servers, scaling, load balancing, patching, and availability.</strong></p>
+</blockquote><h3 id="key-characteristics"><a href="#key-characteristics" class="heading-anchor">#</a>Key Characteristics</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Feature</th>
 <th>Detail</th>
 </tr>
@@ -213,10 +255,10 @@
 <td><strong>Pricing</strong></td>
 <td>pay-per-use (instance hours, storage, network); free tier available</td>
 </tr>
-</tbody></table></div><h3 id="a10-quot-define-appengine-quot-1"><a href="#a10-quot-define-appengine-quot-1" class="heading-anchor">#</a>A10 · &quot;Define AppEngine.&quot; [1]</h3><blockquote class="custom-blockquote"><p>AppEngine is Google Cloud&#39;s fully managed PaaS — developers deploy code (Python, Java, Node.js, Go, PHP, Ruby, .NET) and Google manages infrastructure: servers, auto-scaling, load balancing, patching, availability. Two environments: <strong>Standard</strong> (instance-based, milliseconds scale) and <strong>Flexible</strong> (Docker containers). Services: Datastore, Cloud SQL, Cloud Storage, Pub/Sub.</p>
+</tbody></table></div><hr class="custom-hr"><h3 id="a10-quot-define-appengine-quot-1-1-mark"><a href="#a10-quot-define-appengine-quot-1-1-mark" class="heading-anchor">#</a>A10 · &quot;Define AppEngine.&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>AppEngine is Google Cloud&#39;s fully managed PaaS — developers deploy code (Python, Java, Node.js, Go, PHP, Ruby, .NET) and Google manages infrastructure: servers, auto-scaling, load balancing, patching, availability. Two environments: <strong>Standard</strong> (instance-based, milliseconds scale) and <strong>Flexible</strong> (Docker containers). Services: Datastore, Cloud SQL, Cloud Storage, Pub/Sub.</p>
 </blockquote><p><em>(54 words. Definition + managed services + two environments + key services.)</em></p>
-<hr class="custom-hr"><h2 id="7-3-azure-platform-microsoft-39-s-cloud"><a href="#7-3-azure-platform-microsoft-39-s-cloud" class="heading-anchor">#</a>7.3 Azure Platform — Microsoft&#39;s cloud</h2><blockquote class="custom-blockquote"><p><strong>Microsoft Azure is a comprehensive cloud platform offering IaaS, PaaS, and SaaS — with deep integration into the Microsoft ecosystem (Windows Server, SQL Server, Active Directory, Office 365, Dynamics, Visual Studio, GitHub).</strong></p>
-</blockquote><h3 id="key-paas-services-the-appengine-equivalents"><a href="#key-paas-services-the-appengine-equivalents" class="heading-anchor">#</a>Key PaaS services (the AppEngine equivalents)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="7-3-azure-platform-microsoft-39-s-cloud"><a href="#7-3-azure-platform-microsoft-39-s-cloud" class="heading-anchor">#</a>7.3 Azure Platform — Microsoft&#39;s Cloud</h2><blockquote class="custom-blockquote"><p><strong>Microsoft Azure is a comprehensive cloud platform offering IaaS, PaaS, and SaaS — with deep integration into the Microsoft ecosystem (Windows Server, SQL Server, Active Directory, Office 365, Dynamics, Visual Studio, GitHub).</strong></p>
+</blockquote><h3 id="key-paas-services-the-appengine-equivalents"><a href="#key-paas-services-the-appengine-equivalents" class="heading-anchor">#</a>Key PaaS Services (the AppEngine equivalents)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Service</th>
 <th>What it is</th>
 <th>AppEngine equivalent</th>
@@ -251,7 +293,7 @@
 <td>microservices platform (stateful, actors)</td>
 <td>—</td>
 </tr>
-</tbody></table></div><h3 id="hybrid-enterprise-differentiators"><a href="#hybrid-enterprise-differentiators" class="heading-anchor">#</a>Hybrid / Enterprise differentiators</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><h3 id="hybrid-enterprise-differentiators"><a href="#hybrid-enterprise-differentiators" class="heading-anchor">#</a>Hybrid / Enterprise Differentiators</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Feature</th>
 <th>Why it matters</th>
 </tr>
@@ -275,8 +317,8 @@
 <td><strong>Visual Studio / GitHub / DevOps</strong></td>
 <td>end-to-end developer toolchain</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="7-4-aneka-managed-paas-for-net"><a href="#7-4-aneka-managed-paas-for-net" class="heading-anchor">#</a>7.4 Aneka — managed PaaS for .NET</h2><blockquote class="custom-blockquote"><p><strong>Aneka is a Platform-as-a-Service framework for .NET — developed by Manjrasoft, it provides a runtime environment and SDK for building, deploying, and managing distributed applications on cloud infrastructure (public, private, hybrid).</strong></p>
-</blockquote><h3 id="key-characteristics"><a href="#key-characteristics" class="heading-anchor">#</a>Key characteristics</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="7-4-aneka-managed-paas-for-net"><a href="#7-4-aneka-managed-paas-for-net" class="heading-anchor">#</a>7.4 Aneka — Managed PaaS for .NET</h2><blockquote class="custom-blockquote"><p><strong>Aneka is a Platform-as-a-Service framework for .NET — developed by Manjrasoft, it provides a runtime environment and SDK for building, deploying, and managing distributed applications on cloud infrastructure (public, private, hybrid).</strong></p>
+</blockquote><h3 id="key-characteristics"><a href="#key-characteristics" class="heading-anchor">#</a>Key Characteristics</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Feature</th>
 <th>Detail</th>
 </tr>
@@ -305,7 +347,7 @@
 <td>commercial (free trial); not open source</td>
 </tr>
 </tbody></table></div><p><strong>Exam note:</strong> Aneka is the <em>only</em> .NET-specific PaaS in the syllabus. Know: &quot;.NET PaaS, task/thread/MapReduce models, runs on Windows/Azure/AWS, Manjrasoft, commercial.&quot;</p>
-<hr class="custom-hr"><h2 id="7-5-open-challenges-in-cloud-platforms"><a href="#7-5-open-challenges-in-cloud-platforms" class="heading-anchor">#</a>7.5 Open challenges in cloud platforms</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="7-5-open-challenges-in-cloud-platforms"><a href="#7-5-open-challenges-in-cloud-platforms" class="heading-anchor">#</a>7.5 Open Challenges in Cloud Platforms</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Challenge</th>
 <th>Description</th>
 </tr>
@@ -345,7 +387,7 @@
 <td><strong>Sustainability</strong></td>
 <td>carbon footprint, green regions, efficiency metrics</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="7-6-scientific-applications"><a href="#7-6-scientific-applications" class="heading-anchor">#</a>7.6 Scientific applications</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="7-6-scientific-applications"><a href="#7-6-scientific-applications" class="heading-anchor">#</a>7.6 Scientific Applications</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Application</th>
 <th>Cloud fit</th>
 </tr>
@@ -369,7 +411,7 @@
 <td><strong>AI/ML training</strong></td>
 <td>distributed training (PyTorch DDP, Horovod, DeepSpeed) on GPU clusters</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="7-7-business-and-consumer-applications"><a href="#7-7-business-and-consumer-applications" class="heading-anchor">#</a>7.7 Business and Consumer applications</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="7-7-business-and-consumer-applications"><a href="#7-7-business-and-consumer-applications" class="heading-anchor">#</a>7.7 Business and Consumer Applications</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Category</th>
 <th>Examples</th>
 <th>Cloud value</th>
@@ -399,16 +441,7 @@
 <td>AWS IoT, Azure IoT Hub, GCP IoT Core — device management, rules, analytics</td>
 <td>scale to millions, offline sync, edge compute</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="7-8-answer-skeletons"><a href="#7-8-answer-skeletons" class="heading-anchor">#</a>7.8 Answer skeletons</h2><h3 id="a10-quot-define-appengine-quot-1"><a href="#a10-quot-define-appengine-quot-1" class="heading-anchor">#</a>A10 · &quot;Define AppEngine.&quot; [1]</h3><blockquote class="custom-blockquote"><p>AppEngine is Google Cloud&#39;s fully managed PaaS — developers deploy code (Python, Java, Node.js, Go, PHP, Ruby, .NET) and Google manages infrastructure: servers, auto-scaling, load balancing, patching, availability. Two environments: <strong>Standard</strong> (instance-based, milliseconds scale) and <strong>Flexible</strong> (Docker containers). Services: Datastore, Cloud SQL, Cloud Storage, Pub/Sub.</p>
-</blockquote><p><em>(54 words)</em></p>
-<h3 id="quot-compare-appengine-azure-app-service-and-aneka-quot-5-insurance"><a href="#quot-compare-appengine-azure-app-service-and-aneka-quot-5-insurance" class="heading-anchor">#</a>&quot;Compare AppEngine, Azure App Service, and Aneka.&quot; [5] — insurance</h3><blockquote class="custom-blockquote"><p><strong>AppEngine (Google):</strong> fully managed PaaS, code-only deploy, Standard (instance) + Flexible (Docker) environments, integrated with Datastore/Cloud SQL/Pub/Sub, pay-per-use, free tier.</p>
-<p><strong>Azure App Service (Microsoft):</strong> fully managed web app hosting, Windows/Linux/containers, deployment slots, hybrid (Arc), Entra ID integration, Visual Studio/GitHub native, App Service Plans (dedicated instances).</p>
-<p><strong>Aneka (Manjrasoft):</strong> .NET-specific PaaS, Task/Thread/MapReduce/Grid programming models, runs on Windows/Azure/AWS/private, commercial licence, Visual Studio plugin.</p>
-<p><strong>Differentiation:</strong> AppEngine = code-only, Google ecosystem; Azure App Service = hybrid/enterprise, Microsoft ecosystem; Aneka = .NET workloads, custom programming models.</p>
-</blockquote><p><em>(185 words)</em></p>
-<h3 id="quot-describe-open-challenges-in-cloud-platforms-quot-5-insurance"><a href="#quot-describe-open-challenges-in-cloud-platforms-quot-5-insurance" class="heading-anchor">#</a>&quot;Describe open challenges in cloud platforms.&quot; [5] — insurance</h3><blockquote class="custom-blockquote"><p><strong>Open challenges:</strong> (1) <strong>Vendor lock-in</strong> — proprietary APIs, egress fees, non-portable services. (2) <strong>Multi-cloud complexity</strong> — different APIs, identities, networking, billing. (3) <strong>Security &amp; compliance</strong> — shared responsibility confusion, misconfiguration, data sovereignty. (4) <strong>Cost management</strong> — unpredictable billing, idle resources, lack of visibility. (5) <strong>Skills gap</strong> — Kubernetes, serverless, IaC skills scarce. (6) <strong>Performance variability</strong> — noisy neighbour, cold starts, latency. (7) <strong>Legacy migration</strong> — refactoring cost, data gravity. (8) <strong>Governance</strong> — policy enforcement, drift, FinOps. (9) <strong>Sustainability</strong> — carbon footprint, green regions.</p>
-</blockquote><p><em>(190 words)</em></p>
-<hr class="custom-hr"><h2 id="7-9-traps"><a href="#7-9-traps" class="heading-anchor">#</a>7.9 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="7-8-traps"><a href="#7-8-traps" class="heading-anchor">#</a>7.8 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
@@ -438,7 +471,7 @@
 <td>syllabus bullet: &quot;open challenges&quot;</td>
 <td>9 challenges listed above</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="7-10-self-test-answers-collapsed"><a href="#7-10-self-test-answers-collapsed" class="heading-anchor">#</a>7.10 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="7-9-self-test-answers-collapsed"><a href="#7-9-self-test-answers-collapsed" class="heading-anchor">#</a>7.9 Self-Test (Answers Collapsed)</h2><ol>
 <li>Define AppEngine in one sentence with key services. <em>(1 mark — A10)</em></li><li>What are the two AppEngine environments? <em>(1 mark)</em></li><li>Name the Azure PaaS equivalent of AppEngine. <em>(1 mark)</em></li><li>What is Aneka, and what is its focus? <em>(2 marks)</em></li><li>SOAP vs REST: protocol, data format, use case. <em>(3 marks)</em></li><li>Name five open challenges in cloud platforms. <em>(3 marks)</em></li><li>Give one scientific application and its cloud fit. <em>(2 marks)</em></li><li>Give one business application category and its cloud value. <em>(2 marks)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -447,11 +480,11 @@
 <li>AppEngine = Google&#39;s fully managed PaaS; deploy code (Python, Java, Node.js, Go, PHP, Ruby, .NET); Google manages servers, auto-scaling, load balancing, patching. Services: Datastore, Cloud SQL, Cloud Storage, Pub/Sub.</li><li><strong>Standard</strong> (instance-based, milliseconds scale, sandboxed) and <strong>Flexible</strong> (Docker containers, custom runtimes).</li><li><strong>Azure App Service</strong> — fully managed web app hosting (Windows/Linux/containers), deployment slots, hybrid via Arc.</li><li>Aneka = .NET-specific PaaS (Manjrasoft); Task/Thread/MapReduce/Grid programming models; runs on Windows, Azure, AWS, private cloud; commercial licence.</li><li><strong>SOAP:</strong> HTTP/SMTP, XML, enterprise/strict contracts. <strong>REST:</strong> HTTP, JSON, web/mobile APIs, microservices.</li><li>Vendor lock-in, multi-cloud complexity, security/compliance, cost management, skills gap, performance variability, legacy migration, governance, sustainability.</li><li>Genomics (BWA/GATK) — burst to cloud for large-scale alignment. Climate modelling (WRF) — HPC on cloud with MPI/InfiniBand.</li><li>E-commerce (Shopify) — elastic scaling for Black Friday, global CDN. Streaming (Netflix) — global delivery, personalisation. FinTech (Stripe) — PCI compliance, low latency.</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="7-11-sixty-second-check"><a href="#7-11-sixty-second-check" class="heading-anchor">#</a>7.11 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="7-10-sixty-second-check"><a href="#7-10-sixty-second-check" class="heading-anchor">#</a>7.10 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> AppEngine: definition + two environments + three services</li><li><input disabled="" type="checkbox"> Azure App Service: AppEngine equivalent + hybrid/enterprise features</li><li><input disabled="" type="checkbox"> Aneka: .NET PaaS + programming models + deployment targets</li><li><input disabled="" type="checkbox"> Web services: SOAP vs REST (protocol, format, use case)</li><li><input disabled="" type="checkbox"> Five open challenges (vendor lock-in, multi-cloud, security, cost, skills)</li><li><input disabled="" type="checkbox"> One scientific + one business application with cloud value</li></ul>
 <p>If all six are there, Unit 7&#39;s <strong>1 mark (A10) + insurance</strong> is covered.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 7, 12 LHs) · TU/FOM model question 2026 (A10) · Saurabh, Cloud Computing, ch. 13–14 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 12–13 (syllabus reading) · Google Cloud AppEngine documentation, Microsoft Azure App Service documentation, Manjrasoft Aneka documentation — standard product references. Google Cloud, Microsoft Azure, AWS service names are standard examples, not current feature claims.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 277, Unit 7, 12 LHs) · TU/FOM model question 2026 (A10) · Saurabh, Cloud Computing, ch. 13–14 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 12–13 (syllabus reading) · Google Cloud AppEngine documentation, Microsoft Azure App Service documentation, Manjrasoft Aneka documentation — standard product references. Google Cloud, Microsoft Azure, AWS service names are standard examples, not current feature claims.</em></p>
 
         </div>
       </article>

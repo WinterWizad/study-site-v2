@@ -1,0 +1,17 @@
+{
+  "name": "Worst Generation — BIM 8th Semester",
+  "short_name": "Worst Gen",
+  "description": "BIM 8th semester study materials: Business Intelligence, Digital Economy, Cloud Computing, IT Entrepreneurship.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -3,17 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit 5: MapReduce | Cloud Computing | BIM 8th Semester</title>
-  <meta name="description" content="IT 277 - Unit 5: MapReduce">
+  <title>Unit 5: MapReduce | Cloud Computing | Worst Generation</title>
+  <meta name="description" content="IT 277 - Unit 5: MapReduce — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="cloud">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #7c3aed">IT 277</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -113,8 +120,8 @@
 <td>7</td>
 </tr>
 <tr>
-<td><strong>Marks carried in model question</strong></td>
-<td><strong>9</strong> — one 1-marker (A8 parallel computing definition), one 3-marker (B15 parallel efficiency of MapReduce), one 5-marker (C19 MapReduce architecture working)</td>
+<td><strong>Marks in model question</strong></td>
+<td>9 — one 1-marker (A8 parallel computing definition), one 3-marker (B15 parallel efficiency of MapReduce), one 5-marker (C19 MapReduce architecture working)</td>
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
@@ -129,15 +136,38 @@
 <td>Unit 1 (cloud elasticity enables MapReduce clusters) · basic programming concepts</td>
 </tr>
 <tr>
-<td><strong>Syllabus bullets</strong></td>
+<td><strong>Syllabus</strong></td>
 <td>Parallel computing · MapReduce model · MapReduce applications · Parallel efficiency of MapReduce · Enterprise batch processing using MapReduce</td>
 </tr>
-</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit has <strong>three questions, all mapped directly</strong>. A8 is a 1-marker definition. B15 is a 3-marker on <em>parallel efficiency</em> — you need Amdahl&#39;s law, speedup formula, and straggler mitigation. C19 is a 5-marker on <em>MapReduce architecture working</em> — you must draw the <strong>map → shuffle → reduce</strong> diagram with the word-count example. The diagram is mandatory; prose loses marks.</p>
-</blockquote><hr class="custom-hr"><h2 id="5-1-parallel-computing-a8"><a href="#5-1-parallel-computing-a8" class="heading-anchor">#</a>5.1 Parallel computing (A8)</h2><blockquote class="custom-blockquote"><p><strong>Parallel computing is a form of computation where many calculations or processes are carried out simultaneously — dividing a problem into sub-problems that can be solved concurrently on multiple processors, then combining the results.</strong></p>
-</blockquote><h3 id="a8-quot-what-is-parallel-computing-quot-1"><a href="#a8-quot-what-is-parallel-computing-quot-1" class="heading-anchor">#</a>A8 · &quot;What is parallel computing?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Parallel computing is a computation model where a problem is divided into independent sub-problems that execute simultaneously on multiple processors, with results combined at the end. It exploits concurrency to reduce wall-clock time. Contrast with serial computing (one task at a time) and distributed computing (networked computers with message passing).</p>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> This unit has <strong>three questions, all mapped directly</strong>. A8 is a 1-marker definition. B15 is a 3-marker on <em>parallel efficiency</em> — you need Amdahl&#39;s law, speedup formula, and straggler mitigation. C19 is a 5-marker on <em>MapReduce architecture working</em> — you must draw the <strong>map → shuffle → reduce</strong> diagram with the word-count example. The diagram is mandatory; prose loses marks.</p>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">5.1 Parallel Computing (A8) 🎯 1-mark
+├── Definition: problem divided into sub-problems, executed simultaneously, results combined
+└── Contrast with serial and distributed computing
+
+5.2 The MapReduce Model
+├── Two functions: Map (key,value) → list(key',value'), Reduce (key',list(value')) → list(key'',value'')
+├── Three phases: Map → Shuffle & Sort → Reduce (diagram mandatory for C19)
+└── Word-count example (canonical C19 illustration)
+
+5.3 MapReduce Applications
+├── Word count, Inverted index, Distributed grep, Log analysis, PageRank, Join
+└── Map/Reduce function for each pattern
+
+5.4 Parallel Efficiency of MapReduce (B15) 🎯 3-mark
+├── Speedup = T₁/Tₚ, Efficiency = Speedup/p
+├── Amdahl's Law: Speedup_max = 1 / (f + (1−f)/p)
+└── Three limiting factors: serial fraction, stragglers, shuffle overhead + mitigations
+
+5.5 Enterprise Batch Processing Using MapReduce
+├── Input/Output: HDFS, S3, GCS, Azure Blob
+├── Resource management: YARN, Kubernetes, Mesos
+├── Fault tolerance: task re-execution, speculative execution, checkpointing
+├── Optimisation: combiners, partitioners, compression, join strategies
+└── Beyond MapReduce: Spark (in-memory DAG), Flink (streaming), Tez (DAG engine)</code></pre></div><hr class="custom-hr"><h2 id="5-1-parallel-computing-a8-1-mark"><a href="#5-1-parallel-computing-a8-1-mark" class="heading-anchor">#</a>5.1 Parallel Computing (A8) 🎯 1-mark</h2><blockquote class="custom-blockquote"><p><strong>Parallel computing is a form of computation where many calculations or processes are carried out simultaneously — dividing a problem into sub-problems that can be solved concurrently on multiple processors, then combining the results.</strong></p>
+</blockquote><hr class="custom-hr"><h3 id="a8-quot-what-is-parallel-computing-quot-1-1-mark"><a href="#a8-quot-what-is-parallel-computing-quot-1-1-mark" class="heading-anchor">#</a>A8 · &quot;What is parallel computing?&quot; [1] 🎯 1-mark</h3><blockquote class="custom-blockquote"><p>Parallel computing is a computation model where a problem is divided into independent sub-problems that execute simultaneously on multiple processors, with results combined at the end. It exploits concurrency to reduce wall-clock time. Contrast with serial computing (one task at a time) and distributed computing (networked computers with message passing).</p>
 </blockquote><p><em>(48 words. Definition + how it works + contrast.)</em></p>
-<hr class="custom-hr"><h2 id="5-2-the-mapreduce-model"><a href="#5-2-the-mapreduce-model" class="heading-anchor">#</a>5.2 The MapReduce model</h2><blockquote class="custom-blockquote"><p><strong>MapReduce is a programming model and execution framework for processing large datasets in parallel across a cluster — it abstracts the complexity of distributed systems (partitioning, scheduling, fault tolerance) into two user-defined functions: Map and Reduce.</strong></p>
-</blockquote><h3 id="the-two-functions"><a href="#the-two-functions" class="heading-anchor">#</a>The two functions</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="5-2-the-mapreduce-model"><a href="#5-2-the-mapreduce-model" class="heading-anchor">#</a>5.2 The MapReduce Model</h2><blockquote class="custom-blockquote"><p><strong>MapReduce is a programming model and execution framework for processing large datasets in parallel across a cluster — it abstracts the complexity of distributed systems (partitioning, scheduling, fault tolerance) into two user-defined functions: Map and Reduce.</strong></p>
+</blockquote><h3 id="the-two-functions"><a href="#the-two-functions" class="heading-anchor">#</a>The Two Functions</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Function</th>
 <th>Signature</th>
 <th>What it does</th>
@@ -152,7 +182,7 @@
 <td><code>(key&#39;, list(value&#39;)) → list(key&#39;&#39;, value&#39;&#39;)</code></td>
 <td>aggregates all values for each intermediate key, emits final output</td>
 </tr>
-</tbody></table></div><h3 id="the-three-phases-the-diagram-c19-demands"><a href="#the-three-phases-the-diagram-c19-demands" class="heading-anchor">#</a>The three phases (the diagram C19 demands)</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> INPUT DATA
+</tbody></table></div><hr class="custom-hr"><h3 id="the-three-phases-the-diagram-c19-demands"><a href="#the-three-phases-the-diagram-c19-demands" class="heading-anchor">#</a>The Three Phases (the diagram C19 demands)</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> INPUT DATA
      │
      ▼
 ┌─────────────┐
@@ -168,7 +198,7 @@
   (key, value)      (key', list(v'))      (key'', value'')
   intermediate        grouped by key         final output</code></pre></div><ol>
 <li><strong>Map phase</strong> — input splits processed in parallel; each map task emits <code>(key, value)</code> pairs.</li><li><strong>Shuffle &amp; Sort</strong> — framework partitions map outputs by key, sorts within partition, transfers to reducers (the &quot;shuffle&quot; is network-intensive).</li><li><strong>Reduce phase</strong> — each reducer receives all values for its keys, aggregates, writes final output.</li></ol>
-<h3 id="word-count-example-the-canonical-c19-illustration"><a href="#word-count-example-the-canonical-c19-illustration" class="heading-anchor">#</a>Word-count example (the canonical C19 illustration)</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> INPUT: "the quick brown fox"
+<hr class="custom-hr"><h3 id="word-count-example-the-canonical-c19-illustration"><a href="#word-count-example-the-canonical-c19-illustration" class="heading-anchor">#</a>Word-count example (the canonical C19 illustration)</h3><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text"> INPUT: "the quick brown fox"
               │
               ▼
  MAP: (the,1) (quick,1) (brown,1) (fox,1)
@@ -179,7 +209,7 @@
               │
               ▼
  REDUCE: sum values
- (brown,1) (fox,1) (quick,1) (the,1)</code></pre></div><hr class="custom-hr"><h2 id="5-3-mapreduce-applications"><a href="#5-3-mapreduce-applications" class="heading-anchor">#</a>5.3 MapReduce applications</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+ (brown,1) (fox,1) (quick,1) (the,1)</code></pre></div><hr class="custom-hr"><h2 id="5-3-mapreduce-applications"><a href="#5-3-mapreduce-applications" class="heading-anchor">#</a>5.3 MapReduce Applications</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Application pattern</th>
 <th>Map function</th>
 <th>Reduce function</th>
@@ -214,8 +244,8 @@
 <td>emit (join_key, (tag, value))</td>
 <td>join on key, combine tagged values</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="5-4-parallel-efficiency-of-mapreduce-b15"><a href="#5-4-parallel-efficiency-of-mapreduce-b15" class="heading-anchor">#</a>5.4 Parallel efficiency of MapReduce (B15)</h2><blockquote class="custom-blockquote"><p><strong>Speedup</strong> = T₁ / Tₚ (serial time / parallel time with p processors).<br><strong>Efficiency</strong> = Speedup / p = T₁ / (p × Tₚ).<br><strong>Amdahl&#39;s Law</strong> — maximum speedup is limited by the serial fraction <em>f</em>:<br><strong>Speedup_max = 1 / (f + (1−f)/p)</strong></p>
-</blockquote><h3 id="three-factors-that-limit-mapreduce-efficiency"><a href="#three-factors-that-limit-mapreduce-efficiency" class="heading-anchor">#</a>Three factors that limit MapReduce efficiency</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="5-4-parallel-efficiency-of-mapreduce-b15-3-mark"><a href="#5-4-parallel-efficiency-of-mapreduce-b15-3-mark" class="heading-anchor">#</a>5.4 Parallel Efficiency of MapReduce (B15) 🎯 3-mark</h2><blockquote class="custom-blockquote"><p><strong>Speedup</strong> = T₁ / Tₚ (serial time / parallel time with p processors).<br><strong>Efficiency</strong> = Speedup / p = T₁ / (p × Tₚ).<br><strong>Amdahl&#39;s Law</strong> — maximum speedup is limited by the serial fraction <em>f</em>:<br><strong>Speedup_max = 1 / (f + (1−f)/p)</strong></p>
+</blockquote><h3 id="three-factors-that-limit-mapreduce-efficiency"><a href="#three-factors-that-limit-mapreduce-efficiency" class="heading-anchor">#</a>Three Factors That Limit MapReduce Efficiency</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Factor</th>
 <th>What it is</th>
 <th>Mitigation</th>
@@ -235,13 +265,13 @@
 <td>network transfer of intermediate data</td>
 <td>combiners (local reduce), compression (Snappy, LZO), fewer reducers</td>
 </tr>
-</tbody></table></div><h3 id="b15-quot-describe-the-parallel-efficiency-of-mapreduce-quot-3"><a href="#b15-quot-describe-the-parallel-efficiency-of-mapreduce-quot-3" class="heading-anchor">#</a>B15 · &quot;Describe the parallel efficiency of MapReduce.&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Shape: speedup/efficiency formulas + Amdahl&#39;s law + three limiting factors with mitigations. ~100 words.</strong></p>
+</tbody></table></div><hr class="custom-hr"><h3 id="b15-quot-describe-the-parallel-efficiency-of-mapreduce-quot-3-3-mark"><a href="#b15-quot-describe-the-parallel-efficiency-of-mapreduce-quot-3-3-mark" class="heading-anchor">#</a>B15 · &quot;Describe the parallel efficiency of MapReduce.&quot; [3] 🎯 3-mark</h3><blockquote class="custom-blockquote"><p><strong>Shape: speedup/efficiency formulas + Amdahl&#39;s law + three limiting factors with mitigations. ~100 words.</strong></p>
 </blockquote><p><strong>Speedup</strong> = T₁ / Tₚ. <strong>Efficiency</strong> = Speedup / p = T₁ / (p·Tₚ). <strong>Amdahl&#39;s Law</strong> limits max speedup by serial fraction <em>f</em>: Speedup_max = 1 / (f + (1−f)/p).</p>
 <p><strong>Three factors limiting MapReduce efficiency:</strong></p>
 <ol>
 <li><strong>Serial fraction</strong> — job setup, commit, single-threaded parts. <em>Mitigation:</em> minimise serial code; use combiners for local aggregation.</li><li><strong>Stragglers</strong> — slow tasks from disk, GC, data skew. <em>Mitigation:</em> speculative execution (duplicate slow task); better partitioning (custom Partitioner).</li><li><strong>Shuffle overhead</strong> — network transfer of intermediate data. <em>Mitigation:</em> combiners (local reduce before shuffle); compression (Snappy, LZO); optimal reducer count.</li></ol>
 <p><em>(108 words)</em></p>
-<hr class="custom-hr"><h2 id="5-5-enterprise-batch-processing-using-mapreduce"><a href="#5-5-enterprise-batch-processing-using-mapreduce" class="heading-anchor">#</a>5.5 Enterprise batch processing using MapReduce</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<hr class="custom-hr"><h2 id="5-5-enterprise-batch-processing-using-mapreduce"><a href="#5-5-enterprise-batch-processing-using-mapreduce" class="heading-anchor">#</a>5.5 Enterprise Batch Processing Using MapReduce</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Aspect</th>
 <th>What it means in practice</th>
 </tr>
@@ -269,22 +299,7 @@
 <td><strong>Beyond MapReduce</strong></td>
 <td>Spark (in-memory DAG), Flink (streaming), Tez (DAG engine) — same patterns, better performance</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="5-6-answer-skeletons"><a href="#5-6-answer-skeletons" class="heading-anchor">#</a>5.6 Answer skeletons</h2><h3 id="a8-quot-what-is-parallel-computing-quot-1"><a href="#a8-quot-what-is-parallel-computing-quot-1" class="heading-anchor">#</a>A8 · &quot;What is parallel computing?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Parallel computing is a computation model where a problem is divided into independent sub-problems that execute simultaneously on multiple processors, with results combined at the end. It exploits concurrency to reduce wall-clock time. Contrast with serial computing (one task at a time) and distributed computing (networked computers with message passing).</p>
-</blockquote><p><em>(48 words)</em></p>
-<h3 id="b15-quot-describe-the-parallel-efficiency-of-mapreduce-quot-3"><a href="#b15-quot-describe-the-parallel-efficiency-of-mapreduce-quot-3" class="heading-anchor">#</a>B15 · &quot;Describe the parallel efficiency of MapReduce.&quot; [3]</h3><blockquote class="custom-blockquote"><p><strong>Speedup</strong> = T₁ / Tₚ. <strong>Efficiency</strong> = Speedup / p = T₁ / (p·Tₚ). <strong>Amdahl&#39;s Law</strong>: Speedup_max = 1 / (f + (1−f)/p), limited by serial fraction <em>f</em>.</p>
-<p><strong>Three limiting factors:</strong> (1) <strong>Serial fraction</strong> — job setup, commit, single-threaded parts. <em>Mitigation:</em> minimise serial code; use combiners. (2) <strong>Stragglers</strong> — slow tasks from disk, GC, data skew. <em>Mitigation:</em> speculative execution (duplicate slow task); custom Partitioner. (3) <strong>Shuffle overhead</strong> — network transfer of intermediate data. <em>Mitigation:</em> combiners (local reduce); compression (Snappy, LZO); optimal reducer count.</p>
-</blockquote><p><em>(108 words)</em></p>
-<h3 id="c19-quot-describe-the-working-of-mapreduce-architecture-quot-5"><a href="#c19-quot-describe-the-working-of-mapreduce-architecture-quot-5" class="heading-anchor">#</a>C19 · &quot;Describe the working of MapReduce architecture.&quot; [5]</h3><blockquote class="custom-blockquote"><p><strong>Shape: three phases (map → shuffle → reduce) + word-count diagram + fault tolerance. ~200 words.</strong></p>
-</blockquote><p>MapReduce processes large datasets in parallel via two user functions: <strong>Map</strong> <code>(k,v) → list(k&#39;,v&#39;)</code> and <strong>Reduce</strong> <code>(k&#39;, list(v&#39;)) → list(k&#39;&#39;,v&#39;&#39;)</code>.</p>
-<p><strong>Three phases:</strong></p>
-<ol>
-<li><strong>Map phase</strong> — input split into 64–128MB blocks; each map task processes one split, emits intermediate <code>(key, value)</code> pairs.</li><li><strong>Shuffle &amp; Sort</strong> — framework partitions map outputs by key, sorts within partition, transfers to reducers over network.</li><li><strong>Reduce phase</strong> — each reducer receives all values for its keys, aggregates, writes final output.</li></ol>
-<p><strong>Word-count diagram:</strong></p>
-<div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">INPUT → SPLIT → MAP (the,1) (quick,1) (brown,1) (fox,1)
-    → SHUFFLE: group by key → (the,[1]) (quick,[1]) (brown,[1]) (fox,[1])
-    → REDUCE: sum → (the,1) (quick,1) (brown,1) (fox,1)</code></pre></div><p><strong>Fault tolerance:</strong> task re-execution on failure; speculative execution for stragglers; deterministic map/reduce enables safe retry.</p>
-<p><em>(204 words)</em></p>
-<hr class="custom-hr"><h2 id="5-7-traps"><a href="#5-7-traps" class="heading-anchor">#</a>5.7 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="5-6-traps"><a href="#5-6-traps" class="heading-anchor">#</a>5.6 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
 <th>Why it costs marks</th>
 <th>Fix</th>
@@ -319,7 +334,7 @@
 <td>shuffle + stragglers + serial fraction are the reasons</td>
 <td>three factors + mitigations</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="5-8-self-test-answers-collapsed"><a href="#5-8-self-test-answers-collapsed" class="heading-anchor">#</a>5.8 Self-test (answers collapsed)</h2><ol>
+</tbody></table></div><hr class="custom-hr"><h2 id="5-7-self-test-answers-collapsed"><a href="#5-7-self-test-answers-collapsed" class="heading-anchor">#</a>5.7 Self-Test (Answers Collapsed)</h2><ol>
 <li>Define parallel computing in one sentence. <em>(1 mark — A8)</em></li><li>What are the two MapReduce functions, and their signatures? <em>(2 marks)</em></li><li>Draw the MapReduce three-phase diagram (map → shuffle → reduce). <em>(diagram — C19)</em></li><li>Trace the word-count example through Map, Shuffle, Reduce. <em>(3 marks — C19)</em></li><li>Give the speedup and efficiency formulas, and Amdahl&#39;s law. <em>(2 marks — B15)</em></li><li>Name three factors limiting MapReduce parallel efficiency, with one mitigation each. <em>(3 marks — B15)</em></li><li>What is a combiner, and when does it run? <em>(2 marks)</em></li></ol>
 <details>
 <summary>Answers</summary>
@@ -328,11 +343,11 @@
 <li>Parallel computing = problem divided into independent sub-problems executed simultaneously on multiple processors, results combined; exploits concurrency to reduce wall-clock time.</li><li><strong>Map:</strong> <code>(key, value) → list(key&#39;, value&#39;)</code> — processes input split, emits intermediate pairs. <strong>Reduce:</strong> <code>(key&#39;, list(value&#39;)) → list(key&#39;&#39;, value&#39;&#39;)</code> — aggregates values per key, emits final output.</li><li>INPUT → SPLIT → MAP TASKS (parallel) → SHUFFLE &amp; SORT (partition by key, sort, network transfer) → REDUCE TASKS → OUTPUT.</li><li>&quot;the quick brown fox&quot; → MAP: (the,1) (quick,1) (brown,1) (fox,1) → SHUFFLE: group by key → (the,[1]) (quick,[1]) (brown,[1]) (fox,[1]) → REDUCE: sum → (the,1) (quick,1) (brown,1) (fox,1).</li><li>Speedup = T₁/Tₚ. Efficiency = Speedup/p = T₁/(p·Tₚ). Amdahl: Speedup_max = 1 / (f + (1−f)/p).</li><li>(1) Serial fraction → minimise serial code, use combiners. (2) Stragglers → speculative execution, custom Partitioner. (3) Shuffle overhead → combiners, compression (Snappy/LZO), optimal reducer count.</li><li>Combiner = local reducer that runs on map output <em>before</em> shuffle; same logic as Reduce but on single map&#39;s output; reduces shuffle volume.</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="5-9-sixty-second-check"><a href="#5-9-sixty-second-check" class="heading-anchor">#</a>5.9 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="5-8-sixty-second-check"><a href="#5-8-sixty-second-check" class="heading-anchor">#</a>5.8 Sixty-Second Check</h2><p>Close this file and, on a blank page:</p>
 <ul>
 <li><input disabled="" type="checkbox"> Parallel computing definition (one sentence)</li><li><input disabled="" type="checkbox"> Map signature + Reduce signature</li><li><input disabled="" type="checkbox"> MapReduce three-phase diagram: map → shuffle → reduce</li><li><input disabled="" type="checkbox"> Word-count trace: input → map → shuffle → reduce → output</li><li><input disabled="" type="checkbox"> Speedup, efficiency, Amdahl&#39;s law formulas</li><li><input disabled="" type="checkbox"> Three efficiency limiters: serial fraction, stragglers, shuffle + mitigations</li><li><input disabled="" type="checkbox"> Combiner: local reducer on map output, before shuffle</li></ul>
 <p>If all seven are there, Unit 5&#39;s <strong>9 marks</strong> are covered — A8, B15, C19.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 277, Unit 5, 7 LHs) · TU/FOM model question 2026 (A8, B15, C19) · Saurabh, Cloud Computing, ch. 9 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 10 (syllabus reading) · Dean &amp; Ghemawat, &quot;MapReduce: Simplified Data Processing on Large Clusters&quot; (OSDI 2004) — the original paper. Hadoop MapReduce, Spark, Flink are standard implementations, not current version claims.</em></p>
+<hr class="custom-hr"><p><em>Sources: TU FOM syllabus (IT 277, Unit 5, 7 LHs) · TU/FOM model question 2026 (A8, B15, C19) · Saurabh, Cloud Computing, ch. 9 (syllabus reading) · Buyya et al., Mastering Cloud Computing, ch. 10 (syllabus reading) · Dean &amp; Ghemawat, &quot;MapReduce: Simplified Data Processing on Large Clusters&quot; (OSDI 2004) — the original paper. Hadoop MapReduce, Spark, Flink are standard implementations, not current version claims.</em></p>
 
         </div>
       </article>

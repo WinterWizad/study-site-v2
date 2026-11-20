@@ -3,17 +3,48 @@
 | | |
 |---|---|
 | **Lecture hours** | 7 |
-| **Marks carried in 2026 paper** | **16** — three 2-markers (A3 digital monopolization, A4 four multi-sided platform types, A5 sources of switching costs), two 5-markers (B12 OECD Digital Government index dimensions, B13 network effects + why they matter) |
-| **Difficulty** | ★★★☆☆ — network effects and switching costs are standard platform economics; the OECD index dimensions are a specific list that must be memorised; digital monopolization is a mechanism answer, not a list |
-| **Exam yield** | 🔴 high — 7 hours, 16 marks, and every concept here reappears in Unit 3 (platforms, lock-in, network effects) |
-| **Prerequisite** | Unit 1 (the ecosystem layers — platforms live in layer 2, data in layer 4) |
-| **Syllabus bullets** | Multi-sided platforms: Network effects and positive feedback · Lock-in and switching costs · Formation of monopolies in the digital economy · Digital Adoption Index and OECD Digital Government Index |
+| **Marks in 2026 paper** | 16 — three 2-markers (A3 digital monopolization, A4 four MSP types, A5 switching costs), two 5-markers (B12 OECD DGI, B13 network effects) |
+| **Difficulty** | ★★★☆☆ — network effects and switching costs are standard platform economics; OECD index is a specific list to memorise; digital monopolization is a mechanism answer, not a list |
+| **Exam yield** | 🔴 high — 7 hours, 16 marks, every concept reappears in Unit 3 |
+| **Prerequisite** | Unit 1 (ecosystem layers — platforms in layer 2, data in layer 4) |
+| **Syllabus** | Multi-sided platforms: network effects and positive feedback · Lock-in and switching costs · Formation of monopolies · Digital Adoption Index and OECD Digital Government Index |
 
-> **Read this first:** this unit is where the paper checks whether you understand the *mechanics* of platform markets — network effects, lock-in, switching costs, and how they produce digital monopolies. The OECD Digital Government index is a specific list (six dimensions) that appears verbatim in B12. The "four types of multi-sided platforms" in A4 is a categorisation question — get the four categories right and you get the marks; invent categories and you don't.
+> **Read this first:** This unit checks whether you understand the *mechanics* of platform markets — network effects, lock-in, switching costs, and how they produce digital monopolies. The OECD Digital Government Index is a specific list (six dimensions) that appears verbatim in B12. The "four types of multi-sided platforms" in A4 is a categorisation question — get the four categories right and you get the marks.
 
 ---
 
-## 2.1 Multi-sided platforms and network effects
+## Coverage Map
+
+```
+2.1 Multi-Sided Platforms & Network Effects
+├── MSP definition: three testable parts
+├── Network effects: direct, indirect, negative
+├── Positive feedback loop
+└── Why network effects matter: three reasons + lock-in consequence
+
+2.2 Lock-in and Switching Costs 🎯 2-mark
+├── Definition
+├── Four sources: data/history, network/relationships, learning/workflow, contractual
+└── Endogenous vs contractual
+
+2.3 Digital Monopolization 🎯 2-mark
+├── Mechanism: network effects + near-zero marginal cost + data-driven returns + endogenous switching costs
+├── Not a legal monopoly — effective barrier is installed base
+└── Result: winner-take-most dynamics
+
+2.4 Types of Multi-Sided Platforms 🎯 2-mark
+├── Four canonical types (named by sides)
+└── One example each
+
+2.5 Digital Adoption Index vs OECD DGI 🎯 5-mark
+├── DAI: World Bank, 3 pillars (people, government, business)
+├── DGI: OECD, 6 dimensions with Nepal illustrations
+└── Difference: adoption breadth vs government capability
+```
+
+---
+
+## 2.1 Multi-Sided Platforms and Network Effects
 
 > **A multi-sided platform (MSP) is an intermediary that enables direct interactions between two or more distinct groups of participants — "sides" — and captures value by solving the coordination problem that would exist without it.**
 
@@ -21,11 +52,11 @@ The definition has three testable parts:
 
 | Part | What it means | Exam signal |
 |---|---|---|
-| **distinct groups of participants** | sides have different needs: buyers vs sellers, riders vs drivers, advertisers vs users, developers vs users | A4 asks for *types* — name the sides |
-| **enables direct interactions** | the platform does not buy and resell; it matches and facilitates | distinguishes MSP from a reseller/wholesaler |
-| **captures value** | fees, commissions, subscriptions, data, advertising — the business model | Unit 3's business models |
+| **Distinct groups of participants** | sides have different needs: buyers vs sellers, riders vs drivers, advertisers vs users, developers vs users | A4 asks for *types* — name the sides |
+| **Enables direct interactions** | the platform does not buy and resell; it matches and facilitates | distinguishes MSP from a reseller/wholesaler |
+| **Captures value** | fees, commissions, subscriptions, data, advertising — the business model | Unit 3's business models |
 
-### Network effects — the engine of platform value
+### Network Effects — The Engine of Platform Value
 
 > **A network effect exists when the value of a product or service to one user increases as the number of other users increases.** It is the *positive feedback loop* that makes platforms winner-take-most.
 
@@ -37,7 +68,9 @@ The definition has three testable parts:
 
 **Positive feedback** is the dynamic: network effects → more users → stronger effects → even more users. The loop stops at *market saturation*, *multi-homing* (users on multiple platforms), or *competition*.
 
-### Why network effects matter in digital markets — B13 (5 marks ≈ 200 words)
+---
+
+### Why Network Effects Matter in Digital Markets — B13 🎯 5-mark
 
 > **Shape: define → direct vs indirect → why they matter (three reasons) → the lock-in consequence. ~200 words.**
 
@@ -51,11 +84,21 @@ Network effects are the **structural reason digital markets tend to concentratio
 
 ---
 
-## 2.2 Lock-in and switching costs
+### B13 · "Define network effects. Why are they important in digital markets? Explain." [5] 🎯 5-mark
+
+> A network effect exists when the value of a product or service to one user increases as the number of other users increases. **Direct (same-side)** effects: more users → more value for same-side users (WhatsApp, Metcalfe's law). **Indirect (cross-side)** effects: more users on side A → more value for side B (Uber: drivers ↔ riders; credit cards: merchants ↔ cardholders).
+>
+> Network effects matter in digital markets for three reasons. **First**, they create increasing returns to scale — the thousandth user adds value to all existing users, unlike traditional constant returns. **Second**, they generate switching costs endogenously — the more you use a platform (data, connections, reputation), the more you lose by leaving. **Third**, they shape competition toward winner-take-most — two similar platforms do not split the market 50/50; the larger network pulls ahead until the smaller exits or niches. This lock-in consequence is why digital monopolization (A3) is a structural tendency, not an accident.
+
+*(204 words)*
+
+---
+
+## 2.2 Lock-in and Switching Costs 🎯 2-mark
 
 > **Switching cost is the economic, psychological or contractual cost a user incurs when moving from one platform (or product) to another.** In digital markets, switching costs are the *retention mechanism* that turns network effects into durable market power.
 
-### Sources of switching costs — the list A5 expects (2 marks ≈ 55 words)
+### Sources of Switching Costs — the list A5 expects (2 marks ≈ 55 words)
 
 > **Four main sources:** (1) **Data and history portability** — user-generated content, transaction history, ratings, credit scores, trained models that cannot be exported or are costly to recreate. (2) **Network and relationship specificity** — the connections, followers, supplier relationships, buyer reputation that exist only on that platform. (3) **Learning and workflow investment** — time spent mastering the interface, APIs, integrations, customisations. (4) **Contractual and financial lock-in** — subscriptions, early-termination penalties, hardware bundles, proprietary standards. Together they make the *effective* cost of switching higher than the *nominal* price difference.
 
@@ -63,7 +106,15 @@ Network effects are the **structural reason digital markets tend to concentratio
 
 ---
 
-## 2.3 Digital monopolization — A3 (2 marks ≈ 55 words)
+### A5 · "What are the sources of switching costs?" [2] 🎯 2-mark
+
+> Four main sources: (1) **Data and history portability** — user content, transaction history, ratings, credit scores that cannot be exported. (2) **Network and relationship specificity** — connections, followers, supplier/buyer reputation existing only on that platform. (3) **Learning and workflow investment** — time mastering the interface, APIs, integrations, customisations. (4) **Contractual and financial lock-in** — subscriptions, early-termination penalties, hardware bundles, proprietary standards.
+
+*(59 words)*
+
+---
+
+## 2.3 Digital Monopolization — A3 🎯 2-mark
 
 > **Digital monopolization is the tendency for digital markets to concentrate around one or a few dominant platforms, driven by the interaction of network effects, near-zero marginal costs, data-driven increasing returns, and endogenous switching costs.** It is not a legal monopoly — entry is technically possible — but the *effective* barrier is the installed base: a new entrant must overcome the incumbent's network effects *and* the users' switching costs simultaneously. The result is winner-take-most dynamics in platform markets, not the competitive fragmentation of traditional goods markets.
 
@@ -71,7 +122,15 @@ Network effects are the **structural reason digital markets tend to concentratio
 
 ---
 
-## 2.4 Types of multi-sided platforms — A4 (2 marks ≈ 55 words)
+### A3 · "What is meant by digital monopolization?" [2] 🎯 2-mark
+
+> Digital monopolization is the tendency for digital markets to concentrate around one or a few dominant platforms, driven by the interaction of network effects, near-zero marginal costs, data-driven increasing returns, and endogenous switching costs. It is not a legal monopoly — entry is technically possible — but the effective barrier is the installed base: a new entrant must overcome the incumbent's network effects and the users' switching costs simultaneously. The result is winner-take-most dynamics in platform markets.
+
+*(58 words)*
+
+---
+
+## 2.4 Types of Multi-Sided Platforms — A4 🎯 2-mark
 
 > **Four canonical types, named by the sides they connect:**
 > 1. **Marketplace / transaction platforms** — buyers ↔ sellers (Daraz, Amazon, eBay, Airbnb).
@@ -85,7 +144,15 @@ Network effects are the **structural reason digital markets tend to concentratio
 
 ---
 
-## 2.5 Digital Adoption Index and OECD Digital Government Index
+### A4 · "List out any four types of multi-sided platforms." [2] 🎯 2-mark
+
+> Four canonical types, named by the sides they connect: (1) **Marketplace / transaction platforms** — buyers ↔ sellers (Daraz, Amazon). (2) **Payment platforms** — consumers ↔ merchants ↔ banks (eSewa, Visa). (3) **Social / content platforms** — users ↔ users ↔ advertisers (Facebook, YouTube). (4) **Innovation / developer platforms** — developers ↔ users (iOS/Android, AWS). (Ride-hailing and food delivery are also acceptable as marketplace variants.)
+
+*(58 words)*
+
+---
+
+## 2.5 Digital Adoption Index and OECD Digital Government Index 🎯 5-mark
 
 The syllabus names two indices. The **Digital Adoption Index (DAI)** is a World Bank measure (0–1) covering three pillars: **people** (internet users, mobile subscriptions, digital skills), **government** (online services, digital ID, open data), and **business** (website, e-commerce, cloud, digital payments). Nepal's DAI is low (~0.35), reflecting the reach gap the Agro-tech Concern case illustrates.
 
@@ -100,7 +167,9 @@ The **OECD Digital Government Index (DGI)** is the one B12 asks for. It has **si
 | **5. User-driven** | services designed around user needs, co-creation, feedback loops | Nagarik and Mero Kitta have feedback; most portals do not |
 | **6. Proactiveness** | anticipating needs, predictive services, life-event bundling | absent — services are reactive, application-based |
 
-### B12 · "Describe the dimensions of the OECD Digital Government index." [5]
+---
+
+### B12 · "Describe the dimensions of the OECD Digital Government index." [5] 🎯 5-mark
 
 > **Shape: name the index → list all six dimensions with one-line descriptions → one Nepal illustration. ~200 words.**
 
@@ -119,43 +188,7 @@ The DGI matters because it measures *capability*, not just presence — a govern
 
 ---
 
-## 2.6 Answer skeletons
-
-### A3 · "What is meant by digital monopolization?" [2]
-
-> Digital monopolization is the tendency for digital markets to concentrate around one or a few dominant platforms, driven by the interaction of network effects, near-zero marginal costs, data-driven increasing returns, and endogenous switching costs. It is not a legal monopoly — entry is technically possible — but the effective barrier is the installed base: a new entrant must overcome the incumbent's network effects and the users' switching costs simultaneously. The result is winner-take-most dynamics in platform markets.
-
-*(58 words)*
-
-### A4 · "List out any four types of multi-sided platforms." [2]
-
-> Four canonical types, named by the sides they connect: (1) **Marketplace / transaction platforms** — buyers ↔ sellers (Daraz, Amazon). (2) **Payment platforms** — consumers ↔ merchants ↔ banks (eSewa, Visa). (3) **Social / content platforms** — users ↔ users ↔ advertisers (Facebook, YouTube). (4) **Innovation / developer platforms** — developers ↔ users (iOS/Android, AWS). (Ride-hailing and food delivery are also acceptable as marketplace variants.)
-
-*(58 words)*
-
-### A5 · "What are the sources of switching costs?" [2]
-
-> Four main sources: (1) **Data and history portability** — user content, transaction history, ratings, credit scores that cannot be exported. (2) **Network and relationship specificity** — connections, followers, supplier/buyer reputation existing only on that platform. (3) **Learning and workflow investment** — time mastering the interface, APIs, integrations, customisations. (4) **Contractual and financial lock-in** — subscriptions, early-termination penalties, hardware bundles, proprietary standards.
-
-*(59 words)*
-
-### B12 · "Describe the dimensions of the OECD Digital Government index." [5]
-
-> The OECD Digital Government Index (DGI) benchmarks governments' digital maturity across six dimensions: (1) **Digital by design** — processes built digital-first (Nagarik ID yes; ministry workflows paper-first). (2) **Data-driven public sector** — data for policy and performance (silos, no whole-of-government analytics). (3) **Government as a platform** — shared infrastructure as APIs (connectIPS, X-Road pilot, early stage). (4) **Open by default** — open data, source, standards (portal exists; freshness/granularity low). (5) **User-driven** — services around user needs, co-creation (Nagarik/Mero Kitta have feedback; most portals don't). (6) **Proactiveness** — anticipating needs, predictive services (absent; reactive, application-based). The DGI measures capability, not just presence — Nepal scores low on dimensions 2, 4 and 6, the governance gap the Agro-tech case exposes.
-
-*(212 words)*
-
-### B13 · "Define network effects. Why are they important in digital markets? Explain." [5]
-
-> A network effect exists when the value of a product or service to one user increases as the number of other users increases. **Direct (same-side)** effects: more users → more value for same-side users (WhatsApp, Metcalfe's law). **Indirect (cross-side)** effects: more users on side A → more value for side B (Uber: drivers ↔ riders; credit cards: merchants ↔ cardholders).
->
-> Network effects matter in digital markets for three reasons. **First**, they create increasing returns to scale — the thousandth user adds value to all existing users, unlike traditional constant returns. **Second**, they generate switching costs endogenously — the more you use a platform (data, connections, reputation), the more you lose by leaving. **Third**, they shape competition toward winner-take-most — two similar platforms do not split the market 50/50; the larger network pulls ahead until the smaller exits or niches. This lock-in consequence is why digital monopolization (A3) is a structural tendency, not an accident.
-
-*(204 words)*
-
----
-
-## 2.7 Traps
+## 2.6 Traps
 
 | Trap | Why it costs marks | Fix |
 |---|---|---|
@@ -169,7 +202,7 @@ The DGI matters because it measures *capability*, not just presence — a govern
 
 ---
 
-## 2.8 Self-test (answers collapsed)
+## 2.7 Self-Test (Answers Collapsed)
 
 1. Define a multi-sided platform in three testable parts. *(2 marks)*
 2. Distinguish direct and indirect network effects with one example each. *(2 marks)*
@@ -196,9 +229,9 @@ The DGI matters because it measures *capability*, not just presence — a govern
 
 ---
 
-## 2.9 Sixty-second check
+## 2.8 Sixty-Second Check
 
-Close the file and, on a blank page:
+Close this file and, on a blank page:
 
 - [ ] MSP definition: three testable parts
 - [ ] Direct vs indirect network effects + examples
@@ -213,4 +246,4 @@ If all eight are there, Unit 2's **16 marks** are covered — A3, A4, A5, B12, B
 
 ---
 
-*Sources for this unit: TU FOM syllabus (IT 250, Unit 2, 7 LHs) · TU 2026 board paper (A3, A4, A5, B12, B13) · Overby & Audestad, Introduction to Digital Economics, ch. 2–4 (syllabus reading) · Maheshwari, Digital Transformation, ch. 2–3 (syllabus reading) · OECD Digital Government Index methodology (public documentation) · World Bank Digital Adoption Index methodology (public documentation). Nepal DGI illustrations are constructed from public knowledge of Nagarik, connectIPS, X-Road pilot, Open Data Portal, Mero Kitta — described as patterns, not audited assessments. The Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper.*
+*Sources: TU FOM syllabus (IT 250, Unit 2, 7 LHs) · TU 2026 board paper (A3, A4, A5, B12, B13) · Overby & Audestad, Introduction to Digital Economics, ch. 2–4 (syllabus reading) · Maheshwari, Digital Transformation, ch. 2–3 (syllabus reading) · OECD Digital Government Index methodology (public documentation) · World Bank Digital Adoption Index methodology (public documentation). Nepal DGI illustrations are constructed from public knowledge of Nagarik, connectIPS, X-Road pilot, Open Data Portal, Mero Kitta — described as patterns, not audited assessments. The Agro-tech Concern case facts (85,555 farmers, NPR 489m transactions, 16% price gain, remote reach gap, manual price errors, NPR 16m fee revenue) are verbatim from the 2026 board paper.*

@@ -132,8 +132,15 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BI Cheat Sheet | Business Intelligence | BIM 8th Semester</title>
-  <meta name="description" content="One-page BI cheat sheet for exam revision - printable PDF ready">
+  <title>BI Cheat Sheet | Business Intelligence | Worst Generation</title>
+  <meta name="description" content="One-page BI cheat sheet for exam revision - printable PDF ready — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
   <style>
     @media print {
@@ -151,14 +158,22 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
       .cheat-sheet .diagram { font-size: 6pt !important; line-height: 1.1 !important; }
       .cheat-sheet hr { margin: 3pt 0 !important; border-color: #ccc !important; }
       .cheat-sheet .two-col { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 4pt !important; }
+      .cheat-sheet table, .cheat-sheet .diagram, .cheat-sheet .formula { page-break-inside: avoid !important; break-inside: avoid !important; }
+      .print-header {
+        display: flex !important; justify-content: space-between; align-items: baseline;
+        border-bottom: 1.5pt solid var(--accent) !important; padding-bottom: 2pt !important;
+        margin-bottom: 4pt !important; font-size: 8pt !important; color: #444 !important;
+      }
+      .print-header strong { color: var(--accent) !important; font-size: 9pt !important; }
       @page { margin: 8mm !important; size: A5 !important; }
       body { background: white !important; }
     }
+    .print-header { display: none; }
     
     @media screen {
       .cheat-sheet { max-width: 480px; margin: 0 auto; padding: 16px; font-size: 12px; line-height: 1.35; }
-      .cheat-sheet h2 { font-size: 13px; margin: 12px 0 4px; color: #1e3a5f; border-bottom: 1px solid #2563eb; padding-bottom: 2px; }
-      .cheat-sheet h3 { font-size: 12px; margin: 8px 0 3px; color: #2563eb; }
+      .cheat-sheet h2 { font-size: 13px; margin: 12px 0 4px; color: #1e3a5f; border-bottom: 1px solid var(--accent); padding-bottom: 2px; }
+      .cheat-sheet h3 { font-size: 12px; margin: 8px 0 3px; color: var(--accent); }
       .cheat-sheet p, .cheat-sheet li { margin: 2px 0; }
       .cheat-sheet table { width: 100%; border-collapse: collapse; margin: 4px 0; font-size: 11px; }
       .cheat-sheet th, .cheat-sheet td { border: 1px solid #ddd; padding: 3px 5px; text-align: left; }
@@ -168,7 +183,7 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
       .cheat-sheet .diagram { font-family: monospace; font-size: 10px; line-height: 1.2; background: #fafafa; border: 1px solid #eee; padding: 6px; border-radius: 4px; overflow-x: auto; white-space: pre; }
       .cheat-sheet hr { border: none; border-top: 1px solid #e0e0e0; margin: 8px 0; }
       .cheat-sheet .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      .cheat-sheet .side-label { font-weight: 600; color: #2563eb; }
+      .cheat-sheet .side-label { font-weight: 600; color: var(--accent); }
       .print-btn { position: fixed; bottom: 20px; right: 20px; background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; box-shadow: 0 4px 12px rgba(37,99,235,0.3); z-index: 100; }
       .print-btn:hover { background: #1d4ed8; }
       @media (max-width: 600px) { .cheat-sheet { font-size: 11px; padding: 12px; } }
@@ -178,7 +193,7 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
 <body>
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: #2563eb">IT 249</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -216,7 +231,10 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
         </header>
 
         <div class="cheat-sheet" id="cheatSheet">
-          
+          <div class="print-header">
+            <span><strong>Worst Generation</strong> · BI Cheat Sheet</span>
+            <span>BIM 8th Sem · IT 249</span>
+          </div>
           <section id="side-a">
             <h2>SIDE A — Definitions & Lists</h2>
 
@@ -491,17 +509,24 @@ function generateUnitHtml(subject, unit, htmlContent) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unit ${unit.num}: ${unit.title} | ${subject.name} | BIM 8th Semester</title>
-  <meta name="description" content="${subject.code} - Unit ${unit.num}: ${unit.title}">
+  <title>Unit ${unit.num}: ${unit.title} | ${subject.name} | Worst Generation</title>
+  <meta name="description" content="${subject.code} - Unit ${unit.num}: ${unit.title} — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
 </head>
-<body class="unit-page">
+<body class="unit-page" data-subject="${subject.id}">
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -607,8 +632,15 @@ function generateResourceHtml(subject, title, htmlContent) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} | ${subject.name} | BIM 8th Semester</title>
-  <meta name="description" content="${subject.code} - ${title}">
+  <title>${title} | ${subject.name} | Worst Generation</title>
+  <meta name="description" content="${subject.code} - ${title} — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
@@ -617,7 +649,7 @@ function generateResourceHtml(subject, title, htmlContent) {
 <body>
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -722,14 +754,21 @@ function generateSubjectIndexHtml(subject) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${subject.name} | ${subject.code} | BIM 8th Semester</title>
-  <meta name="description" content="${subject.code} - ${subject.name} - ${subject.units.length} units, ${subject.marks} marks">
+  <title>${subject.name} | ${subject.code} | Worst Generation</title>
+  <meta name="description" content="${subject.code} - ${subject.name} - ${subject.units.length} units, ${subject.marks} marks — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <header class="site-header">
     <div class="header-content">
-      <a href="../index.html" class="site-title">BIM 8th Semester</a>
+      <a href="../index.html" class="site-title">Worst Generation</a>
       <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
     </div>
@@ -923,16 +962,28 @@ function railTravellerHtml(left) {
   return `
         <div class="rail-traveller" id="traveller" style="left:${left}%" aria-hidden="true">
           <span class="speed-lines"><i></i><i></i><i></i></span>
-          <svg class="train-flat" viewBox="0 0 96 40" width="144" height="60" focusable="false">
-            <rect x="8" y="10" width="52" height="20" rx="3" fill="var(--accent)"/>
-            <rect x="12" y="4" width="16" height="10" rx="2" fill="var(--accent)"/>
-            <path d="M60 10h14l14 14v6H60z" fill="var(--accent)"/>
-            <rect x="16" y="14" width="12" height="8" rx="1.5" fill="var(--accent-ink)" opacity="0.85"/>
-            <rect x="34" y="14" width="12" height="8" rx="1.5" fill="var(--accent-ink)" opacity="0.85"/>
-            <path d="M65 16h9l7 7H65z" fill="var(--accent-ink)" opacity="0.8"/>
-            <circle cx="24" cy="31" r="5" fill="var(--fg)"/>
-            <circle cx="44" cy="31" r="5" fill="var(--fg)"/>
-            <circle cx="74" cy="31" r="5" fill="var(--fg)"/>
+          <svg class="ship" viewBox="0 0 120 48" width="150" height="60" focusable="false">
+            <!-- wake behind the stern -->
+            <path d="M4 40q8-3 16 0" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.5"/>
+            <path d="M0 45q10-3 20 0" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.35"/>
+            <!-- hull: rounded stern left, pointed bow right -->
+            <path d="M12 28 L12 37 Q12 43 24 43 L84 43 L110 32 L105 28 Z" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.3"/>
+            <path d="M14 31 H104" stroke="var(--accent-ink)" stroke-width="1" opacity="0.6"/>
+            <!-- portholes -->
+            <circle cx="30" cy="36.5" r="2.4" fill="var(--accent-ink)" opacity="0.9"/>
+            <circle cx="48" cy="36.5" r="2.4" fill="var(--accent-ink)" opacity="0.9"/>
+            <circle cx="66" cy="36.5" r="2.4" fill="var(--accent-ink)" opacity="0.9"/>
+            <!-- mast + sail -->
+            <rect x="55" y="6" width="2.6" height="23" rx="1" fill="var(--fg)"/>
+            <path d="M58 8 L58 29 L82 20 Z" fill="var(--card-bg)" stroke="var(--fg)" stroke-width="1.1"/>
+            <path d="M53 10 L53 27 L34 21 Z" fill="var(--card-bg)" stroke="var(--fg)" stroke-width="1.1"/>
+            <!-- red pennant -->
+            <path d="M56 6 L56 0 L68 3 Z" fill="#dc2626"/>
+            <!-- lion figurehead at the bow -->
+            <circle cx="102" cy="26" r="6.5" fill="#f97316" stroke="var(--fg)" stroke-width="1.1"/>
+            <path d="M96 21 l-3-2 M96 31 l-3 2 M108 21 l3-2 M108 31 l3 2" stroke="#f97316" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="100" cy="25" r="0.9" fill="var(--fg)"/>
+            <circle cx="105" cy="25" r="0.9" fill="var(--fg)"/>
           </svg>
           <span class="traveller-tag">Today</span>
         </div>`;
@@ -941,7 +992,7 @@ function railTravellerHtml(left) {
 function railHeroHtml(rail) {
   const left = rail.fNow.toFixed(3);
   return `
-      <section class="rail-hero" id="timetable" aria-label="Exam timetable rail">
+      <section class="rail-hero" id="timetable" aria-label="Exam route by sea">
         <div class="rail-counter">
           <span class="counter-label">Next</span>
           <span class="counter-code" id="code">Entrepreneur</span>
@@ -963,7 +1014,7 @@ function railHeroHtml(rail) {
             ${RAIL_STOPS.map((s, i) => railStationHtml(s, rail.isoFrac(s.iso).toFixed(3), i)).join('')}${railTravellerHtml(left)}
           </div>
         </div>
-        <span class="sr-only">Exam routine: Dean's Office, 2083/07/28. Films: Dune: Part Three and Avengers: Doomsday, both 18 December 2026.</span>
+        <span class="sr-only">Exam routine: Dean's Office, 2083/07/28. The voyage ends at the films: Dune: Part Three and Avengers: Doomsday, both 18 December 2026.</span>
       </section>`;
 }
 
@@ -1024,15 +1075,41 @@ function spinWheelHtml() {
   return `
       <section class="spin-section" id="spin" aria-labelledby="spinTitle">
         <h2 id="spinTitle" class="section-title">What should I study?</h2>
+        <p class="spin-kicker">Spin the wheel &mdash; the map chooses your unit.</p>
         <div class="spin-layout">
           <div class="wheel-stage">
-            <span class="wheel-pointer" aria-hidden="true"></span>
+            <span class="wheel-pointer" aria-hidden="true">
+              <svg viewBox="0 0 24 34" width="26" height="37" focusable="false">
+                <rect x="10.4" y="0" width="3.2" height="6" rx="1.6" fill="#78350f" stroke="#1a1a2e" stroke-width="1"/>
+                <rect x="4" y="5" width="16" height="3.2" rx="1.6" fill="#b45309" stroke="#1a1a2e" stroke-width="1"/>
+                <path d="M12 33 C9.3 23 8.9 12 9.7 8 L14.3 8 C15.1 12 14.7 23 12 33 Z" fill="#e2e8f0" stroke="#1a1a2e" stroke-width="1"/>
+              </svg>
+            </span>
             <button class="wheel-wrap" id="spinBtn" type="button" aria-label="Spin the wheel to pick a unit">
               <svg class="wheel" id="wheel" viewBox="0 0 200 200" focusable="false" aria-hidden="true" style="transform:rotate(${(-180 / n).toFixed(2)}deg)">
                 ${segments}
-                <circle cx="100" cy="100" r="84" fill="none" stroke="var(--border)" stroke-width="2"/>
-                <circle cx="100" cy="100" r="15" fill="var(--card-bg)" stroke="var(--border)" stroke-width="2"/>
-                <circle cx="100" cy="100" r="4" fill="var(--accent)"/>
+                <!-- wooden rim with a rope binding -->
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#7c4a1d" stroke-width="5"/>
+                <circle cx="100" cy="100" r="87.5" fill="none" stroke="#a9743a" stroke-width="1.2" opacity="0.9"/>
+                <circle cx="100" cy="100" r="82" fill="none" stroke="#e0bc82" stroke-width="1.3" stroke-dasharray="3 4" opacity="0.9"/>
+                <!-- Jolly Roger hub -->
+                <circle cx="100" cy="100" r="16" fill="#111827" stroke="#7c4a1d" stroke-width="2"/>
+                <g transform="translate(100 100)">
+                  <g stroke="#f8fafc" stroke-width="2.8" stroke-linecap="round">
+                    <line x1="-11" y1="-9" x2="11" y2="9"/>
+                    <line x1="-11" y1="9" x2="11" y2="-9"/>
+                  </g>
+                  <ellipse cx="0" cy="-1.5" rx="6.4" ry="6" fill="#f8fafc"/>
+                  <rect x="-3.6" y="1.6" width="7.2" height="4.4" rx="1.6" fill="#f8fafc"/>
+                  <circle cx="-2.6" cy="-2" r="1.8" fill="#111827"/>
+                  <circle cx="2.6" cy="-2" r="1.8" fill="#111827"/>
+                  <polygon points="0,0.6 -1.5,2.6 1.5,2.6" fill="#111827"/>
+                  <g stroke="#111827" stroke-width="0.8">
+                    <line x1="-2.6" y1="2.6" x2="-2.6" y2="5.2"/>
+                    <line x1="0" y1="2.6" x2="0" y2="5.2"/>
+                    <line x1="2.6" y1="2.6" x2="2.6" y2="5.2"/>
+                  </g>
+                </g>
               </svg>
             </button>
           </div>
@@ -1067,14 +1144,21 @@ function generateMainIndexHtml() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIM 8th Semester Study Materials</title>
-  <meta name="description" content="Complete study materials for BIM 8th Semester: Business Intelligence, Digital Economy, Cloud Computing, IT Entrepreneurship">
+  <title>Worst Generation — BIM 8th Semester Study Materials</title>
+  <meta name="description" content="Complete BIM 8th Semester study materials for Business Intelligence, Digital Economy, Cloud Computing and IT Entrepreneurship — Worst Generation.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
     <div class="header-content">
-      <a class="site-title" href="./">BIM 8th Semester</a>
+      <a class="site-title" href="./">Worst Generation</a>
       <nav class="site-nav" aria-label="Sections">
         <a href="#timetable">Timetable</a>
         <a href="#subjects">Notes</a>
@@ -1371,11 +1455,18 @@ function generateMainIndexHtml() {
         } catch (e) { /* audio is a nice-to-have */ }
       }
       function spinSound() {
-        for (let i = 0; i < 7; i++) tone(280 + i * 55, 0.07, i * 0.07, 'triangle');
+        // Ratchet clicks of a spinning wheel: quick, then winding down.
+        for (let i = 0; i < 16; i++) {
+          const f = 520 - Math.min(i, 8) * 18 + Math.max(0, i - 8) * 26;
+          tone(f, 0.045, i * 0.08, 'triangle');
+        }
       }
       function landSound() {
-        tone(784, 0.16, 0, 'sine');
-        tone(1175, 0.22, 0.07, 'sine');
+        // Cannon thud, then a ship's bell.
+        tone(72, 0.45, 0, 'sine');
+        tone(784, 0.18, 0.04, 'sine');
+        tone(1175, 0.24, 0.11, 'sine');
+        tone(1568, 0.30, 0.18, 'sine');
       }
 
       soundBtn.addEventListener('click', function () {
@@ -1446,6 +1537,9 @@ async function build() {
 
   // Copy CSS
   fs.copyFileSync(path.join(__dirname, 'styles.css'), path.join(DIST_DIR, 'styles.css'));
+  ['favicon.svg', 'site.webmanifest'].forEach(file => {
+    fs.copyFileSync(path.join(__dirname, file), path.join(DIST_DIR, file));
+  });
 
   // Generate main index
   const mainIndex = generateMainIndexHtml();
