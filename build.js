@@ -850,117 +850,149 @@ function generateMainIndexHtml() {
     </aside>
 
     <main class="content" role="main">
-      <section class="hero">
-        <div class="hero-content">
-          <div class="hero-badge">BIM 8th Semester · 2083 / 2026</div>
-          <h2>Exam Countdown</h2>
-          <p class="hero-tagline">The clock is ticking. Every hour counts.</p>
-          
-          <div class="hero-countdown" id="examCountdown">
-            <div class="countdown-big">
-              <div class="countdown-label">Next paper: <span id="cd-subject">Loading…</span></div>
-              <div class="countdown-date" id="cd-date">—</div>
-              <div class="countdown-timer">
-                <div class="timer-unit"><span class="timer-value" id="cd-days">00</span><span class="timer-label">days</span></div>
-                <span class="timer-sep">:</span>
-                <div class="timer-unit"><span class="timer-value" id="cd-hours">00</span><span class="timer-label">hrs</span></div>
-                <span class="timer-sep">:</span>
-                <div class="timer-unit"><span class="timer-value" id="cd-mins">00</span><span class="timer-label">min</span></div>
-                <span class="timer-sep">:</span>
-                <div class="timer-unit"><span class="timer-value" id="cd-secs">00</span><span class="timer-label">sec</span></div>
-              </div>
+      <!-- Masthead with hero image -->
+      <section class="masthead" data-scene="masthead">
+        <div class="masthead-image">
+          <img src="assets/tribhuvan-university-of-nepal-img-9531.jpg" width="1920" height="1280" alt="Tribhuvan University campus, Kirtipur" aria-hidden="true">
+        </div>
+        <div class="masthead-inner">
+          <h1>Four papers. Ten days.</h1>
+          <p class="standfirst">BIM 8th semester, Tribhuvan University. IT 248, 250, 249, 277 — 1 to 10 December 2026.</p>
+          <div class="masthead-countdown" id="mastheadCountdown" aria-live="off" aria-atomic="true">
+            <div class="masthead-countdown-label">Next paper</div>
+            <div class="masthead-countdown-subject" id="mcdSubject">—</div>
+            <div class="masthead-countdown-timer" id="mcdTimer" aria-hidden="true">
+              <span class="mcd-unit" id="mcdDays">0</span>
+              <span class="mcd-sep">days</span>
+              <span class="mcd-unit" id="mcdHours">00</span>
+              <span class="mcd-sep">:</span>
+              <span class="mcd-unit" id="mcdMins">00</span>
+              <span class="mcd-sep">:</span>
+              <span class="mcd-unit" id="mcdSecs">00</span>
             </div>
-          </div>
-
-          <div class="hero-progress">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
-              <div class="progress-markers" id="progressMarkers"></div>
-            </div>
-            <div class="progress-labels">
-              <span class="progress-start">Exam period starts</span>
-              <span class="progress-end">All papers done</span>
-            </div>
-          </div>
-
-          <div class="hero-focus" id="heroFocus">
-            <div class="focus-badge">🎯 Current Focus</div>
-            <div class="focus-subject" id="focusSubject">—</div>
-            <div class="focus-hint" id="focusHint">—</div>
+            <div class="masthead-countdown-date" id="mcdDate">—</div>
           </div>
         </div>
       </section>
 
-      <section class="exam-routine">
-        <h3>Exam Routine <span class="routine-badge">2083 / 2026</span></h3>
+      <!-- Kirtipur context strip -->
+      <section class="context-strip" data-scene="context">
+        <div class="context-image">
+          <img src="assets/kirtipur-1950-1955.jpg" width="1228" height="850" alt="Kirtipur town, 1950-1955" aria-hidden="true">
+        </div>
+        <div class="context-content">
+          <h2>Kirtipur — the exam centre</h2>
+          <p>Five kilometres southwest of Kathmandu, the ancient town of Kirtipur has been the examination centre for Tribhuvan University since its founding. The Dean's Office notice (2083/07/28) names it plainly: your papers are written here.</p>
+        </div>
+      </section>
+
+      <section class="routine" aria-labelledby="routineTitle">
+        <h2 id="routineTitle">Examination Routine</h2>
         <div class="routine-table-wrapper">
           <table class="routine-table">
+            <caption>BIM 8th Semester NC papers — Dean's Office, 2083/07/28</caption>
             <thead>
               <tr>
-                <th>Date (AD)</th>
-                <th>Date (BS)</th>
-                <th>Day</th>
-                <th>Code</th>
-                <th>Subject</th>
+                <th scope="col">Date (BS)</th>
+                <th scope="col">Day</th>
+                <th scope="col">Code</th>
+                <th scope="col">Paper</th>
               </tr>
             </thead>
             <tbody>
-              ${EXAM_ROUTINE.map(exam => `
-                <tr class="${exam.isOurs ? 'ours' : 'other'}">
-                  <td>${formatExamDate(exam.iso)}</td>
+              ${EXAM_ROUTINE.map(exam => {
+                const isNext = false; // will be set by JS
+                const rowClass = exam.isOurs ? 'ours' : 'other';
+                const tick = exam.isOurs ? '' : '';
+                return `
+                <tr class="${rowClass}" data-code="${exam.code}" data-iso="${exam.iso}">
                   <td>${exam.bs}</td>
                   <td>${exam.day}</td>
                   <td><code>${exam.code}</code></td>
-                  <td>${exam.isOurs && exam.subjectId ? `<a href="${exam.subjectId}/" style="color: ${SUBJECTS[exam.subjectId].color}; font-weight: 600;">${exam.title}</a>` : exam.title}</td>
-                </tr>
-              `).join('')}
+                  <td>
+                    ${exam.isOurs && exam.subjectId
+                      ? `<a href="${exam.subjectId}/">${exam.title}</a>`
+                      : exam.title}
+                  </td>
+                </tr>`;
+              }).join('')}
             </tbody>
           </table>
         </div>
-        <div class="routine-notes">
-          ${EXAM_NOTES.map(note => `<p>• ${note}</p>`).join('')}
+        <ul class="routine-rules" aria-label="Exam hall rules">
+          <li>Centre: Kirtipur (Tribhuvan University). Time notified by campus.</li>
+          <li>No mobile phones, smart watches, or digital watches in the exam hall.</li>
+          <li>Graph / chart / log paper only with prior written approval.</li>
+          <li>Admit card mandatory for every paper. No admit card = no entry.</li>
+        </ul>
+      </section>
+
+      <!-- Exam hall atmosphere -->
+      <section class="exam-hall" data-scene="exam-hall">
+        <div class="exam-hall-image">
+          <img src="assets/ncea-exam-papers.jpg" width="1920" height="1440" alt="Pile of exam booklets, marked and returned" aria-hidden="true">
+        </div>
+        <div class="exam-hall-content">
+          <h2>What the hall looks like</h2>
+          <p>Rows of desks. The same answer booklet for every paper. The invigilator's bell. Your admit card on the corner. The clock on the wall — the only timepiece allowed. This is where the ten days happen.</p>
         </div>
       </section>
 
-      <section class="subjects-grid">
-        ${Object.values(SUBJECTS).map(s => `
-          <article class="subject-card" style="--subject-color: ${s.color}">
-            <a href="${s.id}/">
-              <header class="card-header">
-                <span class="subject-badge">${s.code}</span>
-                <h3>${s.name}</h3>
-              </header>
-              <div class="card-stats">
-                <span class="stat"><strong>${s.marks}</strong> marks</span>
-                <span class="stat"><strong>${s.units.length}</strong> units</span>
-                <span class="stat"><strong>${s.passMarks}</strong> pass</span>
+      <section class="subjects-list" aria-labelledby="subjectsTitle">
+        <h2 id="subjectsTitle">Your notes</h2>
+        <ul class="subject-rows">
+          ${Object.values(SUBJECTS).map(s => `
+            <li class="subject-row" style="--subject-accent: ${s.color}">
+              <div class="subject-row-label">
+                <code>${s.code}</code>
+                <span class="subject-row-name">${s.name}</span>
               </div>
-              <ul class="unit-preview">
-                ${s.units.slice(0, 3).map(u => `<li>Unit ${u.num}: ${u.title}</li>`).join('')}
-                ${s.units.length > 3 ? `<li>+${s.units.length - 3} more units</li>` : ''}
-              </ul>
-              <a href="${s.id}/" class="card-link">Open Subject →</a>
-            </a>
-          </article>
-        `).join('')}
+              <div class="subject-row-meta">
+                <span class="subject-row-marks"><strong>${s.marks}</strong> marks</span>
+                <span class="subject-row-pass">pass <strong>${s.passMarks}</strong></span>
+                <span class="subject-row-units">${s.units.length} units</span>
+              </div>
+              <a href="${s.id}/" class="subject-row-link">Notes →</a>
+            </li>
+          `).join('')}
+        </ul>
       </section>
 
-      <section class="exam-pattern">
-        <h3>Exam Pattern Overview</h3>
+      <section class="exam-pattern" aria-labelledby="patternTitle">
+        <h2 id="patternTitle">Exam Pattern</h2>
         <div class="pattern-table-wrapper">
           <table class="pattern-table">
             <thead>
               <tr><th>Subject</th><th>Code</th><th>Full Marks</th><th>Pass Marks</th><th>Groups</th></tr>
             </thead>
             <tbody>
-              <tr><td>Business Intelligence</td><td>IT 249</td><td>60</td><td>30</td><td>A:10×1, B:5×3, C:3×5, D:2×10</tr>
-              <tr><td>Digital Economy</td><td>IT 250</td><td>100</td><td>50</td><td>A:10×2, B:6×5, C:3×10, D:1×20</tr>
-              <tr><td>Cloud Computing</td><td>IT 277</td><td>60</td><td>30</td><td>A:10×1, B:5×3, C:3×5, D:2×10</tr>
-              <tr><td>IT Entrepreneurship</td><td>IT 248</td><td>100</td><td>50</td><td>A:10×2, B:6×5, C:3×10, D:1×20</tr>
+              <tr><td>Business Intelligence</td><td>IT 249</td><td>60</td><td class="pass-cell"><strong>30</strong></td><td>A:10×1, B:5×3, C:3×5, D:2×10</td></tr>
+              <tr><td>Digital Economy</td><td>IT 250</td><td>100</td><td class="pass-cell"><strong>50</strong></td><td>A:10×2, B:6×5, C:3×10, D:1×20</td></tr>
+              <tr><td>Cloud Computing</td><td>IT 277</td><td>60</td><td class="pass-cell"><strong>30</strong></td><td>A:10×1, B:5×3, C:3×5, D:2×10</td></tr>
+              <tr><td>IT Entrepreneurship</td><td>IT 248</td><td>100</td><td class="pass-cell"><strong>50</strong></td><td>A:10×2, B:6×5, C:3×10, D:1×20</td></tr>
             </tbody>
           </table>
         </div>
       </section>
+
+      <!-- Historical exam paper texture -->
+      <section class="paper-texture" data-scene="paper">
+        <div class="paper-image">
+          <img src="assets/history-exam-paper-1967-001.jpg" width="1920" height="2133" alt="History examination paper from 1967" aria-hidden="true">
+        </div>
+        <div class="paper-content">
+          <h2>The paper in your hand</h2>
+          <p>Every generation sits the same ritual. The questions change; the format, the silence, the weight of the pen — those don't. Your IT 249 paper will feel like this 1967 history paper: same lines, same margins, same silence.</p>
+        </div>
+      </section>
+
+      <footer class="site-close">
+        <div class="close-links">
+          <a href="bi/cheat-sheet.html" class="close-link">📋 BI Cheat Sheet — print on A5</a>
+          <button class="close-link" onclick="window.print()">🖨️ Print this page</button>
+        </div>
+        <p class="close-name">BIM 8th Semester Study Materials</p>
+      </footer>
     </main>
   </div>
 
@@ -1017,49 +1049,29 @@ function generateMainIndexHtml() {
         if (d > now) { next = e; break; }
       }
 
-      // Countdown timer elements
-      const cdSubject = document.getElementById('cd-subject');
-      const cdDate = document.getElementById('cd-date');
-      const cdDays = document.getElementById('cd-days');
-      const cdHours = document.getElementById('cd-hours');
-      const cdMins = document.getElementById('cd-mins');
-      const cdSecs = document.getElementById('cd-secs');
+      // Masthead countdown elements
+      const mcdSubject = document.getElementById('mcdSubject');
+      const mcdTimer = document.getElementById('mcdTimer');
+      const mcdDays = document.getElementById('mcdDays');
+      const mcdHours = document.getElementById('mcdHours');
+      const mcdMins = document.getElementById('mcdMins');
+      const mcdSecs = document.getElementById('mcdSecs');
+      const mcdDate = document.getElementById('mcdDate');
 
-      // Progress bar
-      const period = getExamPeriod();
-      const total = period.end - period.start;
-      const elapsed = now - period.start;
-      const pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
-      const fill = document.getElementById('progressFill');
-      if (fill) fill.style.width = pct + '%';
-
-      // Progress markers (exam dates)
-      const markers = document.getElementById('progressMarkers');
-      if (markers && markers.children.length === 0) {
-        EXAM_ROUTINE_JS.filter(e => e.isOurs).forEach((exam, i) => {
-          const m = document.createElement('span');
-          m.className = 'progress-marker';
-          const mpct = ((parseLocal(exam.iso) - period.start) / total) * 100;
-          m.style.left = mpct + '%';
-          m.title = exam.title + ' — ' + fmtDate(exam.iso);
-          m.innerHTML = '<span class="marker-dot"></span><span class="marker-label">' + exam.code + '</span>';
-          markers.appendChild(m);
-        });
-      }
-
-      // Current focus
-      const focusSubject = document.getElementById('focusSubject');
-      const focusHint = document.getElementById('focusHint');
+      // Routine table: highlight next paper row
+      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
+        const iso = tr.dataset.iso;
+        const isNext = next && iso === next.iso;
+        tr.classList.toggle('next-paper', isNext);
+      });
 
       if (!next) {
-        if (cdSubject) cdSubject.textContent = 'All papers complete';
-        if (cdDate) cdDate.textContent = '🎉 Exam period over';
-        if (cdDays) cdDays.textContent = '00';
-        if (cdHours) cdHours.textContent = '00';
-        if (cdMins) cdMins.textContent = '00';
-        if (cdSecs) cdSecs.textContent = '00';
-        if (focusSubject) focusSubject.textContent = 'All done!';
-        if (focusHint) focusHint.textContent = 'Rest well. Results await.';
+        if (mcdSubject) mcdSubject.textContent = 'All papers complete';
+        if (mcdDate) mcdDate.textContent = 'Exam period over';
+        if (mcdDays) mcdDays.textContent = '0';
+        if (mcdHours) mcdHours.textContent = '00';
+        if (mcdMins) mcdMins.textContent = '00';
+        if (mcdSecs) mcdSecs.textContent = '00';
         return;
       }
 
@@ -1072,32 +1084,13 @@ function generateMainIndexHtml() {
       const mins = Math.floor((diff % 3600000) / 60000);
       const secs = Math.floor((diff % 60000) / 1000);
 
-      // Update countdown
-      if (cdSubject) cdSubject.innerHTML = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
-      if (cdDate) cdDate.textContent = fmtDate(next.iso);
-      if (cdDays) cdDays.textContent = days;
-      if (cdHours) cdHours.textContent = String(hours).padStart(2, '0');
-      if (cdMins) cdMins.textContent = String(mins).padStart(2, '0');
-      if (cdSecs) cdSecs.textContent = String(secs).padStart(2, '0');
-
-      // Current focus logic
-      const hoursUntil = diff / 3600000;
-      if (focusSubject) {
-        if (hoursUntil <= 48) {
-          focusSubject.textContent = next.title;
-          focusHint.textContent = 'Final revision mode. Practice past papers. Sleep well.';
-        } else if (hoursUntil <= 168) { // 1 week
-          focusSubject.textContent = next.title;
-          focusHint.textContent = 'This week: finish weak units, memorize formulas, do mock questions.';
-        } else {
-          // Find the subject that's furthest but still has time
-          const upcoming = EXAM_ROUTINE_JS.filter(e => e.isOurs && parseLocal(e.iso) > now);
-          if (upcoming.length > 0) {
-            focusSubject.textContent = upcoming[0].title;
-            focusHint.textContent = 'Start with fundamentals. Build notes → practice → mock.';
-          }
-        }
-      }
+      // Update masthead countdown
+      if (mcdSubject) mcdSubject.innerHTML = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
+      if (mcdDate) mcdDate.textContent = fmtDate(next.iso);
+      if (mcdDays) mcdDays.textContent = days;
+      if (mcdHours) mcdHours.textContent = String(hours).padStart(2, '0');
+      if (mcdMins) mcdMins.textContent = String(mins).padStart(2, '0');
+      if (mcdSecs) mcdSecs.textContent = String(secs).padStart(2, '0');
     }
     updateHero();
     setInterval(updateHero, 1000);
@@ -1119,6 +1112,14 @@ async function build() {
 
   // Copy CSS
   fs.copyFileSync(path.join(__dirname, 'styles.css'), path.join(DIST_DIR, 'styles.css'));
+
+  // Copy assets
+  const assetsSrc = path.join(__dirname, 'assets');
+  const assetsDest = path.join(DIST_DIR, 'assets');
+  if (fs.existsSync(assetsSrc)) {
+    fs.cpSync(assetsSrc, assetsDest, { recursive: true });
+    console.log('✅ Copied assets');
+  }
 
   // Generate main index
   const mainIndex = generateMainIndexHtml();
