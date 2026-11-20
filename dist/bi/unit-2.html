@@ -93,6 +93,7 @@
             <span class="subject-name">Business Intelligence</span>
           </div>
           <h1 class="unit-title">Data Warehousing</h1>
+          <p class="exam-date">Exam: Sun, Dec 6, 2026 · <strong>16</strong> days</p>
         </header>
 
         <div class="markdown-body">
@@ -110,31 +111,121 @@
 </tr>
 <tr>
 <td><strong>Difficulty</strong></td>
-<td>★★★☆☆ — the concepts are easy; the architecture diagram and ETL detail are what separate a 3 from a 5</td>
+<td>★★★☆☆ — concepts are easy; architecture diagram and ETL detail separate 3 from 5</td>
 </tr>
 <tr>
 <td><strong>Exam yield</strong></td>
-<td>🔴 high — the most-examined unit in the paper</td>
+<td>🔴 high — most-examined unit in the paper</td>
 </tr>
 <tr>
 <td><strong>Prerequisite</strong></td>
-<td>Unit 1 (the BI stack — this unit is columns 2 and 3 of it)</td>
+<td>Unit 1 (BI stack — this unit is columns 2–3)</td>
 </tr>
 <tr>
 <td><strong>Syllabus bullets</strong></td>
 <td>Introduction to data warehousing concepts · Data warehouse architecture · ETL processes · Data modelling for BI</td>
 </tr>
 </tbody></table></div><blockquote class="custom-blockquote"><p><strong>Read this first:</strong> this unit is the paper&#39;s workhorse. In 2026 it produced a 5-mark architecture question, a 3-mark ETL question, and <em>three</em> separate 1-markers. If you learn only one unit properly, learn this one. Everything here is also the vocabulary for the Group D case.</p>
-</blockquote><hr class="custom-hr"><h2 id="2-1-what-a-data-warehouse-is"><a href="#2-1-what-a-data-warehouse-is" class="heading-anchor">#</a>2.1 What a data warehouse is</h2><blockquote class="custom-blockquote"><p><strong>A data warehouse is a subject-oriented, integrated, time-variant and non-volatile collection of data, built to support management&#39;s decision-making rather than day-to-day transactions.</strong></p>
-</blockquote><p>That is <strong>Inmon&#39;s</strong> definition, and it is the one to write. Every clause is a mark.</p>
-<h3 id="the-four-characteristics-learn-each-as-quot-means-why-quot"><a href="#the-four-characteristics-learn-each-as-quot-means-why-quot" class="heading-anchor">#</a>The four characteristics — learn each as &quot;means + why&quot;</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</blockquote><hr class="custom-hr"><h2 id="coverage-map"><a href="#coverage-map" class="heading-anchor">#</a>Coverage Map</h2><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">2.1 Data Warehouse Concepts
+├── Inmon's 4 Characteristics (S-I-T-N)
+├── OLTP vs DW Contrast
+└── Nepal Context (Bank Example)
+
+2.2 Data Warehouse Architecture
+├── 5-Layer Diagram (Sources→Staging→ETL→EDW→Marts→BI)
+├── 6 Components + Metadata Repository
+├── 3 Architecture Variants
+├── EDW vs Dependent Mart vs Independent Mart vs ODS
+└── Nepal Bank Architecture (Applied)
+
+2.3 ETL Processes
+├── Extract (Full vs Incremental, CDC Concept)
+├── Transform (Clean, Standardize, De-dup, Derive, Conform)
+├── Load (Bulk, Fact/Dim Order, Refresh, ELT)
+└── Why Sequence Matters (Non-volatility)
+
+2.4 Data Modelling for BI
+├── Fact vs Dimension Tables (Grain Declaration)
+├── Star vs Snowflake Schema
+├── SCD Type 1 vs Type 2 (Type 3 mention)
+├── Conformed Dimensions (Critical for Integration)
+├── Surrogate Keys vs Natural Keys
+├── Factless Fact Tables
+└── Late-Arriving Dimensions / Early-Arriving Facts
+
+2.5 Metadata & Data Quality
+├── Metadata Repository (Definitions, Lineage, Load Stats)
+├── 6 Data Quality Dimensions + Controls
+└── Master Data Management (MDM) Link
+
+2.6 Modern Patterns (Exam Insurance)
+├── ELT vs ETL
+├── CDC / Change Data Capture
+├── Real-time / Near-real-time DW
+└── Cloud DW Patterns (Partitioning, Scaling)</code></pre></div><hr class="custom-hr"><h2 id="exam-mapping-quick-reference"><a href="#exam-mapping-quick-reference" class="heading-anchor">#</a>Exam Mapping (Quick Reference)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Q</th>
+<th>Topic</th>
+<th>Marks</th>
+<th>Section</th>
+</tr>
+</thead><tbody><tr>
+<td>A2</td>
+<td>Non-volatile</td>
+<td>1</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>A3</td>
+<td>Transformation Quality</td>
+<td>1</td>
+<td>2.3</td>
+</tr>
+<tr>
+<td>A6</td>
+<td>Data Modelling</td>
+<td>1</td>
+<td>2.4</td>
+</tr>
+<tr>
+<td>A10</td>
+<td>Metadata</td>
+<td>1</td>
+<td>2.5</td>
+</tr>
+<tr>
+<td>B2 / B11</td>
+<td>ETL Process</td>
+<td>3</td>
+<td>2.3</td>
+</tr>
+<tr>
+<td>B12</td>
+<td>Star Schema</td>
+<td>3</td>
+<td>2.4</td>
+</tr>
+<tr>
+<td>C2 / C17</td>
+<td>DW Architecture</td>
+<td>5</td>
+<td>2.2</td>
+</tr>
+<tr>
+<td>D21</td>
+<td>Retailer End-to-End</td>
+<td>10</td>
+<td>2.2 + 2.3 + 2.4</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="2-1-what-a-data-warehouse-is"><a href="#2-1-what-a-data-warehouse-is" class="heading-anchor">#</a>2.1 What a Data Warehouse Is</h2><blockquote class="custom-blockquote"><p><strong>A data warehouse is a subject-oriented, integrated, time-variant and non-volatile collection of data, built to support management&#39;s decision-making rather than day-to-day transactions.</strong></p>
+</blockquote><p>That is <strong>Inmon&#39;s</strong> definition. Every clause is a mark.</p>
+<h3 id="the-four-characteristics-learn-each-as-quot-means-why-quot"><a href="#the-four-characteristics-learn-each-as-quot-means-why-quot" class="heading-anchor">#</a>The Four Characteristics — learn each as &quot;means + why&quot;</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Characteristic</th>
 <th>What it means</th>
 <th>Why it matters</th>
 </tr>
 </thead><tbody><tr>
 <td><strong>Subject-oriented</strong></td>
-<td>organised around subjects (sales, customer, product), not around applications or departments</td>
+<td>organised around subjects (sales, customer, product), not applications or departments</td>
 <td>you analyse a <em>subject</em>, not an app&#39;s tables</td>
 </tr>
 <tr>
@@ -152,13 +243,13 @@
 <td>once loaded, data is <strong>not updated or deleted</strong> by users; it is only read</td>
 <td>you can reproduce last year&#39;s report and get last year&#39;s answer</td>
 </tr>
-</tbody></table></div><h3 id="the-non-volatile-answer-this-was-a2-1-mark"><a href="#the-non-volatile-answer-this-was-a2-1-mark" class="heading-anchor">#</a>The non-volatile answer (this was A2, 1 mark)</h3><blockquote class="custom-blockquote"><p>Because the warehouse analyses the past: editable records would change old reports retroactively and destroy trend comparability. Data is loaded by ETL, then only read.</p>
-</blockquote><p>⚠ <strong>Trap:</strong> students write &quot;non-volatile means data is not deleted&quot;. That&#39;s half. The mark is for <strong>no update</strong> + <strong>why</strong> (historical reproducibility). Corrections are handled by loading a <em>new</em> record (with its own timestamp), not by overwriting the old one.</p>
-<p>🧠 <strong>Memory hook for the four: S-I-T-N</strong> — <em>Subject, Integrated, Time-variant, Non-volatile.</em></p>
-<h3 id="oltp-vs-data-warehouse-the-contrast-examiners-keep-testing"><a href="#oltp-vs-data-warehouse-the-contrast-examiners-keep-testing" class="heading-anchor">#</a>OLTP vs data warehouse — the contrast examiners keep testing</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><p>🧠 <strong>Memory hook: S-I-T-N</strong> — <em>Subject, Integrated, Time-variant, Non-volatile.</em></p>
+<h3 id="the-non-volatile-answer-a2-1-mark"><a href="#the-non-volatile-answer-a2-1-mark" class="heading-anchor">#</a>The Non-Volatile Answer (A2, 1 mark)</h3><blockquote class="custom-blockquote"><p>Because the warehouse analyses the past: editable records would change old reports retroactively and destroy trend comparability. Data is loaded by ETL, then only read. Corrections are handled by loading a <em>new</em> record (with its own timestamp), not by overwriting the old one.</p>
+</blockquote><p>⚠ <strong>Trap:</strong> &quot;non-volatile means data is not deleted&quot; is half. The mark is for <strong>no update</strong> + <strong>why</strong> (historical reproducibility).</p>
+<h3 id="oltp-vs-data-warehouse-the-contrast-examiners-keep-testing"><a href="#oltp-vs-data-warehouse-the-contrast-examiners-keep-testing" class="heading-anchor">#</a>OLTP vs Data Warehouse — the contrast examiners keep testing</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th></th>
-<th><strong>OLTP</strong> (the till, the core banking system)</th>
-<th><strong>Data warehouse</strong> (the analysis store)</th>
+<th><strong>OLTP</strong> (core banking, POS)</th>
+<th><strong>Data Warehouse</strong> (analysis store)</th>
 </tr>
 </thead><tbody><tr>
 <td>Purpose</td>
@@ -195,8 +286,8 @@
 <td>clerks, customers</td>
 <td>analysts, managers</td>
 </tr>
-</tbody></table></div><p>🇳🇵 <strong>Nepal anchor:</strong> a commercial bank&#39;s core banking system (Finacle-style) is the OLTP side — every deposit, withdrawal, loan repayment, in real time. The warehouse is a separate store fed nightly, and it is what produces &quot;branch-wise deposit growth for the last 12 quarters&quot; without touching the live system. Same organisation, two different machines with two different jobs.</p>
-<hr class="custom-hr"><h2 id="2-2-data-warehouse-architecture-draw-this-diagram"><a href="#2-2-data-warehouse-architecture-draw-this-diagram" class="heading-anchor">#</a>2.2 Data warehouse architecture — draw this diagram</h2><p>The syllabus says &quot;architecture&quot;, and in 2026 that was a <strong>5-mark</strong> question phrased as <em>&quot;Illustrate and explain&quot;</em>. Illustrate means draw. A 5-mark answer with no diagram caps at about 3.</p>
+</tbody></table></div><p>🇳🇵 <strong>Nepal anchor:</strong> a commercial bank&#39;s core banking system (Finacle-style) is the OLTP side — every deposit, withdrawal, loan repayment in real time. The warehouse is a separate store fed nightly, producing &quot;branch-wise deposit growth for the last 12 quarters&quot; without touching the live system. Same organisation, two different machines with two different jobs.</p>
+<hr class="custom-hr"><h2 id="2-2-data-warehouse-architecture-draw-this-diagram"><a href="#2-2-data-warehouse-architecture-draw-this-diagram" class="heading-anchor">#</a>2.2 Data Warehouse Architecture — draw this diagram</h2><p>The syllabus says &quot;architecture&quot;, and in 2026 that was a <strong>5-mark</strong> question phrased as <em>&quot;Illustrate and explain&quot;</em>. Illustrate means draw. A 5-mark answer with no diagram caps at about 3.</p>
 <div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">   SOURCE SYSTEMS              STAGING                   WAREHOUSE                ACCESS
  ┌────────────────┐        ┌──────────────┐        ┌──────────────────┐     ┌──────────────┐
  │ Core banking   │        │  Extract     │        │   ENTERPRISE     │     │  BI tools    │
@@ -206,12 +297,12 @@
  │ Web / API      │        │   conform,   │        │  history kept    │ ──► │  Data marts  │
  │ External data  │        │   dedupe)    │        │                  │     │  (sales, HR, │
  └────────────────┘        └──────────────┘        └──────────────────┘     │   finance)   │
-                                                        ▲                   └──────────────┘
-                                                        │
-                                              ┌──────────────────┐
-                                              │     METADATA     │  (definitions, lineage,
-                                              │     REPOSITORY   │   load logs, business rules)
-                                              └──────────────────┘</code></pre></div><h3 id="the-five-components-you-must-name"><a href="#the-five-components-you-must-name" class="heading-anchor">#</a>The five components you must name</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+                                                         ▲                   └──────────────┘
+                                                         │
+                                               ┌──────────────────┐
+                                               │     METADATA     │  (definitions, lineage,
+                                               │     REPOSITORY   │   load logs, business rules)
+                                               └──────────────────┘</code></pre></div><h3 id="the-six-components-you-must-name"><a href="#the-six-components-you-must-name" class="heading-anchor">#</a>The Six Components You Must Name</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Component</th>
 <th>Job</th>
 <th>One line for the exam</th>
@@ -224,7 +315,7 @@
 <tr>
 <td><strong>Staging area</strong></td>
 <td>temporary landing zone for extraction and cleansing</td>
-<td>keeps dirty work away from the warehouse and the source systems</td>
+<td>keeps dirty work away from warehouse and source systems</td>
 </tr>
 <tr>
 <td><strong>ETL / integration</strong></td>
@@ -233,7 +324,7 @@
 </tr>
 <tr>
 <td><strong>Data warehouse (EDW)</strong></td>
-<td>the consolidated, historical, subject-oriented store</td>
+<td>consolidated, historical, subject-oriented store</td>
 <td>&quot;single source of truth&quot;</td>
 </tr>
 <tr>
@@ -246,17 +337,17 @@
 <td>definitions, lineage, load statistics</td>
 <td>the warehouse&#39;s own documentation — what the numbers <em>mean</em></td>
 </tr>
-</tbody></table></div><h3 id="three-architecture-variants-name-them-one-line-each"><a href="#three-architecture-variants-name-them-one-line-each" class="heading-anchor">#</a>Three architecture variants (name them, one line each)</h3><ol>
-<li><strong>Basic</strong> — sources → warehouse → users. Fine for a small organisation, no staging area, dirty data hits the warehouse.</li><li><strong>With staging area</strong> — the common enterprise shape: sources → staging/ETL → warehouse → users. Cleansing is isolated.</li><li><strong>With staging area + data marts</strong> — the diagram above. Marts serve departments; the EDW keeps one governed truth.</li></ol>
-<h3 id="data-mart-edw-ods-the-distinctions-that-earn-half-a-mark-each"><a href="#data-mart-edw-ods-the-distinctions-that-earn-half-a-mark-each" class="heading-anchor">#</a>Data mart, EDW, ODS — the distinctions that earn half a mark each</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><h3 id="three-architecture-variants-name-them-one-line-each"><a href="#three-architecture-variants-name-them-one-line-each" class="heading-anchor">#</a>Three Architecture Variants (name them, one line each)</h3><ol>
+<li><strong>Basic</strong> — sources → warehouse → users. Fine for small org, no staging, dirty data hits warehouse.</li><li><strong>With staging area</strong> — sources → staging/ETL → warehouse → users. Cleansing isolated.</li><li><strong>With staging area + data marts</strong> — the diagram above. Marts serve departments; EDW keeps governed truth.</li></ol>
+<h3 id="edw-vs-data-mart-vs-ods-distinctions-worth-half-a-mark-each"><a href="#edw-vs-data-mart-vs-ods-distinctions-worth-half-a-mark-each" class="heading-anchor">#</a>EDW vs Data Mart vs ODS — distinctions worth half a mark each</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Term</th>
 <th>Scope</th>
 <th>Note</th>
 </tr>
 </thead><tbody><tr>
-<td><strong>Enterprise data warehouse (EDW)</strong></td>
-<td>whole organisation, most detailed grain</td>
-<td>the single source of truth</td>
+<td><strong>Enterprise Data Warehouse (EDW)</strong></td>
+<td>whole org, most detailed grain</td>
+<td>single source of truth</td>
 </tr>
 <tr>
 <td><strong>Data mart</strong></td>
@@ -271,7 +362,7 @@
 <tr>
 <td><strong>Independent data mart</strong></td>
 <td>fed <em>directly from source systems</em></td>
-<td>fast to build, becomes an &quot;island of inconsistency&quot;</td>
+<td>fast to build, becomes &quot;island of inconsistency&quot;</td>
 </tr>
 <tr>
 <td><strong>ODS (operational data store)</strong></td>
@@ -279,37 +370,96 @@
 <td>near-real-time reporting; often feeds the warehouse</td>
 </tr>
 </tbody></table></div><p>⚠ <strong>Trap:</strong> &quot;data mart = small data warehouse&quot; gets partial credit. The distinguishing point is <strong>scope + source</strong>: a mart is department-scoped, and whether it is dependent or independent decides whether it helps or hurts consistency.</p>
-<hr class="custom-hr"><h2 id="2-3-etl-the-process-question-3-marks-and-the-transformation-question-1-mark"><a href="#2-3-etl-the-process-question-3-marks-and-the-transformation-question-1-mark" class="heading-anchor">#</a>2.3 ETL — the process question (3 marks) and the transformation question (1 mark)</h2><h3 id="the-three-stages"><a href="#the-three-stages" class="heading-anchor">#</a>The three stages</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
-<th>Stage</th>
-<th>What happens</th>
-<th>Typical work</th>
+<h3 id="nepal-bank-architecture-applied"><a href="#nepal-bank-architecture-applied" class="heading-anchor">#</a>Nepal Bank Architecture (Applied)</h3><p>Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of history in star schema (fact: deposits/withdrawals; dimensions: branch, product, date, customer segment) → dependent marts for branch and product reporting → dashboards.</p>
+<hr class="custom-hr"><h2 id="2-3-etl-processes"><a href="#2-3-etl-processes" class="heading-anchor">#</a>2.3 ETL Processes</h2><h3 id="2-3-1-extract"><a href="#2-3-1-extract" class="heading-anchor">#</a>2.3.1 Extract</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Method</th>
+<th>Description</th>
+<th>When Used</th>
 </tr>
 </thead><tbody><tr>
-<td><strong>Extract</strong></td>
-<td>pull data out of source systems</td>
-<td>full vs incremental extraction; handle flat files, APIs, DB connections; log what was pulled</td>
+<td><strong>Full Extraction</strong></td>
+<td>Pull entire source dataset</td>
+<td>initial load, small sources, no change tracking</td>
 </tr>
 <tr>
-<td><strong>Transform</strong></td>
-<td>make it consistent and usable</td>
-<td>clean (fix/remove bad records), standardise formats and codes, de-duplicate, derive calculated fields, conform dimensions, aggregate where needed</td>
+<td><strong>Incremental Extraction</strong></td>
+<td>Pull only changed records since last run</td>
+<td>daily/hourly loads; uses timestamps, triggers, or CDC</td>
 </tr>
 <tr>
-<td><strong>Load</strong></td>
-<td>write into the warehouse</td>
-<td>bulk load, dimension/fact load order, refresh strategy, index rebuild, error handling and restart</td>
+<td><strong>Change Data Capture (CDC)</strong></td>
+<td>Captures row-level changes from source transaction logs</td>
+<td>near-real-time; low overhead; modern standard</td>
 </tr>
-</tbody></table></div><h3 id="why-quot-transform-quot-is-the-hardest-and-most-asked-about-stage"><a href="#why-quot-transform-quot-is-the-hardest-and-most-asked-about-stage" class="heading-anchor">#</a>Why &quot;transform&quot; is the hardest and most asked-about stage</h3><p>Raw data from different systems disagrees with itself: dates as <code>12/03/2024</code> and <code>2024-03-12</code>, gender as <code>M/F</code> and <code>1/2</code>, amounts in NPR and INR, the same customer entered twice with different spellings, missing values encoded as <code>-999</code>. Transformation is where those are resolved into <strong>one agreed definition</strong>. That is precisely why transformation is what makes warehouse data trustworthy — and it is the answer to A3.</p>
-<h3 id="the-1-mark-answer-a3-asked-in-2026"><a href="#the-1-mark-answer-a3-asked-in-2026" class="heading-anchor">#</a>The 1-mark answer (A3, asked in 2026)</h3><blockquote class="custom-blockquote"><p>Because it cleans, standardises and reconciles data from different sources into one consistent format and definition, so the warehouse stores accurate, comparable values instead of conflicting raw extracts.</p>
-</blockquote><p>⚠ <strong>Trap:</strong> don&#39;t answer A3 by describing what ETL stands for. The question asks <em>how transformation improves quality</em> — so name the operations (cleaning, standardising, de-duplicating, deriving, conforming) and the outcome (consistent, comparable, trustworthy).</p>
-<h3 id="the-3-mark-answer-b2-asked-in-2026"><a href="#the-3-mark-answer-b2-asked-in-2026" class="heading-anchor">#</a>The 3-mark answer (B2, asked in 2026)</h3><blockquote class="custom-blockquote"><p><em>Shape: name the three stages, one sentence each, plus one line on why the sequence matters. ~100 words.</em></p>
-<p>ETL is the pipeline that moves data from source systems into the data warehouse. <strong>Extraction</strong> pulls the required data — full or incremental — from operational systems, files and external sources into a staging area. <strong>Transformation</strong> then cleans and conforms it: invalid records are corrected or rejected, codes and units are standardised, duplicates are removed, and derived measures are calculated, so that data from different systems means the same thing. <strong>Loading</strong> writes the transformed data into the warehouse&#39;s fact and dimension tables, usually in bulk and in dependency order. The sequence matters because loading untransformed data would permanently corrupt the historical record, which the warehouse cannot correct later — it is non-volatile.</p>
-</blockquote><p>🧠 <strong>Memory hook:</strong> <em>E = get it, T = fix it, L = store it.</em></p>
-<hr class="custom-hr"><h2 id="2-4-data-modelling-for-bi"><a href="#2-4-data-modelling-for-bi" class="heading-anchor">#</a>2.4 Data modelling for BI</h2><h3 id="first-the-1-mark-definition-a6-asked-in-2026"><a href="#first-the-1-mark-definition-a6-asked-in-2026" class="heading-anchor">#</a>First, the 1-mark definition (A6, asked in 2026)</h3><blockquote class="custom-blockquote"><p>Data modelling defines the structure of data — entities, attributes, relationships and constraints — so it can be stored and queried consistently; in BI it produces the warehouse&#39;s fact and dimension tables.</p>
-</blockquote><h3 id="the-two-tables-everything-is-built-from"><a href="#the-two-tables-everything-is-built-from" class="heading-anchor">#</a>The two tables everything is built from</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Exam hook</strong>: A3/B2 ask &quot;full vs incremental&quot; — know 2 differences + when each used.</p>
+</blockquote><h3 id="2-3-2-transform"><a href="#2-3-2-transform" class="heading-anchor">#</a>2.3.2 Transform</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Operation</th>
+<th>Purpose</th>
+<th>Exam Phrase</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Clean</strong></td>
+<td>Fix/remove bad records, handle missing (<code>-999</code>), smooth noise</td>
+<td>&quot;cleans invalid records&quot;</td>
+</tr>
+<tr>
+<td><strong>Standardize</strong></td>
+<td>Formats (dates), codes (M/F→1/2), units (NPR/INR)</td>
+<td>&quot;standardises formats and codes&quot;</td>
+</tr>
+<tr>
+<td><strong>De-duplicate</strong></td>
+<td>Same customer entered twice with different spellings</td>
+<td>&quot;de-duplicates&quot;</td>
+</tr>
+<tr>
+<td><strong>Derive</strong></td>
+<td>Calculated fields (age from DOB, margin from revenue/cost)</td>
+<td>&quot;derived measures calculated&quot;</td>
+</tr>
+<tr>
+<td><strong>Conform Dimensions</strong></td>
+<td>Same customer = same key across CRM + POS + Web</td>
+<td>&quot;conforms dimensions&quot;</td>
+</tr>
+<tr>
+<td><strong>Aggregate</strong></td>
+<td>Pre-summarize for performance (daily→monthly)</td>
+<td>&quot;aggregate where needed&quot;</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>Late-arriving dimensions</strong>: handled by re-processing affected fact partitions or surrogate key versioning.</p>
+</blockquote><h3 id="2-3-3-load"><a href="#2-3-3-load" class="heading-anchor">#</a>2.3.3 Load</h3><ul>
+<li><strong>Bulk Load</strong>: COPY/BCP for speed; disable indexes/constraints during load</li><li><strong>Load Order</strong>: Dimensions first (surrogate keys), then Facts (FK references)</li><li><strong>Refresh Strategy</strong>: Full reload (small marts) vs Incremental (large facts) vs CDC (real-time)</li><li><strong>ELT Pattern</strong>: Load raw to staging → transform in-warehouse (SQL/dbt); leverages MPP</li></ul>
+<blockquote class="custom-blockquote"><p><strong>Why sequence matters</strong>: Loading untransformed data corrupts history — DW is non-volatile.</p>
+</blockquote><h3 id="2-3-4-etl-vs-elt-exam-insurance"><a href="#2-3-4-etl-vs-elt-exam-insurance" class="heading-anchor">#</a>2.3.4 ETL vs ELT (Exam Insurance)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th></th>
-<th><strong>Fact table</strong></th>
-<th><strong>Dimension table</strong></th>
+<th>ETL</th>
+<th>ELT</th>
+</tr>
+</thead><tbody><tr>
+<td>Where Transform Runs</td>
+<td>Staging server / ETL tool</td>
+<td>Inside warehouse (SQL, dbt)</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Batch (hours)</td>
+<td>Near-real-time (minutes)</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Limited by ETL server</td>
+<td>Scales with MPP warehouse</td>
+</tr>
+<tr>
+<td>When Used</td>
+<td>Legacy, complex logic, compliance</td>
+<td>Modern cloud DW (Snowflake, BigQuery, Redshift)</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="2-4-data-modelling-for-bi"><a href="#2-4-data-modelling-for-bi" class="heading-anchor">#</a>2.4 Data Modelling for BI</h2><h3 id="2-4-1-fact-vs-dimension-tables"><a href="#2-4-1-fact-vs-dimension-tables" class="heading-anchor">#</a>2.4.1 Fact vs Dimension Tables</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th></th>
+<th><strong>Fact Table</strong></th>
+<th><strong>Dimension Table</strong></th>
 </tr>
 </thead><tbody><tr>
 <td>Holds</td>
@@ -336,10 +486,11 @@
 <td>&quot;how much&quot;</td>
 <td>&quot;by what / when / where / who&quot;</td>
 </tr>
-</tbody></table></div><h3 id="star-vs-snowflake-the-standard-comparison"><a href="#star-vs-snowflake-the-standard-comparison" class="heading-anchor">#</a>Star vs snowflake — the standard comparison</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+</tbody></table></div><p><strong>Grain</strong> = what one row represents (&quot;one row per product per store per day&quot;). Declare the grain before designing anything; every measure and dimension must be consistent with it.</p>
+<h3 id="2-4-2-star-vs-snowflake"><a href="#2-4-2-star-vs-snowflake" class="heading-anchor">#</a>2.4.2 Star vs Snowflake</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th></th>
-<th><strong>Star schema</strong></th>
-<th><strong>Snowflake schema</strong></th>
+<th><strong>Star Schema</strong></th>
+<th><strong>Snowflake Schema</strong></th>
 </tr>
 </thead><tbody><tr>
 <td>Shape</td>
@@ -363,83 +514,189 @@
 </tr>
 <tr>
 <td>Typical use</td>
-<td>BI query performance — the default choice</td>
-<td>storage-sensitive or highly structured dimension hierarchies</td>
+<td>BI query performance — default choice</td>
+<td>storage-sensitive or highly structured hierarchies</td>
 </tr>
-</tbody></table></div><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">        STAR                                  SNOWFLAKE
-   dim_date   dim_product                dim_date    dim_product
-        \        /                             \          /     \
-         \      /                               \        /    dim_category
-        fact_sales                              fact_sales
-         /      \                               /        \
-   dim_store  dim_customer              dim_store    dim_customer
-                                                          \
-                                                       dim_city</code></pre></div><h3 id="grain-the-one-sentence-that-makes-you-sound-like-you-know-this"><a href="#grain-the-one-sentence-that-makes-you-sound-like-you-know-this" class="heading-anchor">#</a>Grain — the one sentence that makes you sound like you know this</h3><p><strong>Grain</strong> is what one row of the fact table represents (&quot;one row per product per store per day&quot;). Declare the grain before designing anything; every measure and dimension must be consistent with it. Examiners rarely ask directly, but it is the correct thing to say when asked to &quot;explain data modelling for BI&quot;.</p>
-<h3 id="slowly-changing-dimensions-scd-worth-one-line"><a href="#slowly-changing-dimensions-scd-worth-one-line" class="heading-anchor">#</a>Slowly changing dimensions (SCD) — worth one line</h3><p>When a customer moves city, does the warehouse overwrite the old city (losing history) or add a new versioned row (keeping it)? Type 1 = overwrite, Type 2 = new row with validity dates. Since the warehouse is non-volatile, <strong>Type 2 is the normal answer</strong> — and it is a good mark-winning sentence in the architecture 5-marker.</p>
-<hr class="custom-hr"><h2 id="2-5-answer-skeletons-for-the-real-2026-questions-from-this-unit"><a href="#2-5-answer-skeletons-for-the-real-2026-questions-from-this-unit" class="heading-anchor">#</a>2.5 Answer skeletons for the real 2026 questions from this unit</h2><h3 id="a2-quot-why-data-in-data-warehouse-must-be-non-volatile-quot-1"><a href="#a2-quot-why-data-in-data-warehouse-must-be-non-volatile-quot-1" class="heading-anchor">#</a>A2 · &quot;Why data in data warehouse must be non volatile?&quot; [1]</h3><p>See §2.1 — one sentence: historical reproducibility.</p>
-<h3 id="a3-quot-how-does-data-transformation-improve-the-quality-and-usability-of-data-in-a-warehouse-quot-1"><a href="#a3-quot-how-does-data-transformation-improve-the-quality-and-usability-of-data-in-a-warehouse-quot-1" class="heading-anchor">#</a>A3 · &quot;How does data transformation improve the quality and usability of data in a warehouse?&quot; [1]</h3><p>See §2.3 — operations + outcome, one sentence.</p>
-<h3 id="a6-quot-what-is-data-modelling-quot-1"><a href="#a6-quot-what-is-data-modelling-quot-1" class="heading-anchor">#</a>A6 · &quot;What is Data Modelling?&quot; [1]</h3><p>See §2.4 — structure of entities/attributes/relationships; in BI, fact and dimension tables.</p>
-<h3 id="b2-quot-explain-the-etl-process-quot-3"><a href="#b2-quot-explain-the-etl-process-quot-3" class="heading-anchor">#</a>B2 · &quot;Explain the ETL process.&quot; [3]</h3><p>See §2.3 — 100-word skeleton.</p>
-<h3 id="c2-quot-illustrate-and-explain-data-warehouse-architecture-quot-5"><a href="#c2-quot-illustrate-and-explain-data-warehouse-architecture-quot-5" class="heading-anchor">#</a>C2 · &quot;Illustrate and explain data warehouse architecture.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: diagram first (half a page), then five labelled components, then one line on why the layers exist. ~220 words + diagram.</em></p>
+</tbody></table></div><div class="code-block"><div class="code-header"><span class="code-lang">text</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div><pre><code class="language-text">       STAR                                  SNOWFLAKE
+  dim_date   dim_product                dim_date    dim_product
+       \        /                             \          /     \
+        \      /                               \        /    dim_category
+       fact_sales                              fact_sales
+        /      \                               /        \
+  dim_store  dim_customer              dim_store    dim_customer
+                                                    \
+                                                 dim_city</code></pre></div><h3 id="2-4-3-slowly-changing-dimensions-scd"><a href="#2-4-3-slowly-changing-dimensions-scd" class="heading-anchor">#</a>2.4.3 Slowly Changing Dimensions (SCD)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Type</th>
+<th>Behavior</th>
+<th>When Used</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Type 1</strong></td>
+<td>Overwrite old value (lose history)</td>
+<td>Corrections, non-critical attributes</td>
+</tr>
+<tr>
+<td><strong>Type 2</strong></td>
+<td>New row with validity dates (keep history)</td>
+<td><strong>Default for DW</strong> — customer address, product category</td>
+</tr>
+<tr>
+<td><strong>Type 3</strong></td>
+<td>Add &quot;previous value&quot; column</td>
+<td>Limited history, specific attributes</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p>Since DW is non-volatile, <strong>Type 2 is the normal answer</strong> — and it wins marks in the architecture 5-marker.</p>
+</blockquote><h3 id="2-4-4-advanced-modelling-exam-insurance"><a href="#2-4-4-advanced-modelling-exam-insurance" class="heading-anchor">#</a>2.4.4 Advanced Modelling (Exam Insurance)</h3><ul>
+<li><strong>Surrogate Keys vs Natural Keys</strong>: Surrogate (system-generated integer) preferred — stable, small, decoupled from source changes. Natural keys (business codes) change and cause FK breaks.</li><li><strong>Factless Fact Tables</strong>: Fact table with only FKs, no measures — tracks events (student attendance, promo eligibility). Many-to-many bridge tables are factless.</li><li><strong>Conformed Dimensions</strong>: Same dimension (e.g., <code>dim_product</code>) shared across multiple fact tables (<code>fact_sales</code>, <code>fact_inventory</code>). Enables &quot;sold 40, have 12&quot; in one query.</li><li><strong>Late-Arriving Dimensions / Early-Arriving Facts</strong>: Fact arrives before dimension row exists — use inferred member (surrogate key with placeholder attrs) and update later via CDC.</li></ul>
+<hr class="custom-hr"><h2 id="2-5-metadata-amp-data-quality"><a href="#2-5-metadata-amp-data-quality" class="heading-anchor">#</a>2.5 Metadata &amp; Data Quality</h2><h3 id="2-5-1-metadata-repository-a10-1-mark"><a href="#2-5-1-metadata-repository-a10-1-mark" class="heading-anchor">#</a>2.5.1 Metadata Repository (A10, 1 mark)</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Category</th>
+<th>What It Contains</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Business</strong></td>
+<td>Definitions, formulas, ownership, stewardship</td>
+</tr>
+<tr>
+<td><strong>Technical</strong></td>
+<td>Table/column names, data types, lineage, load timestamps</td>
+</tr>
+<tr>
+<td><strong>Operational</strong></td>
+<td>Load logs, row counts, error records, refresh schedules</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>A10 answer</strong>: Metadata in BI is the structured documentation that defines what the data means — table and column definitions, data lineage, business rules, transformation logic, load logs and metric definitions — so any user can understand, trust and correctly use the warehouse data.</p>
+</blockquote><h3 id="2-5-2-data-quality-6-dimensions-controls"><a href="#2-5-2-data-quality-6-dimensions-controls" class="heading-anchor">#</a>2.5.2 Data Quality — 6 Dimensions + Controls</h3><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Dimension</th>
+<th>Definition</th>
+<th>Control</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Completeness</strong></td>
+<td>No missing values where required</td>
+<td>Not-null constraints, mandatory field checks</td>
+</tr>
+<tr>
+<td><strong>Accuracy</strong></td>
+<td>Values reflect reality</td>
+<td>Cross-source reconciliation, reference data lookup</td>
+</tr>
+<tr>
+<td><strong>Consistency</strong></td>
+<td>Same meaning across sources</td>
+<td>Conformed dimensions, standardized codes</td>
+</tr>
+<tr>
+<td><strong>Timeliness</strong></td>
+<td>Data available when needed</td>
+<td>SLA monitoring, freshness timestamps</td>
+</tr>
+<tr>
+<td><strong>Validity</strong></td>
+<td>Values conform to format/rules</td>
+<td>Check constraints, regex, domain lists</td>
+</tr>
+<tr>
+<td><strong>Uniqueness</strong></td>
+<td>No duplicate entities</td>
+<td>Primary keys, deduplication rules</td>
+</tr>
+</tbody></table></div><blockquote class="custom-blockquote"><p><strong>MDM Link</strong>: Master Data Management ensures &quot;one customer, one product&quot; across sources — feeds conformed dimensions.</p>
+</blockquote><hr class="custom-hr"><h2 id="2-6-modern-patterns-exam-insurance"><a href="#2-6-modern-patterns-exam-insurance" class="heading-anchor">#</a>2.6 Modern Patterns (Exam Insurance)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+<th>Pattern</th>
+<th>What It Is</th>
+<th>When Tested</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>ELT vs ETL</strong></td>
+<td>Transform inside warehouse (SQL/dbt) vs external tool</td>
+<td>&quot;When would you use ELT?&quot;</td>
+</tr>
+<tr>
+<td><strong>CDC / Change Data Capture</strong></td>
+<td>Capture row-level changes from transaction logs</td>
+<td>&quot;How to achieve near-real-time?&quot;</td>
+</tr>
+<tr>
+<td><strong>Real-time / Near-real-time DW</strong></td>
+<td>Streaming ingestion (Kafka → DW)</td>
+<td>&quot;How to reduce latency?&quot;</td>
+</tr>
+<tr>
+<td><strong>Cloud DW Patterns</strong></td>
+<td>Partitioning (range/hash), clustering, auto-scaling, separation of compute/storage</td>
+<td>&quot;How to scale DW?&quot;</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="2-7-answer-skeletons-for-2026-questions"><a href="#2-7-answer-skeletons-for-2026-questions" class="heading-anchor">#</a>2.7 Answer Skeletons for 2026 Questions</h2><h3 id="a2-quot-why-data-in-data-warehouse-must-be-non-volatile-quot-1"><a href="#a2-quot-why-data-in-data-warehouse-must-be-non-volatile-quot-1" class="heading-anchor">#</a>A2 · &quot;Why data in data warehouse must be non volatile?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Because the warehouse analyses the past: editable records would change old reports retroactively and destroy trend comparability. Data is loaded by ETL, then only read.</p>
+</blockquote><h3 id="a3-quot-how-does-data-transformation-improve-the-quality-and-usability-of-data-in-a-warehouse-quot-1"><a href="#a3-quot-how-does-data-transformation-improve-the-quality-and-usability-of-data-in-a-warehouse-quot-1" class="heading-anchor">#</a>A3 · &quot;How does data transformation improve the quality and usability of data in a warehouse?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Because it cleans, standardises and reconciles data from different sources into one consistent format and definition, so the warehouse stores accurate, comparable values instead of conflicting raw extracts.</p>
+</blockquote><h3 id="a6-quot-what-is-data-modelling-quot-1"><a href="#a6-quot-what-is-data-modelling-quot-1" class="heading-anchor">#</a>A6 · &quot;What is Data Modelling?&quot; [1]</h3><blockquote class="custom-blockquote"><p>Data modelling defines the structure of data — entities, attributes, relationships and constraints — so it can be stored and queried consistently; in BI it produces the warehouse&#39;s fact and dimension tables.</p>
+</blockquote><h3 id="a10-quot-define-metadata-in-the-context-of-bi-quot-1"><a href="#a10-quot-define-metadata-in-the-context-of-bi-quot-1" class="heading-anchor">#</a>A10 · &quot;Define metadata in the context of BI.&quot; [1]</h3><blockquote class="custom-blockquote"><p>Metadata in BI is the structured documentation that defines what the data means — table and column definitions, data lineage, business rules, transformation logic, load logs and metric definitions — so that any user can understand, trust and correctly use the warehouse data.</p>
+</blockquote><h3 id="b2-quot-explain-the-etl-process-quot-3"><a href="#b2-quot-explain-the-etl-process-quot-3" class="heading-anchor">#</a>B2 · &quot;Explain the ETL process.&quot; [3]</h3><blockquote class="custom-blockquote"><p>ETL is the pipeline that moves data from source systems into the data warehouse. <strong>Extraction</strong> pulls the required data — full or incremental — from operational systems, files and external sources into a staging area. <strong>Transformation</strong> then cleans and conforms it: invalid records are corrected or rejected, codes and units are standardised, duplicates are removed, and derived measures are calculated, so that data from different systems means the same thing. <strong>Loading</strong> writes the transformed data into the warehouse&#39;s fact and dimension tables, usually in bulk and in dependency order. The sequence matters because loading untransformed data would permanently corrupt the historical record, which the warehouse cannot correct later — it is non-volatile.</p>
+</blockquote><h3 id="c2-quot-illustrate-and-explain-data-warehouse-architecture-quot-5"><a href="#c2-quot-illustrate-and-explain-data-warehouse-architecture-quot-5" class="heading-anchor">#</a>C2 · &quot;Illustrate and explain data warehouse architecture.&quot; [5]</h3><blockquote class="custom-blockquote"><p><em>Shape: diagram first (half a page), then five labelled components, then one line on why the layers exist. ~220 words + diagram.</em></p>
 <p>A data warehouse architecture organises the flow of data from operational systems to decision-makers in layers, so that cleansing and history-keeping happen without disturbing live systems.</p>
 <p><strong>[draw the diagram from §2.2 — sources → staging/ETL → EDW → marts/tools, metadata alongside]</strong></p>
 <p><strong>Source systems</strong> are the operational databases, POS, CRM and external feeds that generate raw data. The <strong>staging area</strong> receives extracted data and is where it is cleaned, conformed and de-duplicated, keeping heavy transformation away from both the source systems and the warehouse. The <strong>ETL process</strong> moves data across these layers on a scheduled or near-real-time basis. The <strong>enterprise data warehouse</strong> stores the integrated, subject-oriented, time-variant history in dimensional (star) schemas and acts as the organisation&#39;s single source of truth. <strong>Data marts</strong> are department-scoped subsets fed from the warehouse — dependent marts — so that sales, finance and HR each get fast, focused access without duplicating definitions. A <strong>metadata repository</strong> records definitions, lineage and load statistics, which is what allows two reports to agree on what &quot;revenue&quot; means.</p>
 <p>The layering exists because the requirements conflict: source systems must stay fast and current, while analysis needs history and consistency. Separating them is what makes both possible.</p>
-</blockquote><p>⚠ In the exam, draw first, label everything, then write. A perfect essay with no diagram will not reach 5 on a question that says <em>illustrate</em>.</p>
-<hr class="custom-hr"><h2 id="2-6-traps"><a href="#2-6-traps" class="heading-anchor">#</a>2.6 Traps</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
+</blockquote><hr class="custom-hr"><h2 id="2-8-traps-condensed"><a href="#2-8-traps-condensed" class="heading-anchor">#</a>2.8 Traps (Condensed)</h2><div class="table-wrapper"><table class="data-table"><thead><tr>
 <th>Trap</th>
-<th>Why it costs marks</th>
 <th>Fix</th>
 </tr>
 </thead><tbody><tr>
-<td>Answering the architecture question with prose only</td>
-<td>&quot;illustrate&quot; is a command word; no diagram = lost marks</td>
-<td>draw the 5-layer diagram, then explain</td>
+<td>Architecture with prose only</td>
+<td>Draw 5-layer diagram, then explain</td>
 </tr>
 <tr>
 <td>&quot;Non-volatile = never deleted&quot;</td>
-<td>misses the update ban and the reason</td>
-<td>no update/delete + historical reproducibility</td>
+<td>No update/delete + historical reproducibility</td>
 </tr>
 <tr>
-<td>Confusing data mart with data warehouse</td>
-<td>scope and governance are the point</td>
-<td>mart = one department; EDW = whole organisation</td>
+<td>Data mart = data warehouse</td>
+<td>Scope + source: mart = one department; EDW = whole org</td>
 </tr>
 <tr>
-<td>Describing ETL as &quot;extract, transform, load&quot; and stopping</td>
-<td>that&#39;s the expansion, not the explanation</td>
-<td>say what happens in each stage</td>
+<td>ETL = &quot;extract, transform, load&quot; only</td>
+<td>Say what happens in each stage</td>
 </tr>
 <tr>
-<td>Star vs snowflake answered as &quot;one is bigger&quot;</td>
-<td>wrong axis</td>
-<td>normalisation vs denormalisation → joins vs speed</td>
+<td>Star vs snowflake = &quot;one is bigger&quot;</td>
+<td>Normalisation vs denormalisation → joins vs speed</td>
 </tr>
 <tr>
 <td>Forgetting metadata</td>
-<td>half a mark in architecture answers</td>
-<td>metadata = definitions + lineage</td>
+<td>Metadata = definitions + lineage</td>
 </tr>
 <tr>
-<td>Saying the warehouse is updated in place by users</td>
-<td>breaks non-volatility</td>
-<td>only ETL loads; users read</td>
+<td>Warehouse updated in place by users</td>
+<td>Only ETL loads; users read</td>
 </tr>
-</tbody></table></div><hr class="custom-hr"><h2 id="2-7-self-test-answers-collapsed"><a href="#2-7-self-test-answers-collapsed" class="heading-anchor">#</a>2.7 Self-test (answers collapsed)</h2><ol>
+<tr>
+<td>SCD = only Type 1</td>
+<td>Type 2 (new row + dates) is DW default</td>
+</tr>
+<tr>
+<td>Grain not declared</td>
+<td>Grain fixes level of detail; prevents double-counting</td>
+</tr>
+</tbody></table></div><hr class="custom-hr"><h2 id="2-9-self-test-answers-collapsed"><a href="#2-9-self-test-answers-collapsed" class="heading-anchor">#</a>2.9 Self-Test (Answers Collapsed)</h2><ol>
 <li>State Inmon&#39;s four characteristics of a data warehouse and one line on each. <em>(3–5 marks)</em></li><li>Draw the data warehouse architecture with staging area and data marts; label six components. <em>(5 marks)</em></li><li>Explain ETL, naming what happens in each stage. <em>(3 marks)</em></li><li>Why must warehouse data be non-volatile, and how is a correction handled if data cannot be updated? <em>(1–3 marks)</em></li><li>Distinguish dependent and independent data marts; which is preferred and why? <em>(3 marks)</em></li><li>What is the grain of a fact table, and why declare it first? <em>(1–3 marks)</em></li><li>🇳🇵 A Nepali bank wants monthly branch-wise deposit reports without slowing its core banking system, and wants to keep 10 years of history. Draw the architecture you would propose and justify each layer. <em>(5 marks)</em></li></ol>
 <details>
 <summary>Answers</summary>
 
 <ol>
-<li><strong>Subject-oriented</strong> (organised by business subject, not by application), <strong>integrated</strong> (consistent codes, units and naming across sources), <strong>time-variant</strong> (every record is tied to time; years of history), <strong>non-volatile</strong> (loaded in bulk, then read-only so history cannot change).</li><li>Diagram: source systems → staging area (extract/transform) → ETL → enterprise data warehouse → data marts / BI tools; metadata repository alongside. Labels: sources, staging, ETL, EDW, marts, metadata (users/access as the seventh).</li><li><strong>Extract</strong>: pull full or incremental data from operational systems into staging. <strong>Transform</strong>: clean invalid records, standardise codes and units, de-duplicate, derive measures, conform dimensions. <strong>Load</strong>: bulk-insert into fact and dimension tables in dependency order, with logging and restart handling.</li><li>Because analysis depends on history being reproducible; if records could be edited, past reports would silently change and trend comparisons would be meaningless. A correction is made by loading a <strong>new, timestamped record</strong> (or a new SCD Type 2 version), not by overwriting the old one.</li><li><strong>Dependent</strong> marts are fed from the EDW; <strong>independent</strong> marts are fed directly from source systems. Dependent is preferred: it inherits the warehouse&#39;s single definitions, whereas independent marts grow into islands of inconsistency with their own versions of &quot;revenue&quot;.</li><li>Grain = what one row represents (e.g. one product per store per day). Declaring it first fixes the level of detail, so every measure and dimension is consistent and no double-counting occurs.</li><li>Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of history in a star schema (fact: deposits/withdrawals; dimensions: branch, product, date, customer segment) → dependent marts for branch and product reporting → dashboards. Justification: separates analytical load from the live system (no slowdown), preserves history (time-variant), gives one definition of &quot;deposit&quot; across branches (integrated), and lets corrections be added rather than overwritten (non-volatile).</li></ol>
+<li><p><strong>Subject-oriented</strong> (organised by business subject, not by application), <strong>integrated</strong> (consistent codes, units and naming across sources), <strong>time-variant</strong> (every record is tied to time; years of history), <strong>non-volatile</strong> (loaded in bulk, then read-only so history cannot change).</p>
+</li><li><p>Diagram: source systems → staging area (extract/transform) → ETL → enterprise data warehouse → data marts / BI tools; metadata repository alongside. Labels: sources, staging, ETL, EDW, marts, metadata (users/access as the seventh).</p>
+</li><li><p><strong>Extract</strong>: pull full or incremental data from operational systems into staging. <strong>Transform</strong>: clean invalid records, standardise codes and units, de-duplicate, derive measures, conform dimensions. <strong>Load</strong>: bulk-insert into fact and dimension tables in dependency order, with logging and restart handling.</p>
+</li><li><p>Because analysis depends on history being reproducible; if records could be edited, past reports would silently change and trend comparisons would be meaningless. A correction is made by loading a <strong>new, timestamped record</strong> (or a new SCD Type 2 version), not by overwriting the old one.</p>
+</li><li><p><strong>Dependent</strong> marts are fed from the EDW; <strong>independent</strong> marts are fed directly from source systems. Dependent is preferred: it inherits the warehouse&#39;s single definitions, whereas independent marts grow into islands of inconsistency with their own versions of &quot;revenue&quot;.</p>
+</li><li><p>Grain = what one row represents (e.g. one product per store per day). Declaring it first fixes the level of detail, so every measure and dimension is consistent and no double-counting occurs.</p>
+</li><li><p>Core banking (OLTP) → nightly ETL → staging → EDW holding 10 years of history in a star schema (fact: deposits/withdrawals; dimensions: branch, product, date, customer segment) → dependent marts for branch and product reporting → dashboards. Justification: separates analytical load from the live system (no slowdown), preserves history (time-variant), gives one definition of &quot;deposit&quot; across branches (integrated), and lets corrections be added rather than overwritten (non-volatile).</p>
+</li></ol>
 </details>
 
-<hr class="custom-hr"><h2 id="2-8-sixty-second-check"><a href="#2-8-sixty-second-check" class="heading-anchor">#</a>2.8 Sixty-second check</h2><p>Close the file and, on a blank page:</p>
+<hr class="custom-hr"><h2 id="2-10-sixty-second-check"><a href="#2-10-sixty-second-check" class="heading-anchor">#</a>2.10 Sixty-Second Check</h2><p>Close the file and, on a blank page:</p>
 <ul>
-<li><input disabled="" type="checkbox"> Write the four characteristics from memory, with one line each</li><li><input disabled="" type="checkbox"> Draw the five-layer architecture with staging area and marts, and label metadata</li><li><input disabled="" type="checkbox"> Explain E, T and L in one sentence each</li><li><input disabled="" type="checkbox"> Give the 1-mark answer for &quot;why non-volatile&quot;</li><li><input disabled="" type="checkbox"> State one difference between star and snowflake schema</li><li><input disabled="" type="checkbox"> Say what a dependent data mart is, and why it is preferred</li></ul>
-<p>If all six are there, this unit is marks-safe — and it is the single best unit to have safe.</p>
-<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 249, Unit 2, 8 LHs) · TU 2026 paper (A2, A3, A6, B2, C2) · Inmon&#39;s characteristics and the OLTP/DW contrast cross-checked against Oracle Database Data Warehousing Guide, ch. 1 · star/snowflake and SCD from Kimball &amp; Ross (syllabus reading).</em></p>
+<li><input disabled="" type="checkbox"> Write the four characteristics from memory, with one line each</li><li><input disabled="" type="checkbox"> Draw the five-layer architecture with staging area and marts, and label metadata</li><li><input disabled="" type="checkbox"> Explain E, T and L in one sentence each</li><li><input disabled="" type="checkbox"> Give the 1-mark answer for &quot;why non-volatile&quot;</li><li><input disabled="" type="checkbox"> State one difference between star and snowflake schema</li><li><input disabled="" type="checkbox"> Say what a dependent data mart is, and why it is preferred</li><li><input disabled="" type="checkbox"> Name the 6 data quality dimensions with one control each</li><li><input disabled="" type="checkbox"> Difference between full and incremental extraction</li><li><input disabled="" type="checkbox"> Type 1 vs Type 2 SCD</li><li><input disabled="" type="checkbox"> What is CDC?</li></ul>
+<p>If all ten are there, this unit is marks-safe — and it is the single best unit to have safe.</p>
+<hr class="custom-hr"><p><em>Sources for this unit: TU FOM syllabus (IT 249, Unit 2, 8 LHs) · TU 2026 paper (A2, A3, A6, B2, C2) · official TU/FOM model question 2026 (A10, B11, B12, C17, D21) · Inmon&#39;s characteristics and the OLTP/DW contrast cross-checked against Oracle Database Data Warehousing Guide, ch. 1 · star/snowflake and SCD from Kimball &amp; Ross (syllabus reading) · CDC, ELT, surrogate keys from modern DW literature (Inmon, Kimball, Sherman — syllabus readings).</em></p>
 
         </div>
       </article>

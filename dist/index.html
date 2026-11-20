@@ -11,7 +11,6 @@
   <header class="site-header">
     <div class="header-content">
       <h1 class="site-title">BIM 8th Semester</h1>
-      <div class="exam-info">Exam: 15 Bhadra 2083 (~Aug 31, 2026) • ~2 weeks • 3-4 hrs/day</div>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()">🌙</button>
     </div>
   </header>
@@ -65,8 +64,107 @@
 
     <main class="content" role="main">
       <section class="hero">
-        <h2>Study Materials</h2>
-        <p>Complete, exam-ready notes for all four subjects. Each unit includes exam analysis, structured content, diagrams, and model question answers.</p>
+        <div class="hero-content">
+          <div class="hero-badge">BIM 8th Semester · 2083 / 2026</div>
+          <h2>Exam Countdown</h2>
+          <p class="hero-tagline">The clock is ticking. Every hour counts.</p>
+          
+          <div class="hero-countdown" id="examCountdown">
+            <div class="countdown-big">
+              <div class="countdown-label">Next paper: <span id="cd-subject">Loading…</span></div>
+              <div class="countdown-date" id="cd-date">—</div>
+              <div class="countdown-timer">
+                <div class="timer-unit"><span class="timer-value" id="cd-days">00</span><span class="timer-label">days</span></div>
+                <span class="timer-sep">:</span>
+                <div class="timer-unit"><span class="timer-value" id="cd-hours">00</span><span class="timer-label">hrs</span></div>
+                <span class="timer-sep">:</span>
+                <div class="timer-unit"><span class="timer-value" id="cd-mins">00</span><span class="timer-label">min</span></div>
+                <span class="timer-sep">:</span>
+                <div class="timer-unit"><span class="timer-value" id="cd-secs">00</span><span class="timer-label">sec</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+              <div class="progress-markers" id="progressMarkers"></div>
+            </div>
+            <div class="progress-labels">
+              <span class="progress-start">Exam period starts</span>
+              <span class="progress-end">All papers done</span>
+            </div>
+          </div>
+
+          <div class="hero-focus" id="heroFocus">
+            <div class="focus-badge">🎯 Current Focus</div>
+            <div class="focus-subject" id="focusSubject">—</div>
+            <div class="focus-hint" id="focusHint">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="exam-routine">
+        <h3>Exam Routine <span class="routine-badge">2083 / 2026</span></h3>
+        <div class="routine-table-wrapper">
+          <table class="routine-table">
+            <thead>
+              <tr>
+                <th>Date (AD)</th>
+                <th>Date (BS)</th>
+                <th>Day</th>
+                <th>Code</th>
+                <th>Subject</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                <tr class="ours">
+                  <td>Tue, Dec 1, 2026</td>
+                  <td>Mangsir 15, 2083</td>
+                  <td>Tuesday</td>
+                  <td><code>IT 248</code></td>
+                  <td><a href="entrepreneurship/" style="color: #dc2626; font-weight: 600;">IT Entrepreneurship & Management (NC)</a></td>
+                </tr>
+              
+                <tr class="ours">
+                  <td>Thu, Dec 3, 2026</td>
+                  <td>Mangsir 17, 2083</td>
+                  <td>Thursday</td>
+                  <td><code>IT 250</code></td>
+                  <td><a href="de/" style="color: #059669; font-weight: 600;">Digital Economy (NC)</a></td>
+                </tr>
+              
+                <tr class="ours">
+                  <td>Sun, Dec 6, 2026</td>
+                  <td>Mangsir 20, 2083</td>
+                  <td>Sunday</td>
+                  <td><code>IT 249</code></td>
+                  <td><a href="bi/" style="color: #2563eb; font-weight: 600;">Business Intelligence (NC)</a></td>
+                </tr>
+              
+                <tr class="other">
+                  <td>Tue, Dec 8, 2026</td>
+                  <td>Mangsir 22, 2083</td>
+                  <td>Tuesday</td>
+                  <td><code>IT 275 / IT 276</code></td>
+                  <td>.NET Technologies (NC) / Database Administration (NC)</td>
+                </tr>
+              
+                <tr class="ours">
+                  <td>Thu, Dec 10, 2026</td>
+                  <td>Mangsir 24, 2083</td>
+                  <td>Thursday</td>
+                  <td><code>IT 277</code></td>
+                  <td><a href="cloud/" style="color: #7c3aed; font-weight: 600;">Cloud Computing (NC)</a></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="routine-notes">
+          <p>• Exam centre: Kirtipur (Tribhuvan University). Time will be notified by campus.</p><p>• No mobile phones, smart watches, or digital watches allowed in exam hall.</p><p>• Graph / chart / log paper may be used only with prior written approval.</p><p>• Admit card is mandatory for every paper. No admit card = no entry.</p>
+        </div>
       </section>
 
       <section class="subjects-grid">
@@ -194,6 +292,118 @@
       const themeBtn = document.querySelector('.theme-toggle');
       if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
     };
+
+    // Exam countdown + hero elements
+    const EXAM_ROUTINE_JS = [{"iso":"2026-12-01","bs":"Mangsir 15, 2083","day":"Tuesday","code":"IT 248","title":"IT Entrepreneurship & Management (NC)","subjectId":"entrepreneurship","isOurs":true},{"iso":"2026-12-03","bs":"Mangsir 17, 2083","day":"Thursday","code":"IT 250","title":"Digital Economy (NC)","subjectId":"de","isOurs":true},{"iso":"2026-12-06","bs":"Mangsir 20, 2083","day":"Sunday","code":"IT 249","title":"Business Intelligence (NC)","subjectId":"bi","isOurs":true},{"iso":"2026-12-08","bs":"Mangsir 22, 2083","day":"Tuesday","code":"IT 275 / IT 276","title":".NET Technologies (NC) / Database Administration (NC)","subjectId":null,"isOurs":false},{"iso":"2026-12-10","bs":"Mangsir 24, 2083","day":"Thursday","code":"IT 277","title":"Cloud Computing (NC)","subjectId":"cloud","isOurs":true}];
+    function parseLocal(iso) {
+      const [y, m, d] = iso.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+    function fmtDate(iso) {
+      const [y, m, d] = iso.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+    function getExamPeriod() {
+      const ours = EXAM_ROUTINE_JS.filter(e => e.isOurs);
+      const start = parseLocal(ours[0].iso);
+      const end = parseLocal(ours[ours.length - 1].iso);
+      end.setHours(23, 59, 59, 999);
+      return { start, end };
+    }
+    function updateHero() {
+      const now = new Date();
+      let next = null;
+      for (const e of EXAM_ROUTINE_JS) {
+        const d = parseLocal(e.iso);
+        if (d > now) { next = e; break; }
+      }
+
+      // Countdown timer elements
+      const cdSubject = document.getElementById('cd-subject');
+      const cdDate = document.getElementById('cd-date');
+      const cdDays = document.getElementById('cd-days');
+      const cdHours = document.getElementById('cd-hours');
+      const cdMins = document.getElementById('cd-mins');
+      const cdSecs = document.getElementById('cd-secs');
+
+      // Progress bar
+      const period = getExamPeriod();
+      const total = period.end - period.start;
+      const elapsed = now - period.start;
+      const pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
+      const fill = document.getElementById('progressFill');
+      if (fill) fill.style.width = pct + '%';
+
+      // Progress markers (exam dates)
+      const markers = document.getElementById('progressMarkers');
+      if (markers && markers.children.length === 0) {
+        EXAM_ROUTINE_JS.filter(e => e.isOurs).forEach((exam, i) => {
+          const m = document.createElement('span');
+          m.className = 'progress-marker';
+          const mpct = ((parseLocal(exam.iso) - period.start) / total) * 100;
+          m.style.left = mpct + '%';
+          m.title = exam.title + ' — ' + fmtDate(exam.iso);
+          m.innerHTML = '<span class="marker-dot"></span><span class="marker-label">' + exam.code + '</span>';
+          markers.appendChild(m);
+        });
+      }
+
+      // Current focus
+      const focusSubject = document.getElementById('focusSubject');
+      const focusHint = document.getElementById('focusHint');
+
+      if (!next) {
+        if (cdSubject) cdSubject.textContent = 'All papers complete';
+        if (cdDate) cdDate.textContent = '🎉 Exam period over';
+        if (cdDays) cdDays.textContent = '00';
+        if (cdHours) cdHours.textContent = '00';
+        if (cdMins) cdMins.textContent = '00';
+        if (cdSecs) cdSecs.textContent = '00';
+        if (focusSubject) focusSubject.textContent = 'All done!';
+        if (focusHint) focusHint.textContent = 'Rest well. Results await.';
+        return;
+      }
+
+      const target = parseLocal(next.iso);
+      const diff = target - now;
+      if (diff <= 0) { updateHero(); return; }
+
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+
+      // Update countdown
+      if (cdSubject) cdSubject.innerHTML = next.subjectId ? '<a href="' + next.subjectId + '/">' + next.title + '</a>' : next.title;
+      if (cdDate) cdDate.textContent = fmtDate(next.iso);
+      if (cdDays) cdDays.textContent = days;
+      if (cdHours) cdHours.textContent = String(hours).padStart(2, '0');
+      if (cdMins) cdMins.textContent = String(mins).padStart(2, '0');
+      if (cdSecs) cdSecs.textContent = String(secs).padStart(2, '0');
+
+      // Current focus logic
+      const hoursUntil = diff / 3600000;
+      if (focusSubject) {
+        if (hoursUntil <= 48) {
+          focusSubject.textContent = next.title;
+          focusHint.textContent = 'Final revision mode. Practice past papers. Sleep well.';
+        } else if (hoursUntil <= 168) { // 1 week
+          focusSubject.textContent = next.title;
+          focusHint.textContent = 'This week: finish weak units, memorize formulas, do mock questions.';
+        } else {
+          // Find the subject that's furthest but still has time
+          const upcoming = EXAM_ROUTINE_JS.filter(e => e.isOurs && parseLocal(e.iso) > now);
+          if (upcoming.length > 0) {
+            focusSubject.textContent = upcoming[0].title;
+            focusHint.textContent = 'Start with fundamentals. Build notes → practice → mock.';
+          }
+        }
+      }
+    }
+    updateHero();
+    setInterval(updateHero, 1000);
+
   </script>
 </body>
 </html>

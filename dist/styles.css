@@ -311,6 +311,206 @@ body.unit-page .sidebar {
   margin: 0 auto;
 }
 
+/* ============================================================================
+   Hero — Countdown + Progress + Focus
+   ============================================================================ */
+
+.hero-content { max-width: 720px; margin: 0 auto; text-align: center; }
+
+.hero-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: var(--fg-muted);
+  margin: 0.5rem 0 2rem;
+  font-weight: 400;
+}
+
+.hero-countdown {
+  margin: 2rem auto 1.5rem;
+}
+
+/* Countdown big (reused from header, centered) */
+.hero-countdown .countdown-big {
+  margin: 0 auto;
+  max-width: 520px;
+  text-align: center;
+}
+
+.hero-countdown .countdown-label {
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.hero-countdown .countdown-label a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+.hero-countdown .countdown-label a:hover { border-color: var(--accent); }
+
+.hero-countdown .countdown-date {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.hero-countdown .countdown-timer {
+  justify-content: center;
+  gap: 0;
+}
+
+.hero-countdown .timer-unit { min-width: 4.5ch; }
+.hero-countdown .timer-value { font-size: 2.5rem; }
+.hero-countdown .timer-label { font-size: 0.65rem; margin-top: 0.25rem; }
+.hero-countdown .timer-sep { font-size: 2.5rem; padding: 0 0.25rem; }
+
+/* Progress bar */
+.hero-progress {
+  margin: 2.5rem auto 1.5rem;
+  max-width: 520px;
+  text-align: left;
+}
+
+.progress-bar {
+  position: relative;
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--accent), #7c3aed);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.4);
+}
+
+.progress-markers { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; }
+
+.progress-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6rem;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  opacity: 0.7;
+  transition: opacity var(--transition);
+}
+.progress-marker:hover { opacity: 1; }
+
+.marker-dot {
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.marker-label {
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--card-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  font-size: 0.65rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Current focus */
+.hero-focus {
+  margin: 2rem auto;
+  padding: 1.5rem;
+  max-width: 520px;
+  background: linear-gradient(135deg, var(--accent)08, #7c3aed08);
+  border: 1px solid var(--accent)20;
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.focus-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.focus-subject {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.focus-hint {
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hero { padding: 2rem 1rem; }
+  .hero h2 { font-size: 1.75rem; }
+  .hero-tagline { font-size: 1rem; }
+  .hero-countdown .countdown-big { padding: 1rem; }
+  .hero-countdown .timer-value { font-size: 1.75rem; }
+  .hero-countdown .timer-sep { font-size: 1.75rem; }
+  .hero-countdown .timer-label { font-size: 0.55rem; }
+  .hero-focus { padding: 1rem; }
+  .focus-subject { font-size: 1.1rem; }
+  .focus-hint { font-size: 0.85rem; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 1.5rem 0.75rem; }
+  .hero h2 { font-size: 1.5rem; }
+  .hero-countdown .timer-value { font-size: 1.4rem; }
+  .hero-countdown .timer-sep { font-size: 1.4rem; }
+  .hero-countdown .timer-unit { min-width: 3.5ch; }
+}
+
 .subjects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -968,3 +1168,263 @@ button:focus-visible, a:focus-visible, .nav-btn:focus-visible {
 
 ::selection { background: var(--accent); color: white; }
 ::-moz-selection { background: var(--accent); color: white; }
+
+/* ============================================================================
+   Exam Routine Section (Home Page)
+   ============================================================================ */
+
+.exam-routine {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.exam-routine h3 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.routine-badge {
+  background: var(--accent);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.routine-table-wrapper { overflow-x: auto; }
+
+.routine-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.routine-table th,
+.routine-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.routine-table th {
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.7rem;
+  background: var(--bg);
+}
+
+.routine-table tr:last-child td { border-bottom: none; }
+
+.routine-table code {
+  background: var(--code-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* Our subjects highlighted */
+.routine-table tr.ours td {
+  background: linear-gradient(135deg, var(--accent)08, transparent);
+}
+.routine-table tr.ours:hover td {
+  background: linear-gradient(135deg, var(--accent)15, transparent);
+}
+
+/* Other subjects greyed */
+.routine-table tr.other td {
+  color: var(--fg-muted);
+}
+.routine-table tr.other code { opacity: 0.7; }
+
+.routine-notes {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--fg-muted);
+  line-height: 1.8;
+}
+
+.routine-notes p { margin: 0.25rem 0; }
+
+/* ============================================================================
+   Exam Countdown (Header) — Big Timer
+   ============================================================================ */
+
+#examCountdown { display: flex; align-items: center; }
+
+.countdown-big {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+}
+
+.countdown-label {
+  font-size: 0.7rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.countdown-label a { color: var(--accent); font-weight: 600; text-decoration: none; }
+.countdown-label a:hover { text-decoration: underline; }
+
+.countdown-date {
+  font-size: 0.7rem;
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.countdown-timer {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.timer-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 3.5ch;
+}
+
+.timer-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.timer-label {
+  font-size: 0.55rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.125rem;
+}
+
+.timer-sep {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--border);
+  line-height: 1;
+  padding: 0 0.125rem;
+}
+
+/* Mobile: stack label above timer */
+@media (max-width: 768px) {
+  .countdown-big {
+    align-items: stretch;
+    padding: 0.5rem;
+  }
+  .timer-value { font-size: 1.25rem; }
+  .timer-sep { font-size: 1.25rem; }
+}
+
+@media (max-width: 480px) {
+  .countdown-big { padding: 0.375rem; }
+  .timer-value { font-size: 1rem; }
+  .timer-sep { font-size: 1rem; }
+  .timer-label { font-size: 0.5rem; }
+}
+
+/* Print: hide live timer, show simple text */
+@media print {
+  .countdown-timer { display: none; }
+  .countdown-label::after { content: ' — see site for live countdown'; color: var(--fg-muted); }
+}
+
+/* ============================================================================
+   Exam Date (Subject & Unit Pages)
+   ============================================================================ */
+
+.exam-date {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+
+.exam-date strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ============================================================================
+   Print Styles - Exam Routine
+   ============================================================================ */
+
+@media print {
+  .site-header, .sidebar, .sidebar-toggle, .sidebar-overlay, .unit-nav, .nav-btn,
+  .code-header, .copy-btn, .read-link, .card-link, .resource-list a,
+  .print-hide,
+  .hero-countdown .countdown-timer,
+  .hero-progress,
+  .hero-focus {
+    display: none !important;
+  }
+
+  .layout { display: block; }
+  .content { padding: 0; max-width: none; margin: 0; }
+  body { background: white; color: black; font-size: 11pt; line-height: 1.6; }
+
+  .markdown-body { font-size: 11pt; }
+  .markdown-body h1 { font-size: 18pt; page-break-after: avoid; }
+  .markdown-body h2 { font-size: 15pt; page-break-after: avoid; }
+  .markdown-body h3 { font-size: 13pt; page-break-after: avoid; }
+
+  .markdown-body pre, .markdown-body blockquote, .markdown-body table,
+  .markdown-body .mermaid, .code-block {
+    page-break-inside: avoid;
+  }
+
+  .subject-card, .unit-card { page-break-inside: avoid; }
+
+  a { color: black !important; text-decoration: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; }
+
+  .unit-header, .subject-header { border-bottom: 1px solid #ccc; }
+
+  /* Exam routine print: compact table, no links */
+  .exam-routine {
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+  .routine-table { font-size: 9pt; }
+  .routine-table th { background: #f5f5f5 !important; }
+  .routine-table tr.ours td { background: #eef5ff !important; }
+  .routine-table a { color: black !important; text-decoration: underline; }
+  .routine-notes { font-size: 8pt; }
+  .exam-date { font-size: 9pt; }
+
+  /* Hero print: static countdown summary */
+  .hero { padding: 1rem 0; margin-bottom: 1rem; border-bottom: 2px solid #ccc; }
+  .hero-badge { background: #2563eb !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hero-countdown .countdown-big {
+    background: #f5f5f5 !important; border: 1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    padding: 1rem !important;
+  }
+  .hero-countdown .timer-value { color: #2563eb !important; -webkit-text-fill-color: #2563eb !important; }
+  .hero-countdown .timer-sep { color: #999 !important; }
+  .hero-countdown .countdown-label a { color: #2563eb !important; text-decoration: underline; }
+}
