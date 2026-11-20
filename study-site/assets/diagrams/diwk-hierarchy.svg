@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="wisdomGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5b21b6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="knowledgeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="infoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#15803d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#64748b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#475569;stop-opacity:1" />
+    </linearGradient>
+    <filter id="pyramidShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.2"/>
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="500" height="500" fill="#fafafa"/>
+  
+  <text x="250" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#1a1a2e">DIKW Hierarchy</text>
+  <text x="250" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#64748b">Data → Information → Knowledge → Wisdom</text>
+
+  <!-- Pyramid layers -->
+  <g font-family="Inter, sans-serif">
+    <!-- Wisdom (top) -->
+    <g filter="url(#pyramidShadow)">
+      <path d="M 250 90 L 120 170 L 380 170 Z" fill="url(#wisdomGrad)"/>
+    </g>
+    <text x="250" y="125" text-anchor="middle" font-size="20" font-weight="700" fill="white">WISDOM</text>
+    <text x="250" y="145" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Applied knowledge; sound judgment; "What should we do?"</text>
+    <text x="250" y="162" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">Decisions, Strategy, Values, Ethics</text>
+
+    <!-- Knowledge -->
+    <g filter="url(#pyramidShadow)">
+      <path d="M 90 180 L 50 280 L 450 280 L 410 180 Z" fill="url(#knowledgeGrad)"/>
+    </g>
+    <text x="250" y="215" text-anchor="middle" font-size="18" font-weight="700" fill="white">KNOWLEDGE</text>
+    <text x="250" y="235" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Understanding patterns; "Why does it happen?"</text>
+    <text x="250" y="252" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">Models, Rules, Insights, Experience</text>
+
+    <!-- Information -->
+    <g filter="url(#pyramidShadow)">
+      <path d="M 50 300 L 20 400 L 480 400 L 450 300 Z" fill="url(#infoGrad)"/>
+    </g>
+    <text x="250" y="335" text-anchor="middle" font-size="18" font-weight="700" fill="white">INFORMATION</text>
+    <text x="250" y="355" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Data in context; "What happened?" / "Why?"</text>
+    <text x="250" y="372" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">Reports, Dashboards, Context, Meaning</text>
+
+    <!-- Data (base) -->
+    <g filter="url(#pyramidShadow)">
+      <path d="M 20 420 L 10 500 L 490 500 L 480 420 Z" fill="url(#dataGrad)"/>
+    </g>
+    <text x="250" y="455" text-anchor="middle" font-size="18" font-weight="700" fill="white">DATA</text>
+    <text x="250" y="475" text-anchor="middle" font-size="11" fill="rgba(255,255,255,0.9)">Raw facts; "What are the raw signals?"</text>
+    <text x="250" y="492" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.7)">Numbers, Symbols, Unorganised, Unprocessed</text>
+  </g>
+
+  <!-- Right side labels -->
+  <g font-family="Inter, sans-serif" font-size="11" fill="#64748b">
+    <text x="420" y="130" text-anchor="end" font-weight="600">↑ Increasing Value</text>
+    <text x="420" y="220" text-anchor="end" font-weight="400">Context + Experience</text>
+    <text x="420" y="340" text-anchor="end" font-weight="400">Data + Context</text>
+    <text x="420" y="460" text-anchor="end" font-weight="400">Raw Facts</text>
+  </g>
+
+  <!-- Left side labels -->
+  <g font-family="Inter, sans-serif" font-size="11" fill="#64748b">
+    <text x="80" y="130" font-weight="600">Actions →</text>
+    <text x="80" y="220" font-weight="400">Understanding →</text>
+    <text x="80" y="340" font-weight="400">Context →</text>
+    <text x="80" y="460" font-weight="400">Raw Signals →</text>
+  </g>
+
+  <!-- Transformation arrows -->
+  <g stroke="#2563eb" stroke-width="2" fill="none" marker-end="url(#arrow)">
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+        <polygon points="0 0, 8 2.5, 0 5" fill="#2563eb"/>
+      </marker>
+    </defs>
+    <path d="M 250 172 L 250 198" />
+    <path d="M 250 282 L 250 308" />
+    <path d="M 250 392 L 250 418" />
+  </g>
+
+  <!-- Transformation labels -->
+  <g font-family="Inter, sans-serif" font-size="9" fill="#2563eb" font-weight="600">
+    <text x="260" y="185" text-anchor="start">+ Judgment + Action</text>
+    <text x="260" y="295" text-anchor="start">+ Synthesis + Patterns</text>
+    <text x="260" y="405" text-anchor="start">+ Context + Meaning</text>
+  </g>
+
+  <!-- Bottom description -->
+  <text x="250" y="530" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#64748b" style="max-width: 400px;">
+    Data becomes Information when given context → Information becomes Knowledge when patterns are understood → 
+    Knowledge becomes Wisdom when applied with judgment and values.
+  </text>
+
+  <!-- Key takeaway box -->
+  <g filter="url(#pyramidShadow)">
+    <rect x="50" y="545" width="400" height="45" rx="8" fill="#fef3c7"/>
+  </g>
+  <text x="250" y="570" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#92400e">
+    💡 Exam Tip: BI operates at the Information/Knowledge layers. Data Mining discovers Knowledge. 
+    Dashboards present Information. Decisions require Wisdom.
+  </text>
+</svg>

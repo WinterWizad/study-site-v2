@@ -1,0 +1,67 @@
+window.SUBJECTS = {
+  "bi": {
+    "id": "bi",
+    "code": "IT 249",
+    "name": "Business Intelligence",
+    "folder": "01-business-intelligence",
+    "marks": 60,
+    "passMarks": 30,
+    "units": [
+      { "title": "Introduction to Business Intelligence", "file": "unit-1-introduction-to-bi.md" },
+      { "title": "Data Warehousing", "file": "unit-2-data-warehousing.md" },
+      { "title": "Data Mining", "file": "unit-3-data-mining.md" },
+      { "title": "Data Visualization", "file": "unit-4-data-visualization.md" },
+      { "title": "BI Tools and Technologies", "file": "unit-5-bi-tools-and-technologies.md" },
+      { "title": "BI Implementation", "file": "unit-6-bi-implementation.md" }
+    ]
+  },
+  "de": {
+    "id": "de",
+    "code": "IT 250",
+    "name": "Digital Economy",
+    "folder": "02-digital-economy",
+    "marks": 100,
+    "passMarks": 50,
+    "units": [
+      { "title": "Introduction to Digital Economy", "file": "unit-1-introduction.md" },
+      { "title": "Fundamentals of Digital Economy", "file": "unit-2-fundamentals.md" },
+      { "title": "Digital Markets and Strategy", "file": "unit-3-markets-strategy.md" },
+      { "title": "Digital Transformation", "file": "unit-4-transformation.md" },
+      { "title": "Economics of Information", "file": "unit-5-economics-of-information.md" },
+      { "title": "Nepal Perspective", "file": "unit-6-nepal-perspective.md" }
+    ]
+  },
+  "cloud": {
+    "id": "cloud",
+    "code": "IT 277",
+    "name": "Cloud Computing",
+    "folder": "03-cloud-computing",
+    "marks": 60,
+    "passMarks": 30,
+    "units": [
+      { "title": "Introduction to Cloud Computing", "file": "unit-1-introduction.md" },
+      { "title": "Cloud Architecture", "file": "unit-2-architecture.md" },
+      { "title": "Cloud Applications", "file": "unit-3-applications.md" },
+      { "title": "Virtualization", "file": "unit-4-virtualization.md" },
+      { "title": "MapReduce", "file": "unit-5-mapreduce.md" },
+      { "title": "Cloud Security", "file": "unit-6-security.md" },
+      { "title": "Cloud Platforms", "file": "unit-7-platforms.md" }
+    ]
+  },
+  "entrepreneurship": {
+    "id": "entrepreneurship",
+    "code": "IT 248",
+    "name": "IT Entrepreneurship & Management",
+    "folder": "04-it-entrepreneurship-management",
+    "marks": 100,
+    "passMarks": 50,
+    "units": [
+      { "title": "Foundations of Entrepreneurship", "file": "unit-1-foundations.md" },
+      { "title": "Idea Generation & Market Analysis", "file": "unit-2-idea-market.md" },
+      { "title": "Business Model Development", "file": "unit-3-business-model.md" },
+      { "title": "Legal & Compliance", "file": "unit-4-legal.md" },
+      { "title": "Finance & Marketing", "file": "unit-5-finance-marketing.md" },
+      { "title": "Leadership & CSR", "file": "unit-6-leadership-csr.md" }
+    ]
+  }
+};

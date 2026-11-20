@@ -1,0 +1,14 @@
+{
+  "name": "simple-site",
+  "version": "1.0.0",
+  "description": "Simple BIM 8th Semester Study Site",
+  "main": "app.js",
+  "scripts": {
+    "test": "node test.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {}
+}
