@@ -78,99 +78,104 @@
         <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; 1&ndash;10 December 2026 &middot; centre Kirtipur</p>
       </section>
 
-      <section class="timetable" id="timetable" aria-labelledby="timetableTitle">
-        <h2 id="timetableTitle" class="section-title">Ten days, five papers</h2>
-        <div class="chart" id="chart">
-          <div class="chart-marker" id="chartMarker" style="grid-column: 1 / span 3">
-            <span class="marker-label">Next paper</span>
-            <span class="marker-code" id="markerCode">IT 248</span>
-            <span class="marker-time" id="markerTime" aria-hidden="true"><b id="cdDays">0</b>d <b id="cdHours">00</b>:<b id="cdMins">00</b>:<b id="cdSecs">00</b></span>
-            <span class="sr-only" id="markerSr">Next paper in ten days</span>
-          </div>
-          <div class="chart-month">December 2026 &middot; Mangsir 2083</div>
-          <a class="chart-day is-paper" href="entrepreneurship/" data-iso="2026-12-01" title="IT Entrepreneurship & Management (NC)">
-              <span class="day-when">
-                <span class="day-num">1</span>
-                <span class="day-name">Tue</span>
-                <span class="day-bs">Mangsir 15</span>
-              </span>
-              <span class="day-what">
-                <span class="day-paper">IT 248</span><span class="day-subject">Entrepreneur</span>
-              </span></a><div class="chart-day is-free" data-iso="2026-12-02" title="No paper">
-              <span class="day-when">
-                <span class="day-num">2</span>
-                <span class="day-name">Wed</span>
-                
-              </span>
-              <span class="day-what">
-                <span class="day-free">free</span>
-              </span></div><a class="chart-day is-paper" href="de/" data-iso="2026-12-03" title="Digital Economy (NC)">
-              <span class="day-when">
-                <span class="day-num">3</span>
-                <span class="day-name">Thu</span>
-                <span class="day-bs">Mangsir 17</span>
-              </span>
-              <span class="day-what">
-                <span class="day-paper">IT 250</span><span class="day-subject">Digital Economy</span>
-              </span></a><div class="chart-day is-free" data-iso="2026-12-04" title="No paper">
-              <span class="day-when">
-                <span class="day-num">4</span>
-                <span class="day-name">Fri</span>
-                
-              </span>
-              <span class="day-what">
-                <span class="day-free">free</span>
-              </span></div><div class="chart-day is-free" data-iso="2026-12-05" title="No paper">
-              <span class="day-when">
-                <span class="day-num">5</span>
-                <span class="day-name">Sat</span>
-                
-              </span>
-              <span class="day-what">
-                <span class="day-free">free</span>
-              </span></div><a class="chart-day is-paper" href="bi/" data-iso="2026-12-06" title="Business Intelligence (NC)">
-              <span class="day-when">
-                <span class="day-num">6</span>
-                <span class="day-name">Sun</span>
-                <span class="day-bs">Mangsir 20</span>
-              </span>
-              <span class="day-what">
-                <span class="day-paper">IT 249</span><span class="day-subject">Business Intelligence</span>
-              </span></a><div class="chart-day is-free" data-iso="2026-12-07" title="No paper">
-              <span class="day-when">
-                <span class="day-num">7</span>
-                <span class="day-name">Mon</span>
-                
-              </span>
-              <span class="day-what">
-                <span class="day-free">free</span>
-              </span></div><div class="chart-day is-paper is-other" data-iso="2026-12-08" title=".NET Technologies (NC) / Database Administration (NC)">
-              <span class="day-when">
-                <span class="day-num">8</span>
-                <span class="day-name">Tue</span>
-                <span class="day-bs">Mangsir 22</span>
-              </span>
-              <span class="day-what">
-                <span class="day-paper">IT 275 / IT 276</span><span class="day-subject">.NET / DBA</span>
-              </span></div><div class="chart-day is-free" data-iso="2026-12-09" title="No paper">
-              <span class="day-when">
-                <span class="day-num">9</span>
-                <span class="day-name">Wed</span>
-                
-              </span>
-              <span class="day-what">
-                <span class="day-free">free</span>
-              </span></div><a class="chart-day is-paper" href="cloud/" data-iso="2026-12-10" title="Cloud Computing (NC)">
-              <span class="day-when">
-                <span class="day-num">10</span>
-                <span class="day-name">Thu</span>
-                <span class="day-bs">Mangsir 24</span>
-              </span>
-              <span class="day-what">
-                <span class="day-paper">IT 277</span><span class="day-subject">Cloud Computing</span>
-              </span></a>
+      
+      <section class="rail-hero" id="timetable" aria-labelledby="railTitle">
+        <h2 id="railTitle" class="variant-title">Ten days, five papers</h2>
+        <p class="variant-sub">Today is on the left. Each stop is a paper. The train moves as time passes.</p>
+        <div class="rail-counter">
+          <span class="counter-label">Next paper</span>
+          <span class="counter-code" id="code">IT 248</span>
+          <span class="counter-time" aria-hidden="true"><b id="days">0</b>d <b id="hours">00</b>:<b id="mins">00</b>:<b id="secs">00</b></span>
+          <span class="sr-only" id="sr"></span>
         </div>
-        <p class="chart-note">Your papers fall every other day. The five empty days are the ones you can still use. Routine: Dean's Office, 2083/07/28.</p>
+        <div class="rail-mini" aria-hidden="true">
+          <span class="rail-mini-line"></span>
+          <span class="rail-mini-train" id="mini" style="left:0.000%"></span>
+        </div>
+        <div class="rail-viewport">
+          <div class="rail-track">
+            <div class="rail-line"></div>
+            <span class="rail-origin">Today, Nov 20</span>
+            
+            <span class="rail-gap" style="left:60.000%" data-iso="2026-12-02">Dec 2</span>
+            <span class="rail-gap" style="left:72.500%" data-iso="2026-12-04">4–5</span>
+            <span class="rail-gap" style="left:85.000%" data-iso="2026-12-07">Dec 7</span>
+            <span class="rail-gap" style="left:95.000%" data-iso="2026-12-09">Dec 9</span>
+            
+            <span class="rail-tick" style="left:0.000%" data-iso="2026-11-20"><i></i><em>Nov 20</em></span>
+            <span class="rail-tick" style="left:5.000%" data-iso="2026-11-21"><i></i><em>21</em></span>
+            <span class="rail-tick" style="left:10.000%" data-iso="2026-11-22"><i></i><em>22</em></span>
+            <span class="rail-tick" style="left:15.000%" data-iso="2026-11-23"><i></i><em>23</em></span>
+            <span class="rail-tick" style="left:20.000%" data-iso="2026-11-24"><i></i><em>24</em></span>
+            <span class="rail-tick" style="left:25.000%" data-iso="2026-11-25"><i></i><em>25</em></span>
+            <span class="rail-tick" style="left:30.000%" data-iso="2026-11-26"><i></i><em>26</em></span>
+            <span class="rail-tick" style="left:35.000%" data-iso="2026-11-27"><i></i><em>27</em></span>
+            <span class="rail-tick" style="left:40.000%" data-iso="2026-11-28"><i></i><em>28</em></span>
+            <span class="rail-tick" style="left:45.000%" data-iso="2026-11-29"><i></i><em>29</em></span>
+            <span class="rail-tick" style="left:50.000%" data-iso="2026-11-30"><i></i><em>30</em></span>
+            <span class="rail-tick" style="left:55.000%" data-iso="2026-12-01"><i></i><em>Dec 1</em></span>
+            <span class="rail-tick" style="left:60.000%" data-iso="2026-12-02"><i></i><em>2</em></span>
+            <span class="rail-tick" style="left:65.000%" data-iso="2026-12-03"><i></i><em>3</em></span>
+            <span class="rail-tick" style="left:70.000%" data-iso="2026-12-04"><i></i><em>4</em></span>
+            <span class="rail-tick" style="left:75.000%" data-iso="2026-12-05"><i></i><em>5</em></span>
+            <span class="rail-tick" style="left:80.000%" data-iso="2026-12-06"><i></i><em>6</em></span>
+            <span class="rail-tick" style="left:85.000%" data-iso="2026-12-07"><i></i><em>7</em></span>
+            <span class="rail-tick" style="left:90.000%" data-iso="2026-12-08"><i></i><em>8</em></span>
+            <span class="rail-tick" style="left:95.000%" data-iso="2026-12-09"><i></i><em>9</em></span>
+            <span class="rail-tick" style="left:100.000%" data-iso="2026-12-10"><i></i><em>10</em></span>
+            <a class="rail-station is-ours" href="entrepreneurship/" style="left:55.000%" data-iso="2026-12-01" title="IT Entrepreneurship & Management (NC)">
+        <span class="station-card">
+          <span class="station-code">IT 248</span>
+          <span class="station-when">Tue, Dec 1</span>
+          <span class="station-bs">Mangsir 15</span>
+        </span>
+        <span class="station-dot"></span>
+      </a><a class="rail-station is-ours" href="de/" style="left:65.000%" data-iso="2026-12-03" title="Digital Economy (NC)">
+        <span class="station-card">
+          <span class="station-code">IT 250</span>
+          <span class="station-when">Thu, Dec 3</span>
+          <span class="station-bs">Mangsir 17</span>
+        </span>
+        <span class="station-dot"></span>
+      </a><a class="rail-station is-ours" href="bi/" style="left:80.000%" data-iso="2026-12-06" title="Business Intelligence (NC)">
+        <span class="station-card">
+          <span class="station-code">IT 249</span>
+          <span class="station-when">Sun, Dec 6</span>
+          <span class="station-bs">Mangsir 20</span>
+        </span>
+        <span class="station-dot"></span>
+      </a><div class="rail-station is-other" style="left:90.000%" data-iso="2026-12-08" title=".NET Technologies (NC) / Database Administration (NC)">
+        <span class="station-card">
+          <span class="station-code">IT 275 / IT 276</span>
+          <span class="station-when">Tue, Dec 8</span>
+          <span class="station-bs">Mangsir 22</span>
+        </span>
+        <span class="station-dot"></span>
+      </div><a class="rail-station is-ours" href="cloud/" style="left:100.000%" data-iso="2026-12-10" title="Cloud Computing (NC)">
+        <span class="station-card">
+          <span class="station-code">IT 277</span>
+          <span class="station-when">Thu, Dec 10</span>
+          <span class="station-bs">Mangsir 24</span>
+        </span>
+        <span class="station-dot"></span>
+      </a>
+        <div class="rail-traveller" id="traveller" style="left:0.000%" aria-hidden="true">
+          <svg class="train-flat" viewBox="0 0 96 40" width="96" height="40" focusable="false">
+            <rect x="8" y="10" width="52" height="20" rx="3" fill="var(--accent)"/>
+            <rect x="12" y="4" width="16" height="10" rx="2" fill="var(--accent)"/>
+            <path d="M60 10h14l14 14v6H60z" fill="var(--accent)"/>
+            <rect x="16" y="14" width="12" height="8" rx="1.5" fill="var(--accent-ink)" opacity="0.85"/>
+            <rect x="34" y="14" width="12" height="8" rx="1.5" fill="var(--accent-ink)" opacity="0.85"/>
+            <path d="M65 16h9l7 7H65z" fill="var(--accent-ink)" opacity="0.8"/>
+            <circle cx="24" cy="31" r="5" fill="var(--fg)"/>
+            <circle cx="44" cy="31" r="5" fill="var(--fg)"/>
+            <circle cx="74" cy="31" r="5" fill="var(--fg)"/>
+          </svg>
+          <span class="traveller-tag">Today</span>
+        </div>
+          </div>
+        </div>
+        <p class="rail-note">Your papers fall every other day &mdash; the gaps between stops are free days. Routine: Dean's Office, 2083/07/28.</p>
       </section>
 
       <section class="doors" id="subjects" aria-labelledby="doorsTitle">
@@ -294,7 +299,7 @@
       if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
-    // Exam clock
+    // One clock drives both comparison rails, the header readout and the sidebar.
     const EXAM_ROUTINE_JS = [{"iso":"2026-12-01","bs":"Mangsir 15, 2083","day":"Tuesday","code":"IT 248","title":"IT Entrepreneurship & Management (NC)","subjectId":"entrepreneurship","isOurs":true},{"iso":"2026-12-03","bs":"Mangsir 17, 2083","day":"Thursday","code":"IT 250","title":"Digital Economy (NC)","subjectId":"de","isOurs":true},{"iso":"2026-12-06","bs":"Mangsir 20, 2083","day":"Sunday","code":"IT 249","title":"Business Intelligence (NC)","subjectId":"bi","isOurs":true},{"iso":"2026-12-08","bs":"Mangsir 22, 2083","day":"Tuesday","code":"IT 275 / IT 276","title":".NET Technologies (NC) / Database Administration (NC)","subjectId":null,"isOurs":false},{"iso":"2026-12-10","bs":"Mangsir 24, 2083","day":"Thursday","code":"IT 277","title":"Cloud Computing (NC)","subjectId":"cloud","isOurs":true}];
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
@@ -304,94 +309,84 @@
     function isoOf(date) {
       return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
     }
+    const RAIL_FIRST = parseLocal(EXAM_ROUTINE_JS[0].iso);
+    const RAIL_END = parseLocal(EXAM_ROUTINE_JS[EXAM_ROUTINE_JS.length - 1].iso);
+    function railFraction(now) {
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const start = today < RAIL_FIRST ? today : RAIL_FIRST;
+      return Math.min(100, Math.max(0, ((today - start) / Math.max(1, RAIL_END - start)) * 100));
+    }
     let lastSrDay = -1;
     let lastSrCode = '';
 
-    function updateClock() {
+    function updateRail() {
       const now = new Date();
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
         if (parseLocal(e.iso) > now) { next = e; break; }
       }
-
       const todayIso = isoOf(now);
+      const leftPct = railFraction(now).toFixed(3) + '%';
 
-      document.querySelectorAll('.chart-day[data-iso]').forEach(el => {
-        el.classList.toggle('is-next', !!next && next.iso === el.dataset.iso);
+      document.querySelectorAll('.rail-station[data-iso]').forEach(el => {
+        el.classList.toggle('is-next', !!next && el.dataset.iso === next.iso);
         el.classList.toggle('is-today', el.dataset.iso === todayIso);
         el.classList.toggle('is-past', el.dataset.iso !== todayIso && parseLocal(el.dataset.iso) < now);
       });
-
-      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
-        tr.classList.toggle('is-next-row', !!next && tr.dataset.iso === next.iso);
+      document.querySelectorAll('.rail-gap[data-iso]').forEach(el => {
+        el.classList.toggle('is-past', parseLocal(el.dataset.iso) < now);
+      });
+      document.querySelectorAll('.rail-tick[data-iso]').forEach(el => {
+        el.classList.toggle('is-today', el.dataset.iso === todayIso);
       });
 
-      // Keep the sidebar's day counts in sync with the live counter.
+      // Sidebar day counts stay locked to the same clock as the big counter.
       document.querySelectorAll('.subject-exam[data-iso]').forEach(el => {
         const target = parseLocal(el.dataset.iso);
-        const left = Math.floor((target - now) / 86400000);
-        const sameDay = isoOf(target) === todayIso;
-        const state = sameDay ? 'today' : left < 0 ? 'done' : left + (left === 1 ? ' day' : ' days');
+        const remaining = Math.floor((target - now) / 86400000);
+        const state = isoOf(target) === todayIso ? 'today' : remaining < 0 ? 'done' : remaining + (remaining === 1 ? ' day' : ' days');
         el.textContent = el.dataset.label + ' · ' + state;
       });
 
-      const marker = document.getElementById('chartMarker');
-      const codeEl = document.getElementById('markerCode');
-      const daysEl = document.getElementById('cdDays');
-      const hoursEl = document.getElementById('cdHours');
-      const minsEl = document.getElementById('cdMins');
-      const secsEl = document.getElementById('cdSecs');
-      const srEl = document.getElementById('markerSr');
+      let days = 0, hours = 0, mins = 0, secs = 0;
+      if (next) {
+        const diff = parseLocal(next.iso) - now;
+        days = Math.floor(diff / 86400000);
+        hours = Math.floor((diff % 86400000) / 3600000);
+        mins = Math.floor((diff % 3600000) / 60000);
+        secs = Math.floor((diff % 60000) / 1000);
+      }
+      const clockText = next ? days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs) : '';
+
+      const setText = (name, value) => {
+        const el = document.getElementById(name);
+        if (el) el.textContent = value;
+      };
+      setText('code', next ? next.code : 'All papers done');
+      setText('days', days);
+      setText('hours', pad2(hours));
+      setText('mins', pad2(mins));
+      setText('secs', pad2(secs));
+      ['traveller', 'mini'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.left = leftPct;
+      });
+      const sr = document.getElementById('sr');
+      if (sr && (days !== lastSrDay || (next && next.code) !== lastSrCode)) {
+        lastSrDay = days;
+        lastSrCode = next ? next.code : '';
+        sr.textContent = next
+          ? 'Next paper ' + next.code + ', ' + next.title + ', on ' + parseLocal(next.iso).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days')
+          : 'All papers are finished';
+      }
+
       const htCode = document.getElementById('htCode');
       const htVal = document.getElementById('htVal');
-
-      if (!next) {
-        if (codeEl) codeEl.textContent = 'All papers done';
-        if (daysEl) daysEl.textContent = '0';
-        if (hoursEl) hoursEl.textContent = '00';
-        if (minsEl) minsEl.textContent = '00';
-        if (secsEl) secsEl.textContent = '00';
-        if (htCode) htCode.textContent = 'Done';
-        if (htVal) htVal.textContent = '';
-        if (srEl) srEl.textContent = 'All papers are finished';
-        return;
-      }
-
-      const target = parseLocal(next.iso);
-      const diff = target - now;
-      const days = Math.floor(diff / 86400000);
-      const hours = Math.floor((diff % 86400000) / 3600000);
-      const mins = Math.floor((diff % 3600000) / 60000);
-      const secs = Math.floor((diff % 60000) / 1000);
-
-      if (daysEl) daysEl.textContent = days;
-      if (hoursEl) hoursEl.textContent = pad2(hours);
-      if (minsEl) minsEl.textContent = pad2(mins);
-      if (secsEl) secsEl.textContent = pad2(secs);
-
-      const clockText = days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs);
+      if (htCode) htCode.textContent = next ? next.code : 'Done';
       if (htVal) htVal.textContent = clockText;
-
-      if (codeEl) codeEl.textContent = next.code;
-      if (htCode) htCode.textContent = next.code;
-
-      // Move the marker above the next paper's column (it spans three columns).
-      if (marker) {
-        const dayNum = Number(next.iso.slice(8, 10));
-        const span = 3;
-        const start = Math.min(Math.max(dayNum, 1), 11 - span);
-        marker.style.gridColumn = start + ' / span ' + span;
-        marker.style.setProperty('--pointer', (((dayNum - start + 0.5) / span) * 100).toFixed(1) + '%');
-      }
-
-      if (srEl && (days !== lastSrDay || next.code !== lastSrCode)) {
-        lastSrDay = days;
-        lastSrCode = next.code;
-        srEl.textContent = 'Next paper ' + next.code + ', ' + next.title + ', on ' + target.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days');
-      }
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+    updateRail();
+    setInterval(updateRail, 1000);
 
   </script>
 </body>

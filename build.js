@@ -819,25 +819,142 @@ function generateSubjectIndexHtml(subject) {
 </html>`;
 }
 
-function generateMainIndexHtml() {
-  const CHART_START = EXAM_ROUTINE[0].iso.split('-').map(Number);
-  const chartDays = Array.from({ length: 10 }, (_, k) => {
-    const dt = new Date(CHART_START[0], CHART_START[1] - 1, CHART_START[2] + k);
-    const iso = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
-    return {
-      d: dt.getDate(),
-      iso,
-      exam: EXAM_ROUTINE.find(e => e.iso === iso) || null,
-      dow: dt.toLocaleDateString('en-US', { weekday: 'short' }),
-    };
-  });
-  const SHORT_LABEL = {
-    'IT 248': 'Entrepreneur',
-    'IT 250': 'Digital Economy',
-    'IT 249': 'Business Intelligence',
-    'IT 275 / IT 276': '.NET / DBA',
-    'IT 277': 'Cloud Computing',
+// ---------------------------------------------------------------------------
+// Rail: today -> the last paper. Built once at build time so the page still
+// reads correctly without JavaScript; the inline script then upgrades it.
+// ---------------------------------------------------------------------------
+function parseIsoLocal(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function isoLocal(date) {
+  return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+}
+
+function nextDay(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+}
+
+function railGeometry() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const first = parseIsoLocal(EXAM_ROUTINE[0].iso);
+  const end = parseIsoLocal(EXAM_ROUTINE[EXAM_ROUTINE.length - 1].iso);
+  const start = today < first ? today : first;
+  const span = Math.max(1, end - start);
+  const frac = d => Math.min(100, Math.max(0, ((d - start) / span) * 100));
+  const isoFrac = iso => frac(parseIsoLocal(iso));
+
+  // One tick per real day, so the distance between stations stays truthful.
+  const ticks = [];
+  let lastMonth = -1;
+  for (let d = new Date(start); d <= end; d = nextDay(d)) {
+    const changed = d.getMonth() !== lastMonth;
+    lastMonth = d.getMonth();
+    ticks.push({
+      left: frac(d),
+      iso: isoLocal(d),
+      label: changed
+        ? d.toLocaleDateString('en-US', { month: 'short' }) + ' ' + d.getDate()
+        : String(d.getDate()),
+    });
+  }
+
+  // Bare track between papers = the free days the student can still use.
+  const examIsos = new Set(EXAM_ROUTINE.map(e => e.iso));
+  const gaps = [];
+  let run = [];
+  const flush = () => {
+    if (!run.length) return;
+    const a = run[0];
+    const b = run[run.length - 1];
+    gaps.push({
+      left: (frac(a) + frac(b)) / 2,
+      iso: isoLocal(a),
+      label: run.length === 1
+        ? a.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        : a.getDate() + '\u2013' + b.getDate(),
+    });
+    run = [];
   };
+  for (let d = new Date(first); d < end; d = nextDay(d)) {
+    if (examIsos.has(isoLocal(d))) flush();
+    else run.push(new Date(d));
+  }
+  flush();
+
+  return { fNow: frac(today), isoFrac, ticks, gaps };
+}
+
+function railStationHtml(exam, left) {
+  const when = parseIsoLocal(exam.iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const bs = exam.bs.replace(/, 2083$/, '');
+  const inner = `
+        <span class="station-card">
+          <span class="station-code">${exam.code}</span>
+          <span class="station-when">${when}</span>
+          <span class="station-bs">${bs}</span>
+        </span>
+        <span class="station-dot"></span>`;
+  return exam.subjectId
+    ? `<a class="rail-station is-ours" href="${exam.subjectId}/" style="left:${left}%" data-iso="${exam.iso}" title="${exam.title}">${inner}
+      </a>`
+    : `<div class="rail-station is-other" style="left:${left}%" data-iso="${exam.iso}" title="${exam.title}">${inner}
+      </div>`;
+}
+
+function railTravellerHtml(left) {
+  return `
+        <div class="rail-traveller" id="traveller" style="left:${left}%" aria-hidden="true">
+          <svg class="train-flat" viewBox="0 0 96 40" width="96" height="40" focusable="false">
+            <rect x="8" y="10" width="52" height="20" rx="3" fill="var(--accent)"/>
+            <rect x="12" y="4" width="16" height="10" rx="2" fill="var(--accent)"/>
+            <path d="M60 10h14l14 14v6H60z" fill="var(--accent)"/>
+            <rect x="16" y="14" width="12" height="8" rx="1.5" fill="var(--accent-ink)" opacity="0.85"/>
+            <rect x="34" y="14" width="12" height="8" rx="1.5" fill="var(--accent-ink)" opacity="0.85"/>
+            <path d="M65 16h9l7 7H65z" fill="var(--accent-ink)" opacity="0.8"/>
+            <circle cx="24" cy="31" r="5" fill="var(--fg)"/>
+            <circle cx="44" cy="31" r="5" fill="var(--fg)"/>
+            <circle cx="74" cy="31" r="5" fill="var(--fg)"/>
+          </svg>
+          <span class="traveller-tag">Today</span>
+        </div>`;
+}
+
+function railHeroHtml(rail) {
+  const left = rail.fNow.toFixed(3);
+  return `
+      <section class="rail-hero" id="timetable" aria-labelledby="railTitle">
+        <h2 id="railTitle" class="variant-title">Ten days, five papers</h2>
+        <p class="variant-sub">Today is on the left. Each stop is a paper. The train moves as time passes.</p>
+        <div class="rail-counter">
+          <span class="counter-label">Next paper</span>
+          <span class="counter-code" id="code">IT 248</span>
+          <span class="counter-time" aria-hidden="true"><b id="days">0</b>d <b id="hours">00</b>:<b id="mins">00</b>:<b id="secs">00</b></span>
+          <span class="sr-only" id="sr"></span>
+        </div>
+        <div class="rail-mini" aria-hidden="true">
+          <span class="rail-mini-line"></span>
+          <span class="rail-mini-train" id="mini" style="left:${left}%"></span>
+        </div>
+        <div class="rail-viewport">
+          <div class="rail-track">
+            <div class="rail-line"></div>
+            <span class="rail-origin">Today, ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+            ${rail.gaps.map(g => `
+            <span class="rail-gap" style="left:${g.left.toFixed(3)}%" data-iso="${g.iso}">${g.label}</span>`).join('')}
+            ${rail.ticks.map(t => `
+            <span class="rail-tick" style="left:${t.left.toFixed(3)}%" data-iso="${t.iso}"><i></i><em>${t.label}</em></span>`).join('')}
+            ${EXAM_ROUTINE.map(e => railStationHtml(e, rail.isoFrac(e.iso).toFixed(3))).join('')}${railTravellerHtml(left)}
+          </div>
+        </div>
+        <p class="rail-note">Your papers fall every other day &mdash; the gaps between stops are free days. Routine: Dean's Office, 2083/07/28.</p>
+      </section>`;
+}
+
+function generateMainIndexHtml() {
+  const rail = railGeometry();
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -901,38 +1018,7 @@ function generateMainIndexHtml() {
         <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; 1&ndash;10 December 2026 &middot; centre ${EXAM_CENTRE}</p>
       </section>
 
-      <section class="timetable" id="timetable" aria-labelledby="timetableTitle">
-        <h2 id="timetableTitle" class="section-title">Ten days, five papers</h2>
-        <div class="chart" id="chart">
-          <div class="chart-marker" id="chartMarker" style="grid-column: 1 / span 3">
-            <span class="marker-label">Next paper</span>
-            <span class="marker-code" id="markerCode">IT 248</span>
-            <span class="marker-time" id="markerTime" aria-hidden="true"><b id="cdDays">0</b>d <b id="cdHours">00</b>:<b id="cdMins">00</b>:<b id="cdSecs">00</b></span>
-            <span class="sr-only" id="markerSr">Next paper in ten days</span>
-          </div>
-          <div class="chart-month">December 2026 &middot; Mangsir 2083</div>
-          ${chartDays.map(c => {
-            const exam = c.exam;
-            const isLink = exam && exam.subjectId;
-            const cls = "chart-day" + (exam ? " is-paper" : " is-free") + (exam && !exam.isOurs ? " is-other" : "");
-            const inner = `
-              <span class="day-when">
-                <span class="day-num">${c.d}</span>
-                <span class="day-name">${c.dow}</span>
-                ${exam ? `<span class="day-bs">${exam.bs.replace(/, 2083$/, '')}</span>` : ''}
-              </span>
-              <span class="day-what">
-                ${exam
-                  ? `<span class="day-paper">${exam.code}</span><span class="day-subject">${SHORT_LABEL[exam.code] || exam.title}</span>`
-                  : `<span class="day-free">free</span>`}
-              </span>`;
-            return isLink
-              ? `<a class="${cls}" href="${exam.subjectId}/" data-iso="${c.iso}" title="${exam.title}">${inner}</a>`
-              : `<div class="${cls}" data-iso="${c.iso}" title="${exam ? exam.title : 'No paper'}">${inner}</div>`;
-          }).join('')}
-        </div>
-        <p class="chart-note">Your papers fall every other day. The five empty days are the ones you can still use. Routine: Dean's Office, 2083/07/28.</p>
-      </section>
+      ${railHeroHtml(rail)}
 
       <section class="doors" id="subjects" aria-labelledby="doorsTitle">
         <h2 id="doorsTitle" class="section-title">Open your notes</h2>
@@ -1019,7 +1105,7 @@ function generateMainIndexHtml() {
       if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
-    // Exam clock
+    // One clock drives both comparison rails, the header readout and the sidebar.
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
     function parseLocal(iso) {
       const [y, m, d] = iso.split('-').map(Number);
@@ -1029,94 +1115,84 @@ function generateMainIndexHtml() {
     function isoOf(date) {
       return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
     }
+    const RAIL_FIRST = parseLocal(EXAM_ROUTINE_JS[0].iso);
+    const RAIL_END = parseLocal(EXAM_ROUTINE_JS[EXAM_ROUTINE_JS.length - 1].iso);
+    function railFraction(now) {
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const start = today < RAIL_FIRST ? today : RAIL_FIRST;
+      return Math.min(100, Math.max(0, ((today - start) / Math.max(1, RAIL_END - start)) * 100));
+    }
     let lastSrDay = -1;
     let lastSrCode = '';
 
-    function updateClock() {
+    function updateRail() {
       const now = new Date();
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
         if (parseLocal(e.iso) > now) { next = e; break; }
       }
-
       const todayIso = isoOf(now);
+      const leftPct = railFraction(now).toFixed(3) + '%';
 
-      document.querySelectorAll('.chart-day[data-iso]').forEach(el => {
-        el.classList.toggle('is-next', !!next && next.iso === el.dataset.iso);
+      document.querySelectorAll('.rail-station[data-iso]').forEach(el => {
+        el.classList.toggle('is-next', !!next && el.dataset.iso === next.iso);
         el.classList.toggle('is-today', el.dataset.iso === todayIso);
         el.classList.toggle('is-past', el.dataset.iso !== todayIso && parseLocal(el.dataset.iso) < now);
       });
-
-      document.querySelectorAll('.routine-table tbody tr[data-iso]').forEach(tr => {
-        tr.classList.toggle('is-next-row', !!next && tr.dataset.iso === next.iso);
+      document.querySelectorAll('.rail-gap[data-iso]').forEach(el => {
+        el.classList.toggle('is-past', parseLocal(el.dataset.iso) < now);
+      });
+      document.querySelectorAll('.rail-tick[data-iso]').forEach(el => {
+        el.classList.toggle('is-today', el.dataset.iso === todayIso);
       });
 
-      // Keep the sidebar's day counts in sync with the live counter.
+      // Sidebar day counts stay locked to the same clock as the big counter.
       document.querySelectorAll('.subject-exam[data-iso]').forEach(el => {
         const target = parseLocal(el.dataset.iso);
-        const left = Math.floor((target - now) / 86400000);
-        const sameDay = isoOf(target) === todayIso;
-        const state = sameDay ? 'today' : left < 0 ? 'done' : left + (left === 1 ? ' day' : ' days');
+        const remaining = Math.floor((target - now) / 86400000);
+        const state = isoOf(target) === todayIso ? 'today' : remaining < 0 ? 'done' : remaining + (remaining === 1 ? ' day' : ' days');
         el.textContent = el.dataset.label + ' \u00b7 ' + state;
       });
 
-      const marker = document.getElementById('chartMarker');
-      const codeEl = document.getElementById('markerCode');
-      const daysEl = document.getElementById('cdDays');
-      const hoursEl = document.getElementById('cdHours');
-      const minsEl = document.getElementById('cdMins');
-      const secsEl = document.getElementById('cdSecs');
-      const srEl = document.getElementById('markerSr');
+      let days = 0, hours = 0, mins = 0, secs = 0;
+      if (next) {
+        const diff = parseLocal(next.iso) - now;
+        days = Math.floor(diff / 86400000);
+        hours = Math.floor((diff % 86400000) / 3600000);
+        mins = Math.floor((diff % 3600000) / 60000);
+        secs = Math.floor((diff % 60000) / 1000);
+      }
+      const clockText = next ? days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs) : '';
+
+      const setText = (name, value) => {
+        const el = document.getElementById(name);
+        if (el) el.textContent = value;
+      };
+      setText('code', next ? next.code : 'All papers done');
+      setText('days', days);
+      setText('hours', pad2(hours));
+      setText('mins', pad2(mins));
+      setText('secs', pad2(secs));
+      ['traveller', 'mini'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.left = leftPct;
+      });
+      const sr = document.getElementById('sr');
+      if (sr && (days !== lastSrDay || (next && next.code) !== lastSrCode)) {
+        lastSrDay = days;
+        lastSrCode = next ? next.code : '';
+        sr.textContent = next
+          ? 'Next paper ' + next.code + ', ' + next.title + ', on ' + parseLocal(next.iso).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days')
+          : 'All papers are finished';
+      }
+
       const htCode = document.getElementById('htCode');
       const htVal = document.getElementById('htVal');
-
-      if (!next) {
-        if (codeEl) codeEl.textContent = 'All papers done';
-        if (daysEl) daysEl.textContent = '0';
-        if (hoursEl) hoursEl.textContent = '00';
-        if (minsEl) minsEl.textContent = '00';
-        if (secsEl) secsEl.textContent = '00';
-        if (htCode) htCode.textContent = 'Done';
-        if (htVal) htVal.textContent = '';
-        if (srEl) srEl.textContent = 'All papers are finished';
-        return;
-      }
-
-      const target = parseLocal(next.iso);
-      const diff = target - now;
-      const days = Math.floor(diff / 86400000);
-      const hours = Math.floor((diff % 86400000) / 3600000);
-      const mins = Math.floor((diff % 3600000) / 60000);
-      const secs = Math.floor((diff % 60000) / 1000);
-
-      if (daysEl) daysEl.textContent = days;
-      if (hoursEl) hoursEl.textContent = pad2(hours);
-      if (minsEl) minsEl.textContent = pad2(mins);
-      if (secsEl) secsEl.textContent = pad2(secs);
-
-      const clockText = days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs);
+      if (htCode) htCode.textContent = next ? next.code : 'Done';
       if (htVal) htVal.textContent = clockText;
-
-      if (codeEl) codeEl.textContent = next.code;
-      if (htCode) htCode.textContent = next.code;
-
-      // Move the marker above the next paper's column (it spans three columns).
-      if (marker) {
-        const dayNum = Number(next.iso.slice(8, 10));
-        const span = 3;
-        const start = Math.min(Math.max(dayNum, 1), 11 - span);
-        marker.style.gridColumn = start + ' / span ' + span;
-        marker.style.setProperty('--pointer', (((dayNum - start + 0.5) / span) * 100).toFixed(1) + '%');
-      }
-
-      if (srEl && (days !== lastSrDay || next.code !== lastSrCode)) {
-        lastSrDay = days;
-        lastSrCode = next.code;
-        srEl.textContent = 'Next paper ' + next.code + ', ' + next.title + ', on ' + target.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days');
-      }
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+    updateRail();
+    setInterval(updateRail, 1000);
 
   </script>
 </body>
@@ -1135,7 +1211,6 @@ async function build() {
 
   // Copy CSS
   fs.copyFileSync(path.join(__dirname, 'styles.css'), path.join(DIST_DIR, 'styles.css'));
-
 
   // Generate main index
   const mainIndex = generateMainIndexHtml();
