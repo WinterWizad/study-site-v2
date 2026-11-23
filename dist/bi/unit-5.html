@@ -79,6 +79,7 @@
           
         </ul>
         <div class="sidebar-footer">
+          <a href="../reels/" class="footer-link">Quick Reels</a>
           <a href="../index.html" class="footer-link">← All Subjects</a>
         </div>
       </div>
@@ -100,7 +101,7 @@
             <span class="subject-name">Business Intelligence</span>
           </div>
           <h1 class="unit-title">BI Tools and Technologies</h1>
-          <p class="exam-date">Exam: Sun, Dec 6, 2026 · <strong>16</strong> days</p>
+          <p class="exam-date">Exam: Sun, Dec 6, 2026 · <strong>13</strong> days</p>
         </header>
 
         <div class="markdown-body">
@@ -641,10 +642,12 @@
 
     // Sidebar toggle
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
 
     // Close sidebar on link click (mobile)

@@ -31,11 +31,11 @@ const { chromium } = require('playwright');
     await page.goto('http://localhost:8080', { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForTimeout(1000);
 
-    check('Main page loads', await page.title() === 'BIM 8th Semester Study Materials');
-    check('4 subject cards present', (await page.$$('.subject-card')).length === 4);
-    check('Exam pattern table present', await page.$('.pattern-table') !== null);
+    check('Main page loads', await page.title() === 'BIM 8th Semester Exam Timetable & Study Notes');
+    check('4 subject entries present', (await page.$$('.door')).length === 4);
+    check('Exam blueprint table present', await page.$('.marks-table') !== null);
     check('Theme toggle present', await page.$('.theme-toggle') !== null);
-    check('Sidebar toggle present', await page.$('.sidebar-toggle') !== null);
+    check('Accessible hidden timetable heading present', await page.$('h1.sr-only') !== null);
 
     // Theme toggle works
     await page.click('.theme-toggle');
@@ -46,14 +46,19 @@ const { chromium } = require('playwright');
     check('Light mode toggle back', (await page.getAttribute('html', 'data-theme')) === 'light');
 
     // ========== SUBJECT PAGES ==========
-    const subjects = ['bi', 'de', 'cloud', 'entrepreneurship'];
-    for (const subj of subjects) {
+    const subjects = {
+      bi: 'Business Intelligence',
+      de: 'Digital Economy',
+      cloud: 'Cloud Computing',
+      entrepreneurship: 'IT Entrepreneurship & Management'
+    };
+    for (const [subj, subjectName] of Object.entries(subjects)) {
       console.log(`\n=== ${subj.toUpperCase()} SUBJECT ===`);
       await page.goto(`http://localhost:8080/${subj}/`, { waitUntil: 'domcontentloaded', timeout: 10000 });
       await page.waitForTimeout(500);
 
       const title = await page.title();
-      check(`${subj} subject page loads`, title && title.includes('BIM 8th Semester'));
+      check(`${subj} subject page loads`, title && title.includes(subjectName) && title.includes('Worst Generation'));
       check(`${subj} has unit cards`, (await page.$$('.unit-card')).length > 0);
 
       // Check subject header
@@ -70,7 +75,7 @@ const { chromium } = require('playwright');
       { subj: 'bi', unit: 2, check: 'Data Warehousing' },
       { subj: 'bi', unit: 6, check: 'BI Implementation' },
       { subj: 'de', unit: 1, check: 'Introduction to Digital Economy' },
-      { subj: 'de', unit: 6, check: 'Nepal Perspective' },
+      { subj: 'de', unit: 6, check: 'Digitalization in Nepalese Perspective' },
       { subj: 'cloud', unit: 1, check: 'Introduction to Cloud Computing' },
       { subj: 'cloud', unit: 4, check: 'Virtualization' },
       { subj: 'cloud', unit: 6, check: 'Cloud Security' },
@@ -84,7 +89,7 @@ const { chromium } = require('playwright');
       await page.waitForTimeout(500);
 
       const title = await page.title();
-      check(`${t.subj} unit-${t.unit} loads`, title.includes('BIM 8th Semester'));
+      check(`${t.subj} unit-${t.unit} loads`, title.includes(`Unit ${t.unit}:`) && title.includes('Worst Generation'));
 
       const content = await page.textContent('.markdown-body');
       check(`${t.subj} unit-${t.unit} has content`, content && content.length > 500);

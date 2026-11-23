@@ -1,4 +1,4 @@
-﻿# Unit 1 â€” Introduction to Business Intelligence
+# Unit 1 â€” Introduction to Business Intelligence
 
 | | |
 |---|---|
@@ -11,8 +11,111 @@
 
 > **Read this first:** This unit is the vocabulary for the whole paper. You can't answer the 20-mark case ("how does Amazon use BI?") without defining BI exactly. Get definitions right here and you get free marks in Groups A and D simultaneously.
 
-?## Learn in Motion?
-?
+## Learn in Motion
+
+<div class="learn-motion-demo" style="font-family: system-ui, sans-serif; margin: 1rem 0;">
+  <h3 style="margin-top: 0;">C-T-P-D: The BI Pipeline in Motion</h3>
+  
+  <svg id="ctpd-svg" width="640" height="180" viewBox="0 0 640 180" style="max-width: 100%; height: auto; display: block; margin: 0 auto 1rem auto;">
+    <rect id="box1" x="40" y="60" width="120" height="60" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    <rect id="box2" x="200" y="60" width="120" height="60" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    <rect id="box3" x="360" y="60" width="120" height="60" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    <rect id="box4" x="520" y="60" width="120" height="60" rx="8" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+    
+    <text x="100" y="85" text-anchor="middle" font-weight="600" fill="#334155" font-family="system-ui, sans-serif" font-size="14">1 · COLLECT</text>
+    <text x="100" y="105" text-anchor="middle" font-size="12" fill="#64748b" font-family="system-ui, sans-serif">sources</text>
+    
+    <text x="260" y="85" text-anchor="middle" font-weight="600" fill="#334155" font-family="system-ui, sans-serif" font-size="14">2 · TRANSFORM</text>
+    <text x="260" y="105" text-anchor="middle" font-size="12" fill="#64748b" font-family="system-ui, sans-serif">ETL / clean</text>
+    
+    <text x="420" y="85" text-anchor="middle" font-weight="600" fill="#334155" font-family="system-ui, sans-serif" font-size="14">3 · PRESENT</text>
+    <text x="420" y="105" text-anchor="middle" font-size="12" fill="#64748b" font-family="system-ui, sans-serif">dashboards</text>
+    
+    <text x="580" y="85" text-anchor="middle" font-weight="600" fill="#334155" font-family="system-ui, sans-serif" font-size="14">4 · DECIDE</text>
+    <text x="580" y="105" text-anchor="middle" font-size="12" fill="#64748b" font-family="system-ui, sans-serif">action</text>
+    
+    <line id="arrow1" x1="160" y1="90" x2="200" y2="90" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrowhead)"/>
+    <line id="arrow2" x1="320" y1="90" x2="360" y2="90" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrowhead)"/>
+    <line id="arrow3" x1="480" y1="90" x2="520" y2="90" stroke="#94a3b8" stroke-width="3" marker-end="url(#arrowhead)"/>
+    
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8"/>
+      </marker>
+    </defs>
+  </svg>
+  
+  <div id="ctpd-caption" style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-left: 4px solid #2563eb; border-radius: 0 6px 6px 0; font-size: 0.95rem; color: #334155; min-height: 3em;">
+    Click a stage to see what happens at each step.
+  </div>
+  
+  <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem; align-items: center;">
+    <button onclick="ctpdPlay('auto')" style="padding: 0.4rem 0.8rem; cursor: pointer;">▶ Auto Play</button>
+    <button onclick="ctpdPlay('loop')" style="padding: 0.4rem 0.8rem; cursor: pointer;">🔁 Loop</button>
+    <button onclick="ctpdReset()" style="padding: 0.4rem 0.8rem; cursor: pointer;">↺ Reset</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const boxes = ['box1','box2','box3','box4'];
+  const arrows = ['arrow1','arrow2','arrow3'];
+  const captions = [
+    'Collect: Data flows in from ERP, CRM, Excel, web APIs, and sensors — raw and multi-source.',
+    'Transform: ETL cleans, deduplicates, and loads data into a query-ready warehouse.',
+    'Present: Dashboards, reports, and alerts put information in front of managers.',
+    'Decide: The output is a decision — not just a chart. That is the point of BI.'
+  ];
+  let loopTimer = null;
+
+  function highlight(i){
+    boxes.forEach((b, idx) => {
+      const el = document.getElementById(b);
+      el.setAttribute('fill', idx === i ? '#dbeafe' : '#e2e8f0');
+      el.setAttribute('stroke', idx === i ? '#2563eb' : '#64748b');
+    });
+    arrows.forEach((a, idx) => {
+      document.getElementById(a).setAttribute('stroke', idx === i ? '#2563eb' : '#94a3b8');
+    });
+    const cap = document.getElementById('ctpd-caption');
+    if (i >= 0 && i < captions.length) cap.textContent = captions[i];
+  }
+
+  function autoPlay(){
+    clearTimeout(loopTimer);
+    let step = 0;
+    function next(){
+      if (step > 3){ ctpdReset(); return; }
+      highlight(step - 1);
+      loopTimer = setTimeout(next, 2200);
+      step++;
+    }
+    next();
+  }
+
+  window.ctpdPlay = function(mode){
+    if (mode === 'loop'){ autoPlay(); }
+    else if (mode === 'auto'){ clearTimeout(loopTimer); autoPlay(); }
+  };
+
+  window.ctpdReset = function(){
+    clearTimeout(loopTimer);
+    highlight(-1);
+    document.getElementById('ctpd-caption').textContent = 'Click a stage to see what happens at each step.';
+  };
+
+  boxes.forEach((b, i) => {
+    document.getElementById(b).style.cursor = 'pointer';
+    document.getElementById(b).onclick = () => { clearTimeout(loopTimer); highlight(i); };
+  });
+})();
+</script>
+
+<style>
+.learn-motion-demo rect{transition: fill 0.3s, stroke 0.3s;}
+.learn-motion-demo line{transition: stroke 0.3s;}
+</style>
+
 ---
 
 ## Coverage Map

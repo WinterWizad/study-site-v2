@@ -24,8 +24,28 @@
   --header-height: 64px;
   --transition: 0.2s ease;
   --font-display: 'Newsreader', Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   --map-ray: rgba(37, 99, 235, 0.13);
   --map-ring: rgba(37, 99, 235, 0.10);
+  /* Ocean backdrop */
+  --oc-sky-top: #bfe3ff;
+  --oc-sky-haze: #f2fbff;
+  --oc-sea-top: #8ccbec;
+  --oc-sea-deep: #0d4f7d;
+  --oc-l1: #b3dcf3;
+  --oc-l2: #78bce4;
+  --oc-l3: #3d92cb;
+  --oc-l4: #175e9c;
+  --oc-horizon: rgba(255, 255, 255, 0.75);
+  --oc-sun: #fff4c2;
+  --oc-glow: rgba(255, 226, 150, 0.55);
+  --oc-glow-out: rgba(255, 226, 150, 0);
+  --oc-bird: rgba(23, 56, 89, 0.45);
+  --glass: rgba(255, 255, 255, 0.62);
+  --glass-edge: rgba(255, 255, 255, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.82);
+  --glass-head: rgba(255, 255, 255, 0.38);
+  --ship-width: clamp(380px, 36vw, 520px);
 }
 
 [data-theme="dark"] {
@@ -44,6 +64,24 @@
   --accent-ink: #0b1220;
   --map-ray: rgba(96, 165, 250, 0.16);
   --map-ring: rgba(96, 165, 250, 0.12);
+  /* Night sea */
+  --oc-sky-top: #040812;
+  --oc-sky-haze: #173250;
+  --oc-sea-top: #1d5375;
+  --oc-sea-deep: #050f1c;
+  --oc-l1: #32708f;
+  --oc-l2: #215572;
+  --oc-l3: #133d59;
+  --oc-l4: #071c2d;
+  --oc-horizon: rgba(186, 220, 246, 0.35);
+  --oc-sun: #e8f1ff;
+  --oc-glow: rgba(190, 220, 255, 0.30);
+  --oc-glow-out: rgba(190, 220, 255, 0);
+  --oc-bird: rgba(180, 210, 240, 0.35);
+  --glass: rgba(16, 26, 44, 0.62);
+  --glass-edge: rgba(255, 255, 255, 0.14);
+  --glass-strong: rgba(28, 44, 70, 0.85);
+  --glass-head: rgba(255, 255, 255, 0.07);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -61,6 +99,294 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
+}
+
+/* ============================================================================
+   Ocean backdrop (home page)
+   ============================================================================ */
+
+.ocean {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ocean-art { display: block; width: 100%; height: 100%; }
+.beach-art {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 22%;
+}
+[data-theme="dark"] .beach-art { filter: brightness(0.72) saturate(0.88); }
+.oc-cloud {
+  position: absolute;
+  z-index: 2;
+  width: 86px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  border-radius: 999px;
+  pointer-events: none;
+}
+.oc-cloud::before,
+.oc-cloud::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  background: inherit;
+  border-radius: 50%;
+}
+.oc-cloud::before { left: 16px; width: 36px; height: 36px; }
+.oc-cloud::after { right: 14px; width: 28px; height: 28px; }
+.oc-cloud-one { top: 10%; left: 6%; }
+.oc-cloud-two { top: 6%; left: 34%; transform: scale(0.72); }
+.oc-cloud-three { top: 8%; right: 18%; transform: scale(0.58); }
+.oc-stop-top { stop-color: var(--oc-sky-top); }
+.oc-stop-haze { stop-color: var(--oc-sky-haze); }
+.oc-stop-sea-top { stop-color: var(--oc-sea-top); }
+.oc-stop-sea-deep { stop-color: var(--oc-sea-deep); }
+/* The sun and the gulls live outside the stretched sea SVG, so they stay
+   round and keep their proportions at any viewport size. */
+.oc-sun {
+  position: absolute;
+  z-index: 2;
+  top: 11%;
+  right: 13%;
+  width: clamp(54px, 8vmin, 118px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--oc-sun);
+  box-shadow: 0 0 54px 10px var(--oc-glow), 0 0 6px 1px var(--oc-glow);
+}
+.oc-birds {
+  position: absolute;
+  z-index: 2;
+  top: 13%;
+  left: 19%;
+  width: 140px;
+  height: 52px;
+  fill: none;
+  stroke: var(--oc-bird);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  transform-origin: center;
+  animation: birdFlight 28s linear infinite;
+}
+.oc-birds .bird {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: birdFlap 1.15s ease-in-out infinite alternate;
+}
+.oc-birds .bird--two { animation-delay: -0.38s; }
+.oc-birds .bird--three { animation-delay: -0.76s; }
+@keyframes birdFlight {
+  0% { transform: translate3d(-18vw, 2vh, 0); }
+  48% { transform: translate3d(35vw, -1vh, 0); }
+  100% { transform: translate3d(88vw, 3vh, 0); }
+}
+@keyframes birdFlap {
+  from { transform: scaleY(0.42) translateY(1px); }
+  to { transform: scaleY(1) translateY(-1px); }
+}
+.oc-horizon { stroke: var(--oc-horizon); stroke-width: 1.5; }
+.oc-wave-1 path { fill: var(--oc-l1); }
+.oc-wave-2 path { fill: var(--oc-l2); }
+.oc-wave-3 path { fill: var(--oc-l3); }
+.oc-wave-4 path { fill: var(--oc-l4); }
+.oc-layer { will-change: transform; }
+.oc-wave-1 { animation: ocDrift 26s linear infinite; }
+.oc-wave-2 { animation: ocDrift 20s linear infinite; }
+.oc-wave-3 { animation: ocDrift 14s linear infinite; }
+.oc-wave-4 { animation: ocDrift 9s linear infinite; }
+@keyframes ocDrift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-1200px); }
+}
+
+/* Home page: full-bleed, sitting directly on the ocean. The header stays
+   outside a dedicated vertical scroller so the panels snap predictably. */
+body.home-page {
+  height: 100dvh;
+  overflow: hidden;
+  background: transparent;
+}
+body.home-page .site-header,
+body.home-page .layout { position: relative; z-index: 1; }
+body.home-page .site-header {
+  position: relative;
+  flex: none;
+  background: var(--bg);
+  border-bottom-color: var(--border);
+  box-shadow: none;
+}
+body.home-page .header-content { max-width: none; }
+body.home-page .layout {
+  height: calc(100dvh - var(--header-height));
+  min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  background-image: none;
+  --rail: 0;
+}
+body.home-page .content {
+  height: 100%;
+  min-height: 0;
+  max-width: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  overflow-anchor: none;
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(37, 99, 235, 0.35) transparent;
+  --home-gutter: clamp(1rem, 3vw, 3rem);
+  padding: 0 var(--home-gutter) 0;
+}
+/* The rail hero is a scene, not a card: it floats on the open sea and the
+   track's waterline is pinned to the ocean's horizon (41.25% of the viewport).
+   The timetable title occupies the open sky. */
+body.home-page .rail-hero {
+  position: relative;
+  height: calc(100dvh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
+  max-height: none;
+  margin-top: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  border-image: none;
+  overflow: visible;
+}
+/* The route scrolls away normally; only the ship compensates to stay put. */
+body.home-page .scene-stage {
+  position: relative;
+  height: 100%;
+}
+
+/* The timetable title is the only text in the sky. It sits above the route
+   and stays clear of the ship as the scene scales up. */
+body.home-page .timetable-heading {
+  position: absolute;
+  top: clamp(1.5rem, 6vh, 4.25rem);
+  left: 50%;
+  z-index: 3;
+  width: min(1180px, calc(100vw - 3rem));
+  margin: 0;
+  color: var(--fg);
+  text-align: center;
+  transform: translateX(-50%);
+}
+body.home-page .timetable-heading h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.2vw, 4.75rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  text-shadow: 0 1px 16px rgba(255, 255, 255, 0.78);
+}
+body.home-page .timetable-heading p {
+  max-width: none;
+  margin: 0.8rem auto 0;
+  font-size: clamp(0.75rem, 1.15vw, 0.9rem);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--fg);
+  text-shadow: 0 1px 10px rgba(255, 255, 255, 0.78);
+}
+[data-theme="dark"] body.home-page .timetable-heading h1,
+[data-theme="dark"] body.home-page .timetable-heading p {
+  text-shadow: 0 1px 14px rgba(3, 8, 18, 0.92);
+}
+
+@media (min-width: 769px) {
+  body.home-page .rail-viewport {
+    position: absolute;
+    left: clamp(1rem, 3vw, 3rem);
+    right: clamp(1rem, 3vw, 3rem);
+    top: max(130px, calc(41.25vh - var(--header-height) - 150px));
+    z-index: 2;
+  }
+  /* The ship sits on "today" at the track's head, so the track reserves room
+     on the left for the hull and wake. The route itself stays proportional to
+     real days and scrolls freely when the timetable extends beyond the view. */
+  body.home-page .rail-track {
+    --ship-gutter: clamp(270px, 29vw, 420px);
+    width: calc(100% - var(--ship-gutter));
+    min-width: 720px;
+    margin: 0 0 0 var(--ship-gutter);
+  }
+}
+body.home-page .page-head h1,
+body.home-page .section-title,
+body.home-page .section-meta,
+body.home-page .spin-kicker {
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.8);
+}
+[data-theme="dark"] body.home-page .page-head h1,
+[data-theme="dark"] body.home-page .section-title,
+[data-theme="dark"] body.home-page .section-meta,
+[data-theme="dark"] body.home-page .spin-kicker {
+  text-shadow: 0 1px 12px rgba(3, 8, 18, 0.9);
+}
+/* The lower homepage is an opaque study field, not another layer of glass. */
+body.home-page .section-head {
+  margin-bottom: 2rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+body.home-page .section-head .section-title { margin-bottom: 0; }
+body.home-page .section-meta {
+  margin: 0.45rem 0 0;
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+body.home-page .door-exam { margin-left: 0.25rem; }
+
+/* The date ruler sits on warm sand, so it uses brown ink rather than sea ink. */
+body.home-page .rail-tick em {
+  color: #6b4823;
+  text-shadow: none;
+}
+body.home-page .rail-tick i { background: rgba(107, 72, 35, 0.45); }
+body.home-page .rail-tick.is-exam i,
+body.home-page .rail-tick.is-movie i { background: var(--tick-color); }
+body.home-page .rail-tick.is-today em { color: #fff; font-weight: 700; }
+body.home-page .rail-gap {
+  background: rgba(255, 255, 255, 0.94);
+  color: #1e293b;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+}
+[data-theme="dark"] body.home-page .rail-gap {
+  background: rgba(8, 24, 40, 0.72);
+  color: #cfe6f7;
+}
+
+/* The wheel is deliberately unchanged and remains the one glass island. */
+body.home-page .spin-section {
+  position: relative;
+  z-index: 4;
+  padding: 1.5rem;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-edge);
+  border-radius: var(--radius-lg);
+}
+body.home-page .sound-btn {
+  background: var(--glass-strong);
+  border-color: var(--glass-edge);
 }
 
 /* ============================================================================
@@ -398,186 +724,289 @@ body.unit-page .sidebar {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
 }
-.rail-counter {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.6rem;
-  padding: 0.55rem 0.75rem;
-  background: var(--accent);
-  color: var(--accent-ink);
-  border-radius: var(--radius);
-}
-.counter-label { font-size: 0.75rem; opacity: 0.9; }
-.counter-code { font-size: 0.8125rem; font-weight: 700; }
-.counter-time {
-  margin-left: auto;
-  font-size: 1.25rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-.counter-time b { font-weight: 700; }
 
 .rail-mini { display: none; }
 
-.rail-viewport { overflow-x: auto; padding: 0 8px; }
+.rail-viewport {
+  overflow-x: auto;
+  padding: 0 8px;
+  scroll-behavior: smooth;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.45) transparent;
+}
+.rail-viewport::-webkit-scrollbar { height: 6px; }
+.rail-viewport::-webkit-scrollbar-track { background: transparent; }
+.rail-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+}
 .rail-track {
+  --rail-waterline: 300px;
   position: relative;
-  height: 226px;
+  height: 560px;
   min-width: 880px;
   margin: 0 120px;
 }
-/* The route is a stretch of sea, with a tinted band under the waterline. */
-.rail-track::before {
+.rail-track::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  top: 138px;
-  height: 26px;
-  background: linear-gradient(180deg, rgba(37,99,235,0.05), rgba(37,99,235,0.18));
-  border-radius: 13px;
-  pointer-events: none;
+  top: 505px;
+  z-index: 2;
+  height: 1px;
+  background: rgba(107, 72, 35, 0.3);
 }
-.rail-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 150px;
-  height: 5px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
-  border-radius: 3px;
-}
+/* The Today marker is a small blue-ring buoy at the voyage's starting point. */
 .rail-origin {
-  display: none;
+  display: block;
   position: absolute;
   left: 0;
-  top: -4px;
-  font-size: 0.6875rem;
-  color: var(--fg-muted);
-  white-space: nowrap;
+  top: 322px;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 3px solid #1d4ed8;
+  border-radius: 50%;
+  color: transparent;
+  font-size: 0;
+  transform: translateX(-50%);
+  z-index: 3;
 }
 
+.rail-route-art {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.rail-route-trail {
+  fill: none;
+  stroke: #fef3c7;
+  stroke-width: 3.2;
+  stroke-dasharray: 10 9;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 1px 1px rgba(15, 23, 42, 0.22));
+}
 .rail-station {
   position: absolute;
   top: 0;
+  z-index: 4;
   width: 0;
   height: 100%;
   color: inherit;
   text-decoration: none;
 }
+.rail-station::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 82px;
+  height: 208px;
+  border-left: 2px dashed currentColor;
+  opacity: 0.45;
+}
+.rail-station.row-b::before {
+  top: 212px;
+  height: 128px;
+}
 .station-card {
   position: absolute;
-  top: 16px;
+  top: 18px;
   left: 0;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.05rem;
-  width: 108px;
-  padding: 0.4rem 0.2rem;
+  gap: 0.1rem;
+  width: 136px;
+  padding: 0.6rem 0.4rem;
   text-align: center;
-  border-radius: var(--radius);
-  transition: background var(--transition);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid color-mix(in srgb, currentColor 28%, white);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
-.rail-station.row-b .station-card { top: 76px; }
-.station-code { font-size: 0.75rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
-.station-when { font-size: 0.6875rem; font-weight: 600; white-space: nowrap; }
+.rail-station.row-b .station-card { top: 150px; }
+.rail-station:hover .station-card,
+.rail-station:focus-visible .station-card {
+  transform: translateX(-50%) translateY(-3px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
+}
+.station-code { font-size: 0.875rem; font-weight: 700; color: var(--fg); white-space: nowrap; }
+.station-name {
+  max-width: 124px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.12;
+  text-wrap: balance;
+  white-space: normal;
+}
+.station-when { font-size: 0.75rem; font-weight: 600; color: #334155; white-space: nowrap; }
 .station-kind {
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--fg-muted);
+  color: #64748b;
 }
 .station-dot {
   position: absolute;
-  top: 143px;
+  top: 292px;
   left: 0;
+  width: 68px;
+  height: 48px;
   transform: translateX(-50%);
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  background: var(--card-bg);
-  border: 3px solid var(--accent);
-  border-radius: 50%;
+  color: var(--accent);
+}
+.rail-station.row-b .station-dot { top: 342px; }
+.rail-station.is-movie .station-dot {
+  top: 282px;
+  width: 96px;
+  height: 58px;
+}
+.station-dot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 3px 3px rgba(15, 23, 42, 0.14));
 }
 .rail-station.is-ours:hover .station-card,
-.rail-station.is-next .station-card { background: var(--hover-tint); }
-.rail-station.is-next .station-dot { background: var(--accent); }
-.rail-station.is-today .station-dot { background: var(--accent); }
-.rail-station.is-past { opacity: 0.45; }
+.rail-station.is-next .station-card { background: #fff; }
+.rail-station.is-next .station-dot { filter: drop-shadow(0 5px 5px rgba(15, 23, 42, 0.2)); }
+.rail-station.is-past { opacity: 0.55; }
 .rail-station.is-movie .station-code { color: var(--fg); }
-.rail-station.is-movie .station-dot { border-color: var(--fg); background: var(--fg); }
-.rail-station.is-movie.row-b .station-card { top: 68px; }
+.rail-station.is-movie.row-b .station-card { top: 130px; }
 
 .rail-gap {
   position: absolute;
-  top: 162px;
+  top: 428px;
+  z-index: 3;
   transform: translateX(-50%);
-  padding: 0 0.25rem;
-  background: var(--card-bg);
-  font-size: 0.625rem;
-  color: var(--fg-muted);
+  padding: 0.2rem 0.55rem;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid #bae6fd;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #1e293b;
   white-space: nowrap;
 }
 .rail-gap.is-past { opacity: 0.45; }
 
 .rail-tick {
   position: absolute;
-  top: 182px;
+  top: 493px;
+  z-index: 3;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.18rem;
 }
-.rail-tick i { display: block; width: 1px; height: 5px; background: var(--border); }
+.rail-tick i {
+  display: block;
+  width: 1px;
+  height: 12px;
+  background: rgba(107, 72, 35, 0.45);
+}
 .rail-tick em {
   font-style: normal;
-  font-size: 0.625rem;
-  color: var(--fg-muted);
+  font-size: 0.6875rem;
+  color: #6b4823;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.rail-tick.is-today em { color: var(--accent); font-weight: 700; }
+.rail-tick.is-exam i,
+.rail-tick.is-movie i {
+  width: 2px;
+  height: 13px;
+  background: var(--tick-color);
+}
+.rail-tick.is-exam em,
+.rail-tick.is-movie em {
+  color: var(--tick-color);
+  font-weight: 800;
+}
+.rail-tick.is-today em {
+  padding: 0.1rem 0.35rem;
+  background: #1d4ed8;
+  border-radius: 999px;
+  color: #fff;
+  font-weight: 700;
+}
+.rail-tick.is-movie em {
+  padding: 0.1rem 0.35rem;
+  background: #0f172a;
+  border-radius: 999px;
+  color: #fff;
+}
 
+/* The ship floats on the waterline: the traveller is a zero-width anchor
+   sitting exactly on the rail's sea line, and the hull hangs below it.
+   It sits above the route viewport so vertical overflow is never clipped. */
 .rail-traveller {
   position: absolute;
-  top: 96px;
+  top: 0;
+  left: 0;
   z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transform: translateX(-50%);
+  width: 0;
+  height: 0;
   pointer-events: none;
-  transition: left 0.9s linear;
+}
+.ship-wrap {
+  --ship-anchor-x: 88.846%;
+  --ship-anchor-shift: -88.846%;
+  position: absolute;
+  left: 0;
+  /* 12 SVG units sit between the hull bottom and the frame, so the hull —
+     not the frame — lands on the waterline. */
+  bottom: calc((12 / 260) * var(--ship-width) * -1);
+  display: block;
+  line-height: 0;
+  translate: var(--ship-anchor-shift) var(--ship-stick-y, 0px);
+  animation: sailIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.ship-reflection {
+  position: absolute;
+  left: 50%;
+  top: calc(106 / 118 * 100%);
+  width: var(--ship-width);
+  height: auto;
+  transform: translateX(-50%);
 }
 .speed-lines {
   position: absolute;
-  right: calc(100% - 6px);
-  top: 20px;
-  width: 54px;
+  left: 0;
+  bottom: calc((12 / 260) * var(--ship-width) * -1 - 2px);
+  width: 92px;
   height: 28px;
+  transform: translateX(-88%);
 }
 .speed-lines i {
   position: absolute;
   left: 0;
   height: 3px;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.78);
   border-radius: 2px;
   opacity: 0;
   animation: streak 1.05s linear infinite;
 }
-.speed-lines i:nth-child(1) { top: 1px; width: 40px; animation-delay: 0s; }
-.speed-lines i:nth-child(2) { top: 12px; width: 54px; animation-delay: 0.35s; }
-.speed-lines i:nth-child(3) { top: 23px; width: 32px; animation-delay: 0.7s; }
-.ship { display: block; }
+.speed-lines i:nth-child(1) { top: 1px; width: 56px; animation-delay: 0s; }
+.speed-lines i:nth-child(2) { top: 10px; width: 78px; animation-delay: 0.35s; }
+.speed-lines i:nth-child(3) { top: 19px; width: 44px; animation-delay: 0.7s; }
+.ship { display: block; width: var(--ship-width); height: auto; }
 .traveller-tag {
-  order: -1;
-  margin-bottom: 0.2rem;
+  position: absolute;
+  left: var(--ship-anchor-x);
+  bottom: calc(100% + 0.35rem);
+  transform: translateX(-50%);
   padding: 0.1rem 0.35rem;
   background: var(--accent);
   color: var(--accent-ink);
@@ -585,14 +1014,16 @@ body.unit-page .sidebar {
   font-size: 0.625rem;
   font-weight: 700;
   line-height: 1.3;
+  white-space: nowrap;
 }
 
-/* Motion: the sea shimmers, the ship bobs, speed lines trail as wake. */
-.rail-line { transform-origin: left center; animation: railDraw 0.7s ease-out both, seaShimmer 3s ease-in-out 0.7s infinite; }
+/* Motion: the ship sails in once, then bobs while the sea drifts behind it. */
 .rail-station { animation: stationIn 0.4s ease-out 0.15s both; }
 .ship { animation: shipBob 2.2s ease-in-out infinite; }
-@keyframes railDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes seaShimmer { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+@keyframes sailIn {
+  from { transform: translateX(calc(0px - var(--ship-width))); }
+  to { transform: translateX(0); }
+}
 @keyframes stationIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes shipBob { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-2px) rotate(0.6deg); } }
 @keyframes streak {
@@ -601,9 +1032,12 @@ body.unit-page .sidebar {
   100% { transform: translateX(-28px); opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rail-line, .rail-station, .ship, .speed-lines i, .rail-mini-train::before { animation: none !important; }
+  .rail-station, .ship-wrap, .ship, .speed-lines i, .rail-mini-train::before,
+  .oc-layer, .oc-birds, .oc-birds .bird { animation: none !important; }
+  .oc-birds, .oc-birds .bird { transform: none; }
   .speed-lines i { opacity: 0.5; }
   .rail-traveller, .rail-mini-train, .wheel { transition: none; }
+  .rail-viewport { scroll-behavior: auto; }
   .spin-modal[open] { animation: none; }
 }
 
@@ -725,13 +1159,17 @@ body.unit-page .sidebar {
 }
 .spin-modal-x:hover { color: var(--accent); }
 .spin-modal-kicker {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--fg-muted);
 }
+.spin-modal-skull { flex: none; }
 .spin-modal-title {
   display: flex;
   align-items: center;
@@ -929,71 +1367,6 @@ body.unit-page .sidebar {
   .site-title { font-size: 1.0625rem; }
   .rules-list { columns: 1; }
 
-  /* The rail becomes a thumb-friendly vertical line. */
-  .rail-hero { padding: 0.85rem 0.85rem 0.75rem; }
-  .rail-mini {
-    display: block;
-    position: relative;
-    height: 24px;
-    margin: 0.35rem 0 0.8rem;
-  }
-  .rail-mini-line { position: absolute; left: 0; right: 0; top: 15px; height: 3px; background: var(--accent); opacity: 0.35; border-radius: 2px; }
-  .rail-mini-train {
-    position: absolute;
-    top: 10px;
-    width: 18px;
-    height: 6px;
-    background: var(--accent);
-    border-radius: 1px 1px 6px 5px;
-    transform: translateX(-50%);
-    transition: left 0.9s linear;
-  }
-  .rail-mini-train::after {
-    content: "";
-    position: absolute;
-    left: 5px;
-    bottom: 100%;
-    border-top: 8px solid transparent;
-    border-left: 8px solid var(--accent);
-  }
-  .rail-mini-train::before {
-    content: "";
-    position: absolute;
-    right: 100%;
-    top: 2px;
-    width: 14px;
-    height: 2px;
-    background: var(--accent);
-    opacity: 0.6;
-    animation: streak 1.05s linear infinite;
-  }
-  .rail-viewport { overflow: visible; padding: 0; }
-  .rail-track { min-width: 0; height: auto; margin: 0; padding-left: 26px; }
-  .rail-track::before { display: none; }
-  .rail-line { left: 7px; right: auto; top: 8px; bottom: 8px; width: 3px; height: auto; animation: none; }
-  .rail-origin { display: block; left: 0; top: -4px; }
-  .rail-tick, .rail-gap { display: none; }
-  .rail-station {
-    position: relative;
-    left: auto !important;
-    width: auto;
-    height: auto;
-    display: block;
-    padding: 0 0 1rem 18px;
-  }
-  .rail-station.is-past { opacity: 0.5; }
-  .station-card {
-    position: static;
-    transform: none;
-    width: auto;
-    align-items: flex-start;
-    text-align: left;
-    padding: 0;
-  }
-  .station-dot { top: 5px; left: 1px; transform: none; width: 14px; height: 14px; }
-  .rail-traveller { display: none; }
-  .counter-time { margin-left: 0; font-size: 1.125rem; }
-
   .spin-layout { gap: 1rem; }
   .spin-section { padding: 0.75rem 0.5rem; }
 }
@@ -1009,14 +1382,17 @@ body.unit-page .sidebar {
 
 /* Print: one static rail plus the notes */
 @media print {
-  .site-nav, .header-clock, .theme-toggle, .sidebar, .rail-counter,
-  .rail-traveller, .rail-mini, .rail-tick, .rail-gap, .rail-origin,
-  .spin-section, .page-foot { display: none !important; }
+  .site-nav, .header-clock, .theme-toggle, .sidebar,
+  .rail-traveller, .mobile-ship, .rail-mini, .rail-tick, .rail-gap, .rail-origin,
+  .station-dot, .spin-section, .page-foot { display: none !important; }
   .rail-hero { margin-top: 0; padding: 0; border: 0; }
-  .rail-viewport { overflow: visible; padding: 0; }
-  .rail-track { min-width: 0; height: auto; margin: 0; padding-left: 26px; }
-  .rail-track::before { display: none; }
-  .rail-line { left: 7px; right: auto; top: 6px; bottom: 6px; width: 2px; height: auto; background: #666; animation: none; }
+  .rail-viewport {
+    overflow: visible;
+    padding: 0;
+    scroll-behavior: auto;
+  }
+  .rail-track { min-width: 0; height: auto; margin: 0; }
+  .rail-track::after { display: none; }
   .rail-station {
     position: relative;
     left: auto !important;
@@ -1026,8 +1402,8 @@ body.unit-page .sidebar {
     padding: 0 0 0.8rem 18px;
     opacity: 1 !important;
   }
+  .rail-station::before { display: none; }
   .station-card { position: static; transform: none; width: auto; align-items: flex-start; text-align: left; padding: 0; }
-  .station-dot { top: 4px; left: 1px; transform: none; width: 12px; height: 12px; border-color: #666; }
   .door, .marks-block { border: 1px solid #ccc; page-break-inside: avoid; }
 }
 
@@ -1496,8 +1872,39 @@ body.unit-page[data-subject="entrepreneurship"] { --accent: #dc2626; --accent-ho
 
 @media print {
   .site-header, .sidebar, .sidebar-toggle, .sidebar-overlay, .unit-nav, .nav-btn,
-  .code-header, .copy-btn, .read-link, .card-link, .resource-list a {
+  .code-header, .copy-btn, .read-link, .card-link, .resource-list a,
+  .ocean, .rail-route-art {
     display: none !important;
+  }
+  body.home-page { background: white; }
+  body.home-page .rail-hero {
+    background: white;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    height: auto;
+    min-height: 0;
+  }
+  body.home-page .rail-viewport { position: static; top: auto; left: auto; right: auto; }
+  body.home-page .scene-stage { transform: none; }
+  body.home-page .spin-section,
+  body.home-page .section-head,
+  body.home-page .door,
+  body.home-page .marks-block,
+  body.home-page .rules-block,
+  body.home-page .page-foot {
+    background: white;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-color: #ccc;
+  }
+  body.home-page .marks-table thead th { background: #f0f0f0; }
+  body.home-page .station-card { background: transparent; border: 0; padding: 0; }
+  body.home-page .content::before {
+    content: "Worst Generation — BIM 8th Semester timetable";
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 15pt;
+    font-weight: 700;
   }
 
   .layout { display: block; }
@@ -1633,4 +2040,483 @@ button:focus-visible, a:focus-visible, .nav-btn:focus-visible {
 .exam-date strong {
   color: var(--accent);
   font-weight: 700;
+}
+
+/* ============================================================================
+   Homepage refinement: vertical section snapping, plain header, solid field
+   ============================================================================ */
+
+/* The route scrolls freely. The homepage scroller behaves like a reel:
+   native mandatory snapping guarantees that scrolling always settles on a
+   panel, with no JavaScript compensation. */
+body.home-page .home-scroll > .rail-hero,
+body.home-page .home-scroll > .spin-section,
+body.home-page .home-scroll > .doors,
+body.home-page .home-scroll > .pattern {
+  min-height: calc(100dvh - var(--header-height));
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+body.home-page .home-scroll > .spin-section {
+  margin-top: 0;
+}
+/* The footer is the final reel so it remains reachable under mandatory
+   snapping instead of sitting below the last unreachable snap position. */
+body.home-page .home-scroll > .page-foot {
+  scroll-snap-align: end;
+  scroll-snap-stop: normal;
+}
+
+body.home-page .site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 0.9375rem;
+}
+body.home-page .header-clock { font-size: 0.8125rem; }
+body.home-page .theme-toggle,
+.mobile-nav-toggle {
+  width: 44px;
+  height: 44px;
+  flex: none;
+}
+body.home-page .theme-toggle {
+  background: transparent;
+  border-color: transparent;
+}
+.mobile-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  color: var(--fg);
+  cursor: pointer;
+}
+.mobile-nav-toggle:hover { color: var(--accent); }
+
+/* The route stays freely scrollable; vertical section snapping is handled below. */
+body.home-page .rail-viewport {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x pinch-zoom;
+}
+body.home-page .rail-viewport::-webkit-scrollbar { display: none; }
+body.home-page .rail-station:focus-visible { outline: none; }
+body.home-page .rail-station:focus-visible .station-card {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+body.home-page .station-card {
+  min-height: 44px;
+  padding: 0.6rem 0.45rem;
+}
+body.home-page .station-code { font-size: 0.875rem; }
+body.home-page .station-name { font-size: 0.875rem; }
+body.home-page .station-when { font-size: 0.75rem; }
+body.home-page .station-kind {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+body.home-page .rail-station.is-movie .station-card { width: 164px; }
+body.home-page .rail-scroll-cue {
+  position: absolute;
+  right: clamp(1rem, 3vw, 3rem);
+  bottom: 1rem;
+  z-index: 4;
+  padding: 0.45rem 0.65rem;
+  background: rgba(4, 24, 44, 0.78);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+body.home-page .scene-stage.route-overflow .rail-scroll-cue { opacity: 1; }
+body.home-page .mobile-ship { display: none; }
+
+/* Below the wheel, each section becomes an opaque full-height study panel. */
+body.home-page .doors,
+body.home-page .pattern {
+  position: relative;
+  z-index: 4;
+  margin: 0 calc(var(--home-gutter) * -1);
+  padding: 4rem var(--home-gutter) 3rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+body.home-page .pattern { padding-bottom: 4rem; }
+body.home-page .doors .section-title,
+body.home-page .pattern .section-title {
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-shadow: none;
+}
+body.home-page .doors .section-meta,
+body.home-page .pattern .section-meta {
+  color: var(--fg-muted);
+  text-shadow: none;
+}
+body.home-page .doors-list {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+body.home-page .doors-list::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 30px;
+  bottom: 30px;
+  width: 4px;
+  background: var(--border);
+}
+body.home-page .door {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+  min-width: 0;
+  padding: 1.5rem 0 1.5rem 3.25rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+body.home-page .door::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 1.8rem;
+  width: 20px;
+  height: 20px;
+  background: var(--door-color);
+  border: 5px solid var(--bg);
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+body.home-page .door:hover {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+body.home-page .door-head { gap: 0.75rem; }
+body.home-page .door-code {
+  padding-left: 0;
+  border-left: 0;
+  color: var(--door-color);
+  font-size: 0.8125rem;
+}
+body.home-page .door-name {
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+body.home-page .door-meta {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+}
+body.home-page .door-actions {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+body.home-page .door-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: var(--radius);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+body.home-page .door-primary:hover {
+  background: var(--accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+body.home-page .door-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem 1rem;
+}
+body.home-page .door-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.18em;
+  white-space: nowrap;
+}
+body.home-page .pattern { margin-top: 0; }
+body.home-page .pattern-grid { gap: 2rem; }
+body.home-page .marks-block {
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+body.home-page .marks-scroll { overflow-x: auto; }
+body.home-page .marks-table { font-size: 0.9375rem; }
+body.home-page .marks-table thead th {
+  background: var(--hover-tint);
+  font-size: 0.75rem;
+}
+body.home-page .rules-block {
+  padding: 2rem;
+  background: #eff6ff;
+  border: 0;
+  border-radius: var(--radius-lg);
+}
+[data-theme="dark"] body.home-page .rules-block { background: #14243a; }
+body.home-page .rules-block h3 {
+  margin: 0 0 1rem;
+  color: var(--fg);
+  font-size: 1.5rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+body.home-page .rules-list {
+  color: var(--fg);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+body.home-page .page-foot {
+  margin: 4rem calc(var(--home-gutter) * -1) 0;
+  padding: 3rem var(--home-gutter);
+  background: #0b2742;
+  color: #e8f3fb;
+  border: 0;
+  border-radius: 0;
+}
+body.home-page .foot-brand strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.1;
+}
+body.home-page .foot-brand p {
+  margin: 0.45rem 0 0;
+  color: #b9d3e6;
+  font-size: 0.875rem;
+}
+body.home-page .foot-btn {
+  min-height: 44px;
+  padding: 0.65rem 1rem;
+  background: #fff;
+  color: #0b2742;
+  border: 0;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+/* Mobile navigation and the compact ship-led route. */
+@media (max-width: 768px) {
+  body.home-page { --header-height: 56px; }
+  body.home-page .header-content { position: relative; }
+  body.home-page .site-title { font-size: 1.0625rem; }
+  body.home-page .site-nav {
+    position: absolute;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    z-index: 120;
+    display: none;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem var(--home-gutter) 0.75rem;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+  }
+  body.home-page .site-nav.is-open { display: flex; }
+  body.home-page .site-nav a {
+    min-height: 48px;
+    padding: 0 0.25rem;
+  }
+  body.home-page .mobile-nav-toggle { display: inline-flex; }
+  body.home-page .header-clock {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.75rem;
+  }
+  body.home-page .clock-code { display: inline; }
+
+  /* Tall mobile sections expose smaller snap targets. Each subject card and
+     blueprint block can settle independently, so every piece of study content
+     remains readable while mandatory snapping prevents dead zones. */
+  body.home-page .home-scroll > .doors,
+  body.home-page .home-scroll > .pattern {
+    scroll-snap-align: none;
+  }
+  body.home-page .home-scroll > .doors > .section-head,
+  body.home-page .home-scroll > .doors > .doors-list > .door,
+  body.home-page .home-scroll > .pattern > .section-head,
+  body.home-page .home-scroll > .pattern .marks-block,
+  body.home-page .home-scroll > .pattern .rules-block {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+
+/* Tablet keeps the horizontal route and the desktop ship. */
+@media (min-width: 601px) and (max-width: 768px) {
+  body.home-page .rail-viewport {
+    position: absolute;
+    left: clamp(1rem, 3vw, 3rem);
+    right: clamp(1rem, 3vw, 3rem);
+    top: max(130px, calc(41.25vh - var(--header-height) - 150px));
+    z-index: 2;
+  }
+  body.home-page .rail-track {
+    --ship-gutter: clamp(270px, 29vw, 420px);
+    width: calc(100% - var(--ship-gutter));
+    min-width: 720px;
+    margin: 0 0 0 var(--ship-gutter);
+  }
+  body.home-page .rail-traveller { display: block; }
+  body.home-page .mobile-ship { display: none; }
+}
+
+/* Phone gets its own composition: the ship remains, and the route scrolls
+   horizontally without snapping. */
+@media (max-width: 600px) {
+  body.home-page .rail-hero {
+    height: calc(100dvh - var(--header-height));
+    min-height: calc(100dvh - var(--header-height));
+    max-height: none;
+  }
+  body.home-page .scene-stage {
+    height: 100%;
+  }
+  body.home-page .rail-viewport {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    top: max(60px, calc(41.25vh - var(--header-height) - 150px));
+    bottom: auto;
+    z-index: 2;
+    overflow-x: auto;
+    padding: 0;
+  }
+  body.home-page .rail-track {
+    position: relative;
+    width: 760px;
+    min-width: 760px;
+    height: 560px;
+    margin: 0 0 0 50%;
+    padding: 0;
+  }
+  body.home-page .rail-tick.is-day:not(.is-today):not(.is-exam):not(.is-movie),
+  body.home-page .rail-gap { display: none; }
+  body.home-page .rail-traveller { display: none; }
+  body.home-page .mobile-ship {
+    --ship-width: min(68vw, 260px);
+    position: absolute;
+    top: calc(41.25vh - var(--header-height) - 8px);
+    left: 50%;
+    z-index: 3;
+    display: block;
+    width: 0;
+    height: 0;
+  }
+  body.home-page .rail-scroll-cue { right: 1rem; }
+  body.home-page .door {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 1.35rem 0 1.35rem 3rem;
+  }
+  body.home-page .door-actions {
+    grid-column: 1;
+    grid-row: auto;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  body.home-page .door-links { justify-content: flex-start; }
+  body.home-page .doors,
+  body.home-page .pattern {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  body.home-page .rules-block { padding: 1.5rem; }
+  body.home-page .rules-list { columns: 1; }
+  body.home-page .page-foot {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 2.5rem var(--home-gutter);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.home-page .rail-viewport { scroll-behavior: auto; }
+  body.home-page .mobile-ship .ship,
+  body.home-page .mobile-ship .speed-lines i { animation: none !important; }
+}
+
+@media print {
+  body.home-page .mobile-nav-toggle { display: none !important; }
+  body.home-page {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+  body.home-page .layout {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+  body.home-page .home-scroll {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    scroll-snap-type: none;
+    padding: 0;
+  }
+  body.home-page .home-scroll > .rail-hero {
+    height: auto;
+    min-height: 0;
+  }
+  body.home-page .doors,
+  body.home-page .pattern {
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+  body.home-page .page-foot {
+    margin: 1rem 0 0;
+    padding: 1rem 0;
+    background: white;
+    color: black;
+  }
+  body.home-page .foot-brand p { color: #555; }
+  body.home-page .foot-btn { display: none; }
 }

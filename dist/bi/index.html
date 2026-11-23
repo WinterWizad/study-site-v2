@@ -70,7 +70,7 @@
             <span class="subject-badge" style="background: #2563eb">IT 249</span>
             <h1>Business Intelligence</h1>
             <p class="subject-meta">60 marks • 30 pass • 6 units • 48 lecture hours</p>
-            <p class="exam-date">Exam: Sun, Dec 6, 2026 · <strong>16</strong> days</p>
+            <p class="exam-date">Exam: Sun, Dec 6, 2026 · <strong>13</strong> days</p>
           </div>
         </header>
 
@@ -144,6 +144,7 @@
             <li><a href="model-question.html">Model Question</a></li>
             <li><a href="model-question-answers.html">Model Question Answers</a></li>
             <li><a href="question-bank.html">Question Bank</a></li>
+            <li><a href="../reels/">Quick Reels</a></li>
             <li><a href="cheat-sheet.html">&#x1F4CB; Cheat Sheet</a></li>
             <li><a href="../_syllabus/it249-business-intelligence.md" target="_blank">Syllabus</a></li>
           </ul>
@@ -154,10 +155,12 @@
 
   <script>
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
     document.querySelectorAll('.sidebar-content a').forEach(link => {
       link.addEventListener('click', () => closeSidebar());

@@ -1370,10 +1370,12 @@ reduce(w, list(counts)) → emit(w, totalCount)</code></pre></div><p><strong>Shu
 
     // Sidebar toggle
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
     document.querySelectorAll('.sidebar-content a').forEach(link => {
       link.addEventListener('click', () => closeSidebar());

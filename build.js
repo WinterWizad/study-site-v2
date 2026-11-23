@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import { marked } from 'marked';
 import fm from 'front-matter';
 import { glob } from 'glob';
+import { createHeadingIdAssigner, extractReelContent, repairMojibake } from './reels/content.mjs';
+import { BI_QUESTION_MANIFEST } from './reels/bi-question-manifest.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = __dirname;
@@ -11,10 +13,10 @@ const DIST_DIR = path.join(__dirname, 'dist');
 
 // Exam Routine — single source of truth (8th Semester NC only, from Dean's Office 2083/07/28)
 const EXAM_ROUTINE = [
-  { iso: '2026-12-01', bs: 'Mangsir 15, 2083', day: 'Tuesday', code: 'IT 248', short: 'Entrepreneur', color: '#dc2626', title: 'IT Entrepreneurship & Management (NC)', subjectId: 'entrepreneurship', isOurs: true },
-  { iso: '2026-12-03', bs: 'Mangsir 17, 2083', day: 'Thursday', code: 'IT 250', short: 'Digital Economy', color: '#059669', title: 'Digital Economy (NC)', subjectId: 'de', isOurs: true },
-  { iso: '2026-12-06', bs: 'Mangsir 20, 2083', day: 'Sunday', code: 'IT 249', short: 'Business Intel.', color: '#2563eb', title: 'Business Intelligence (NC)', subjectId: 'bi', isOurs: true },
-  { iso: '2026-12-10', bs: 'Mangsir 24, 2083', day: 'Thursday', code: 'IT 277', short: 'Cloud Computing', color: '#7c3aed', title: 'Cloud Computing (NC)', subjectId: 'cloud', isOurs: true },
+  { iso: '2026-12-01', bs: 'Mangsir 15, 2083', day: 'Tuesday', code: 'IT 248', short: 'Entrepreneur', railName: 'Entrepreneurship', color: '#dc2626', title: 'IT Entrepreneurship & Management (NC)', subjectId: 'entrepreneurship', isOurs: true },
+  { iso: '2026-12-03', bs: 'Mangsir 17, 2083', day: 'Thursday', code: 'IT 250', short: 'Digital Economy', railName: 'Digital Economy', color: '#059669', title: 'Digital Economy (NC)', subjectId: 'de', isOurs: true },
+  { iso: '2026-12-06', bs: 'Mangsir 20, 2083', day: 'Sunday', code: 'IT 249', short: 'Business Intel.', railName: 'Business Intelligence', color: '#2563eb', title: 'Business Intelligence (NC)', subjectId: 'bi', isOurs: true },
+  { iso: '2026-12-10', bs: 'Mangsir 24, 2083', day: 'Thursday', code: 'IT 277', short: 'Cloud Computing', railName: 'Cloud Computing', color: '#7c3aed', title: 'Cloud Computing (NC)', subjectId: 'cloud', isOurs: true },
 ];
 
 // Two real cinema releases on 18 Dec 2026. Kept out of EXAM_ROUTINE so the
@@ -392,6 +394,7 @@ const CHEAT_SHEET_HTML = `<!DOCTYPE html>
 
 // Custom renderer for better HTML
 const renderer = new marked.Renderer();
+let assignHeadingIds = createHeadingIdAssigner();
 
 // Table rendering with classes
 renderer.table = (header, body) => {
@@ -415,7 +418,7 @@ renderer.hr = () => '<hr class="custom-hr">';
 
 // Headings with anchor links
 renderer.heading = (text, level) => {
-  const id = text.toLowerCase().replace(/[^\w]+/g, '-').replace(/(^-|-$)/g, '');
+  const id = assignHeadingIds(text);
   return `<h${level} id="${id}"><a href="#${id}" class="heading-anchor">#</a>${text}</h${level}>`;
 };
 
@@ -485,6 +488,7 @@ function readMarkdownFile(filePath) {
 }
 
 function renderMarkdown(md) {
+  assignHeadingIds = createHeadingIdAssigner();
   return marked.parse(md);
 }
 
@@ -550,6 +554,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
           `).join('')}
         </ul>
         <div class="sidebar-footer">
+          ${subject.id === 'bi' ? '<a href="../reels/" class="footer-link">Quick Reels</a>' : ''}
           <a href="../index.html" class="footer-link">← All Subjects</a>
         </div>
       </div>
@@ -595,10 +600,12 @@ function generateUnitHtml(subject, unit, htmlContent) {
 
     // Sidebar toggle
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
 
     // Close sidebar on link click (mobile)
@@ -713,10 +720,12 @@ function generateResourceHtml(subject, title, htmlContent) {
 
     // Sidebar toggle
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
     document.querySelectorAll('.sidebar-content a').forEach(link => {
       link.addEventListener('click', () => closeSidebar());
@@ -824,6 +833,7 @@ function generateSubjectIndexHtml(subject) {
             <li><a href="model-question.html">Model Question</a></li>
             <li><a href="model-question-answers.html">Model Question Answers</a></li>
             <li><a href="question-bank.html">Question Bank</a></li>
+            ${subject.id === 'bi' ? `<li><a href="../reels/">Quick Reels</a></li>` : ''}
             ${subject.id === 'bi' ? `<li><a href="cheat-sheet.html">&#x1F4CB; Cheat Sheet</a></li>` : ''}
             <li><a href="../_syllabus/${SYLLABUS_FILES[subject.code] || ''}" target="_blank">Syllabus</a></li>
           </ul>
@@ -834,10 +844,12 @@ function generateSubjectIndexHtml(subject) {
 
   <script>
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
     document.querySelectorAll('.sidebar-content a').forEach(link => {
       link.addEventListener('click', () => closeSidebar());
@@ -897,14 +909,18 @@ function railGeometry() {
   const isoFrac = iso => frac(parseIsoLocal(iso));
 
   // One tick per real day, so the distance between stations stays truthful.
+  const tickStops = new Map(RAIL_STOPS.map(stop => [stop.iso, stop]));
   const ticks = [];
   let lastMonth = -1;
   for (let d = new Date(start); d <= end; d = nextDay(d)) {
     const changed = d.getMonth() !== lastMonth;
     lastMonth = d.getMonth();
+    const stop = tickStops.get(isoLocal(d));
     ticks.push({
       left: frac(d),
       iso: isoLocal(d),
+      kind: stop ? (stop.isMovie ? 'movie' : 'exam') : 'day',
+      color: stop?.color || '#0f172a',
       label: changed
         ? d.toLocaleDateString('en-US', { month: 'short' }) + ' ' + d.getDate()
         : String(d.getDate()),
@@ -922,6 +938,8 @@ function railGeometry() {
     gaps.push({
       left: (frac(a) + frac(b)) / 2,
       iso: isoLocal(a),
+      from: isoLocal(a),
+      to: isoLocal(b),
       label: run.length === 1
         ? a.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
         : a.getDate() + '\u2013' + b.getDate(),
@@ -937,82 +955,329 @@ function railGeometry() {
   return { fNow: frac(today), isoFrac, ticks, gaps };
 }
 
+function routePathD(points) {
+  if (!points.length) return '';
+  let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1];
+    const b = points[i];
+    const dx = (b.x - a.x) * 0.42;
+    d += ` C ${(a.x + dx).toFixed(1)} ${a.y.toFixed(1)}, ${(b.x - dx).toFixed(1)} ${b.y.toFixed(1)}, ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
+  }
+  return d;
+}
+
+function stationIslandSvg(stop) {
+  if (stop.isMovie) {
+    return `<svg viewBox="0 0 120 76" aria-hidden="true" focusable="false">
+          <ellipse cx="60" cy="66" rx="55" ry="10" fill="#fff" fill-opacity=".78"/>
+          <path d="M13 62 Q25 42 60 42 Q95 42 107 62 Q60 72 13 62Z" fill="#f2d28b" stroke="#1e293b" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M27 53 Q43 38 72 44 Q86 47 91 55 Q59 61 27 53Z" fill="#4ade80" stroke="#1e293b" stroke-width="1.5"/>
+          <path d="M37 52 Q30 30 42 16" fill="none" stroke="#7c4a2d" stroke-width="4" stroke-linecap="round"/>
+          <path d="M42 16 Q25 8 22 21 Q33 17 42 16Z M42 16 Q36 1 49 3 Q46 11 42 16Z M42 16 Q57 4 62 15 Q51 12 42 16Z M42 16 Q56 21 52 31 Q47 22 42 16Z" fill="#22c55e" stroke="#1e293b" stroke-width="1.2" stroke-linejoin="round"/>
+          <g transform="translate(73 48)">
+            <rect x="-9" y="-5" width="18" height="11" rx="2" fill="#b45309" stroke="#1e293b" stroke-width="1.4"/>
+            <path d="M-9 -2 Q0 -8 9 -2" fill="#f59e0b" stroke="#1e293b" stroke-width="1.4"/>
+            <rect x="-2" y="-3" width="4" height="4" rx="1" fill="#fde047"/>
+          </g>
+        </svg>`;
+  }
+  return `<svg viewBox="0 0 100 70" aria-hidden="true" focusable="false">
+        <ellipse cx="50" cy="61" rx="42" ry="9" fill="#fff" fill-opacity=".74"/>
+        <path d="M10 57 Q19 39 50 38 Q81 39 90 57 Q50 66 10 57Z" fill="#f2d28b" stroke="#1e293b" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M18 52 Q22 42 31 44 Q36 37 43 48Z" fill="#22c55e" stroke="#1e293b" stroke-width="1.3" stroke-linejoin="round"/>
+        <path d="M51 46 L51 8" stroke="#1e293b" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M51 8 L72 16 L51 24Z" fill="currentColor" stroke="#1e293b" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>`;
+}
+
 function railStationHtml(stop, left, row) {
   const when = parseIsoLocal(stop.iso).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const names = stop.isMovie
     ? stop.view.map(n => `<span class="station-code">${n}</span>`).join('')
-    : `<span class="station-code" style="color:${stop.color}">${stop.short || stop.code}</span>`;
-  const kind = stop.isMovie ? '<span class="station-kind">films</span>' : '';
+    : `<span class="station-name" style="color:${stop.color}">${stop.railName || stop.code}</span>`;
+  const kind = stop.isMovie ? '<span class="station-kind">Post-exam films</span>' : '';
   const inner = `
         <span class="station-card">
           ${kind}${names}
           <span class="station-when">${when}</span>
         </span>
-        <span class="station-dot"${stop.color ? ` style="border-color:${stop.color}"` : ''}></span>`;
+        <span class="station-dot" style="color:${stop.color || '#0f172a'}" aria-hidden="true">${stationIslandSvg(stop)}</span>`;
   const cls = 'rail-station ' + (stop.isMovie ? 'is-movie' : 'is-ours') + (row % 2 ? ' row-b' : '');
-  const attrs = `class="${cls}" style="left:${left}%" data-iso="${stop.iso}" title="${stop.title}"`;
+  const attrs = `class="${cls}" style="left:${left}%;color:${stop.color || '#0f172a'}" data-iso="${stop.iso}" title="${stop.title}" aria-label="${stop.title}, ${when}"`;
   return stop.subjectId
     ? `<a ${attrs} href="${stop.subjectId}/">${inner}
       </a>`
-    : `<div ${attrs}>${inner}
+    : `<div role="group" ${attrs}>${inner}
       </div>`;
 }
 
-function railTravellerHtml(left) {
+function railTravellerHtml(left, { id = 'traveller', className = 'rail-traveller' } = {}) {
   return `
-        <div class="rail-traveller" id="traveller" style="left:${left}%" aria-hidden="true">
-          <span class="speed-lines"><i></i><i></i><i></i></span>
-          <svg class="ship" viewBox="0 0 120 48" width="150" height="60" focusable="false">
-            <!-- wake behind the stern -->
-            <path d="M4 40q8-3 16 0" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.5"/>
-            <path d="M0 45q10-3 20 0" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.35"/>
-            <!-- hull: rounded stern left, pointed bow right -->
-            <path d="M12 28 L12 37 Q12 43 24 43 L84 43 L110 32 L105 28 Z" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.3"/>
-            <path d="M14 31 H104" stroke="var(--accent-ink)" stroke-width="1" opacity="0.6"/>
-            <!-- portholes -->
-            <circle cx="30" cy="36.5" r="2.4" fill="var(--accent-ink)" opacity="0.9"/>
-            <circle cx="48" cy="36.5" r="2.4" fill="var(--accent-ink)" opacity="0.9"/>
-            <circle cx="66" cy="36.5" r="2.4" fill="var(--accent-ink)" opacity="0.9"/>
-            <!-- mast + sail -->
-            <rect x="55" y="6" width="2.6" height="23" rx="1" fill="var(--fg)"/>
-            <path d="M58 8 L58 29 L82 20 Z" fill="var(--card-bg)" stroke="var(--fg)" stroke-width="1.1"/>
-            <path d="M53 10 L53 27 L34 21 Z" fill="var(--card-bg)" stroke="var(--fg)" stroke-width="1.1"/>
-            <!-- red pennant -->
-            <path d="M56 6 L56 0 L68 3 Z" fill="#dc2626"/>
-            <!-- lion figurehead at the bow -->
-            <circle cx="102" cy="26" r="6.5" fill="#f97316" stroke="var(--fg)" stroke-width="1.1"/>
-            <path d="M96 21 l-3-2 M96 31 l-3 2 M108 21 l3-2 M108 31 l3 2" stroke="#f97316" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="100" cy="25" r="0.9" fill="var(--fg)"/>
-            <circle cx="105" cy="25" r="0.9" fill="var(--fg)"/>
+        <div class="${className}" id="${id}" data-route-left="${left}" aria-hidden="true">
+          <span class="ship-wrap">
+            <span class="speed-lines"><i></i><i></i><i></i></span>
+            <svg class="ship" viewBox="0 0 260 118" width="560" height="254" focusable="false">
+            <!-- rigging -->
+            <g stroke="var(--fg)" stroke-width="0.8" opacity="0.48" fill="none">
+              <path d="M104 10 L30 76"/>
+              <path d="M104 10 L236 78"/>
+              <path d="M168 32 L238 80"/>
+              <path d="M168 32 L74 76"/>
+              <path d="M104 12 L168 32"/>
+              <path d="M108 18 L150 39"/>
+              <path d="M172 38 L205 59"/>
+              <path d="M78 74 L153 70"/>
+            </g>
+
+            <!-- Jolly Roger at the main masthead -->
+            <path d="M107 8 L139 14 L132 32 L107 28 Z" fill="#111827" stroke="var(--fg)" stroke-width="1"/>
+            <path d="M108 10 L137 15 L134 18 L108 14 Z" fill="#f8fafc" opacity="0.18"/>
+            <g transform="translate(118 19) scale(0.5)">
+              <g stroke="#f8fafc" stroke-width="3" stroke-linecap="round">
+                <line x1="-12" y1="-10" x2="12" y2="10"/>
+                <line x1="-12" y1="10" x2="12" y2="-10"/>
+              </g>
+              <ellipse cx="0" cy="-2" rx="7" ry="6.4" fill="#f8fafc"/>
+              <rect x="-4" y="1.6" width="8" height="5" rx="1.8" fill="#f8fafc"/>
+              <circle cx="-2.8" cy="-2.4" r="2" fill="#111827"/>
+              <circle cx="2.8" cy="-2.4" r="2" fill="#111827"/>
+              <polygon points="0,0.4 -1.6,2.8 1.6,2.8" fill="#111827"/>
+            </g>
+
+            <!-- masts + bowsprit -->
+            <rect x="102.2" y="6" width="3.6" height="72" rx="1.2" fill="#78350f" stroke="var(--fg)" stroke-width="1"/>
+            <rect x="166.6" y="30" width="2.8" height="48" rx="1" fill="#78350f" stroke="var(--fg)" stroke-width="1"/>
+            <path d="M228 74 L252 60" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>
+            <path d="M228 74 L252 60" stroke="#b45309" stroke-width="1" stroke-linecap="round"/>
+            <path d="M96 17 L112 17 M96 21 L112 21 M161 39 L172 39 M161 43 L172 43" stroke="#d6a15f" stroke-width="0.8" opacity="0.65"/>
+
+            <!-- sails -->
+            <rect x="76" y="34" width="58" height="3" rx="1.2" fill="#92400e" stroke="var(--fg)" stroke-width="0.8"/>
+            <path d="M78 37 Q104 43 130 37 L130 72 Q104 76 78 72 Z" fill="#f8f1e0" stroke="var(--fg)" stroke-width="1.2"/>
+            <path d="M89 39 Q94 55 90 73 M116 39 Q112 56 116 74" fill="none" stroke="#b79a6b" stroke-width="0.65" opacity="0.65"/>
+            <g transform="translate(104 54) scale(0.62)">
+              <g stroke="#1f2937" stroke-width="3" stroke-linecap="round">
+                <line x1="-12" y1="-10" x2="12" y2="10"/>
+                <line x1="-12" y1="10" x2="12" y2="-10"/>
+              </g>
+              <ellipse cx="0" cy="-2" rx="7" ry="6.4" fill="#1f2937"/>
+              <rect x="-4" y="1.6" width="8" height="5" rx="1.8" fill="#1f2937"/>
+              <circle cx="-2.8" cy="-2.4" r="2" fill="#f8f1e0"/>
+              <circle cx="2.8" cy="-2.4" r="2" fill="#f8f1e0"/>
+            </g>
+            <rect x="150" y="40" width="38" height="2.8" rx="1.1" fill="#92400e" stroke="var(--fg)" stroke-width="0.8"/>
+            <path d="M152 43 Q169 47 186 43 L186 70 Q169 73 152 70 Z" fill="#f8f1e0" stroke="var(--fg)" stroke-width="1.2"/>
+            <path d="M160 45 Q163 57 159 71 M178 45 Q176 58 180 72" fill="none" stroke="#b79a6b" stroke-width="0.6" opacity="0.65"/>
+            <path d="M234 70 L250 62 L244 44 Z" fill="#f8f1e0" stroke="var(--fg)" stroke-width="1.1"/>
+
+            <!-- stern castle -->
+            <path d="M26 76 L26 58 L62 58 L62 64 L82 64 L82 76 Z" fill="var(--accent-hover)" stroke="var(--fg)" stroke-width="1.4"/>
+            <path d="M28 59 L60 59" stroke="#f3e3c3" stroke-width="1" opacity="0.45"/>
+            <rect x="32" y="62" width="8" height="7" rx="1.4" fill="#f3e3c3"/>
+            <rect x="46" y="62" width="8" height="7" rx="1.4" fill="#f3e3c3"/>
+            <rect x="60" y="65" width="7" height="6" rx="1.2" fill="#f3e3c3"/>
+            <path d="M70 64 L79 64" stroke="#f3e3c3" stroke-width="1" opacity="0.7"/>
+
+            <!-- hull -->
+            <path d="M24 76 L24 92 Q24 106 50 106 L152 106 Q196 106 228 80 L218 74 Z" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.8"/>
+            <path d="M26 89 L218 86" stroke="var(--fg)" stroke-width="0.8" opacity="0.35"/>
+            <path d="M31 93 C62 91 93 92 121 90 C153 88 183 86 211 83" fill="none" stroke="var(--fg)" stroke-width="0.55" opacity="0.3"/>
+            <path d="M44 102 C75 103 104 103 134 101" fill="none" stroke="var(--fg)" stroke-width="0.55" opacity="0.22"/>
+            <g fill="#fbbf24" stroke="var(--fg)" stroke-width="1">
+              <circle cx="48" cy="96" r="3.6"/>
+              <circle cx="74" cy="96" r="3.6"/>
+              <circle cx="100" cy="96" r="3.6"/>
+              <circle cx="126" cy="96" r="3.6"/>
+              <circle cx="152" cy="96" r="3.6"/>
+            </g>
+            <g fill="#111827" opacity="0.45">
+              <circle cx="48" cy="96" r="1.2"/>
+              <circle cx="74" cy="96" r="1.2"/>
+              <circle cx="100" cy="96" r="1.2"/>
+              <circle cx="126" cy="96" r="1.2"/>
+              <circle cx="152" cy="96" r="1.2"/>
+            </g>
+
+            <!-- deck anchor -->
+            <g stroke="var(--fg)" stroke-width="1.6" fill="none" stroke-linecap="round">
+              <path d="M140 60 L140 74"/>
+              <path d="M135 68 Q140 77 145 68"/>
+              <circle cx="140" cy="58.5" r="2.2"/>
+            </g>
+
+            <!-- sun-wheel figurehead -->
+            <g class="ship-figurehead">
+              <g stroke="#f97316" stroke-width="2.2" stroke-linecap="round">
+                <path d="M231 60 L231 82 M220 71 L242 71 M223 63 L239 79 M239 63 L223 79"/>
+              </g>
+              <circle cx="231" cy="71" r="7.2" fill="#f97316" stroke="var(--fg)" stroke-width="1.4"/>
+              <circle cx="228.5" cy="69.5" r="1" fill="var(--fg)"/>
+              <circle cx="233.5" cy="69.5" r="1" fill="var(--fg)"/>
+              <ellipse cx="231" cy="73.5" rx="2.6" ry="2" fill="#fff7ed" stroke="var(--fg)" stroke-width="0.7"/>
+            </g>
+
+            <!-- foam at the waterline -->
+            <g fill="none" stroke="var(--accent)" stroke-linecap="round">
+              <path d="M14 110 q11-5 22 0 t22 0 t22 0 t22 0 t22 0 t22 0 t22 0 t22 0 t22 0 t22 0" stroke-width="2" opacity="0.6"/>
+              <path d="M30 116 q12-4 24 0 t24 0 t24 0 t24 0 t24 0 t24 0 t24 0" stroke-width="1.6" opacity="0.45"/>
+              <path d="M4 107 q8-3 16 0" stroke-width="1.2" opacity="0.42"/>
+              <path d="M238 108 q8-3 16 0" stroke-width="1.2" opacity="0.42"/>
+            </g>
           </svg>
-          <span class="traveller-tag">Today</span>
+            <svg class="ship-reflection" viewBox="0 106 260 34" width="560" height="73" focusable="false" aria-hidden="true">
+              <g opacity="0.2">
+                <g transform="translate(0 212) scale(1 -1)">
+                  <path d="M24 76 L24 92 Q24 106 50 106 L152 106 Q196 106 228 80 L218 74 Z" fill="var(--accent)"/>
+                </g>
+              </g>
+              <g stroke="rgba(255,255,255,0.42)" stroke-width="1.2" stroke-linecap="round" fill="none">
+                <path d="M32 113 h46"/>
+                <path d="M98 116 h54"/>
+                <path d="M58 123 h72"/>
+                <path d="M146 128 h44"/>
+                <path d="M88 133 h58"/>
+              </g>
+            </svg>
+            <span class="traveller-tag">Today</span>
+          </span>
         </div>`;
+}
+
+// A rolling wave band. The path is drawn wider than the viewport so the layer
+// can slide one screen-width and still cover the view.
+//
+// Every half-wavelength is the same quadratic (one crest, then one trough), so
+// the curve is smooth and has no kink, and the path ends exactly on a whole
+// number of wavelengths. The drift animation moves the layer by 1200 user
+// units, which is a multiple of every wavelength used here, so the loop lands
+// back on the same phase: no seam at the right edge.
+function waveBandPath(x0, x1, wavelength, baseY, amp) {
+  const half = wavelength / 2;
+  const end = x0 + Math.round((x1 - x0) / wavelength) * wavelength;
+  let d = `M ${x0} ${baseY}`;
+  let x = x0;
+  let dir = -1;
+  while (x < end - 0.001) {
+    const nx = Math.min(x + half, end);
+    const cx = (x + nx) / 2;
+    d += ` Q ${cx.toFixed(1)} ${(baseY + dir * amp).toFixed(1)} ${nx.toFixed(1)} ${baseY}`;
+    x = nx;
+    dir = -dir;
+  }
+  return `${d} V 800 H ${x0} Z`;
+}
+
+// The ocean is a fixed viewport backdrop: sky, horizon, then four depth layers
+// of drifting waves. Page content scrolls on top of it.
+function oceanHtml() {
+  const X0 = -1200, X1 = 2400;
+  const layers = [
+    { cls: 'oc-wave-1', wave: 120, base: 338, amp: 5 },
+    { cls: 'oc-wave-2', wave: 240, base: 366, amp: 11 },
+    { cls: 'oc-wave-3', wave: 400, base: 428, amp: 24 },
+    { cls: 'oc-wave-4', wave: 600, base: 545, amp: 46 },
+  ];
+  const bands = layers.map(l =>
+    `<g class="oc-layer ${l.cls}"><path d="${waveBandPath(X0, X1, l.wave, l.base, l.amp)}"/></g>`
+  ).join('\n        ');
+
+  return `
+  <div class="ocean" aria-hidden="true">
+    <svg class="ocean-art" viewBox="0 0 1200 800" preserveAspectRatio="none" focusable="false">
+      <defs>
+        <linearGradient id="ocSky" x1="0" y1="0" x2="0" y2="1">
+          <stop class="oc-stop-top" offset="0"/>
+          <stop class="oc-stop-haze" offset="0.41"/>
+        </linearGradient>
+        <linearGradient id="ocSea" x1="0" y1="0" x2="0" y2="1">
+          <stop class="oc-stop-sea-top" offset="0"/>
+          <stop class="oc-stop-sea-deep" offset="1"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="800" fill="url(#ocSky)"/>
+      <rect y="330" width="1200" height="470" fill="url(#ocSea)"/>
+      ${bands}
+      <path class="oc-horizon" d="M 0 330 H 1200"/>
+    </svg>
+    <svg class="beach-art" viewBox="0 0 1600 140" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path d="M0 12 Q180 0 360 12 T720 9 T1080 13 T1440 8 L1600 11 L1600 140 L0 140Z" fill="#fff" fill-opacity=".78"/>
+      <path d="M0 24 Q190 10 380 23 T760 20 T1140 24 T1520 18 L1600 22 L1600 140 L0 140Z" fill="#d2a460"/>
+      <path d="M0 48 Q210 34 420 46 T840 43 T1260 47 T1600 40 L1600 140 L0 140Z" fill="#f2d28b"/>
+      <g fill="#c28e46" opacity=".42">
+        <circle cx="240" cy="98" r="2.2"/><circle cx="258" cy="110" r="1.6"/>
+        <circle cx="590" cy="126" r="2.2"/><circle cx="1010" cy="132" r="1.8"/>
+        <circle cx="1390" cy="122" r="2.2"/>
+      </g>
+      <g id="beach-left-props">
+        <path d="M-5 140 L-5 94 Q25 80 54 96 Q74 108 78 140Z" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+        <path d="M42 140 Q48 110 76 108 Q98 110 105 140Z" fill="#64748b" stroke="#1e293b" stroke-width="2"/>
+        <g fill="none" stroke="#65a30d" stroke-width="3" stroke-linecap="round">
+          <path d="M18 96 Q8 64 -2 54"/><path d="M24 94 Q24 62 30 48"/><path d="M30 96 Q40 68 52 58"/>
+        </g>
+        <path d="M142 111 L146 119 L155 120 L148 126 L150 135 L142 130 L134 135 L136 126 L129 120 L138 119Z" fill="#f97316" stroke="#1e293b" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M186 124 Q194 114 202 124 Q194 130 186 124Z" fill="#fef3c7" stroke="#1e293b" stroke-width="1.3"/>
+      </g>
+      <g id="beach-right-props">
+        <path d="M1528 140 Q1536 108 1565 102 Q1590 100 1605 112 L1605 140Z" fill="#64748b" stroke="#1e293b" stroke-width="2"/>
+        <g fill="#16a34a" stroke="#1e293b" stroke-width="1.6" stroke-linejoin="round">
+          <path d="M1600 110 Q1558 72 1534 86 Q1564 96 1600 110Z"/>
+          <path d="M1600 105 Q1568 54 1548 58 Q1572 82 1600 105Z"/>
+          <path d="M1600 102 Q1588 48 1574 42 Q1586 74 1600 102Z"/>
+        </g>
+      </g>
+    </svg>
+    <span class="oc-cloud oc-cloud-one" aria-hidden="true"></span>
+    <span class="oc-cloud oc-cloud-two" aria-hidden="true"></span>
+    <span class="oc-cloud oc-cloud-three" aria-hidden="true"></span>
+    <span class="oc-sun"></span>
+    <svg class="oc-birds" viewBox="0 0 140 52" width="140" height="52" focusable="false" aria-hidden="true">
+      <g class="bird bird--one">
+        <path d="M 10 26 q 9 -8 18 0 q 9 -8 18 0"/>
+      </g>
+      <g class="bird bird--two">
+        <path d="M 64 48 q 7 -6 14 0 q 7 -6 14 0"/>
+      </g>
+      <g class="bird bird--three">
+        <path d="M 110 18 q 5 -5 10 0 q 5 -5 10 0"/>
+      </g>
+    </svg>
+  </div>`;
 }
 
 function railHeroHtml(rail) {
   const left = rail.fNow.toFixed(3);
+  const routePoints = [
+    { x: rail.fNow * 1000, y: 330 },
+    ...RAIL_STOPS.map((stop, index) => ({
+      x: rail.isoFrac(stop.iso) * 1000,
+      y: index % 2 ? 380 : 330
+    }))
+  ];
   return `
-      <section class="rail-hero" id="timetable" aria-label="Exam route by sea">
-        <div class="rail-counter">
-          <span class="counter-label">Next</span>
-          <span class="counter-code" id="code">Entrepreneur</span>
-          <span class="counter-time" aria-hidden="true"><b id="days">0</b>d <b id="hours">00</b>:<b id="mins">00</b>:<b id="secs">00</b></span>
-          <span class="sr-only" id="sr"></span>
-        </div>
-        <div class="rail-mini" aria-hidden="true">
-          <span class="rail-mini-line"></span>
-          <span class="rail-mini-train" id="mini" style="left:${left}%"></span>
-        </div>
-        <div class="rail-viewport">
-          <div class="rail-track">
-            <div class="rail-line"></div>
-            <span class="rail-origin">Today</span>
-            ${rail.gaps.map(g => `
-            <span class="rail-gap" style="left:${g.left.toFixed(3)}%" data-iso="${g.iso}">${g.label}</span>`).join('')}
-            ${rail.ticks.map(t => `
-            <span class="rail-tick" style="left:${t.left.toFixed(3)}%" data-iso="${t.iso}"><i></i><em>${t.label}</em></span>`).join('')}
-            ${RAIL_STOPS.map((s, i) => railStationHtml(s, rail.isoFrac(s.iso).toFixed(3), i)).join('')}${railTravellerHtml(left)}
+      <section class="rail-hero" id="timetable" aria-labelledby="timetableTitle">
+        <h1 id="timetableTitle" class="sr-only">BIM 8th-semester examination timetable and study notes</h1>
+        <div class="scene-stage">
+          <div class="rail-mini" aria-hidden="true">
+            <span class="rail-mini-line"></span>
+            <span class="rail-mini-train" id="mini" style="left:${left}%"></span>
           </div>
+          ${railTravellerHtml(left, { id: 'mobileTraveller', className: 'mobile-ship' })}
+          <div class="rail-viewport" role="region" aria-label="Exam timetable route" tabindex="0">
+            <div class="rail-track">
+              <svg class="rail-route-art" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <path class="rail-route-trail" d="${routePathD(routePoints)}"></path>
+              </svg>
+              <span class="rail-origin" style="left:${left}%" aria-hidden="true">Today</span>
+              ${rail.gaps.map(g => `
+              <span class="rail-gap" style="left:${g.left.toFixed(3)}%" data-iso="${g.iso}" data-from="${g.from}" data-to="${g.to}">${g.label}</span>`).join('')}
+              ${rail.ticks.map(t => `
+              <span class="rail-tick is-${t.kind}" style="left:${t.left.toFixed(3)}%;--tick-color:${t.color}" data-iso="${t.iso}"><i></i><em>${t.label}</em></span>`).join('')}
+              ${RAIL_STOPS.map((s, i) => railStationHtml(s, rail.isoFrac(s.iso).toFixed(3), i)).join('')}
+            </div>
+          </div>
+          ${railTravellerHtml(left)}
+          <span class="rail-scroll-cue" aria-hidden="true">Scroll the route &rarr;</span>
         </div>
         <span class="sr-only">Exam routine: Dean's Office, 2083/07/28. The voyage ends at the films: Dune: Part Three and Avengers: Doomsday, both 18 December 2026.</span>
       </section>`;
@@ -1124,7 +1389,7 @@ function spinWheelHtml() {
         <dialog class="spin-modal" id="spinModal" aria-labelledby="spinModalTitle">
           <div class="spin-modal-body">
             <button class="spin-modal-x" id="spinModalClose" type="button" aria-label="Close">&times;</button>
-            <span class="spin-modal-kicker">Today's pick</span>
+            <span class="spin-modal-kicker"><svg class="spin-modal-skull" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false"><path d="M8 1a5 5 0 0 1 5 5v2.2l-1.4 1.3V12H7.6v1.6H6.4V12H4.4V9.5L3 8.2V6a5 5 0 0 1 5-5Z" fill="currentColor"/><circle cx="6" cy="6" r="1.4" fill="var(--card-bg)"/><circle cx="10" cy="6" r="1.4" fill="var(--card-bg)"/></svg>Today's pick</span>
             <h3 class="spin-modal-title" id="spinModalTitle"><i id="spinModalDot"></i><span id="spinModalSubject">Subject</span></h3>
             <p class="spin-modal-unit"><strong id="spinModalNum">Unit 1</strong><span id="spinModalUnit">Unit title</span></p>
             <div class="spin-modal-actions">
@@ -1138,14 +1403,21 @@ function spinWheelHtml() {
 
 function generateMainIndexHtml() {
   const rail = railGeometry();
+  const initialNext = getNextExam();
+  const initialCode = initialNext ? initialNext.code : 'Done';
+  const initialCodeColor = initialNext ? initialNext.color : 'var(--fg-muted)';
+  const initialDays = initialNext ? daysUntil(initialNext.iso) : 0;
+  const initialCountdown = initialNext
+    ? (initialDays === 0 ? 'Today' : initialDays === 1 ? '1 day' : `${initialDays} days`)
+    : 'Done';
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Worst Generation — BIM 8th Semester Study Materials</title>
-  <meta name="description" content="Complete BIM 8th Semester study materials for Business Intelligence, Digital Economy, Cloud Computing and IT Entrepreneurship — Worst Generation.">
+  <title>BIM 8th Semester Exam Timetable & Study Notes</title>
+  <meta name="description" content="BIM 8th-semester examination timetable and study notes for Business Intelligence, Digital Economy, Cloud Computing and IT Entrepreneurship.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/site.webmanifest">
@@ -1155,79 +1427,57 @@ function generateMainIndexHtml() {
   <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="home-page">
+  ${oceanHtml()}
   <header class="site-header">
     <div class="header-content">
       <a class="site-title" href="./">Worst Generation</a>
-      <nav class="site-nav" aria-label="Sections">
+      <nav class="site-nav" id="siteNav" aria-label="Sections">
         <a href="#timetable">Timetable</a>
         <a href="#subjects">Notes</a>
-        <a href="#pattern">Pattern</a>
-        <a href="bi/cheat-sheet.html">Cheat sheet</a>
+        <a href="#pattern">Exam pattern</a>
+        <a href="reels/">Quick Reels</a>
+        <a href="bi/cheat-sheet.html">BI cheat sheet</a>
       </nav>
       <span class="header-clock" id="headerClock" aria-live="off">
-        <span class="clock-code" id="htCode" style="color:#dc2626">Entrepreneur</span>
-        <span class="clock-val" id="htVal">--d --:--:--</span>
+        <span class="clock-code" id="htCode" style="color:${initialCodeColor}">${initialCode}</span>
+        <span class="clock-val" id="htVal">${initialCountdown}</span>
       </span>
       <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
+      <button class="mobile-nav-toggle" type="button" aria-label="Open navigation" aria-controls="siteNav" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </header>
 
   <div class="layout">
-    <aside class="sidebar" id="sidebar">
-      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">&#9776;</button>
-      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
-      <div class="sidebar-content">
-        <h3>This semester</h3>
-        <ul class="subject-list">
-          ${SUBJECT_ORDER.map(s => {
-            const ex = getSubjectExam(s.id);
-            return `
-            <li>
-              <a href="${s.id}/" style="border-left-color: ${s.color}">
-                <span class="subject-code">${s.code}</span>
-                <span class="subject-name">${s.name}</span>
-                ${ex ? `<span class="subject-exam" data-iso="${ex.iso}" data-label="${formatExamDate(ex.iso).replace(/, 2026$/, '')}">${formatExamDate(ex.iso).replace(/, 2026$/, '')} &middot; ${daysUntil(ex.iso)} days</span>` : ''}
-              </a>
-            </li>`;
-          }).join('')}
-        </ul>
-        <div class="sidebar-footer">
-          <div class="progress-summary">
-            <span>25 units</span>
-            <span>320 marks</span>
-          </div>
-          <a class="footer-link" href="bi/cheat-sheet.html">BI cheat sheet</a>
-        </div>
-      </div>
-    </aside>
-
-    <main class="content" role="main">
-      <section class="page-head">
-        <h1>Examination timetable</h1>
-        <p class="page-meta">BIM 8th semester &middot; Tribhuvan University &middot; exams 1&ndash;10 December 2026 &middot; films 18 December &middot; centre ${EXAM_CENTRE}</p>
-      </section>
-
+    <main class="content home-scroll" role="main">
       ${railHeroHtml(rail)}
       ${spinWheelHtml()}
 
       <section class="doors" id="subjects" aria-labelledby="doorsTitle">
-        <h2 id="doorsTitle" class="section-title">Open your notes</h2>
+        <div class="section-head">
+          <h2 id="doorsTitle" class="section-title">Open your notes</h2>
+          <p class="section-meta">4 papers &middot; 25 units &middot; 320 marks &middot; exams 1&ndash;10 December 2026</p>
+        </div>
         <ul class="doors-list">
           ${SUBJECT_ORDER.map(s => {
             const ex = getSubjectExam(s.id);
             return `
-            <li class="door">
+            <li class="door" style="--door-color: ${s.color}">
               <div class="door-head">
-                <span class="door-code" style="border-color: ${s.color}">${s.code}</span>
+                <span class="door-code">${s.code}</span>
                 <span class="door-name">${s.name}</span>
               </div>
-              <p class="door-meta">${s.units.length} units &middot; ${s.marks} marks &middot; pass ${s.passMarks}${ex ? ` &middot; ${formatExamDate(ex.iso).replace(/, 2026$/, '')}` : ''}</p>
-              <div class="door-links">
-                <a href="${s.id}/">Notes</a>
-                <a href="${s.id}/question-bank.html">Question bank</a>
-                <a href="${s.id}/model-question-answers.html">Model answers</a>
-                ${s.id === 'bi' ? '<a href="bi/cheat-sheet.html">Cheat sheet</a>' : ''}
+              <p class="door-meta">${s.units.length} units &middot; ${s.marks} marks &middot; pass ${s.passMarks}${ex ? ` <span class="subject-exam door-exam" data-iso="${ex.iso}" data-label="${formatExamDate(ex.iso).replace(/, 2026$/, '')}">${formatExamDate(ex.iso).replace(/, 2026$/, '')}</span>` : ''}</p>
+              <div class="door-actions">
+                <a class="door-primary" href="${s.id}/">Open notes</a>
+                <div class="door-links">
+                  <a href="${s.id}/question-bank.html">Question bank</a>
+                  <a href="${s.id}/model-question-answers.html">Model answers</a>
+                  ${s.id === 'bi' ? '<a href="reels/">Quick Reels</a>' : ''}
+                  ${s.id === 'bi' ? '<a href="bi/cheat-sheet.html">Cheat sheet</a>' : ''}
+                </div>
               </div>
             </li>`;
           }).join('')}
@@ -1235,7 +1485,9 @@ function generateMainIndexHtml() {
       </section>
 
       <section class="pattern" id="pattern" aria-labelledby="patternTitle">
-        <h2 id="patternTitle" class="section-title">What each paper is worth</h2>
+        <div class="section-head">
+          <h2 id="patternTitle" class="section-title">Exam paper blueprint</h2>
+        </div>
         <div class="pattern-grid">
           <div class="marks-block">
             <div class="marks-scroll">
@@ -1253,7 +1505,7 @@ function generateMainIndexHtml() {
             </div>
           </div>
           <div class="rules-block">
-            <h3>Hall rules</h3>
+            <h3>Before you enter the exam hall</h3>
             <ul class="rules-list">
               ${EXAM_NOTES.map(note => `<li>${note}</li>`).join('')}
             </ul>
@@ -1262,7 +1514,10 @@ function generateMainIndexHtml() {
       </section>
 
       <footer class="page-foot">
-        <p>Routine source: Dean's Office, 2083/07/28. Centre: ${EXAM_CENTRE}.</p>
+        <div class="foot-brand">
+          <strong>Worst Generation</strong>
+          <p>Routine source: Dean's Office, 2083/07/28. Centre: ${EXAM_CENTRE}.</p>
+        </div>
         <button class="foot-btn" onclick="window.print()">Print this page</button>
       </footer>
 
@@ -1271,10 +1526,12 @@ function generateMainIndexHtml() {
 
   <script>
     window.toggleSidebar = function() {
-      document.getElementById('sidebar').classList.toggle('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
     };
     window.closeSidebar = function() {
-      document.getElementById('sidebar').classList.remove('open');
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
     };
     document.querySelectorAll('.sidebar-content a').forEach(link => {
       link.addEventListener('click', () => closeSidebar());
@@ -1296,9 +1553,35 @@ function generateMainIndexHtml() {
       if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
     };
 
+    // Compact mobile navigation. The same semantic nav becomes a short menu
+    // below the header; it never becomes a sidebar.
+    (function () {
+      const toggle = document.querySelector('.mobile-nav-toggle');
+      const nav = document.getElementById('siteNav');
+      if (!toggle || !nav) return;
+      const setOpen = (open) => {
+        nav.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      };
+      toggle.addEventListener('click', () => {
+        setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      });
+      nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => setOpen(false));
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+          setOpen(false);
+          toggle.focus();
+        }
+      });
+    })();
+
     // One clock drives the rail, the header readout and the sidebar. Films are
-    // only the far end of the line; the counter still counts exam papers.
+    // only the far end of the line; the header still counts exam papers.
     const EXAM_ROUTINE_JS = ${JSON.stringify(EXAM_ROUTINE)};
+    const RAIL_STOPS_JS = ${JSON.stringify(RAIL_STOPS)};
     const RAIL_LAST_ISO = ${JSON.stringify(RAIL_STOPS[RAIL_STOPS.length - 1].iso)};
     const WHEEL_SLICES = ${JSON.stringify(SUBJECT_ORDER.flatMap(s => s.units.map(u => ({
       id: s.id,
@@ -1322,80 +1605,240 @@ function generateMainIndexHtml() {
       const start = today < RAIL_FIRST ? today : RAIL_FIRST;
       return Math.min(100, Math.max(0, ((today - start) / Math.max(1, RAIL_END - start)) * 100));
     }
-    let lastSrDay = -1;
-    let lastSrCode = '';
+    function railPointFraction(iso) {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const start = today < RAIL_FIRST ? today : RAIL_FIRST;
+      const point = parseLocal(iso);
+      return Math.min(100, Math.max(0, ((point - start) / Math.max(1, RAIL_END - start)) * 100));
+    }
+    function routePathD(points) {
+      if (!points.length) return '';
+      let d = 'M ' + points[0].x.toFixed(1) + ' ' + points[0].y.toFixed(1);
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        const dx = (b.x - a.x) * 0.42;
+        d += ' C ' + (a.x + dx).toFixed(1) + ' ' + a.y.toFixed(1) + ', ' + (b.x - dx).toFixed(1) + ' ' + b.y.toFixed(1) + ', ' + b.x.toFixed(1) + ' ' + b.y.toFixed(1);
+      }
+      return d;
+    }
+    function updateRouteTrail() {
+      const trail = document.querySelector('.rail-route-trail');
+      if (!trail) return;
+      const now = new Date();
+      const todayIso = isoOf(now);
+      const points = [
+        { x: railPointFraction(todayIso) * 10, y: 330 },
+        ...RAIL_STOPS_JS.map((stop, index) => ({
+          x: railPointFraction(stop.iso) * 10,
+          y: index % 2 ? 380 : 330
+        }))
+      ];
+      trail.setAttribute('d', routePathD(points));
+    }
+    function nextLocalDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+    }
+    function renderRailTicks(todayStart) {
+      const track = document.querySelector('.rail-track');
+      if (!track) return;
+      const stopByIso = new Map(RAIL_STOPS_JS.map(stop => [stop.iso, stop]));
+      const start = todayStart < RAIL_FIRST ? todayStart : RAIL_FIRST;
+      const fragment = document.createDocumentFragment();
+      let lastMonth = -1;
 
+      for (let date = new Date(start); date <= RAIL_END; date = nextLocalDay(date)) {
+        const iso = isoOf(date);
+        const stop = stopByIso.get(iso);
+        const monthChanged = date.getMonth() !== lastMonth;
+        lastMonth = date.getMonth();
+        const label = monthChanged
+          ? date.toLocaleDateString('en-US', { month: 'short' }) + ' ' + date.getDate()
+          : String(date.getDate());
+        const tick = document.createElement('span');
+        tick.className = 'rail-tick is-' + (stop ? (stop.isMovie ? 'movie' : 'exam') : 'day');
+        tick.dataset.iso = iso;
+        tick.style.left = railPointFraction(iso).toFixed(3) + '%';
+        tick.style.setProperty('--tick-color', stop?.color || '#0f172a');
+        tick.innerHTML = '<i></i><em></em>';
+        tick.querySelector('em').textContent = label;
+        fragment.appendChild(tick);
+      }
+
+      track.querySelectorAll('.rail-tick').forEach(el => el.remove());
+      const firstStation = track.querySelector('.rail-station');
+      if (firstStation) firstStation.before(fragment);
+      else track.appendChild(fragment);
+    }
+    function updateRouteGeometry(todayStart) {
+      renderRailTicks(todayStart);
+      document.querySelectorAll('.rail-station[data-iso]').forEach(el => {
+        el.style.left = railPointFraction(el.dataset.iso).toFixed(3) + '%';
+      });
+      document.querySelectorAll('.rail-gap[data-from][data-to]').forEach(el => {
+        const left = (railPointFraction(el.dataset.from) + railPointFraction(el.dataset.to)) / 2;
+        el.style.left = left.toFixed(3) + '%';
+      });
+    }
     function updateRail() {
       const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       let next = null;
       for (const e of EXAM_ROUTINE_JS) {
-        if (parseLocal(e.iso) > now) { next = e; break; }
+        if (parseLocal(e.iso) >= todayStart) { next = e; break; }
       }
       const todayIso = isoOf(now);
       const leftPct = railFraction(now).toFixed(3) + '%';
 
+      updateRouteGeometry(todayStart);
       document.querySelectorAll('.rail-station[data-iso]').forEach(el => {
         el.classList.toggle('is-next', !!next && el.dataset.iso === next.iso);
         el.classList.toggle('is-today', el.dataset.iso === todayIso);
-        el.classList.toggle('is-past', el.dataset.iso !== todayIso && parseLocal(el.dataset.iso) < now);
+        el.classList.toggle('is-past', el.dataset.iso !== todayIso && parseLocal(el.dataset.iso) < todayStart);
       });
       document.querySelectorAll('.rail-gap[data-iso]').forEach(el => {
-        el.classList.toggle('is-past', parseLocal(el.dataset.iso) < now);
+        el.classList.toggle('is-past', parseLocal(el.dataset.iso) < todayStart);
       });
       document.querySelectorAll('.rail-tick[data-iso]').forEach(el => {
         el.classList.toggle('is-today', el.dataset.iso === todayIso);
       });
 
-      // Sidebar day counts stay locked to the same clock as the big counter.
+      // Subject-day counts stay locked to the same calendar clock as the header.
       document.querySelectorAll('.subject-exam[data-iso]').forEach(el => {
         const target = parseLocal(el.dataset.iso);
-        const remaining = Math.floor((target - now) / 86400000);
+        const remaining = Math.round((target - todayStart) / 86400000);
         const state = isoOf(target) === todayIso ? 'today' : remaining < 0 ? 'done' : remaining + (remaining === 1 ? ' day' : ' days');
         el.textContent = el.dataset.label + ' \u00b7 ' + state;
       });
 
-      let days = 0, hours = 0, mins = 0, secs = 0;
-      if (next) {
-        const diff = parseLocal(next.iso) - now;
-        days = Math.floor(diff / 86400000);
-        hours = Math.floor((diff % 86400000) / 3600000);
-        mins = Math.floor((diff % 3600000) / 60000);
-        secs = Math.floor((diff % 60000) / 1000);
-      }
-      const clockText = next ? days + 'd ' + pad2(hours) + ':' + pad2(mins) + ':' + pad2(secs) : '';
+      const days = next ? Math.round((parseLocal(next.iso) - todayStart) / 86400000) : 0;
+      const clockText = !next ? 'Done' : days === 0 ? 'Today' : days === 1 ? '1 day' : days + ' days';
 
-      const setText = (name, value) => {
-        const el = document.getElementById(name);
-        if (el) el.textContent = value;
-      };
-      setText('code', next ? (next.short || next.code) : 'All papers done');
-      setText('days', days);
-      setText('hours', pad2(hours));
-      setText('mins', pad2(mins));
-      setText('secs', pad2(secs));
-      ['traveller', 'mini'].forEach(id => {
+      const mini = document.getElementById('mini');
+      if (mini) mini.style.left = leftPct;
+      ['traveller', 'mobileTraveller'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.style.left = leftPct;
+        if (el) el.dataset.routeLeft = leftPct;
       });
-      const sr = document.getElementById('sr');
-      if (sr && (days !== lastSrDay || (next && next.code) !== lastSrCode)) {
-        lastSrDay = days;
-        lastSrCode = next ? next.code : '';
-        sr.textContent = next
-          ? 'Next paper ' + next.code + ', ' + next.title + ', on ' + parseLocal(next.iso).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) + ', in ' + days + (days === 1 ? ' day' : ' days')
-          : 'All papers are finished';
-      }
-
+      const origin = document.querySelector('.rail-origin');
+      if (origin) origin.style.left = leftPct;
+      updateRouteTrail();
       const htCode = document.getElementById('htCode');
       const htVal = document.getElementById('htVal');
       if (htCode) {
-        htCode.textContent = next ? (next.short || next.code) : 'Done';
-        if (next && next.color) htCode.style.color = next.color;
+        htCode.textContent = next ? next.code : 'Done';
+        htCode.style.color = next && next.color ? next.color : 'var(--fg-muted)';
       }
       if (htVal) htVal.textContent = clockText;
+
+      const railViewport = document.querySelector('.rail-viewport');
+      if (railViewport) {
+        const scrollable = railViewport.scrollWidth > railViewport.clientWidth + 2;
+        railViewport.classList.toggle('is-scrollable', scrollable);
+        const scene = railViewport.closest('.scene-stage');
+        if (scene) scene.classList.toggle('route-overflow', scrollable);
+      }
+      positionRouteShips();
     }
+
+    // The desktop ship lives above the horizontally scrolling route so it can
+    // stay visible while vertical panels pass over it. Recompute its anchor
+    // from the live track geometry whenever the route scrolls or resizes.
+    function positionRouteShips() {
+      const scene = document.querySelector('.scene-stage');
+      const track = document.querySelector('.rail-track');
+      const ship = document.getElementById('traveller');
+      const mobileShip = document.getElementById('mobileTraveller');
+      if (!scene || !track || !ship) return;
+      const fraction = Math.min(100, Math.max(0, parseFloat(ship.dataset.routeLeft || '0'))) / 100;
+      const sceneRect = scene.getBoundingClientRect();
+      const trackRect = track.getBoundingClientRect();
+      const waterline = parseFloat(getComputedStyle(track).getPropertyValue('--rail-waterline')) || 300;
+      const anchorX = trackRect.left + trackRect.width * fraction - sceneRect.left;
+      ship.style.left = anchorX.toFixed(2) + 'px';
+      ship.style.top = (trackRect.top - sceneRect.top + waterline).toFixed(2) + 'px';
+      if (mobileShip) {
+        mobileShip.style.left = anchorX.toFixed(2) + 'px';
+        mobileShip.style.top = (trackRect.top - sceneRect.top + waterline).toFixed(2) + 'px';
+      }
+    }
+
     updateRail();
-    setInterval(updateRail, 1000);
+    setInterval(updateRail, 60000);
+    window.addEventListener('resize', updateRail);
+    const routeViewport = document.querySelector('.rail-viewport');
+    if (routeViewport) routeViewport.addEventListener('scroll', positionRouteShips, { passive: true });
+
+    // Native scroll snap handles touch and trackpad gestures. Keyboard focus
+    // also centres the selected stop so the next link is always in context.
+    (function () {
+      const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+      document.querySelectorAll('.rail-station[href]').forEach(station => {
+        station.addEventListener('focus', () => {
+          station.scrollIntoView({
+            behavior: calm.matches ? 'auto' : 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          });
+        });
+      });
+    })();
+
+    // Scroll-linked ship anchor inside the dedicated homepage scroller. The
+    // route scrolls away normally while the ship counters the hero's movement,
+    // allowing the next study panel to pass over it like the fixed ocean.
+    (function () {
+      const root = document.documentElement;
+      const scroller = document.querySelector('.home-scroll');
+      if (!scroller) return;
+      const anchorGap = 10;
+      scroller.style.scrollBehavior = 'auto';
+      let queued = false;
+
+      function paint() {
+        queued = false;
+        root.style.setProperty('--ship-stick-y', scroller.scrollTop.toFixed(1) + 'px');
+      }
+      function schedule() {
+        if (!queued) { queued = true; requestAnimationFrame(paint); }
+      }
+      scroller.addEventListener('scroll', schedule, { passive: true });
+      window.addEventListener('resize', schedule);
+
+      // Land anchors inside the homepage scroller, below the non-scrolling
+      // header, without allowing the browser's root page to move.
+      function landOn(el) {
+        if (!el) return;
+        const want = anchorGap;
+        for (let i = 0; i < 6; i++) {
+          paint();
+          const scrollerTop = scroller.getBoundingClientRect().top;
+          const y = el.getBoundingClientRect().top - scrollerTop;
+          if (Math.abs(y - want) < 2) break;
+          scroller.scrollTo({ top: scroller.scrollTop + y - want, behavior: 'instant' });
+        }
+        paint();
+      }
+      function targetOf(hash) {
+        if (!hash || hash === '#') return null;
+        try { return document.querySelector(hash); } catch (e) { return null; }
+      }
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+          const target = targetOf(link.getAttribute('href'));
+          if (!target) return;
+          e.preventDefault();
+          landOn(target);
+          history.replaceState(null, '', link.getAttribute('href'));
+        });
+      });
+
+      paint();
+      if (location.hash) {
+        requestAnimationFrame(() => landOn(targetOf(location.hash)));
+      }
+    })();
 
     // Study picker: one spin chooses a subject, then a unit inside it.
     (function () {
@@ -1564,7 +2007,8 @@ async function build() {
       }
 
       const { content } = readMarkdownFile(mdPath);
-      const htmlContent = renderMarkdown(content);
+      const displayContent = subjectId === 'bi' && unit.num === 1 ? repairMojibake(content) : content;
+      const htmlContent = renderMarkdown(displayContent);
       const unitHtml = generateUnitHtml(subject, unit, htmlContent);
       
       // Use a simple filename
@@ -1600,6 +2044,90 @@ async function build() {
     console.log(`✅ Subject: ${subject.name} (${subject.units.length} units)`);
   }
 
+  // Generate the BI Quick Reels pilot. Source wording stays in Markdown;
+  // the extractor only turns its semantic blocks into a versioned feed payload.
+  const reelsSourceDir = path.join(SRC_DIR, 'reels');
+  const reelsDistDir = path.join(DIST_DIR, 'reels');
+  fs.mkdirSync(reelsDistDir, { recursive: true });
+
+  const reelsPayload = extractReelContent({
+    subject: SUBJECTS.bi,
+    units: SUBJECTS.bi.units,
+    rootDir: SRC_DIR,
+    questionManifest: BI_QUESTION_MANIFEST
+  });
+  reelsPayload.questionManifest = BI_QUESTION_MANIFEST;
+
+  if (!reelsPayload.entries.length || !reelsPayload.audit.mappedQuestions) {
+    throw new Error('Quick Reels extraction produced no usable BI content.');
+  }
+
+  const reelsAuditTotal = reelsPayload.audit.includedHeadings
+    + reelsPayload.audit.excludedHeadings.length
+    + reelsPayload.audit.containerHeadings
+    + reelsPayload.audit.duplicateHeadings;
+  if (reelsAuditTotal !== reelsPayload.audit.sourceHeadings) {
+    throw new Error(`Quick Reels heading audit does not reconcile (${reelsAuditTotal}/${reelsPayload.audit.sourceHeadings}).`);
+  }
+
+  if (reelsPayload.audit.mappedQuestions !== BI_QUESTION_MANIFEST.length || reelsPayload.units.length !== 6) {
+    throw new Error('Quick Reels BI coverage changed unexpectedly; reconcile the source audit before shipping.');
+  }
+
+  if (reelsPayload.entries.some(entry => entry.kind === 'question' && !entry.parts.some(part => part.section === 'answer'))) {
+    throw new Error('Quick Reels contains a mapped question without answer content.');
+  }
+
+  if (/[âÂÃð]/.test(JSON.stringify(reelsPayload))) {
+    throw new Error('Quick Reels contains unresolved Unit 1 mojibake.');
+  }
+
+  for (const entry of reelsPayload.entries) {
+    const unitHtmlPath = path.join(DIST_DIR, 'bi', `unit-${entry.unit}.html`);
+    const unitHtml = fs.readFileSync(unitHtmlPath, 'utf8');
+    if (!unitHtml.includes(`id="${entry.sourceAnchor}"`)) {
+      throw new Error(`Quick Reels source anchor is missing from the built unit page: ${entry.sourceUrl}`);
+    }
+  }
+
+  reelsPayload.music = [
+    {
+      title: 'Easy Lemon (60 second)',
+      file: 'assets/music/easy-lemon-60-second.mp3',
+      artist: 'Kevin MacLeod',
+      licence: 'CC BY 4.0',
+      source: 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Easy%20Lemon%2060%20second.mp3'
+    },
+    {
+      title: 'Somewhere Sunny',
+      file: 'assets/music/somewhere-sunny.mp3',
+      artist: 'Kevin MacLeod',
+      licence: 'CC BY 4.0',
+      source: 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Somewhere%20Sunny.mp3'
+    }
+  ];
+
+  const reelsMusicSource = path.join(reelsSourceDir, 'assets', 'music');
+  for (const file of ['easy-lemon-60-second.mp3', 'somewhere-sunny.mp3']) {
+    const musicPath = path.join(reelsMusicSource, file);
+    if (!fs.existsSync(musicPath) || fs.statSync(musicPath).size < 1000) {
+      throw new Error(`Quick Reels music asset is missing or empty: ${file}`);
+    }
+  }
+
+  fs.writeFileSync(path.join(reelsDistDir, 'content.json'), JSON.stringify(reelsPayload));
+  ['reels.html', 'reels.css', 'reels.js'].forEach(file => {
+    fs.copyFileSync(path.join(reelsSourceDir, file), path.join(reelsDistDir, file === 'reels.html' ? 'index.html' : file));
+  });
+
+  const reelsMusicDist = path.join(reelsDistDir, 'assets', 'music');
+  fs.mkdirSync(reelsMusicDist, { recursive: true });
+  fs.readdirSync(path.join(reelsSourceDir, 'assets', 'music'))
+    .filter(file => file.endsWith('.mp3') || file === 'CREDITS.md')
+    .forEach(file => fs.copyFileSync(path.join(reelsSourceDir, 'assets', 'music', file), path.join(reelsMusicDist, file)));
+
+  console.log(`✅ reels/ (${reelsPayload.entries.length} BI sections, ${reelsPayload.audit.mappedQuestions} mapped questions)`);
+
   // Copy syllabus files
   const syllabusDir = path.join(SRC_DIR, '_syllabus');
   const destSyllabusDir = path.join(DIST_DIR, '_syllabus');
@@ -1616,4 +2144,7 @@ async function build() {
   console.log('Run "npm run serve" to preview.');
 }
 
-build().catch(console.error);
+build().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});
