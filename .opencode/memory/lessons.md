@@ -5,6 +5,10 @@
 
 ## Lessons
 
+- [Review] 2026-11-21: For frontend visual review, capture at most one screenshot at a time, and ask the user for permission before every capture.
+- [Behavior] 2026-11-21: The homepage uses a dedicated vertical scroller with native `scroll-snap-type: y mandatory`; full-height hero, wheel, notes, and blueprint panels use `scroll-snap-align: start`. The purpose is reel-like settling: a scroll must never rest between panels. Never use proximity snapping on the homepage because it creates dead zones. Never put snapping on the root page or compensate with custom JavaScript. On mobile, expose smaller content targets so tall study content remains readable. The horizontal timetable route must scroll freely without snapping.
+- [Behavior] 2026-11-21: The homepage ship must sail in from the left, align its bow with the Today marker, and remain visually anchored during vertical scrolling while the lower study panels scroll over it.
+
 - [Scope] 2026-11-18: User sits **Cloud Computing (IT 277)** as the only elective. Do not build .NET / DBA / Big Data.
 - [Scope] 2026-11-18: Theory papers only. Skip internship viva and lab/practical files unless asked.
 - [Method] 2026-11-18: **One subject at a time.** Finish → self-review → revise → only then next subject. Do not interleave subjects.
