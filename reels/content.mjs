@@ -958,6 +958,9 @@ export function extractReelContent({ subject, units, rootDir, questionManifest =
         }
 
         const questionInfo = parseQuestionHeading(childText);
+        const manifestEntry = questionInfo
+          ? manifestForHeading(childText, sourceHeadingOccurrenceAt(child.index))
+          : null;
         if (!questionInfo) {
           const concept = makeConcept({
             unit,
@@ -972,7 +975,26 @@ export function extractReelContent({ subject, units, rootDir, questionManifest =
           continue;
         }
 
-        const manifestEntry = manifestForHeading(childText, sourceHeadingOccurrenceAt(child.index));
+        // Some notes repeat an official question code in a teaching section whose
+        // answer already has a dedicated manifest card in another unit. Keep the
+        // source text as a concept card, but do not create a second question card.
+        const duplicateManifestCode = questionManifest.length > 0
+          && !manifestEntry
+          && questionManifest.some(entry => entry.code === questionInfo.code);
+        if (duplicateManifestCode) {
+          const concept = makeConcept({
+            unit,
+            subject,
+            headingText: childText,
+            sourceAnchor: sourceAnchorAt(child.index),
+            parts: meaningfulParts(childTokens.flatMap(token => tokenParts(token, 'content'))),
+            audit: unitAudit
+          });
+          if (concept) unitEntries.push(concept);
+          addSectionManifestQuestions(childText, child.index);
+          continue;
+        }
+
         const question = makeQuestion({
           unit,
           subject,

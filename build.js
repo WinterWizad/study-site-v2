@@ -8,6 +8,9 @@ import { collectSectionHeadingNames, createHeadingIdAssigner, extractReelContent
 import { buildNarrationManifest, narrationProfileFromEnv, buildAiTranscriptManifest, DEFAULT_AI_TRANSCRIPT_PROFILE } from './reels/speech.mjs';
 import { BI_QUESTION_MANIFEST } from './reels/bi-question-manifest.mjs';
 import { ENTREPRENEURSHIP_QUESTION_MANIFEST } from './reels/entrepreneurship-question-manifest.mjs';
+import { CLOUD_QUESTION_MANIFEST } from './reels/cloud-question-manifest.mjs';
+
+const REEL_SUBJECT_IDS = ['bi', 'entrepreneurship', 'cloud'];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = __dirname;
@@ -556,7 +559,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
           `).join('')}
         </ul>
         <div class="sidebar-footer">
-          ${['bi', 'entrepreneurship'].includes(subject.id) ? `<a href="../reels/?subject=${subject.id}" class="footer-link">Quick Reels</a>` : ''}
+          ${REEL_SUBJECT_IDS.includes(subject.id) ? `<a href="../reels/?subject=${subject.id}" class="footer-link">Quick Reels</a>` : ''}
           <a href="../index.html" class="footer-link">← All Subjects</a>
         </div>
       </div>
@@ -835,7 +838,7 @@ function generateSubjectIndexHtml(subject) {
             <li><a href="model-question.html">Model Question</a></li>
             <li><a href="model-question-answers.html">Model Question Answers</a></li>
             <li><a href="question-bank.html">Question Bank</a></li>
-            ${['bi', 'entrepreneurship'].includes(subject.id) ? `<li><a href="../reels/?subject=${subject.id}">Quick Reels</a></li>` : ''}
+            ${REEL_SUBJECT_IDS.includes(subject.id) ? `<li><a href="../reels/?subject=${subject.id}">Quick Reels</a></li>` : ''}
             ${subject.id === 'bi' ? `<li><a href="cheat-sheet.html">&#x1F4CB; Cheat Sheet</a></li>` : ''}
             <li><a href="../_syllabus/${SYLLABUS_FILES[subject.code] || ''}" target="_blank">Syllabus</a></li>
           </ul>
@@ -1477,7 +1480,7 @@ function generateMainIndexHtml() {
                 <div class="door-links">
                   <a href="${s.id}/question-bank.html">Question bank</a>
                   <a href="${s.id}/model-question-answers.html">Model answers</a>
-                  ${['bi', 'entrepreneurship'].includes(s.id) ? `<a href="reels/?subject=${s.id}">Quick Reels</a>` : ''}
+                  ${REEL_SUBJECT_IDS.includes(s.id) ? `<a href="reels/?subject=${s.id}">Quick Reels</a>` : ''}
                   ${s.id === 'bi' ? '<a href="bi/cheat-sheet.html">Cheat sheet</a>' : ''}
                 </div>
               </div>
@@ -2089,8 +2092,9 @@ async function build() {
   const reelsBuiltAt = new Date().toISOString();
 
   const reelSubjectConfigs = [
-    { subject: SUBJECTS.bi, units: SUBJECTS.bi.units, questionManifest: BI_QUESTION_MANIFEST },
-    { subject: SUBJECTS.entrepreneurship, units: SUBJECTS.entrepreneurship.units, questionManifest: ENTREPRENEURSHIP_QUESTION_MANIFEST }
+    { subject: SUBJECTS.bi, units: SUBJECTS.bi.units, questionManifest: BI_QUESTION_MANIFEST, expectedUnits: 6 },
+    { subject: SUBJECTS.entrepreneurship, units: SUBJECTS.entrepreneurship.units, questionManifest: ENTREPRENEURSHIP_QUESTION_MANIFEST, expectedUnits: 6 },
+    { subject: SUBJECTS.cloud, units: SUBJECTS.cloud.units, questionManifest: CLOUD_QUESTION_MANIFEST, expectedUnits: 7 }
   ];
 
   function mergeReelManifests(manifests, label) {
@@ -2126,7 +2130,7 @@ async function build() {
     };
   }
 
-  function buildSubjectReelPayload({ subject, units, questionManifest }) {
+  function buildSubjectReelPayload({ subject, units, questionManifest, expectedUnits }) {
     const payload = extractReelContent({
       subject,
       units,
@@ -2177,7 +2181,7 @@ async function build() {
       throw new Error(`Quick Reels heading audit does not reconcile for ${subject.name} (${auditTotal}/${payload.audit.sourceHeadings}).`);
     }
 
-    if (payload.audit.mappedQuestions !== questionManifest.length || payload.units.length !== 6) {
+    if (payload.audit.mappedQuestions !== questionManifest.length || payload.units.length !== expectedUnits) {
       throw new Error(`Quick Reels coverage changed unexpectedly for ${subject.name}; reconcile the source audit before shipping.`);
     }
 

@@ -3,6 +3,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 import { BI_QUESTION_MANIFEST, BI_QUESTION_UNIT_COUNTS } from './reels/bi-question-manifest.mjs';
+import { CLOUD_QUESTION_MANIFEST } from './reels/cloud-question-manifest.mjs';
 import {
   createHeadingIdAssigner,
   extractReelContent,
@@ -282,6 +283,40 @@ const manifestAnchorMismatches = BI_QUESTION_MANIFEST.filter(question => {
   return !entry || !expectedSourceId || entry.sourceAnchor !== expectedSourceId;
 });
 check('Every mapped question points to its exact generated source-heading occurrence', manifestAnchorMismatches.length === 0, JSON.stringify(manifestAnchorMismatches));
+
+const cloudSubject = {
+  id: 'cloud',
+  code: 'IT 277',
+  name: 'Cloud Computing',
+  folder: '03-cloud-computing',
+  color: '#7c3aed'
+};
+const cloudUnits = Array.from({ length: 7 }, (_, index) => {
+  const num = index + 1;
+  return { num, title: `Unit ${num}`, file: [
+    'unit-1-introduction.md',
+    'unit-2-architecture.md',
+    'unit-3-applications.md',
+    'unit-4-virtualization.md',
+    'unit-5-mapreduce.md',
+    'unit-6-security.md',
+    'unit-7-platforms.md'
+  ][index] };
+});
+const cloudPayload = extractReelContent({
+  subject: cloudSubject,
+  units: cloudUnits,
+  rootDir: __dirname,
+  questionManifest: CLOUD_QUESTION_MANIFEST
+});
+const cloudQuestions = cloudPayload.entries.filter(entry => entry.kind === 'question');
+const cloudCodes = cloudQuestions.map(entry => entry.code);
+const cloudOfficialText = fs.readFileSync(path.join(__dirname, cloudSubject.folder, 'model-question.md'), 'utf8');
+check('Cloud feed maps all 22 official model questions exactly once', cloudQuestions.length === 22 && new Set(cloudCodes).size === 22 && CLOUD_QUESTION_MANIFEST.length === 22, JSON.stringify({ questions: cloudQuestions.length, uniqueCodes: new Set(cloudCodes).size }));
+check('Cloud manifest preserves every official question wording', CLOUD_QUESTION_MANIFEST.every(question => cloudOfficialText.includes(question.officialQuestion)), JSON.stringify(CLOUD_QUESTION_MANIFEST.filter(question => !cloudOfficialText.includes(question.officialQuestion)).map(question => question.id)));
+check('Every Cloud unit contributes source sections', Object.keys(cloudPayload.audit.unitCounts).length === 7 && Object.values(cloudPayload.audit.unitCounts).every(count => count > 0), JSON.stringify(cloudPayload.audit.unitCounts));
+check('Cloud source links are root-absolute', cloudPayload.entries.every(entry => entry.sourceUrl === `/cloud/unit-${entry.unit}.html#${entry.sourceAnchor}`), String(cloudPayload.entries.find(entry => !entry.sourceUrl.startsWith('/cloud/unit-'))?.sourceUrl || ''));
+check('Every Cloud question has answer content', cloudQuestions.every(entry => entry.parts.some(part => part.section === 'answer')), JSON.stringify(cloudQuestions.filter(entry => !entry.parts.some(part => part.section === 'answer')).map(entry => entry.id)));
 
 const duplicateSourceIds = [];
 for (const unit of units) {

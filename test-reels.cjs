@@ -1926,7 +1926,7 @@ function startServer() {
 
     await openSubmodal(subjectPage, 'feed');
     const modalSubjectChips = await subjectPage.evaluate(() => [...document.querySelectorAll('#subjectFilters .subject-chip')].map(chip => ({ id: chip.dataset.subject, active: chip.classList.contains('is-active') })));
-    check('The Feed & filters modal exposes the subject switcher', modalSubjectChips.length === 2 && modalSubjectChips.some(chip => chip.id === 'entrepreneurship' && chip.active) && modalSubjectChips.some(chip => chip.id === 'bi' && !chip.active), JSON.stringify(modalSubjectChips));
+    check('The Feed & filters modal exposes every subject', modalSubjectChips.length === 3 && modalSubjectChips.some(chip => chip.id === 'entrepreneurship' && chip.active) && modalSubjectChips.some(chip => chip.id === 'bi' && !chip.active) && modalSubjectChips.some(chip => chip.id === 'cloud' && !chip.active), JSON.stringify(modalSubjectChips));
     await subjectPage.click('#subjectFilters .subject-chip[data-subject="bi"]');
     await pollUntil(subjectPage, () => document.title.includes('Business Intelligence') && document.querySelector('#subjectFilters .subject-chip.is-active')?.dataset.subject === 'bi', null, 30000);
     check('The Feed & filters subject chip switches subjects in place', Boolean(await subjectPage.evaluate(() => document.querySelector('#feedModal')?.open)), 'feed modal closed after subject switch');
@@ -1948,6 +1948,47 @@ function startServer() {
     }));
     check('Unknown subject deep links fall back to the default subject', invalidSubjectState.title.includes('Business Intelligence') && invalidSubjectState.url === '/reels/' && invalidSubjectState.activeEntryId.startsWith('bi-'), JSON.stringify(invalidSubjectState));
     await invalidSubjectContext.close();
+
+    const cloudContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    const cloudPage = await cloudContext.newPage();
+    cloudPage.on('console', message => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    cloudPage.on('pageerror', error => errors.push(error.message));
+    await cloudPage.goto(`${baseUrl}/reels/?subject=cloud`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(cloudPage);
+    await waitForSubject(cloudPage, 'cloud', 'Cloud Computing');
+    const cloudState = await cloudPage.evaluate(() => {
+      const active = document.querySelector('.reel-card[aria-hidden="false"]');
+      const stored = JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}');
+      return {
+        title: document.title,
+        url: `${location.pathname}${location.search}`,
+        subject: document.querySelector('#topbarSubject')?.textContent.trim() || '',
+        notesHref: document.querySelector('#hubNotesLink')?.getAttribute('href') || '',
+        activeEntryId: active?.dataset.entryId || '',
+        sourceHref: active?.querySelector('.reel-source-link')?.getAttribute('href') || '',
+        hubSubjectIds: [...document.querySelectorAll('#hubSubjects .subject-chip')].map(chip => chip.dataset.subject),
+        cardCount: document.querySelectorAll('.reel-card:not(.reel-measure)').length,
+        positions: stored.positions || {}
+      };
+    });
+    check('Cloud Computing deep link opens the canonical multi-subject route', cloudState.title.includes('Cloud Computing') && cloudState.url === '/reels/?subject=cloud' && cloudState.subject === 'Cloud Computing' && cloudState.activeEntryId.startsWith('cloud-'), JSON.stringify(cloudState));
+    check('Cloud Computing feed loads all seven units', cloudState.cardCount > 100 && cloudState.notesHref === '/cloud/', JSON.stringify(cloudState));
+    check('Cloud source links are root-absolute', /^\/cloud\/unit-[1-7]\.html#/.test(cloudState.sourceHref), cloudState.sourceHref);
+    check('Cloud position uses a subject-scoped key', Boolean(cloudState.positions['ordered|cloud|all|all']), JSON.stringify(Object.keys(cloudState.positions)));
+    check('The hub switcher lists all three subjects', cloudState.hubSubjectIds.join(',') === 'bi,entrepreneurship,cloud', JSON.stringify(cloudState.hubSubjectIds));
+    await openHubMenu(cloudPage);
+    await cloudPage.click('#hubSubjects .subject-chip[data-subject="bi"]');
+    await waitForSubject(cloudPage, 'bi', 'Business Intelligence');
+    await closeHubMenu(cloudPage);
+    const cloudSwitchState = await cloudPage.evaluate(() => ({
+      url: `${location.pathname}${location.search}`,
+      subject: document.querySelector('#topbarSubject')?.textContent.trim() || '',
+      activeEntryId: document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.entryId || ''
+    }));
+    check('Cloud hub chip switches back to the default subject', cloudSwitchState.url === '/reels/' && cloudSwitchState.subject === 'Business Intelligence' && cloudSwitchState.activeEntryId.startsWith('bi-'), JSON.stringify(cloudSwitchState));
+    await cloudContext.close();
 
     const migrationContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const migrationPage = await migrationContext.newPage();
