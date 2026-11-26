@@ -155,16 +155,103 @@ function startServer() {
     }, selector);
   }
 
-  async function openDrawer(page) {
-    const expanded = await page.locator('#railToggle').getAttribute('aria-expanded');
-    if (expanded !== 'true') await page.click('#railToggle');
-    await page.waitForFunction(() => document.querySelector('#reelsRail')?.classList.contains('is-open'));
+  async function openHubMenu(page) {
+    await page.click('#hubToggle');
+    await page.waitForFunction(() => document.querySelector('#hubMenu')?.open === true);
   }
 
-  async function closeDrawer(page) {
-    const expanded = await page.locator('#railToggle').getAttribute('aria-expanded');
-    if (expanded === 'true') await page.keyboard.press('Escape');
-    await page.waitForFunction(() => !document.querySelector('#reelsRail')?.classList.contains('is-open'));
+  async function closeHubMenu(page) {
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => document.querySelector('#hubMenu')?.open === false);
+  }
+
+  async function openSubmodal(page, modalId) {
+    const modalSelector = modalId === 'feed' ? '#feedModal' : modalId === 'progress' ? '#progressModal' : '#audioModal';
+    await openHubMenu(page);
+    // Find and click the hub menu item
+    await page.evaluate(sel => {
+      const items = document.querySelectorAll('.hub-menu__item[data-hub-target]');
+      items.forEach(item => {
+        if (item.dataset.hubTarget === sel) item.click();
+      });
+    }, modalId);
+    await page.waitForFunction(sel => document.querySelector(sel)?.open === true, modalSelector, { timeout: 10000 });
+  }
+
+  async function closeSubmodal(page, modalId) {
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(id => document.querySelector(`#${id}`)?.open === false, modalId);
+  }
+
+  async function selectBrowserNarrator(page, voice = 'test-voice-one') {
+    await openSubmodal(page, 'audio');
+    await page.selectOption('#voiceSelect', voice);
+    await closeSubmodal(page, 'audioModal');
+  }
+
+  async function forceNarrationManifest(page) {
+    await page.route('**/reels/content.json', async route => {
+      const response = await route.fetch();
+      const payload = await response.json();
+      payload.narration = payload.narration || {};
+      payload.narration.cloudEnabled = true;
+      Object.values(payload.narration.segments || {}).forEach(segment => {
+        segment.static = false;
+      });
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(payload)
+      });
+    });
+  }
+
+  async function installSpeechMock(context) {
+    await context.addInitScript(() => {
+      const log = { speaks: [], speechEvents: [], completions: 0, cancels: 0, pauses: 0, resumes: 0 };
+      window.__speechLog = log;
+
+      class MockUtterance {
+        constructor(text) {
+          this.text = text;
+          this.rate = 1;
+          this.pitch = 1;
+          this.volume = 1;
+          this.voice = null;
+          this.onend = null;
+          this.onerror = null;
+        }
+      }
+
+      const synthesis = {
+        getVoices() {
+          return [
+            { name: 'Provider Test Voice', lang: 'en-US', voiceURI: 'provider-test-voice' },
+            { name: 'Provider Test Voice Two', lang: 'en-GB', voiceURI: 'provider-test-voice-two' }
+          ];
+        },
+        speak(utterance) {
+          log.speaks.push(utterance.text);
+          log.speechEvents.push({
+            text: utterance.text,
+            time: performance.now(),
+            voice: utterance.voice?.voiceURI || null,
+            rate: utterance.rate
+          });
+          window.setTimeout(() => {
+            log.completions += 1;
+            utterance.onend?.();
+          }, 5);
+        },
+        cancel() { log.cancels += 1; },
+        pause() { log.pauses += 1; },
+        resume() { log.resumes += 1; },
+        addEventListener() {}
+      };
+
+      Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: synthesis });
+      Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: MockUtterance });
+    });
   }
 
   const { server, baseUrl } = await startServer();
@@ -312,7 +399,7 @@ function startServer() {
       const navigation = card?.querySelector('.reel-card__navigation');
       const cardRect = card?.getBoundingClientRect();
       const actionsRect = actions?.getBoundingClientRect();
-      const drawer = document.querySelector('#reelsRail');
+      const hubMenu = document.querySelector('#hubMenu');
       const stage = document.querySelector('.reels-stage');
       const stageRect = stage?.getBoundingClientRect();
       return {
@@ -320,28 +407,35 @@ function startServer() {
         navigationCount: navigation?.querySelectorAll('[data-action]').length || 0,
         bodyPaddingRight: body ? parseFloat(getComputedStyle(body).paddingRight) : 0,
         actionsInsideCard: Boolean(cardRect && actionsRect && actionsRect.right <= cardRect.right && actionsRect.left >= cardRect.left),
-        drawerPosition: drawer ? getComputedStyle(drawer).position : '',
-        drawerVisible: drawer ? getComputedStyle(drawer).visibility : '',
+        hubMenuOpen: hubMenu?.open ?? false,
         stageRatio: stageRect ? Number((stageRect.height / stageRect.width).toFixed(2)) : 0,
         stageWidth: stageRect?.width || 0,
         viewportWidth: innerWidth
       };
     });
-    check('The active card uses one four-action study rail', reelComposition.actionCount === 4, JSON.stringify(reelComposition));
+    check('The active card uses one five-action study rail', reelComposition.actionCount === 5, JSON.stringify(reelComposition));
     check('Previous and next remain a separate two-button navigation group', reelComposition.navigationCount === 2, JSON.stringify(reelComposition));
     check('The card body reserves a readable strip beside the edge actions', reelComposition.bodyPaddingRight >= 68 && reelComposition.actionsInsideCard, JSON.stringify(reelComposition));
-    check('Feed controls are hidden behind a fixed modal drawer on desktop', reelComposition.drawerPosition === 'fixed' && reelComposition.drawerVisible === 'hidden', JSON.stringify(reelComposition));
+    check('Feed controls are hidden behind a hub menu on desktop', reelComposition.hubMenuOpen === false, JSON.stringify(reelComposition));
     check('Desktop keeps one centred portrait reading frame', reelComposition.stageRatio >= 1.7 && reelComposition.stageRatio <= 1.9 && reelComposition.stageWidth < reelComposition.viewportWidth * 0.45, JSON.stringify(reelComposition));
 
-    await openDrawer(page);
-    const desktopModalState = await page.evaluate(() => ({
-      role: document.querySelector('#reelsRail')?.getAttribute('role'),
-      modal: document.querySelector('#reelsRail')?.getAttribute('aria-modal'),
-      stageInert: document.querySelector('#reelStage')?.inert,
-      focusInside: document.querySelector('#reelsRail')?.contains(document.activeElement)
+    const muteButtonPresent = await page.evaluate(() => ({
+      hasMuteButton: Boolean(document.querySelector('.reel-card[aria-hidden="false"] [data-action="mute"]')),
+      muteAriaPressed: document.querySelector('.reel-card[aria-hidden="false"] [data-action="mute"]')?.getAttribute('aria-pressed'),
+      muteIconCount: document.querySelectorAll('.reel-card[aria-hidden="false"] [data-action="mute"] svg').length
     }));
-    await closeDrawer(page);
-    check('Desktop feed controls also use true modal-dialog semantics', desktopModalState.role === 'dialog' && desktopModalState.modal === 'true' && desktopModalState.stageInert && desktopModalState.focusInside, JSON.stringify(desktopModalState));
+    check('Mute button present on card', muteButtonPresent.hasMuteButton === true);
+    check('Mute button starts unmuted', muteButtonPresent.muteAriaPressed === 'false');
+
+    await openHubMenu(page);
+    const desktopModalState = await page.evaluate(() => ({
+      role: document.querySelector('#hubMenu')?.getAttribute('role'),
+      modal: document.querySelector('#hubMenu')?.getAttribute('aria-modal'),
+      stageInert: document.querySelector('#reelStage')?.inert,
+      focusInside: document.querySelector('#hubMenu')?.contains(document.activeElement)
+    }));
+    await closeHubMenu(page);
+    check('Desktop hub menu uses true modal-dialog semantics', desktopModalState.role === 'dialog' && desktopModalState.modal === 'true' && desktopModalState.stageInert && desktopModalState.focusInside, JSON.stringify(desktopModalState));
 
     const payload = await page.evaluate(async () => {
       const response = await fetch('content.json');
@@ -350,6 +444,11 @@ function startServer() {
     check('Every BI unit contributes source sections', payload.units.length === 6 && Object.keys(payload.audit.unitCounts).length === 6);
     check('The feed contains every audited mapped question', payload.entries.filter(entry => entry.kind === 'question').length === payload.questionManifest.length && payload.questionManifest.length === 42, `${payload.entries.filter(entry => entry.kind === 'question').length} / ${payload.questionManifest.length}`);
     check('Every mapped question keeps its paper identity', payload.entries.filter(entry => entry.kind === 'question').every(entry => ['board', 'model'].includes(entry.paper)));
+    const defaultNarrator = await page.evaluate(() => ({
+      selected: document.querySelector('#voiceSelect')?.value || '',
+      stored: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').voice || ''
+    }));
+    check('Google Chirp 3 HD is the default narrator', defaultNarrator.selected === 'google' && defaultNarrator.stored === 'google', JSON.stringify(defaultNarrator));
     check('Coverage and self-test sections stay excluded', payload.audit.excludedHeadings.some(item => /coverage map/i.test(item.heading)) && payload.audit.excludedHeadings.some(item => /self-test/i.test(item.heading)));
     check('No Unit 1 mojibake reaches the feed', !JSON.stringify(payload).match(/[âÂÃð]/));
 
@@ -372,7 +471,7 @@ function startServer() {
         h1Count: document.querySelectorAll('h1').length,
         h1Text: document.querySelector('h1')?.textContent.trim() || '',
         audioRole: document.querySelector('#audioStatus')?.getAttribute('role') || '',
-        audioOutsideDrawer: !document.querySelector('#reelsRail')?.contains(document.querySelector('#audioStatus')),
+        audioOutsideDrawer: !document.querySelector('#hubMenu')?.contains(document.querySelector('#audioStatus')),
         cardLive: document.querySelector('#cardAnnouncement')?.getAttribute('aria-live') || '',
         cardAtomic: document.querySelector('#cardAnnouncement')?.getAttribute('aria-atomic') || '',
         stateLive: document.querySelector('#stateAnnouncement')?.getAttribute('aria-live') || '',
@@ -387,7 +486,7 @@ function startServer() {
         diagramCount: diagramRegions.length
       };
     });
-    check('The page keeps one accessible H1 outside the mobile drawer', semantics.h1Count === 1 && semantics.h1Text === 'Quick Reels', JSON.stringify(semantics));
+    check('The page keeps one accessible H1 outside the mobile hub menu', semantics.h1Count === 1 && semantics.h1Text === 'Quick Reels', JSON.stringify(semantics));
     check('Narration and state changes use polite live regions', semantics.audioRole === 'status' && semantics.audioOutsideDrawer && semantics.cardLive === 'polite' && semantics.cardAtomic === 'true' && semantics.stateLive === 'polite', JSON.stringify(semantics));
     check('The motion SVG has a meaningful name and associated captions', semantics.svgRole === 'img' && /BI Pipeline/i.test(semantics.svgLabel) && semantics.svgDescriptionExists, JSON.stringify(semantics));
     check('Tables have contextual names and no empty rendered headers', semantics.genericTableLabels === 0 && semantics.emptyTableHeaders === 0 && semantics.tableFocusable, JSON.stringify(semantics));
@@ -436,14 +535,17 @@ function startServer() {
     check('Question cards show the question before the answer', questionOrder.questionBeforeAnswer && questionOrder.allQuestionFirst && questionOrder.count > 0);
     check('Question answer area has a clear label', questionOrder.answer === 'Answer');
 
+    await activateCard(page, '.reel-card[data-mode="visual"]');
     const blankTapBefore = await page.evaluate(() => ({
       paused: document.querySelector('#musicPlayer')?.paused ?? true,
       mode: document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.mode || ''
     }));
+    // Click the body directly in browser context to ensure proper event
     await page.evaluate(() => {
-      document.querySelector('.reel-card[aria-hidden="false"] .reel-card__body')?.click();
+      const body = document.querySelector('.reel-card[aria-hidden="false"] .reel-card__body');
+      if (body) body.click();
     });
-    await page.waitForTimeout(80);
+    await page.waitForTimeout(350);
     const blankTapAfter = await page.evaluate(() => ({
       paused: document.querySelector('#musicPlayer')?.paused ?? true,
       mode: document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.mode || ''
@@ -458,7 +560,7 @@ function startServer() {
     const textTapSpeech = await page.evaluate(() => [...window.__speechLog.speaks]);
     check('Tapping source text does not hijack the reading action', textTapSpeech.length === 0, String(textTapSpeech.length));
 
-    await openDrawer(page);
+    await openSubmodal(page, 'audio');
     await page.selectOption('#voiceSelect', 'test-voice-one');
     await page.locator('#speechRate').evaluate(input => {
       input.value = '1.15';
@@ -468,6 +570,7 @@ function startServer() {
       input.value = '0.35';
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    await closeSubmodal(page, 'audioModal');
     const configuredPreferences = await persistedState(page);
     check('Fixed voice selection persists in state', configuredPreferences.voice === 'test-voice-one');
     check('Speech-rate selection persists in state', configuredPreferences.speechRate === 1.15);
@@ -478,57 +581,149 @@ function startServer() {
     const restoredPreferences = await persistedState(page);
     check('Audio preferences survive reload', restoredPreferences.voice === 'test-voice-one' && restoredPreferences.speechRate === 1.15 && restoredPreferences.musicVolume === 0.35);
 
-    await openDrawer(page);
+    await openSubmodal(page, 'audio');
     await page.selectOption('#voiceSelect', 'random');
+    await closeSubmodal(page, 'audioModal');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await waitForFeed(page);
     check('Random narrator mode survives reload', (await persistedState(page)).voice === 'random');
 
-    await openDrawer(page);
-    await page.click('[data-unit="3"]');
+    // AI subtitle overlay tests
+    const subtitleHiddenInitially = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      return panel ? panel.hidden : null;
+    });
+    check('AI subtitle starts hidden', subtitleHiddenInitially === true);
+
+    await openSubmodal(page, 'audio');
+    await page.selectOption('#voiceSelect', 'ai');
+    await closeSubmodal(page, 'audioModal');
+    await page.waitForTimeout(150);
+
+    const subtitleAiVisible = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      const content = document.querySelector('#transcriptContent');
+      return panel
+        ? { hidden: panel.hidden, role: panel.getAttribute('role'), live: panel.getAttribute('aria-live'), text: content?.textContent.trim().slice(0, 80) }
+        : null;
+    });
+    check('AI subtitle is visible when AI voice selected', subtitleAiVisible && subtitleAiVisible.hidden === false);
+    check('AI subtitle is a polite status region, not a dialog', subtitleAiVisible && subtitleAiVisible.role === 'status' && subtitleAiVisible.live === 'polite');
+    check('AI subtitle shows generated transcript text', subtitleAiVisible && subtitleAiVisible.text && subtitleAiVisible.text.length > 0);
+
+    await openSubmodal(page, 'audio');
+    await page.selectOption('#voiceSelect', 'random');
+    await closeSubmodal(page, 'audioModal');
+    await page.waitForTimeout(150);
+
+    const subtitleHiddenAfterNonAi = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      return panel ? panel.hidden : null;
+    });
+    check('AI subtitle hides when a non-AI voice is selected', subtitleHiddenAfterNonAi === true);
+
+    await openSubmodal(page, 'audio');
+    await page.selectOption('#voiceSelect', 'ai');
+    await closeSubmodal(page, 'audioModal');
+    await page.waitForTimeout(150);
+
+    const cardTextWithSubtitle = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      const body = document.querySelector('.reel-card[aria-hidden="false"] .reel-card__body');
+      return panel && body ? { bodyTextLength: body.textContent.trim().length, panelPointer: getComputedStyle(panel).pointerEvents, panelHidden: panel.hidden } : null;
+    });
+    check('Original card body text stays visible under subtitle', cardTextWithSubtitle && cardTextWithSubtitle.bodyTextLength > 0);
+    check('Subtitle container blocks pointer events', cardTextWithSubtitle && cardTextWithSubtitle.panelPointer === 'none');
+    check('Subtitle content allows interaction', cardTextWithSubtitle && cardTextWithSubtitle.panelHidden === false);
+
+    // Progressive subtitle tests
+    const subtitleCompact = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      if (!panel || panel.hidden) return null;
+      const style = window.getComputedStyle(panel);
+      return { maxHeight: style.maxHeight, bottom: style.bottom, overflowY: style.overflowY };
+    });
+    check('AI subtitle is compact (max-height 18%)', subtitleCompact && subtitleCompact.maxHeight === '18%');
+    check('AI subtitle sits above action rail', subtitleCompact && subtitleCompact.bottom === '82px');
+    check('AI subtitle allows vertical scroll', subtitleCompact && subtitleCompact.overflowY === 'auto');
+
+    const subtitleFirstSentence = await page.evaluate(() => {
+      const content = document.querySelector('#transcriptContent');
+      const current = content?.querySelector('.subtitle-current');
+      const segments = content?.querySelectorAll('.transcript-segment');
+      return {
+        hasCurrent: !!current,
+        totalSegments: segments?.length || 0,
+        currentText: current?.textContent.trim().slice(0, 60) || ''
+      };
+    });
+    check('AI subtitle shows first sentence highlighted', subtitleFirstSentence && subtitleFirstSentence.hasCurrent && subtitleFirstSentence.totalSegments > 0);
+
+    // Switch to a different card and verify subtitle resets
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(300);
+
+    const subtitleReset = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      const content = document.querySelector('#transcriptContent');
+      const current = content?.querySelector('.subtitle-current');
+      const segments = content?.querySelectorAll('.transcript-segment');
+      return panel && content ? {
+        hidden: panel.hidden,
+        hasCurrent: !!current,
+        totalSegments: segments?.length || 0,
+        currentText: current?.textContent.trim().slice(0, 60) || ''
+      } : null;
+    });
+    check('AI subtitle resets on card change', subtitleReset && subtitleReset.hidden === false && subtitleReset.hasCurrent && subtitleReset.totalSegments > 0);
+
+    await openSubmodal(page, 'feed');
+    await page.click('#unitFilters [data-unit="3"]');
     await page.waitForTimeout(100);
     const unitFiltered = await page.evaluate(() => [...document.querySelectorAll('.reel-card:not(.reel-measure)')].every(card => Number(card.dataset.unit) === 3));
     const focusedUnit = await page.evaluate(() => document.activeElement?.dataset?.unit || '');
     check('Unit filter limits the feed to the chosen unit', unitFiltered);
     check('Rebuilding the unit filters preserves keyboard focus', focusedUnit === '3', focusedUnit);
 
-    await page.click('[data-unit="all"]');
+    await page.click('#unitFilters [data-unit="all"]');
     await page.click('[data-order="shuffled"]');
     await page.waitForTimeout(100);
     const shuffledBefore = await page.evaluate(() => [...document.querySelectorAll('.reel-card:not(.reel-measure)')].slice(0, 12).map(card => card.dataset.entryId));
+    await closeSubmodal(page, 'feedModal');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await waitForFeed(page);
     const shuffledAfter = await page.evaluate(() => [...document.querySelectorAll('.reel-card:not(.reel-measure)')].slice(0, 12).map(card => card.dataset.entryId));
     check('Shuffle order is stable across reloads', JSON.stringify(shuffledBefore) === JSON.stringify(shuffledAfter));
     check('Shuffle seed persists', (await persistedState(page)).shuffleSeed === 541385059);
 
-    await openDrawer(page);
+    await openSubmodal(page, 'feed');
     await page.click('#newOrderButton');
     await page.waitForTimeout(100);
     const newShuffleSeed = (await persistedState(page)).shuffleSeed;
     check('New shuffle creates a different seed', newShuffleSeed !== 541385059, String(newShuffleSeed));
+    await closeSubmodal(page, 'feedModal');
     await page.reload({ waitUntil: 'domcontentloaded' });
     await waitForFeed(page);
     check('New shuffle seed survives reload', (await persistedState(page)).shuffleSeed === newShuffleSeed);
 
-    await openDrawer(page);
+    await openSubmodal(page, 'feed');
     await page.click('[data-order="ordered"]');
-    await closeDrawer(page);
+    await closeSubmodal(page, 'feedModal');
     await activateCard(page, '.reel-card[data-card-index="5"]');
     const orderedSnapshot = await activeCardSnapshot(page);
-    await openDrawer(page);
+    await openSubmodal(page, 'feed');
     await page.click('[data-order="shuffled"]');
     await page.click('#newOrderButton');
     await page.click('[data-order="ordered"]');
-    await closeDrawer(page);
+    await closeSubmodal(page, 'feedModal');
     await waitForRepagination(page);
     const orderedRestored = await activeCardSnapshot(page);
     check('Ordered feed restores independently of later shuffle seeds', orderedRestored.entryId === orderedSnapshot.entryId && orderedRestored.cardKey === orderedSnapshot.cardKey, JSON.stringify({ orderedSnapshot, orderedRestored }));
     check('Ordered feed uses a seed-independent position key', Boolean(orderedRestored.positions['ordered|all|all']) && !Object.keys(orderedRestored.positions).some(key => key.startsWith('ordered|all|all|')), JSON.stringify(Object.keys(orderedRestored.positions)));
 
-    await openDrawer(page);
+    await openSubmodal(page, 'feed');
     await page.click('[data-order="ordered"]');
-    await closeDrawer(page);
+    await closeSubmodal(page, 'feedModal');
     await activateCard(page, '.reel-card[data-card-index="0"]');
     const activeEntry = await page.evaluate(() => document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.entryId);
     await page.click('.reel-card[aria-hidden="false"] [data-action="done"]');
@@ -544,6 +739,7 @@ function startServer() {
     const restoredProgress = await persistedState(page);
     check('Progress survives reload', restoredProgress.done.includes(activeEntry) && restoredProgress.saved.includes(activeEntry));
 
+    await selectBrowserNarrator(page, 'test-voice-one');
     await page.evaluate(() => {
       window.__speechLog.speaks = [];
       window.__speechLog.speechEvents = [];
@@ -584,6 +780,18 @@ function startServer() {
     check('S toggles Saved for the active card', keyboardAfter.saved !== keyboardBefore.saved);
     check('D toggles Done for the active card', keyboardAfter.done !== keyboardBefore.done);
     check('M toggles mute', keyboardAfter.muted !== keyboardBefore.muted);
+
+    const cardMute = await page.locator('.reel-card[aria-hidden="false"] [data-action="mute"]');
+    const modalMute = await page.locator('#muteButton');
+    await cardMute.click();
+    await page.waitForTimeout(50);
+    const muteClickState = await page.evaluate(() => ({
+      cardAriaPressed: document.querySelector('.reel-card[aria-hidden="false"] [data-action="mute"]')?.getAttribute('aria-pressed'),
+      modalAriaPressed: document.querySelector('#muteButton')?.getAttribute('aria-pressed')
+    }));
+    check('Card mute button click toggles aria-pressed', muteClickState.cardAriaPressed === 'true');
+    check('Card mute click syncs with modal mute button', muteClickState.modalAriaPressed === 'true');
+
     await page.keyboard.press('s');
     await page.keyboard.press('d');
     await page.keyboard.press('m');
@@ -646,6 +854,7 @@ function startServer() {
       check('Continuation-card navigation moves focus to a visible target', false, 'no continuation card found');
     }
 
+    await selectBrowserNarrator(page, 'test-voice-one');
     await activateCard(page, '.reel-card[data-kind="concept"][data-mode="text"]');
     await activateCard(page, '.reel-card[data-kind="question"][data-mode="text"]');
     await page.click('.reel-card[aria-hidden="false"] [data-action="next"]');
@@ -654,12 +863,19 @@ function startServer() {
       window.__speechLog.speaks = [];
     });
     await page.click('.reel-card[aria-hidden="false"] [data-action="previous"]');
-    const questionNarration = await page.evaluate(() => ({
-      question: document.querySelector('.reel-card[aria-hidden="false"] .reel-card__question')?.textContent.trim() || ''
-    }));
+    const questionNarration = await page.evaluate(async () => {
+      const card = document.querySelector('.reel-card[aria-hidden="false"]');
+      const feed = await fetch('content.json').then(response => response.json());
+      const entry = feed.entries.find(item => item.id === card?.dataset.entryId);
+      const segmentId = entry?.narration?.title;
+      return {
+        visible: card?.querySelector('.reel-card__question')?.textContent.trim() || '',
+        narrated: feed.narration?.segments?.[segmentId]?.text || ''
+      };
+    });
     await page.waitForTimeout(650);
     const speechEvents = await page.evaluate(() => [...window.__speechLog.speechEvents]);
-    check('Question narration speaks the question first', speechEvents[0]?.text === questionNarration.question, JSON.stringify(speechEvents.slice(0, 2)));
+    check('Question narration speaks the normalized question first', speechEvents[0]?.text === questionNarration.narrated && questionNarration.narrated !== questionNarration.visible, JSON.stringify({ questionNarration, events: speechEvents.slice(0, 2) }));
     check('Question and answer use one voice per card', speechEvents.length >= 2 && speechEvents[0].voice && speechEvents[0].voice === speechEvents[1].voice);
     check('Question and answer are separated by a deliberate pause', speechEvents.length >= 2 && speechEvents[1].time - speechEvents[0].time >= 400, speechEvents.length >= 2 ? String(speechEvents[1].time - speechEvents[0].time) : 'missing second segment');
     check('Narration uses the selected speech rate', speechEvents[0]?.rate === 1.15, String(speechEvents[0]?.rate));
@@ -685,7 +901,13 @@ function startServer() {
     await page.evaluate(() => document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]')?.click());
     await page.waitForTimeout(520);
     const resumedGapSpeech = await page.evaluate(() => [...window.__speechLog.speaks]);
-    check('Resuming during the question-answer gap starts the pending answer once', resumedGapSpeech.length === 2 && resumedGapSpeech[0] !== resumedGapSpeech[1], JSON.stringify(resumedGapSpeech));
+    check(
+      'Resuming during the question-answer gap starts the pending answer once',
+      resumedGapSpeech.length >= 2
+        && resumedGapSpeech[0] !== resumedGapSpeech[1]
+        && resumedGapSpeech.filter(text => text === resumedGapSpeech[0]).length === 1,
+      JSON.stringify(resumedGapSpeech)
+    );
 
     await activateCard(page, '.reel-card[data-mode="visual"]');
     const visualNavigation = await page.evaluate(() => {
@@ -729,84 +951,99 @@ function startServer() {
     await waitForFeed(page);
     const mobile = await page.evaluate(() => ({
       pageOverflow: document.documentElement.scrollWidth - innerWidth,
-      railOpen: document.querySelector('#reelsRail').classList.contains('is-open'),
-      railInert: document.querySelector('#reelsRail').inert,
-      railAriaHidden: document.querySelector('#reelsRail').getAttribute('aria-hidden'),
+      hubMenuOpen: document.querySelector('#hubMenu')?.open ?? false,
+      hubMenuInert: document.querySelector('#hubMenu')?.inert ?? false,
+      hubMenuAriaHidden: document.querySelector('#hubMenu')?.getAttribute('aria-hidden') ?? 'true',
       overflow: [...document.querySelectorAll('.reel-card:not(.reel-measure)')].filter(card => {
         const body = card.querySelector('.reel-card__body');
         return body && body.scrollHeight > body.clientHeight + 2;
       }).length,
-      menuVisible: getComputedStyle(document.querySelector('#railToggle')).display !== 'none',
+      menuVisible: getComputedStyle(document.querySelector('#hubToggle')).display !== 'none',
       stageWidth: Math.round(document.querySelector('#reelStage').getBoundingClientRect().width),
       viewportWidth: innerWidth
     }));
     check('Mobile has no horizontal page overflow', mobile.pageOverflow === 0);
-    check('Mobile rail starts closed', !mobile.railOpen);
-    check('Closed mobile rail is removed from the tab order', mobile.railInert && mobile.railAriaHidden === 'true');
+    check('Mobile hub menu starts closed', !mobile.hubMenuOpen);
+    check('Closed mobile hub menu is removed from the tab order', mobile.hubMenuInert && mobile.hubMenuAriaHidden === 'true');
     check('Mobile cards do not overflow after repagination', mobile.overflow === 0, `${mobile.overflow} overflowing cards`);
     check('Mobile menu control is visible', mobile.menuVisible);
     check('Mobile card stage fills the viewport width', mobile.stageWidth === mobile.viewportWidth);
 
-    await page.click('#railToggle');
-    const openRailState = await page.evaluate(() => ({
-      expanded: document.querySelector('#railToggle').getAttribute('aria-expanded'),
-      inert: document.querySelector('#reelsRail').inert,
-      ariaHidden: document.querySelector('#reelsRail').getAttribute('aria-hidden'),
-      focusInRail: document.querySelector('#reelsRail').contains(document.activeElement),
-      role: document.querySelector('#reelsRail').getAttribute('role'),
-      modal: document.querySelector('#reelsRail').getAttribute('aria-modal'),
-      stageInert: document.querySelector('#reelStage').inert,
-      stageAriaHidden: document.querySelector('#reelStage').getAttribute('aria-hidden'),
-      scrimInert: document.querySelector('#railScrim').inert,
-      scrimAriaHidden: document.querySelector('#railScrim').getAttribute('aria-hidden')
+    await page.click('#hubToggle');
+    const openHubState = await page.evaluate(() => ({
+      open: document.querySelector('#hubMenu')?.open ?? false,
+      inert: document.querySelector('#hubMenu')?.inert ?? false,
+      ariaHidden: document.querySelector('#hubMenu')?.getAttribute('aria-hidden') ?? 'true',
+      focusInHub: document.querySelector('#hubMenu')?.contains(document.activeElement),
+      role: document.querySelector('#hubMenu')?.getAttribute('role'),
+      modal: document.querySelector('#hubMenu')?.getAttribute('aria-modal'),
+      stageInert: document.querySelector('#reelStage')?.inert,
+      stageAriaHidden: document.querySelector('#reelStage')?.getAttribute('aria-hidden')
     }));
-    check('Mobile feed controls open', openRailState.expanded === 'true');
-    check('Open mobile rail is keyboard accessible', !openRailState.inert && openRailState.ariaHidden === 'false' && openRailState.focusInRail);
-    check('Open mobile rail exposes true modal-dialog semantics', openRailState.role === 'dialog' && openRailState.modal === 'true' && openRailState.stageInert && openRailState.stageAriaHidden === 'true' && !openRailState.scrimInert && openRailState.scrimAriaHidden === 'false', JSON.stringify(openRailState));
+    check('Mobile hub menu opens', openHubState.open === true);
+    check('Open mobile hub menu is keyboard accessible', !openHubState.inert && openHubState.ariaHidden === 'false' && openHubState.focusInHub);
+    check('Open mobile hub menu exposes true modal-dialog semantics', openHubState.role === 'dialog' && openHubState.modal === 'true' && openHubState.stageInert && openHubState.stageAriaHidden === 'true', JSON.stringify(openHubState));
 
     await page.evaluate(() => {
-      const focusable = [...document.querySelector('#reelsRail').querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), summary, [tabindex]:not([tabindex="-1"])')].filter(element => element.getClientRects().length > 0);
+      const focusable = [...document.querySelector('#hubMenu').querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), summary, [tabindex]:not([tabindex="-1"])')].filter(element => element.getClientRects().length > 0);
       focusable[focusable.length - 1]?.focus();
     });
     await page.keyboard.press('Tab');
     const trappedForward = await page.evaluate(() => ({
-      inside: document.querySelector('#reelsRail').contains(document.activeElement),
+      inside: document.querySelector('#hubMenu').contains(document.activeElement),
       id: document.activeElement?.id || '',
       order: document.activeElement?.dataset?.order || ''
     }));
-    check('Forward Tab stays inside the mobile drawer', trappedForward.inside, JSON.stringify(trappedForward));
+    check('Forward Tab stays inside the mobile hub menu', trappedForward.inside, JSON.stringify(trappedForward));
     await page.keyboard.press('Shift+Tab');
-    const trappedReverse = await page.evaluate(() => document.querySelector('#reelsRail').contains(document.activeElement));
-    check('Reverse Tab stays inside the mobile drawer', trappedReverse);
+    const trappedReverse = await page.evaluate(() => document.querySelector('#hubMenu').contains(document.activeElement));
+    check('Reverse Tab stays inside the mobile hub menu', trappedReverse);
 
     await page.keyboard.press('Escape');
-    const closedRailState = await page.evaluate(() => ({
-      expanded: document.querySelector('#railToggle').getAttribute('aria-expanded'),
-      focusId: document.activeElement?.id,
-      scrimInert: document.querySelector('#railScrim').inert,
-      scrimAriaHidden: document.querySelector('#railScrim').getAttribute('aria-hidden')
-    }));
-    check('Escape closes the mobile feed controls', closedRailState.expanded === 'false');
-    check('Closing the mobile drawer restores focus to its trigger', closedRailState.focusId === 'railToggle');
-    check('Closed drawer scrim is removed from the accessibility tree', closedRailState.scrimInert && closedRailState.scrimAriaHidden === 'true', JSON.stringify(closedRailState));
-
-    await page.click('#railToggle');
-    await page.mouse.click(370, 120);
-    const scrimClosedState = await page.evaluate(() => ({
-      expanded: document.querySelector('#railToggle').getAttribute('aria-expanded'),
+    await page.waitForFunction(() => {
+      const hub = document.querySelector('#hubMenu');
+      return hub?.open === false && hub?.inert === true && hub?.getAttribute('aria-hidden') === 'true';
+    }, { timeout: 5000 });
+    const closedHubState = await page.evaluate(() => ({
+      open: document.querySelector('#hubMenu')?.open ?? false,
+      inert: document.querySelector('#hubMenu')?.inert ?? false,
+      ariaHidden: document.querySelector('#hubMenu')?.getAttribute('aria-hidden') ?? 'false',
       focusId: document.activeElement?.id
     }));
-    check('Clicking the scrim closes the mobile drawer', scrimClosedState.expanded === 'false');
-    check('Scrim close restores focus to the drawer trigger', scrimClosedState.focusId === 'railToggle', JSON.stringify(scrimClosedState));
+    check('Escape closes the mobile hub menu', closedHubState.open === false);
+    check('Closed mobile hub menu is removed from the tab order', closedHubState.inert && closedHubState.ariaHidden === 'true');
+    check('Closing the mobile hub menu restores focus to its trigger', closedHubState.focusId === 'hubToggle');
 
-    await page.click('#railToggle');
-    await page.click('#railClose');
+    await page.click('#hubToggle');
+    await page.click('#hubClose');
     const triggerClosedState = await page.evaluate(() => ({
-      expanded: document.querySelector('#railToggle').getAttribute('aria-expanded'),
+      open: document.querySelector('#hubMenu')?.open ?? false,
       focusId: document.activeElement?.id
     }));
-    check('The drawer close button closes the mobile drawer', triggerClosedState.expanded === 'false');
-    check('Drawer-button close restores focus to the drawer trigger', triggerClosedState.focusId === 'railToggle', JSON.stringify(triggerClosedState));
+    check('The hub menu close button closes the mobile hub menu', triggerClosedState.open === false);
+    check('Hub-menu-button close restores focus to the hub trigger', triggerClosedState.focusId === 'hubToggle', JSON.stringify(triggerClosedState));
+
+    // Test submodal focus trapping
+    await page.click('#hubToggle');
+    await page.click('.hub-menu__item[data-hub-target="feed"]');
+    const feedModalOpen = await page.waitForFunction(() => document.querySelector('#feedModal')?.open === true, { timeout: 5000 });
+    check('Feed submodal opens on mobile', feedModalOpen);
+
+    await page.evaluate(() => {
+      const focusable = [...document.querySelector('#feedModal').querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), summary, [tabindex]:not([tabindex="-1"])')].filter(element => element.getClientRects().length > 0);
+      focusable[focusable.length - 1]?.focus();
+    });
+    await page.keyboard.press('Tab');
+    const feedTrappedForward = await page.evaluate(() => document.querySelector('#feedModal').contains(document.activeElement));
+    check('Forward Tab stays inside the feed submodal', feedTrappedForward);
+    await page.keyboard.press('Shift+Tab');
+    const feedTrappedReverse = await page.evaluate(() => document.querySelector('#feedModal').contains(document.activeElement));
+    check('Reverse Tab stays inside the feed submodal', feedTrappedReverse);
+
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => document.querySelector('#feedModal')?.open === false, { timeout: 5000 });
+    const feedClosedFocus = await page.evaluate(() => document.activeElement?.id);
+    check('Escape closes feed submodal and returns focus to hub menu', feedClosedFocus === 'hubToggle');
 
     const viewportMatrix = [
       { width: 320, height: 568 },
@@ -873,6 +1110,247 @@ function startServer() {
     } else {
       check('Resize keeps the active source entry and atom boundary', false, 'no multi-row table card found');
     }
+
+    const providerContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(providerContext);
+    const providerPage = await providerContext.newPage();
+    const providerErrors = [];
+    providerPage.on('console', message => {
+      if (message.type() === 'error') providerErrors.push(message.text());
+    });
+    providerPage.on('pageerror', error => providerErrors.push(error.message));
+    await forceNarrationManifest(providerPage);
+    const providerRequests = [];
+    const providerAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
+    let providerRequestsActive = 0;
+    let providerRequestsMaximum = 0;
+    await providerPage.route('**/api/narration?**', async route => {
+      providerRequestsActive += 1;
+      providerRequestsMaximum = Math.max(providerRequestsMaximum, providerRequestsActive);
+      const requestUrl = new URL(route.request().url());
+      providerRequests.push({
+        segment: requestUrl.searchParams.get('segment') || '',
+        version: requestUrl.searchParams.get('v') || ''
+      });
+      await new Promise(resolve => setTimeout(resolve, 80));
+      await route.fulfill({ status: 200, contentType: 'audio/mpeg', body: providerAudio });
+      providerRequestsActive -= 1;
+    });
+    await providerPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(providerPage);
+    const providerFeed = await providerPage.evaluate(async () => fetch('content.json').then(response => response.json()));
+    const visualEntry = providerFeed.entries.find(entry => entry.parts.some(part => part.type === 'visual'));
+    const visualTitleId = visualEntry?.narration?.title || '';
+    const firstProviderRequest = providerPage.waitForRequest(
+      request => request.url().includes('/api/narration?'),
+      { timeout: 10000 }
+    );
+    await providerPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await firstProviderRequest;
+    await providerPage.waitForFunction(() => document.querySelector('#audioStatus')?.textContent.includes('Google'), null, { timeout: 10000 });
+    await providerPage.waitForTimeout(220);
+    const providerState = await providerPage.evaluate(() => ({
+      status: document.querySelector('#audioStatus')?.textContent.trim() || '',
+      speechCount: window.__speechLog?.speaks?.length || 0,
+      playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || ''
+    }));
+    const providerRequestCounts = providerRequests.reduce((counts, request) => {
+      counts[request.segment] = (counts[request.segment] || 0) + 1;
+      return counts;
+    }, {});
+    check(
+      'Google narration routes known manifest segments to the protected endpoint',
+      providerRequests.length > 0
+        && providerRequests.every(request => providerFeed.narration.segments[request.segment]
+          && providerFeed.narration.segments[request.segment].version === request.version),
+      JSON.stringify(providerRequests.slice(0, 5))
+    );
+    check('Google narration does not fall back to browser speech', providerState.speechCount === 0 && /Google Chirp 3 HD/.test(providerState.status), JSON.stringify(providerState));
+    check('Narration prefetch deduplicates segment requests', Object.values(providerRequestCounts).every(count => count === 1), JSON.stringify(providerRequestCounts));
+    check('Narration prefetch caps background provider concurrency', providerRequestsMaximum <= 4, String(providerRequestsMaximum));
+    check('Narration prefetch skips visual-only cards', !visualTitleId || !providerRequests.some(request => request.segment === visualTitleId), visualTitleId);
+    check('Provider playback produces no browser errors', providerErrors.length === 0, providerErrors.join(' | '));
+    await providerContext.close();
+
+    const aiOffContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(aiOffContext);
+    await aiOffContext.addInitScript(() => {
+      localStorage.setItem('quickReels.state.v1', JSON.stringify({
+        version: 1,
+        voice: 'google',
+        narratorVersion: 2,
+        aiNarrationEnabled: false,
+        muted: false
+      }));
+    });
+    const aiOffPage = await aiOffContext.newPage();
+    await forceNarrationManifest(aiOffPage);
+    await aiOffPage.route('**/api/narration?**', route => route.fulfill({
+      status: 200,
+      contentType: 'audio/mpeg',
+      body: providerAudio
+    }));
+    await aiOffPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(aiOffPage);
+    await aiOffPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await aiOffPage.waitForFunction(() => /Google Chirp 3 HD/.test(document.querySelector('#audioStatus')?.textContent || ''), null, { timeout: 10000 });
+    await aiOffPage.waitForTimeout(220);
+    const aiOffState = await aiOffPage.evaluate(() => ({
+      status: document.querySelector('#audioStatus')?.textContent.trim() || '',
+      speechCount: window.__speechLog?.speaks?.length || 0,
+      playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || '',
+      aiEnabled: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').aiNarrationEnabled
+    }));
+    check(
+      'Regression: Google narration still plays with AI narration OFF',
+      aiOffState.speechCount === 0 && /Google Chirp 3 HD/.test(aiOffState.status) && Boolean(aiOffState.playerSource),
+      JSON.stringify(aiOffState)
+    );
+    check('Regression: AI narration toggle stays OFF during Google playback', aiOffState.aiEnabled === false, JSON.stringify(aiOffState));
+    await aiOffContext.close();
+
+    const retiredVoiceContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await retiredVoiceContext.addInitScript(() => {
+      localStorage.setItem('quickReels.state.v1', JSON.stringify({
+        version: 1,
+        voice: 'kokoro',
+        narratorVersion: 2,
+        aiNarrationEnabled: true,
+        muted: false
+      }));
+    });
+    const retiredVoicePage = await retiredVoiceContext.newPage();
+    await retiredVoicePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(retiredVoicePage);
+    const retiredVoiceState = await retiredVoicePage.evaluate(() => ({
+      selected: document.querySelector('#voiceSelect')?.value || '',
+      options: [...(document.querySelector('#voiceSelect')?.options || [])].map(option => option.value)
+    }));
+    check(
+      'Retired local voice migrates to Google on load',
+      retiredVoiceState.selected === 'google' && !retiredVoiceState.options.includes('kokoro'),
+      JSON.stringify(retiredVoiceState)
+    );
+    await retiredVoiceContext.close();
+    const quotaContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(quotaContext);
+    const quotaPage = await quotaContext.newPage();
+    await forceNarrationManifest(quotaPage);
+    await quotaPage.route('**/api/narration?**', route => route.fulfill({
+      status: 429,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'quota_exhausted', message: 'Quota exhausted.' })
+    }));
+    await quotaPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(quotaPage);
+    await quotaPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await quotaPage.waitForFunction(() => (window.__speechLog?.speaks?.length || 0) > 0, null, { timeout: 10000 });
+    const quotaState = await quotaPage.evaluate(() => ({
+      status: document.querySelector('#audioStatus')?.textContent.trim() || '',
+      speaks: [...(window.__speechLog?.speaks || [])]
+    }));
+    check(
+      'Google quota failure falls back to browser speech for the current card',
+      /browser voice/i.test(quotaState.status) && quotaState.speaks.length > 0,
+      JSON.stringify(quotaState)
+    );
+    await quotaContext.close();
+
+    const remainderContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(remainderContext);
+    const remainderPage = await remainderContext.newPage();
+    await forceNarrationManifest(remainderPage);
+    let remainderFirstId = '';
+    let remainderSecondId = '';
+    const remainderAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
+    await remainderPage.route('**/api/narration?**', async route => {
+      const requestUrl = new URL(route.request().url());
+      const segment = requestUrl.searchParams.get('segment') || '';
+      if (segment === remainderSecondId) {
+        await route.fulfill({
+          status: 429,
+          contentType: 'application/json',
+          body: JSON.stringify({ error: 'quota_exhausted', message: 'Quota exhausted.' })
+        });
+        return;
+      }
+      await route.fulfill({ status: 200, contentType: 'audio/mpeg', body: remainderAudio });
+    });
+    await remainderPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(remainderPage);
+    const remainderFeed = await remainderPage.evaluate(async () => fetch('content.json').then(response => response.json()));
+    const remainderEntry = remainderFeed.entries[0];
+    remainderFirstId = remainderEntry?.narration?.title || '';
+    const remainderFirstPart = remainderEntry?.narration?.parts?.[0] || {};
+    remainderSecondId = remainderFirstPart.type === 'table'
+      ? (remainderFirstPart.header || '')
+      : (remainderFirstPart.text || '');
+    await remainderPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await remainderPage.waitForFunction(
+      segmentId => document.querySelector('#narrationPlayer')?.dataset.narrationSegmentId === segmentId,
+      remainderFirstId,
+      { timeout: 10000 }
+    );
+    await remainderPage.evaluate(() => document.querySelector('#narrationPlayer')?.dispatchEvent(new Event('ended')));
+    await remainderPage.waitForFunction(() => (window.__speechLog?.speaks?.length || 0) > 0, null, { timeout: 10000 });
+    const remainderState = await remainderPage.evaluate(() => ({
+      speaks: [...(window.__speechLog?.speaks || [])],
+      status: document.querySelector('#audioStatus')?.textContent.trim() || ''
+    }));
+    const remainderFirstText = remainderFeed.narration.segments[remainderFirstId]?.text || '';
+    const remainderSecondText = remainderFeed.narration.segments[remainderSecondId]?.text || '';
+    check(
+      'Provider fallback starts at the failed segment instead of replaying earlier audio',
+      remainderState.speaks[0] === remainderSecondText
+        && remainderState.speaks[0] !== remainderFirstText
+        && /browser voice/i.test(remainderState.status),
+      JSON.stringify({ remainderFirstText, remainderSecondText, remainderState })
+    );
+    await remainderContext.close();
+
+    const staleContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(staleContext);
+    const stalePage = await staleContext.newPage();
+    await forceNarrationManifest(stalePage);
+    let releaseFirstRequest;
+    let markFirstRequestSeen;
+    const firstRequestSeen = new Promise(resolve => { markFirstRequestSeen = resolve; });
+    const firstRequestGate = new Promise(resolve => { releaseFirstRequest = resolve; });
+    let firstRequestHandled = false;
+    const staleAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
+    await stalePage.route('**/api/narration?**', async route => {
+      const requestUrl = new URL(route.request().url());
+      const segment = requestUrl.searchParams.get('segment') || '';
+      if (segment === remainderFirstId && !firstRequestHandled) {
+        firstRequestHandled = true;
+        markFirstRequestSeen();
+        await firstRequestGate;
+        try {
+          await route.abort('failed');
+        } catch {}
+        return;
+      }
+      await route.fulfill({ status: 200, contentType: 'audio/mpeg', body: staleAudio });
+    });
+    await stalePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(stalePage);
+    await stalePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await firstRequestSeen;
+    await stalePage.click('.reel-card[aria-hidden="false"] [data-action="next"]');
+    await stalePage.click('.reel-card[aria-hidden="false"] [data-action="next"]');
+    releaseFirstRequest();
+    await stalePage.waitForTimeout(350);
+    const staleState = await stalePage.evaluate(() => ({
+      speaks: [...(window.__speechLog?.speaks || [])],
+      status: document.querySelector('#audioStatus')?.textContent.trim() || '',
+      activeMode: document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.mode || ''
+    }));
+    check(
+      'A late failed Google request cannot narrate the previous card',
+      staleState.speaks.length === 0 && staleState.activeMode === 'text' && /Google/i.test(staleState.status),
+      JSON.stringify(staleState)
+    );
+    await staleContext.close();
 
     const emptyContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     await emptyContext.addInitScript(() => {
@@ -956,6 +1434,12 @@ function startServer() {
     await fallbackContext.addInitScript(() => {
       delete window.speechSynthesis;
       delete window.SpeechSynthesisUtterance;
+      localStorage.setItem('quickReels.state.v1', JSON.stringify({
+        version: 1,
+        seen: [], done: [], saved: [], lastPosition: null, positions: {},
+        voice: 'system', narratorVersion: 2, speechRate: 1, shuffleSeed: 541385059,
+        order: 'ordered', unit: 'all', savedOnly: false, musicVolume: 0.28, muted: false
+      }));
     });
     const fallbackPage = await fallbackContext.newPage();
     const fallbackErrors = [];

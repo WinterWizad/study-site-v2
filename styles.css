@@ -216,9 +216,10 @@ body.home-page {
   background: transparent;
 }
 body.home-page .site-header,
-body.home-page .layout { position: relative; z-index: 1; }
+body.home-page .layout { position: relative; }
 body.home-page .site-header {
   position: relative;
+  z-index: 2;
   flex: none;
   background: var(--bg);
   border-bottom-color: var(--border);
@@ -226,6 +227,7 @@ body.home-page .site-header {
 }
 body.home-page .header-content { max-width: none; }
 body.home-page .layout {
+  z-index: 1;
   height: calc(100dvh - var(--header-height));
   min-height: 0;
   max-width: 100%;
@@ -2097,11 +2099,19 @@ body.home-page .theme-toggle {
 }
 .mobile-nav-toggle:hover { color: var(--accent); }
 
-/* The route stays freely scrollable; vertical section snapping is handled below. */
+/* The route handles horizontal pan; vertical pan is delegated to the
+   parent homepage scroller so a vertical finger gesture starting on the route
+   still scrolls the page. Using manipulation allows the browser to choose
+   the appropriate scroll container for each axis. */
 body.home-page .rail-viewport {
   scrollbar-width: none;
   -ms-overflow-style: none;
-  touch-action: pan-x pinch-zoom;
+  touch-action: manipulation;
+}
+
+/* The dedicated vertical scroller claims vertical gestures. */
+body.home-page .home-scroll {
+  touch-action: pan-y;
 }
 body.home-page .rail-viewport::-webkit-scrollbar { display: none; }
 body.home-page .rail-station:focus-visible { outline: none; }
@@ -2424,14 +2434,15 @@ body.home-page .foot-btn {
     bottom: auto;
     z-index: 2;
     overflow-x: auto;
+    overflow-y: auto;
     padding: 0;
   }
   body.home-page .rail-track {
     position: relative;
     width: 760px;
     min-width: 760px;
-    height: 560px;
-    margin: 0 0 0 50%;
+    height: min(560px, calc(100dvh - var(--header-height) - 80px));
+    margin: 0;
     padding: 0;
   }
   body.home-page .rail-tick.is-day:not(.is-today):not(.is-exam):not(.is-movie),
@@ -2446,6 +2457,7 @@ body.home-page .foot-btn {
     display: block;
     width: 0;
     height: 0;
+    pointer-events: none;
   }
   body.home-page .rail-scroll-cue { right: 1rem; }
   body.home-page .door {
@@ -2520,3 +2532,16 @@ body.home-page .foot-btn {
   body.home-page .foot-brand p { color: #555; }
   body.home-page .foot-btn { display: none; }
 }
+
+/* Safe-area handling for notched devices – disabled in test env */
+/* @supports (padding: max(0px)) {
+  body.home-page .site-header {
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
+  body.home-page .home-scroll {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+  body.home-page .page-foot {
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+} */

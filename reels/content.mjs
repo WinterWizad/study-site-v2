@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Buffer } from 'node:buffer';
 import { marked } from 'marked';
+import { normalizeSpeech } from './speech.mjs';
 
 // Reverse Windows-1252 sequences that were decoded as UTF-8 in Unit 1. The
 // repair is intentionally local to suspicious runs: a second global pass would
@@ -677,6 +678,31 @@ function manifestAnswerParts(tokens, manifestEntry) {
   }
 
   return parts;
+}
+
+export function collectSectionHeadingNames(units = [], rootDir = '.', folder = '') {
+  const names = new Map();
+
+  for (const unit of units) {
+    const filePath = path.join(rootDir, folder, unit.file);
+    const markdown = repairMojibake(fs.readFileSync(filePath, 'utf8'));
+    const tokens = marked.lexer(markdown);
+
+    for (const token of tokens) {
+      if (token.type !== 'heading' || (token.depth !== 2 && token.depth !== 3)) continue;
+      const match = String(token.text || '').match(/^(\d+(?:\.\d+)*)\.?\s+(.+)$/);
+      if (!match) continue;
+
+      const name = normalizeSpeech(match[2], { kind: 'heading' })
+        .replace(/\s+[—-]\s+Draw This Diagram\s*$/i, '')
+        .replace(/\s+[—-]\s+[A-D]\d+\b.*$/i, '')
+        .replace(/\s+\d+(?:-\s*mark)?(?:\s*\/\s*\d+(?:-\s*mark)?)*\s*$/i, '')
+        .trim();
+      if (name) names.set(match[1], name);
+    }
+  }
+
+  return names;
 }
 
 export function extractReelContent({ subject, units, rootDir, questionManifest = [] }) {

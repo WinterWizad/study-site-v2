@@ -4,8 +4,10 @@ import { fileURLToPath } from 'url';
 import { marked } from 'marked';
 import fm from 'front-matter';
 import { glob } from 'glob';
-import { createHeadingIdAssigner, extractReelContent, repairMojibake } from './reels/content.mjs';
+import { collectSectionHeadingNames, createHeadingIdAssigner, extractReelContent, repairMojibake } from './reels/content.mjs';
+import { buildNarrationManifest, narrationProfileFromEnv, buildAiTranscriptManifest, DEFAULT_AI_TRANSCRIPT_PROFILE } from './reels/speech.mjs';
 import { BI_QUESTION_MANIFEST } from './reels/bi-question-manifest.mjs';
+import { ENTREPRENEURSHIP_QUESTION_MANIFEST } from './reels/entrepreneurship-question-manifest.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = __dirname;
@@ -1415,7 +1417,7 @@ function generateMainIndexHtml() {
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>BIM 8th Semester Exam Timetable & Study Notes</title>
   <meta name="description" content="BIM 8th-semester examination timetable and study notes for Business Intelligence, Digital Economy, Cloud Computing and IT Entrepreneurship.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -1968,6 +1970,35 @@ function generateMainIndexHtml() {
 </html>`;
 }
 
+// Static hosts do not all apply the clean-URL rewrites from vercel.json.
+// Generate a route alias for each rewritten page so routes such as
+// /bi/unit-1 also work with Python's http.server.
+function resolveRouteRelativeUrls(pageHtml, canonicalPublicPath) {
+  const canonicalUrl = new URL(canonicalPublicPath, 'https://study-site.local');
+  const urlAttribute = /(<(?:a|link|script|img|source|iframe|video|audio|embed|object)\b[^>]*?\b(?:href|src)\s*=\s*)(["'])([^"']*)\2/gi;
+
+  return pageHtml.replace(urlAttribute, (match, prefix, quote, value) => {
+    if (!value || /^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(value)) return match;
+
+    try {
+      const resolved = new URL(value, canonicalUrl);
+      return `${prefix}${quote}${resolved.pathname}${resolved.search}${resolved.hash}${quote}`;
+    } catch {
+      return match;
+    }
+  });
+}
+
+function writeCleanRouteAlias(subjectDistDir, subjectId, pageFilename, pageHtml) {
+  const routeName = path.basename(pageFilename, '.html');
+  const routeDir = path.join(subjectDistDir, routeName);
+  const canonicalPublicPath = `/${subjectId}/${pageFilename}`;
+  const routeHtml = resolveRouteRelativeUrls(pageHtml, canonicalPublicPath);
+
+  fs.mkdirSync(routeDir, { recursive: true });
+  fs.writeFileSync(path.join(routeDir, 'index.html'), routeHtml);
+}
+
 // Main build function
 async function build() {
   console.log('🔨 Building study site...');
@@ -2014,6 +2045,7 @@ async function build() {
       // Use a simple filename
       const unitFilename = `unit-${unit.num}.html`;
       fs.writeFileSync(path.join(subjectDistDir, unitFilename), unitHtml);
+      writeCleanRouteAlias(subjectDistDir, subjectId, unitFilename, unitHtml);
       console.log(`  ✅ ${subjectId}/unit-${unit.num}.html`);
     }
 
@@ -2030,7 +2062,8 @@ async function build() {
         const { content } = readMarkdownFile(srcPath);
         const htmlContent = renderMarkdown(content);
         const resourceHtml = generateResourceHtml(subject, resource.title, htmlContent);
-        fs.writeFileSync(path.join(DIST_DIR, subjectId, resource.dest), resourceHtml);
+        fs.writeFileSync(path.join(subjectDistDir, resource.dest), resourceHtml);
+        writeCleanRouteAlias(subjectDistDir, subjectId, resource.dest, resourceHtml);
         console.log(`  ✅ ${subjectId}/${resource.dest}`);
       }
     }
@@ -2057,6 +2090,39 @@ async function build() {
     questionManifest: BI_QUESTION_MANIFEST
   });
   reelsPayload.questionManifest = BI_QUESTION_MANIFEST;
+
+  const narrationProfile = narrationProfileFromEnv();
+  const sectionNames = collectSectionHeadingNames(
+    SUBJECTS.bi.units,
+    SRC_DIR,
+    SUBJECTS.bi.folder
+  );
+  const primeNarrationEntryCount = Math.max(1, Math.min(30, Number(process.env.GOOGLE_TTS_PRIME_ENTRIES) || 12));
+  const primeNarrationEntryIds = reelsPayload.entries
+    .filter(entry => entry.parts.some(part => part.type === 'text' && String(part.text || '').trim()))
+    .slice(0, primeNarrationEntryCount)
+    .map(entry => entry.id);
+  const narration = buildNarrationManifest(reelsPayload.entries, {
+    profile: narrationProfile,
+    sectionNames,
+    primeEntryIds: primeNarrationEntryIds,
+    cloudEnabled: Boolean(String(process.env.GOOGLE_CLOUD_TTS_API_KEY || '').trim())
+  });
+  reelsPayload.narration = narration.manifest;
+  reelsPayload.entries.forEach(entry => {
+    entry.narration = narration.entryNarration[entry.id];
+  });
+
+  // Build AI transcript manifest (parallel to deterministic narration)
+  // Generate AI transcripts for entries with text content
+  const aiTranscript = buildAiTranscriptManifest(reelsPayload.entries, {
+    profile: DEFAULT_AI_TRANSCRIPT_PROFILE,
+    primeEntries: 0 // AI transcripts generated on-demand, not pre-primed
+  });
+  reelsPayload.aiTranscript = aiTranscript.manifest;
+  reelsPayload.entries.forEach(entry => {
+    entry.aiTranscript = aiTranscript.entryNarration[entry.id];
+  });
 
   if (!reelsPayload.entries.length || !reelsPayload.audit.mappedQuestions) {
     throw new Error('Quick Reels extraction produced no usable BI content.');
@@ -2127,6 +2193,102 @@ async function build() {
     .forEach(file => fs.copyFileSync(path.join(reelsSourceDir, 'assets', 'music', file), path.join(reelsMusicDist, file)));
 
   console.log(`✅ reels/ (${reelsPayload.entries.length} BI sections, ${reelsPayload.audit.mappedQuestions} mapped questions)`);
+
+  // ============================================================
+  // IT Entrepreneurship Quick Reels
+  // ============================================================
+  const entrepreneurshipReelsSourceDir = path.join(SRC_DIR, 'reels');
+  const entrepreneurshipReelsDistDir = path.join(DIST_DIR, 'reels', 'entrepreneurship');
+  fs.mkdirSync(entrepreneurshipReelsDistDir, { recursive: true });
+
+  const entrepreneurshipReelsPayload = extractReelContent({
+    subject: SUBJECTS.entrepreneurship,
+    units: SUBJECTS.entrepreneurship.units,
+    rootDir: SRC_DIR,
+    questionManifest: ENTREPRENEURSHIP_QUESTION_MANIFEST
+  });
+  entrepreneurshipReelsPayload.questionManifest = ENTREPRENEURSHIP_QUESTION_MANIFEST;
+
+  const entrepreneurshipNarrationProfile = narrationProfileFromEnv();
+  const entrepreneurshipSectionNames = collectSectionHeadingNames(
+    SUBJECTS.entrepreneurship.units,
+    SRC_DIR,
+    SUBJECTS.entrepreneurship.folder
+  );
+  const entrepreneurshipPrimeNarrationEntryCount = Math.max(1, Math.min(30, Number(process.env.GOOGLE_TTS_PRIME_ENTRIES) || 12));
+  const entrepreneurshipPrimeNarrationEntryIds = entrepreneurshipReelsPayload.entries
+    .filter(entry => entry.parts.some(part => part.type === 'text' && String(part.text || '').trim()))
+    .slice(0, entrepreneurshipPrimeNarrationEntryCount)
+    .map(entry => entry.id);
+  const entrepreneurshipNarration = buildNarrationManifest(entrepreneurshipReelsPayload.entries, {
+    profile: entrepreneurshipNarrationProfile,
+    sectionNames: entrepreneurshipSectionNames,
+    primeEntryIds: entrepreneurshipPrimeNarrationEntryIds,
+    cloudEnabled: Boolean(String(process.env.GOOGLE_CLOUD_TTS_API_KEY || '').trim())
+  });
+  entrepreneurshipReelsPayload.narration = entrepreneurshipNarration.manifest;
+  entrepreneurshipReelsPayload.entries.forEach(entry => {
+    entry.narration = entrepreneurshipNarration.entryNarration[entry.id];
+  });
+
+  const entrepreneurshipAiTranscript = buildAiTranscriptManifest(entrepreneurshipReelsPayload.entries, {
+    profile: DEFAULT_AI_TRANSCRIPT_PROFILE,
+    primeEntries: 0
+  });
+  entrepreneurshipReelsPayload.aiTranscript = entrepreneurshipAiTranscript.manifest;
+  entrepreneurshipReelsPayload.entries.forEach(entry => {
+    entry.aiTranscript = entrepreneurshipAiTranscript.entryNarration[entry.id];
+  });
+
+  if (!entrepreneurshipReelsPayload.entries.length || !entrepreneurshipReelsPayload.audit.mappedQuestions) {
+    throw new Error('Quick Reels Entrepreneurship extraction produced no usable content.');
+  }
+
+  const entrepreneurshipReelsAuditTotal = entrepreneurshipReelsPayload.audit.includedHeadings
+    + entrepreneurshipReelsPayload.audit.excludedHeadings.length
+    + entrepreneurshipReelsPayload.audit.containerHeadings
+    + entrepreneurshipReelsPayload.audit.duplicateHeadings;
+  if (entrepreneurshipReelsAuditTotal !== entrepreneurshipReelsPayload.audit.sourceHeadings) {
+    throw new Error(`Quick Reels Entrepreneurship heading audit does not reconcile (${entrepreneurshipReelsAuditTotal}/${entrepreneurshipReelsPayload.audit.sourceHeadings}).`);
+  }
+
+  if (entrepreneurshipReelsPayload.audit.mappedQuestions !== ENTREPRENEURSHIP_QUESTION_MANIFEST.length || entrepreneurshipReelsPayload.units.length !== 6) {
+    throw new Error('Quick Reels Entrepreneurship coverage changed unexpectedly; reconcile the source audit before shipping.');
+  }
+
+  if (entrepreneurshipReelsPayload.entries.some(entry => entry.kind === 'question' && !entry.parts.some(part => part.section === 'answer'))) {
+    throw new Error('Quick Reels Entrepreneurship contains a mapped question without answer content.');
+  }
+
+  entrepreneurshipReelsPayload.music = [
+    {
+      title: 'Easy Lemon (60 second)',
+      file: 'assets/music/easy-lemon-60-second.mp3',
+      artist: 'Kevin MacLeod',
+      licence: 'CC BY 4.0',
+      source: 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Easy%20Lemon%2060%20second.mp3'
+    },
+    {
+      title: 'Somewhere Sunny',
+      file: 'assets/music/somewhere-sunny.mp3',
+      artist: 'Kevin MacLeod',
+      licence: 'CC BY 4.0',
+      source: 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Somewhere%20Sunny.mp3'
+    }
+  ];
+
+  fs.writeFileSync(path.join(entrepreneurshipReelsDistDir, 'content.json'), JSON.stringify(entrepreneurshipReelsPayload));
+  ['reels.html', 'reels.css', 'reels.js'].forEach(file => {
+    fs.copyFileSync(path.join(entrepreneurshipReelsSourceDir, file), path.join(entrepreneurshipReelsDistDir, file === 'reels.html' ? 'index.html' : file));
+  });
+
+  const entrepreneurshipReelsMusicDist = path.join(entrepreneurshipReelsDistDir, 'assets', 'music');
+  fs.mkdirSync(entrepreneurshipReelsMusicDist, { recursive: true });
+  fs.readdirSync(path.join(entrepreneurshipReelsSourceDir, 'assets', 'music'))
+    .filter(file => file.endsWith('.mp3') || file === 'CREDITS.md')
+    .forEach(file => fs.copyFileSync(path.join(entrepreneurshipReelsSourceDir, 'assets', 'music', file), path.join(entrepreneurshipReelsMusicDist, file)));
+
+  console.log(`✅ reels/entrepreneurship/ (${entrepreneurshipReelsPayload.entries.length} sections, ${entrepreneurshipReelsPayload.audit.mappedQuestions} mapped questions)`);
 
   // Copy syllabus files
   const syllabusDir = path.join(SRC_DIR, '_syllabus');

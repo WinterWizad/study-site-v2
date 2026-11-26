@@ -7,15 +7,21 @@ const DEFAULT_STATE = {
   saved: [],
   lastPosition: null,
   positions: {},
-  voice: 'random',
+  voice: 'google',
+  narratorVersion: 2,
   speechRate: 1,
   shuffleSeed: 541385059,
   order: 'ordered',
   unit: 'all',
   savedOnly: false,
   musicVolume: 0.28,
-  muted: false
+  muted: false,
+  aiNarrationEnabled: true,
+  lastNarrationFallback: null
 };
+
+const MAX_CLOUD_PREFETCH_SEGMENTS = 18;
+const CLOUD_PREFETCH_CONCURRENCY = 3;
 
 const MUSIC_TRACKS = [
   {
@@ -30,6 +36,13 @@ const MUSIC_TRACKS = [
   }
 ];
 
+// Progressive subtitle state for AI narration
+let subtitleSentences = [];
+let subtitleCurrentIndex = -1;
+let subtitleTimer = null;
+let subtitleFallbackTimer = null;
+let subtitleAudioPlayer = null;
+
 const elements = {
   audioStatus: document.querySelector('#audioStatus'),
   cardTrack: document.querySelector('#cardTrack'),
@@ -38,17 +51,33 @@ const elements = {
   doneCount: document.querySelector('#doneCount'),
   muteButton: document.querySelector('#muteButton'),
   muteButtonLabel: document.querySelector('#muteButtonLabel'),
+  narratorStatus: document.querySelector('#narratorStatus'),
+  narrationPlayer: document.querySelector('#narrationPlayer'),
   musicPlayer: document.querySelector('#musicPlayer'),
   musicVolume: document.querySelector('#musicVolume'),
   musicVolumeValue: document.querySelector('#musicVolumeValue'),
   newOrderButton: document.querySelector('#newOrderButton'),
   progressNote: document.querySelector('#progressNote'),
   railProgressFill: document.querySelector('#railProgressFill'),
-  railClose: document.querySelector('#railClose'),
-  railScrim: document.querySelector('#railScrim'),
-  railToggle: document.querySelector('#railToggle'),
-  reelStage: document.querySelector('#reelStage'),
-  reelsRail: document.querySelector('#reelsRail'),
+  hubToggle: document.querySelector('#hubToggle'),
+  hubMenu: document.querySelector('#hubMenu'),
+  hubClose: document.querySelector('#hubClose'),
+  hubMenuItems: document.querySelectorAll('.hub-menu__item'),
+  hubSummaryFeed: document.querySelector('#hubSummaryFeed'),
+  hubSummaryProgress: document.querySelector('#hubSummaryProgress'),
+  hubSummaryAudio: document.querySelector('#hubSummaryAudio'),
+  hubResetFilters: document.querySelector('#hubResetFilters'),
+  feedModal: document.querySelector('#feedModal'),
+  feedClose: document.querySelector('#feedClose'),
+  feedApply: document.querySelector('#feedApply'),
+  progressModal: document.querySelector('#progressModal'),
+  progressClose: document.querySelector('#progressClose'),
+  audioModal: document.querySelector('#audioModal'),
+  audioClose: document.querySelector('#audioClose'),
+  resetProgress: document.querySelector('#resetProgress'),
+  resetConfirm: document.querySelector('#resetConfirm'),
+  resetConfirmCancel: document.querySelector('#resetConfirmCancel'),
+  resetConfirmAccept: document.querySelector('#resetConfirmAccept'),
   savedCount: document.querySelector('#savedCount'),
   savedFilterButton: document.querySelector('#savedFilterButton'),
   savedFilterCount: document.querySelector('#savedFilterCount'),
@@ -56,12 +85,18 @@ const elements = {
   seenCount: document.querySelector('#seenCount'),
   speechRate: document.querySelector('#speechRate'),
   speechRateValue: document.querySelector('#speechRateValue'),
-  stageCaption: document.querySelector('#stageCaption'),
   stageLoading: document.querySelector('#stageLoading'),
   stateAnnouncement: document.querySelector('#stateAnnouncement'),
   themeToggle: document.querySelector('#themeToggle'),
   unitFilters: document.querySelector('#unitFilters'),
-  voiceSelect: document.querySelector('#voiceSelect')
+  voiceSelect: document.querySelector('#voiceSelect'),
+  reelStage: document.querySelector('#reelStage'),
+  narrationToggle: document.querySelector('#aiNarrationToggle'),
+  transcriptPanel: document.querySelector('#transcriptPanel'),
+  transcriptContent: document.querySelector('#transcriptContent'),
+  transcriptEmpty: document.querySelector('#transcriptEmpty'),
+  transcriptClose: document.querySelector('#transcriptClose'),
+  hubSummaryAiNarration: document.querySelector('#hubSummaryAiNarration')
 };
 
 let storageAvailable = true;
@@ -70,16 +105,40 @@ let payload = null;
 let cards = [];
 let currentIndex = 0;
 let hasUserGesture = false;
+let narrationIntent = false;
 let speechGeneration = 0;
 let speechPaused = false;
 let speechSession = null;
 let speechGapTimer = 0;
+let cloudGeneration = 0;
+let cloudSession = null;
+let cloudPreloadPromises = new Map();
+let cloudAudioBlobs = new Map();
+let cloudObjectUrls = [];
+let cloudPrefetchQueue = [];
+let cloudPrefetchActive = 0;
+let cloudPrefetchControllers = new Map();
+let cloudPrefetchPromises = new Map();
 let musicGeneration = 0;
 let musicFadeFrame = 0;
+
+// AI narration runtime state
+let aiGeneration = 0;
+let aiSession = null;
+let aiPrefetchPromises = new Map();
+let aiPrefetchQueue = [];
+let aiPrefetchActive = 0;
+let aiPrefetchControllers = new Map();
+const MAX_AI_PREFETCH_SEGMENTS = 18;
+const AI_PREFETCH_CONCURRENCY = 3;
 let resizeTimer = 0;
 let measurementCard = null;
 let currentRestore = null;
 let cardPointerStart = null;
+let hubReturnFocus = null;
+let submodalReturnFocus = null;
+let activeModal = null;
+let activeSubmodal = null;
 
 function escapeHtml(value) {
   const amp = String.fromCharCode(38);
@@ -148,6 +207,15 @@ function loadState() {
 
   const merged = { ...DEFAULT_STATE, ...(stored && typeof stored === 'object' ? stored : {}) };
   merged.version = SUPPORTED_STATE_VERSION;
+
+  if (Number(merged.narratorVersion || 1) < 2) {
+    if (merged.voice === 'random') merged.voice = 'google';
+    merged.narratorVersion = 2;
+  } else {
+    merged.narratorVersion = 2;
+  }
+  if (merged.voice === 'kokoro') merged.voice = DEFAULT_STATE.voice;
+
   merged.seen = Array.isArray(merged.seen) ? merged.seen.filter(value => typeof value === 'string') : [];
   merged.done = Array.isArray(merged.done) ? merged.done.filter(value => typeof value === 'string') : [];
   merged.saved = Array.isArray(merged.saved) ? merged.saved.filter(value => typeof value === 'string') : [];
@@ -158,6 +226,10 @@ function loadState() {
   merged.unit = typeof merged.unit === 'string' ? merged.unit : 'all';
   merged.savedOnly = Boolean(merged.savedOnly);
   merged.muted = Boolean(merged.muted);
+  merged.aiNarrationEnabled = Boolean(merged.aiNarrationEnabled);
+  merged.lastNarrationFallback = merged.lastNarrationFallback && typeof merged.lastNarrationFallback === 'object'
+    ? { provider: String(merged.lastNarrationFallback.provider || ''), reason: String(merged.lastNarrationFallback.reason || ''), at: String(merged.lastNarrationFallback.at || '') }
+    : null;
   merged.lastPosition = normalizePosition(merged.lastPosition);
   merged.positions = merged.positions && typeof merged.positions === 'object' && !Array.isArray(merged.positions)
     ? Object.fromEntries(
@@ -205,8 +277,6 @@ function positionForFeed(feedKey = currentFeedKey()) {
   const stored = state.positions?.[feedKey];
   if (stored) return stored;
 
-  // Migrate the early ordered-feed key, which incorrectly included the
-  // shuffle seed. Ordered positions are now independent of every shuffle.
   if (state.order === 'ordered') {
     const legacy = Object.entries(state.positions || {})
       .filter(([candidateKey]) => candidateKey.startsWith(`${feedKey}|`))
@@ -301,7 +371,6 @@ function setTheme(theme) {
   try {
     localStorage.setItem('theme', theme);
   } catch {
-    // The theme still works when persistent storage is unavailable.
   }
   elements.themeToggle?.setAttribute('aria-label', theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
 }
@@ -320,44 +389,122 @@ function markGesture() {
   hasUserGesture = true;
 }
 
-function syncRailAccessibility() {
-  const open = elements.reelsRail.classList.contains('is-open');
-
-  elements.reelsRail.inert = !open;
-  elements.reelsRail.setAttribute('aria-hidden', String(!open));
-  elements.railScrim.inert = !open;
-  elements.railScrim.setAttribute('aria-hidden', String(!open));
-
+function syncHubMenuAccessibility(open) {
+  elements.hubMenu.inert = !open;
+  elements.hubMenu.setAttribute('aria-hidden', String(!open));
   if (open) {
-    elements.reelsRail.setAttribute('role', 'dialog');
-    elements.reelsRail.setAttribute('aria-modal', 'true');
+    elements.hubMenu.setAttribute('role', 'dialog');
+    elements.hubMenu.setAttribute('aria-modal', 'true');
     elements.reelStage.inert = true;
     elements.reelStage.setAttribute('aria-hidden', 'true');
   } else {
-    elements.reelsRail.removeAttribute('role');
-    elements.reelsRail.removeAttribute('aria-modal');
+    elements.hubMenu.removeAttribute('role');
+    elements.hubMenu.removeAttribute('aria-modal');
     elements.reelStage.inert = false;
     elements.reelStage.removeAttribute('aria-hidden');
   }
 }
 
-function toggleRail(open) {
-  const nextOpen = typeof open === 'boolean' ? open : !elements.reelsRail.classList.contains('is-open');
-  const wasOpen = elements.reelsRail.classList.contains('is-open');
+function openHubMenu() {
+  if (elements.hubMenu.open) return;
+  hubReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : elements.hubToggle;
+  elements.hubMenu.showModal();
+  elements.hubToggle.setAttribute('aria-expanded', 'true');
+  syncHubMenuAccessibility(true);
+  elements.hubMenu.querySelector('.hub-menu__item')?.focus({ preventScroll: true });
+}
 
-  elements.reelsRail.classList.toggle('is-open', nextOpen);
-  elements.railScrim.classList.toggle('is-visible', nextOpen);
-  elements.railToggle.setAttribute('aria-expanded', String(nextOpen));
-  elements.railToggle.setAttribute('aria-label', nextOpen ? 'Close feed controls' : 'Open feed controls');
-  syncRailAccessibility();
+function closeHubMenu() {
+  if (!elements.hubMenu.open) return;
+  elements.hubMenu.close();
+  elements.hubToggle.setAttribute('aria-expanded', 'false');
+  syncHubMenuAccessibility(false);
+  if (hubReturnFocus?.isConnected) hubReturnFocus.focus({ preventScroll: true });
+  hubReturnFocus = null;
+}
 
-  if (nextOpen) {
-    elements.reelsRail.querySelector('button, a, select, input')?.focus();
-  } else if (wasOpen) {
-    // Every close path returns to the trigger, including a scrim click that
-    // moved focus to the scrim itself.
-    elements.railToggle.focus({ preventScroll: true });
+function toggleHubMenu() {
+  if (elements.hubMenu.open) closeHubMenu();
+  else openHubMenu();
+}
+
+function openSubmodal(modal, returnFocus) {
+  if (modal.open) return;
+  const hubWasOpen = elements.hubMenu.open;
+  const doOpen = () => {
+    submodalReturnFocus = returnFocus || document.activeElement instanceof HTMLElement ? document.activeElement : elements.hubToggle;
+    modal.showModal();
+    activeModal = modal;
+    if (elements.reelStage) {
+      elements.reelStage.inert = true;
+      elements.reelStage.setAttribute('aria-hidden', 'true');
+    }
+    modal.querySelector('button, a, select, input, [tabindex]:not([tabindex="-1"])')?.focus({ preventScroll: true });
+    updateHubSummaries();
+  };
+  if (hubWasOpen) {
+    let hubCloseFired = false;
+    const onHubClose = () => {
+      hubCloseFired = true;
+      elements.hubMenu.removeEventListener('close', onHubClose);
+      doOpen();
+    };
+    elements.hubMenu.addEventListener('close', onHubClose);
+    closeHubMenu();
+    // Fallback in case close event doesn't fire
+    setTimeout(() => {
+      if (!hubCloseFired) {
+        elements.hubMenu.removeEventListener('close', onHubClose);
+        doOpen();
+      }
+    }, 150);
+  } else {
+    doOpen();
   }
+}
+
+function closeSubmodal() {
+  if (!activeModal || !activeModal.open) return;
+  activeModal.close();
+  if (elements.reelStage) {
+    elements.reelStage.inert = false;
+    elements.reelStage.removeAttribute('aria-hidden');
+  }
+  const toFocus = submodalReturnFocus?.isConnected ? submodalReturnFocus : elements.hubToggle;
+  toFocus.focus({ preventScroll: true });
+  submodalReturnFocus = null;
+  activeModal = null;
+  updateHubSummaries();
+}
+
+function toggleSubmodal(modal, returnFocus) {
+  if (modal.open) closeSubmodal();
+  else openSubmodal(modal, returnFocus);
+}
+
+function updateHubSummaries() {
+  const unitLabel = state.unit === 'all' ? 'All units' : `Unit ${state.unit}`;
+  const orderLabel = state.order === 'shuffled' ? 'Shuffled' : 'Unit order';
+  elements.hubSummaryFeed.textContent = `${unitLabel} · ${orderLabel}`;
+
+  const done = new Set(state.done).size;
+  const saved = new Set(state.saved).size;
+  elements.hubSummaryProgress.textContent = `${done} done · ${saved} saved`;
+
+  let voiceLabel = state.voice;
+  if (state.voice === 'google') voiceLabel = 'Google Chirp 3 HD';
+  else if (state.voice === 'ai') voiceLabel = 'AI narration';
+  else if (state.voice === 'piper-amy') voiceLabel = 'Piper (Amy)';
+  else if (state.voice === 'piper-ljspeech') voiceLabel = 'Piper (LJSpeech)';
+  else if (state.voice === 'piper-ryan') voiceLabel = 'Piper (Ryan)';
+  else if (state.voice === 'random') voiceLabel = 'Random browser voice';
+  else if (state.voice === 'system') voiceLabel = 'Browser system voice';
+  elements.hubSummaryAudio.textContent = `${voiceLabel} · ${state.speechRate.toFixed(1).replace(/\.0$/, '')}×`;
+
+  const aiLabel = state.aiNarrationEnabled ? 'On' : 'Off';
+  elements.hubSummaryAiNarration.textContent = `${aiLabel} · reel transcript`;
+
+  elements.hubResetFilters.hidden = state.unit === 'all' && state.order === 'ordered' && !state.savedOnly;
 }
 
 function hashString(value) {
@@ -457,6 +604,11 @@ function cardHeaderHtml(entry) {
 function cardActionsHtml(entry) {
   return `
     <div class="reel-card__actions" role="group" aria-label="Current card actions">
+      <button class="reel-action-button" type="button" data-action="mute" aria-pressed="false" aria-label="Mute audio" title="Mute (M)" data-tooltip="Mute">
+        <svg class="mute-on" viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="currentColor"/></svg>
+        <svg class="mute-off" viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" fill="currentColor"/></svg>
+        <span class="reels-sr-only" data-mute-label>Mute</span>
+      </button>
       <button class="reel-action-button" type="button" data-action="play" aria-label="Play narration" title="Listen (Space)" data-tooltip="Listen">
         <svg data-play-icon viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><path d="m9 7 8 5-8 5Z" fill="currentColor"/></svg>
         <span class="reels-sr-only" data-play-label>Play</span>
@@ -510,11 +662,15 @@ function buildCardElement(entry, atoms, index, total, continuation = false) {
   article.dataset.cardIndex = String(index);
   article.dataset.kind = entry.kind;
   article.dataset.unit = String(entry.unit);
-  article.dataset.mode = atoms.some(atom => atom.part?.visual) ? 'visual' : 'text';
+  article.dataset.mode = atoms.some(atom => atom.part?.type === 'visual') ? 'visual' : 'text';
   article.innerHTML = `
     ${cardHeaderHtml(entry)}
     <div class="reel-card__body" tabindex="0" aria-label="Card content">${cardBodyHtml(entry, atoms, continuation)}</div>
     ${cardActionsHtml(entry)}
+    <div class="reel-playback-feedback" aria-hidden="true" data-playback-feedback>
+      <svg data-feedback-icon viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"></svg>
+      <span data-feedback-label class="feedback-label"></span>
+    </div>
     ${cardFooterHtml(entry, index, total)}
   `;
   return article;
@@ -904,6 +1060,7 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
   updateCurrentCard({ speak, markSeen, persistPosition });
   updateUnitFilters();
   updateProgressUi();
+  updateHubSummaries();
 
   if (!cards.length) {
     showEmptyFeed();
@@ -1044,7 +1201,9 @@ function updateCurrentCard({ speak = false, markSeen = true, persistPosition = t
   if (stateChanged) saveState();
   updateCardState(card);
   updateProgressUi();
+  updateHubSummaries();
   updatePlayControls();
+  renderAiTranscript(card);
 
   if (elements.cardAnnouncement) {
     const label = card.entry.kind === 'question' ? card.entry.questionText : card.entry.title;
@@ -1059,8 +1218,11 @@ function goTo(index, { speak = true } = {}) {
   const previousCard = cards[currentIndex];
   const moveFocus = Boolean(previousCard?.element?.contains(document.activeElement));
   stopCurrentAudio();
+  abortCloudPrefetches();
+  abortAiPrefetches();
   currentIndex = clamp(index, 0, cards.length - 1);
   updateCurrentCard({ speak });
+  prefetchNarrationAround(currentIndex, 2);
   if (moveFocus) {
     const target = cards[currentIndex]?.element?.querySelector(
       'h2:not(.reels-sr-only), .reel-card__continued-label, .reel-card__answer-label'
@@ -1090,6 +1252,7 @@ function toggleState(name, entryId) {
 
   updateAllCardStates();
   updateProgressUi();
+  updateHubSummaries();
 }
 
 function availableVoices() {
@@ -1102,28 +1265,39 @@ function refreshVoiceOptions() {
   const voices = availableVoices();
   elements.voiceSelect.replaceChildren();
 
-  const randomOption = document.createElement('option');
-  randomOption.value = 'random';
-  randomOption.textContent = 'Random voice per card';
-  elements.voiceSelect.appendChild(randomOption);
+  const fixedOptions = [
+    ['google', 'Google Chirp 3 HD (recommended)'],
+    ['ai', 'AI narration (reel transcript)'],
+    ['piper-amy', 'Amy (Piper) — warm, conversational'],
+    ['piper-ljspeech', 'LJSpeech (Piper) — clear, articulate'],
+    ['piper-ryan', 'Ryan (Piper) — steady, neutral'],
+    ['random', 'Random browser voice per card'],
+    ['system', 'Browser system voice']
+  ];
+  fixedOptions.forEach(([value, label]) => {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = label;
+    elements.voiceSelect.appendChild(option);
+  });
 
-  const systemOption = document.createElement('option');
-  systemOption.value = 'system';
-  systemOption.textContent = 'System default';
-  elements.voiceSelect.appendChild(systemOption);
-
-  voices
-    .slice()
-    .sort((left, right) => `${left.lang} ${left.name}`.localeCompare(`${right.lang} ${right.name}`))
-    .forEach(voice => {
-      const option = document.createElement('option');
-      option.value = voice.voiceURI;
-      option.textContent = `${voice.name} (${voice.lang})`;
-      elements.voiceSelect.appendChild(option);
-    });
+  if (voices.length) {
+    const group = document.createElement('optgroup');
+    group.label = 'Browser voices';
+    voices
+      .slice()
+      .sort((left, right) => `${left.lang} ${left.name}`.localeCompare(`${right.lang} ${right.name}`))
+      .forEach(voice => {
+        const option = document.createElement('option');
+        option.value = voice.voiceURI;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        group.appendChild(option);
+      });
+    elements.voiceSelect.appendChild(group);
+  }
 
   const selectedOption = Array.from(elements.voiceSelect.options).find(option => option.value === selected);
-  if (!selectedOption && selected !== 'random' && selected !== 'system') {
+  if (!selectedOption && !['google', 'random', 'system'].includes(selected)) {
     const pendingOption = document.createElement('option');
     pendingOption.value = selected;
     pendingOption.textContent = voices.length
@@ -1152,6 +1326,719 @@ function chooseNarrator(card) {
   return card.narratorVoice;
 }
 
+function setNarratorStatus(message, { announce = false } = {}) {
+  if (elements.narratorStatus) elements.narratorStatus.textContent = message;
+  if (announce && elements.audioStatus) elements.audioStatus.textContent = message;
+}
+
+function refreshNarratorStatus() {
+  if (state.voice === 'google') {
+    setNarratorStatus(payload?.narration?.cloudEnabled
+      ? 'Google Chirp 3 HD is configured. Narration loads ahead of the card.'
+      : 'Google narration is not configured. Browser speech is the fallback.');
+    return;
+  }
+  if (state.voice === 'ai') {
+    setNarratorStatus(payload?.aiTranscript?.cloudEnabled
+      ? 'AI narration is configured. Reel transcript loads ahead of the card.'
+      : 'AI narration uses the build-time transcript with deterministic fallback.');
+    return;
+  }
+  if (state.voice === 'piper-amy') {
+    setNarratorStatus('Piper TTS (Amy) — warm, conversational female voice. Generated locally.');
+    return;
+  }
+  if (state.voice === 'piper-ljspeech') {
+    setNarratorStatus('Piper TTS (LJSpeech) — clear, articulate female voice. Generated locally.');
+    return;
+  }
+  if (state.voice === 'piper-ryan') {
+    setNarratorStatus('Piper TTS (Ryan) — steady, neutral male voice. Generated locally.');
+    return;
+  }
+  if (state.voice === 'random') {
+    setNarratorStatus('A random browser voice is selected for each card.');
+    return;
+  }
+  if (state.voice === 'system') {
+    setNarratorStatus('The browser system voice will read each card.');
+    return;
+  }
+  setNarratorStatus('A saved browser voice will read each card.');
+}
+
+function narrationSegmentRecord(id) {
+  return payload?.narration?.segments?.[id] || null;
+}
+
+function aiSegmentRecord(id) {
+  return payload?.aiTranscript?.segments?.[id] || null;
+}
+
+function narrationSegmentsForCard(card) {
+  const entryNarration = card?.entry?.narration;
+  const segments = [];
+  const addSegment = id => {
+    if (!id) return;
+    const segment = narrationSegmentRecord(id);
+    if (segment?.text) segments.push({ id, text: segment.text });
+  };
+
+  if (!entryNarration) return segments;
+  addSegment(entryNarration.title);
+
+  card.atoms.forEach(atom => {
+    const partIndex = Number(atom.anchor?.partIndex);
+    const narrationPart = entryNarration.parts?.[partIndex];
+    if (!narrationPart) return;
+
+    if (atom.part?.type === 'table') {
+      addSegment(narrationPart.header);
+      const start = Number(atom.anchor?.start || 0);
+      const end = Number(atom.anchor?.end ?? start);
+      (narrationPart.rows || []).slice(start, end + 1).forEach(addSegment);
+      return;
+    }
+
+    if (atom.part?.type === 'diagram') {
+      const start = Number(atom.anchor?.start || 0);
+      const end = Number(atom.anchor?.end ?? start);
+      (narrationPart.lines || []).slice(start, end + 1).forEach(addSegment);
+      return;
+    }
+
+    addSegment(narrationPart.text);
+  });
+
+  return segments;
+}
+
+function browserNarrationSegments(card) {
+  const normalized = narrationSegmentsForCard(card);
+  if (normalized.length) return normalized.map(segment => segment.text);
+  const answerText = card.atoms.map(atomText).filter(Boolean).join(' ');
+  return card.entry.kind === 'question'
+    ? [card.entry.questionText, answerText].filter(Boolean)
+    : [card.entry.speechTitle, answerText].filter(Boolean);
+}
+
+function aiNarrationSegmentsForCard(card) {
+  const entryAiNarration = card?.entry?.aiTranscript;
+  const segments = [];
+  const addSegment = id => {
+    if (!id) return;
+    const segment = aiSegmentRecord(id);
+    if (segment?.text) segments.push({ id, text: segment.text });
+  };
+
+  if (!entryAiNarration) return segments;
+  addSegment(entryAiNarration.transcript);
+  return segments;
+}
+
+function reelsBaseUrl() {
+  return new URL('./', import.meta.url);
+}
+
+function cloudSegmentUrl(segment) {
+  if (segment.static) {
+    const fileName = `${segment.id}-${segment.version}.mp3`;
+    return new URL(`audio/${fileName}`, reelsBaseUrl()).href;
+  }
+  const url = new URL('/api/narration', window.location.origin);
+  url.searchParams.set('segment', segment.id);
+  url.searchParams.set('v', segment.version);
+  // Pass selected Piper voice as override
+  if (state.voice?.startsWith('piper-')) {
+    const piperVoice = state.voice.replace('piper-', '');
+    url.searchParams.set('voice', piperVoice);
+  }
+  return url.href;
+}
+
+function trimAudioObjectUrls(blobMap, objectUrls, maximum = 72) {
+  let attempts = objectUrls.length;
+  while (objectUrls.length > maximum && attempts > 0) {
+    attempts -= 1;
+    const oldest = objectUrls.shift();
+    if (!oldest) break;
+    if (oldest.url === elements.narrationPlayer?.src) {
+      objectUrls.push(oldest);
+      continue;
+    }
+    if (blobMap.get(oldest.id) === oldest.url) blobMap.delete(oldest.id);
+    URL.revokeObjectURL(oldest.url);
+  }
+}
+
+function fetchCloudSegment(id, { signal } = {}) {
+  if (cloudAudioBlobs.has(id)) return Promise.resolve(cloudAudioBlobs.get(id));
+  if (cloudPreloadPromises.has(id)) return cloudPreloadPromises.get(id);
+
+  const segment = narrationSegmentRecord(id);
+  if (!segment) return Promise.reject(new Error(`Unknown narration segment: ${id}`));
+
+  const promise = fetch(cloudSegmentUrl(segment), {
+    cache: segment.static ? 'force-cache' : 'default',
+    credentials: 'same-origin',
+    signal
+  })
+    .then(response => {
+      if (!response.ok) throw new Error(`Narration request failed with ${response.status}`);
+      return response.blob();
+    })
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      cloudAudioBlobs.set(id, url);
+      cloudObjectUrls.push({ id, url });
+      cloudPreloadPromises.delete(id);
+      trimAudioObjectUrls(cloudAudioBlobs, cloudObjectUrls);
+      return url;
+    })
+    .catch(error => {
+      cloudPreloadPromises.delete(id);
+      throw error;
+    });
+
+  cloudPreloadPromises.set(id, promise);
+  return promise;
+}
+
+function drainCloudPrefetchQueue() {
+  while (cloudPrefetchActive < CLOUD_PREFETCH_CONCURRENCY && cloudPrefetchQueue.length) {
+    const task = cloudPrefetchQueue.shift();
+    if (!task) break;
+    if (task.controller.signal.aborted) {
+      task.reject(new DOMException('Narration prefetch was aborted.', 'AbortError'));
+      cloudPrefetchPromises.delete(task.id);
+      continue;
+    }
+
+    cloudPrefetchActive += 1;
+    fetchCloudSegment(task.id, { signal: task.controller.signal })
+      .then(task.resolve, task.reject)
+      .finally(() => {
+        cloudPrefetchActive = Math.max(0, cloudPrefetchActive - 1);
+        cloudPrefetchControllers.delete(task.id);
+        cloudPrefetchPromises.delete(task.id);
+        drainCloudPrefetchQueue();
+      });
+  }
+}
+
+function queueCloudSegment(id) {
+  if (cloudAudioBlobs.has(id)) return Promise.resolve(cloudAudioBlobs.get(id));
+  if (cloudPreloadPromises.has(id)) return cloudPreloadPromises.get(id);
+  if (cloudPrefetchPromises.has(id)) return cloudPrefetchPromises.get(id);
+
+  const controller = new AbortController();
+  let resolveTask;
+  let rejectTask;
+  const promise = new Promise((resolve, reject) => {
+    resolveTask = resolve;
+    rejectTask = reject;
+  });
+  cloudPrefetchPromises.set(id, promise);
+  cloudPrefetchControllers.set(id, controller);
+  cloudPrefetchQueue.push({ id, controller, resolve: resolveTask, reject: rejectTask });
+  drainCloudPrefetchQueue();
+  return promise;
+}
+
+function abortCloudPrefetches() {
+  cloudPrefetchControllers.forEach(controller => controller.abort());
+  cloudPrefetchControllers.clear();
+  cloudPrefetchPromises.clear();
+  cloudPrefetchQueue.splice(0).forEach(task => {
+    task.reject(new DOMException('Narration prefetch was aborted.', 'AbortError'));
+  });
+}
+
+// --- AI narration audio blob storage ---
+let aiAudioBlobs = new Map();
+let aiObjectUrls = [];
+let aiPreloadPromises = new Map();
+
+function fetchAiSegment(id, { signal } = {}) {
+  if (aiAudioBlobs.has(id)) return Promise.resolve(aiAudioBlobs.get(id));
+  if (aiPreloadPromises.has(id)) return aiPreloadPromises.get(id);
+
+  const segment = aiSegmentRecord(id);
+  if (!segment) return Promise.reject(new Error(`Unknown AI narration segment: ${id}`));
+
+  const promise = fetch(aiSegmentUrl(segment), {
+    cache: segment.static ? 'force-cache' : 'default',
+    credentials: 'same-origin',
+    signal
+  })
+    .then(response => {
+      if (!response.ok) throw new Error(`AI narration request failed with ${response.status}`);
+      return response.blob();
+    })
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      aiAudioBlobs.set(id, url);
+      aiObjectUrls.push({ id, url });
+      aiPreloadPromises.delete(id);
+      trimAudioObjectUrls(aiAudioBlobs, aiObjectUrls);
+      return url;
+    })
+    .catch(error => {
+      aiPreloadPromises.delete(id);
+      throw error;
+    });
+
+  aiPreloadPromises.set(id, promise);
+  return promise;
+}
+
+function drainAiPrefetchQueue() {
+  while (aiPrefetchActive < AI_PREFETCH_CONCURRENCY && aiPrefetchQueue.length) {
+    const task = aiPrefetchQueue.shift();
+    if (!task) break;
+    if (task.controller.signal.aborted) {
+      task.reject(new DOMException('AI narration prefetch was aborted.', 'AbortError'));
+      aiPrefetchPromises.delete(task.id);
+      continue;
+    }
+
+    aiPrefetchActive += 1;
+    fetchAiSegment(task.id, { signal: task.controller.signal })
+      .then(task.resolve, task.reject)
+      .finally(() => {
+        aiPrefetchActive = Math.max(0, aiPrefetchActive - 1);
+        aiPrefetchControllers.delete(task.id);
+        aiPrefetchPromises.delete(task.id);
+        drainAiPrefetchQueue();
+      });
+  }
+}
+
+function queueAiPrefetch(id) {
+  if (aiAudioBlobs.has(id)) return Promise.resolve(aiAudioBlobs.get(id));
+  if (aiPreloadPromises.has(id)) return aiPreloadPromises.get(id);
+  if (aiPrefetchPromises.has(id)) return aiPrefetchPromises.get(id);
+
+  const controller = new AbortController();
+  let resolveTask;
+  let rejectTask;
+  const promise = new Promise((resolve, reject) => {
+    resolveTask = resolve;
+    rejectTask = reject;
+  });
+  aiPrefetchPromises.set(id, promise);
+  aiPrefetchControllers.set(id, controller);
+  aiPrefetchQueue.push({ id, controller, resolve: resolveTask, reject: rejectTask });
+  drainAiPrefetchQueue();
+  return promise;
+}
+
+function abortAiPrefetches() {
+  aiPrefetchControllers.forEach(controller => controller.abort());
+  aiPrefetchControllers.clear();
+  aiPrefetchPromises.clear();
+  aiPrefetchQueue.splice(0).forEach(task => {
+    task.reject(new DOMException('AI narration prefetch was aborted.', 'AbortError'));
+  });
+}
+
+function prefetchNarrationAround(index, ahead = 2) {
+  if (!cards.length) return;
+
+  const windowCards = cards.slice(index, index + ahead + 1)
+    .filter(card => card.element?.dataset.mode !== 'visual');
+  const ids = new Set();
+  windowCards.forEach(card => {
+    narrationSegmentsForCard(card).forEach(segment => ids.add(segment.id));
+    if (state.voice === 'ai') {
+      aiNarrationSegmentsForCard(card).forEach(segment => ids.add(segment.id));
+    }
+  });
+
+  const activeSegmentId = cloudSession?.segments?.[cloudSession.segmentIndex]?.id
+    || aiSession?.segments?.[aiSession.segmentIndex]?.id;
+  if (activeSegmentId) ids.delete(activeSegmentId);
+
+  if (state.voice === 'google' && payload?.narration?.cloudEnabled) {
+    [...ids].slice(0, MAX_CLOUD_PREFETCH_SEGMENTS).forEach(id => {
+      const segment = narrationSegmentRecord(id);
+      if (!segment?.static && !narrationIntent) return;
+      queueCloudSegment(id).catch(() => {});
+    });
+    return;
+  }
+
+
+  if (state.voice === 'ai' && state.aiNarrationEnabled && payload?.aiTranscript?.cloudEnabled) {
+    [...ids].slice(0, MAX_AI_PREFETCH_SEGMENTS).forEach(id => {
+      const segment = aiSegmentRecord(id);
+      if (!segment?.static && !narrationIntent) return;
+      queueAiPrefetch(id).catch(() => {});
+    });
+  }
+}
+
+function stopCloudNarration() {
+  cloudGeneration += 1;
+  if (cloudSession?.gapTimer) {
+    window.clearTimeout(cloudSession.gapTimer);
+    cloudSession.gapTimer = 0;
+  }
+  cloudSession = null;
+  const player = elements.narrationPlayer;
+  player.pause();
+  delete player.dataset.narrationSessionId;
+  delete player.dataset.narrationSegmentId;
+  player.removeAttribute('src');
+  player.load();
+}
+
+function scheduleNarrationGap(session, delay) {
+  if (!session || session.finished) return;
+  if (session.gapTimer) window.clearTimeout(session.gapTimer);
+  session.waiting = true;
+  session.gapRemaining = Math.max(0, delay);
+  session.gapStartedAt = performance.now();
+  session.gapTimer = window.setTimeout(() => {
+    session.gapTimer = 0;
+    session.waiting = false;
+    session.gapRemaining = 0;
+    const activeGeneration = session.mode === 'cloud' ? cloudGeneration : aiGeneration;
+    if (session.generation !== activeGeneration) return;
+    if (session.paused || session.finished) return;
+    if (session.mode === 'cloud') playCloudSegment(session);
+    else playAiSegment(session);
+  }, session.gapRemaining);
+}
+
+function pauseNarrationGap(session) {
+  if (!session?.waiting) return;
+  if (session.gapTimer) window.clearTimeout(session.gapTimer);
+  session.gapTimer = 0;
+  const elapsed = performance.now() - session.gapStartedAt;
+  session.gapRemaining = Math.max(0, session.gapRemaining - elapsed);
+  session.paused = true;
+}
+
+function resumeNarrationGap(session) {
+  if (!session?.waiting) return;
+  session.paused = false;
+  scheduleNarrationGap(session, session.gapRemaining);
+}
+
+function finishNarrationSession(session) {
+  if (!session) return;
+  session.finished = true;
+  session.waiting = false;
+  if (session.mode === 'cloud' && cloudSession === session) cloudSession = null;
+  if (session.mode === 'ai' && aiSession === session) aiSession = null;
+  if (elements.narrationPlayer?.dataset?.narrationSessionId === session.id) {
+    delete elements.narrationPlayer.dataset.narrationSessionId;
+    delete elements.narrationPlayer.dataset.narrationSegmentId;
+  }
+  elements.audioStatus.textContent = 'Narration finished. The transcript stays visible.';
+  updatePlayControls();
+  if (session.mode === 'ai') stopSubtitleTracking(); // keep last sentence visible until card change
+}
+
+function isCurrentNarrationSession(session) {
+  if (!session || session.finished || session.fallbackAttempted || session.paused) return false;
+  if (session.mode === 'cloud') {
+    return cloudSession === session && session.generation === cloudGeneration;
+  }
+  return false;
+}
+
+function fallbackToBrowserSpeech(session, reason = 'Cloud narration is unavailable. Using the browser voice.') {
+  if (!isCurrentNarrationSession(session)) return;
+  session.fallbackAttempted = true;
+  const remaining = session.segments.slice(session.segmentIndex).map(segment => segment.text).filter(Boolean);
+  const card = session.card;
+  if (session.mode === 'cloud') stopCloudNarration();
+  else if (session.mode === 'ai') stopAiNarration();
+  stopSpeech();
+
+  if (!remaining.length || !speechSupported()) {
+    elements.audioStatus.textContent = 'Narration is unavailable. The transcript is still available.';
+    updatePlayControls();
+    return;
+  }
+
+  const voice = chooseNarrator(card);
+  elements.audioStatus.textContent = reason;
+
+  // Re-establish progressive subtitle for AI fallback (stopAiNarration cleared it via clearSubtitle).
+  if (session.mode === 'ai' && state.aiNarrationEnabled && state.voice === 'ai') {
+    renderAiTranscript(card); // populates subtitleSentences, shows sentence 0, unhides panel
+    startSubtitleFallbackTimer();
+  }
+
+  speakSegments(remaining, voice, speechGeneration, session.rate);
+}
+
+async function playCloudSegment(session) {
+  if (!session || session.finished || session.generation !== cloudGeneration) return;
+  if (session.segmentIndex >= session.segments.length) {
+    finishNarrationSession(session);
+    return;
+  }
+
+  const segment = session.segments[session.segmentIndex];
+  const record = narrationSegmentRecord(segment.id);
+  if (!record) {
+    fallbackToBrowserSpeech(session);
+    return;
+  }
+
+  let source = cloudAudioBlobs.get(segment.id);
+  const pendingPrefetch = source
+    ? null
+    : (cloudPreloadPromises.get(segment.id) || cloudPrefetchPromises.get(segment.id));
+  if (pendingPrefetch) {
+    session.loading = true;
+    elements.audioStatus.textContent = 'Loading Google narration…';
+    updatePlayControls();
+    try {
+      source = await pendingPrefetch;
+    } catch {
+      source = null;
+    } finally {
+      session.loading = false;
+    }
+  }
+  if (!session || session.finished || session.generation !== cloudGeneration) return;
+  if (session.paused) {
+    updatePlayControls();
+    return;
+  }
+
+  const player = createNarrationPlayer(session, segment.id);
+  player.src = source || cloudSegmentUrl(record);
+  player.defaultPlaybackRate = session.rate;
+  player.playbackRate = session.rate;
+  player.preload = 'auto';
+  // Show appropriate narrator name
+  const voiceLabel = (() => {
+    if (state.voice === 'google') return 'Google Chirp 3 HD';
+    if (state.voice === 'piper-amy') return 'Piper TTS (Amy)';
+    if (state.voice === 'piper-ljspeech') return 'Piper TTS (LJSpeech)';
+    if (state.voice === 'piper-ryan') return 'Piper TTS (Ryan)';
+    return 'Narrator';
+  })();
+  elements.audioStatus.textContent = `Reading with ${voiceLabel}.`;
+  session.started = true;
+  session.paused = false;
+
+  const playPromise = player.play();
+  if (playPromise?.catch) {
+    playPromise.catch(() => fallbackToBrowserSpeech(session));
+  }
+  updatePlayControls();
+}
+
+function aiSegmentUrl(segment) {
+  const version = segment.version || '';
+  if (segment.static && version) {
+    const fileName = `${segment.id}-${version}.mp3`;
+    return new URL(`audio/${fileName}`, reelsBaseUrl()).href;
+  }
+  const url = new URL('/api/narration', window.location.origin);
+  url.searchParams.set('segment', segment.id);
+  url.searchParams.set('v', version);
+  return url.href;
+}
+
+function playAiSegment(session) {
+  if (!session || session.finished || session.generation !== aiGeneration) return;
+  if (session.segmentIndex >= session.segments.length) {
+    finishNarrationSession(session);
+    return;
+  }
+
+  const segment = session.segments[session.segmentIndex];
+  session.loading = true;
+  updatePlayControls();
+  try {
+    const source = aiSegmentUrl(segment);
+    const player = createNarrationPlayer(session, segment.id);
+    player.src = source;
+    player.defaultPlaybackRate = session.rate;
+    player.playbackRate = session.rate;
+    elements.audioStatus.textContent = 'AI narration is playing.';
+    if (session.paused) return;
+    session.started = true;
+    session.paused = false;
+
+    // Set up progressive subtitle tracking
+    stopSubtitleTracking();
+    renderAiTranscript(session.card);
+    subtitleAudioPlayer = player;
+    player.addEventListener('timeupdate', handleSubtitleTimeUpdate, { passive: true });
+
+    const playPromise = player.play();
+    if (playPromise?.catch) {
+      playPromise.catch(() => {
+        // Stop progress tracking; fallbackToBrowserSpeech re-establishes subtitles
+        fallbackToBrowserSpeech(session, 'AI narration could not play. Using deterministic narration.');
+      });
+    }
+  } catch (error) {
+    // Stop progress tracking; fallbackToBrowserSpeech re-establishes subtitles
+    fallbackToBrowserSpeech(session, `AI narration could not narrate this card. Using deterministic narration. ${error.message}`);
+  }
+  updatePlayControls();
+}
+
+function playAiNarration(card) {
+  const segments = aiNarrationSegmentsForCard(card);
+  if (!segments.length) {
+    speakCurrentCard();
+    return;
+  }
+
+  stopSpeech();
+  stopCloudNarration();
+  const session = {
+    id: `ai-${aiGeneration + 1}`,
+    mode: 'ai',
+    generation: ++aiGeneration,
+    card,
+    segments,
+    segmentIndex: 0,
+    rate: clamp(Number(state.speechRate) || 1, 0.75, 1.25),
+    started: false,
+    waiting: false,
+    paused: false,
+    loading: false,
+    gapRemaining: 0,
+    gapStartedAt: 0,
+    gapTimer: 0,
+    finished: false,
+    fallbackAttempted: false
+  };
+  aiSession = session;
+  setNarratorStatus('AI narration is ready.', { announce: true });
+  elements.audioStatus.textContent = 'Preparing AI narration…';
+  playAiSegment(session);
+}
+
+function playCloudNarration(card) {
+  if (!payload?.narration?.cloudEnabled) {
+    speakCurrentCard();
+    return;
+  }
+
+  const segments = narrationSegmentsForCard(card);
+  if (!segments.length) {
+    speakCurrentCard();
+    return;
+  }
+
+  stopSpeech();
+  stopAiNarration();
+  stopCloudNarration();
+  const session = {
+    id: `cloud-${cloudGeneration + 1}`,
+    mode: 'cloud',
+    generation: ++cloudGeneration,
+    card,
+    segments,
+    segmentIndex: 0,
+    rate: clamp(Number(state.speechRate) || 1, 0.75, 1.25),
+    started: false,
+    waiting: false,
+    paused: false,
+    loading: false,
+    gapRemaining: 0,
+    gapStartedAt: 0,
+    gapTimer: 0,
+    finished: false,
+    fallbackAttempted: false
+  };
+  cloudSession = session;
+  playCloudSegment(session);
+}
+
+function stopAiNarration() {
+  aiGeneration += 1;
+  if (aiSession?.gapTimer) {
+    window.clearTimeout(aiSession.gapTimer);
+    aiSession.gapTimer = 0;
+  }
+  aiSession = null;
+  const player = elements.narrationPlayer;
+  player.pause();
+  delete player.dataset.narrationSessionId;
+  delete player.dataset.narrationSegmentId;
+  player.removeAttribute('src');
+  player.load();
+  clearSubtitle();
+}
+
+function activeNarrationSession(sessionId = '', segmentId = '') {
+  const player = elements.narrationPlayer;
+  const activeId = sessionId || player?.dataset?.narrationSessionId || '';
+  if (!activeId) return null;
+  if (segmentId && player?.dataset?.narrationSegmentId !== segmentId) return null;
+
+  if (cloudSession?.id === activeId) return cloudSession;
+  if (aiSession?.id === activeId) return aiSession;
+  return null;
+}
+
+function createNarrationPlayer(session, segmentId) {
+  const previous = elements.narrationPlayer;
+  delete previous.dataset.narrationSessionId;
+  delete previous.dataset.narrationSegmentId;
+  previous.pause();
+  previous.removeAttribute('src');
+  previous.load();
+
+  const player = previous.cloneNode(false);
+  player.id = 'narrationPlayer';
+  player.preload = 'auto';
+  player.dataset.narrationSessionId = session.id;
+  player.dataset.narrationSegmentId = segmentId;
+  player.addEventListener('ended', () => {
+    if (elements.narrationPlayer !== player) return;
+    handleNarrationEnded(session.id, segmentId);
+  });
+  player.addEventListener('error', () => {
+    if (elements.narrationPlayer !== player) return;
+    handleNarrationError(session.id, segmentId);
+  });
+
+  previous.replaceWith(player);
+  elements.narrationPlayer = player;
+  return player;
+}
+
+function handleNarrationEnded(sessionId, segmentId) {
+  const session = activeNarrationSession(sessionId, segmentId);
+  if (!session || session.finished || session.paused) return;
+  const completedIndex = session.segmentIndex;
+  session.segmentIndex += 1;
+  if (completedIndex === 0) {
+    scheduleNarrationGap(session, 450);
+  } else if (session.mode === 'cloud') {
+    playCloudSegment(session);
+  } else if (session.mode === 'ai') {
+    playAiSegment(session);
+  }
+}
+
+function handleNarrationError(sessionId, segmentId) {
+  const session = activeNarrationSession(sessionId, segmentId);
+  if (!session || session.finished) return;
+  const reason = session.mode === 'ai'
+    ? 'AI narration could not play. Using the browser voice.'
+    : 'Google narration could not play. Using the browser voice.';
+  if (session.mode === 'ai') {
+    stopSubtitleTracking();
+  }
+  fallbackToBrowserSpeech(session, reason);
+}
+
 function speechSupported() {
   return 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 }
@@ -1168,7 +2055,7 @@ function stopSpeech() {
   updatePlayControls();
 }
 
-function speakSegments(segments, voice, generation) {
+function speakSegments(segments, voice, generation, rate = state.speechRate, onBoundary) {
   if (!speechSupported() || !segments.length) return;
 
   const synthesis = window.speechSynthesis;
@@ -1177,9 +2064,11 @@ function speakSegments(segments, voice, generation) {
     segments,
     voice,
     segmentIndex: 0,
-    rate: state.speechRate,
+    rate: clamp(Number(rate) || 1, 0.75, 1.25),
+    started: false,
     waiting: false,
     paused: false,
+    loading: false,
     gapRemaining: 0,
     gapStartedAt: 0,
     finished: false
@@ -1237,6 +2126,10 @@ function speakSegments(segments, voice, generation) {
     utterance.rate = session.rate;
     utterance.pitch = 1;
     utterance.volume = 1;
+    utterance.onboundary = ev => {
+      if (!onBoundary || generation !== speechGeneration || session.finished) return;
+      onBoundary({ charIndex: ev.charIndex || 0, segmentIndex: session.segmentIndex, totalSegments: session.segments.length });
+    };
     utterance.onend = () => {
       if (generation !== speechGeneration || session.finished) return;
       const completed = session.segmentIndex;
@@ -1275,15 +2168,9 @@ function speakCurrentCard() {
   const card = cards[currentIndex];
   if (!card) return;
 
-  // A new narration must own the speech queue. This prevents a late onend
-  // callback from an earlier card from starting an old segment beside the new
-  // one, especially when the user presses Play again after a short pause.
   stopSpeech();
   const voice = chooseNarrator(card);
-  const answerText = card.atoms.map(atomText).filter(Boolean).join(' ');
-  const segments = card.entry.kind === 'question'
-    ? [card.entry.questionText, answerText].filter(Boolean)
-    : [card.entry.speechTitle, answerText].filter(Boolean);
+  const segments = browserNarrationSegments(card);
 
   speechPaused = false;
   elements.audioStatus.textContent = voice
@@ -1346,15 +2233,34 @@ function playCurrentAudio() {
 
   if (card.element.dataset.mode === 'visual') {
     stopSpeech();
+    stopCloudNarration();
+    stopAiNarration();
     playMusicForCard(card);
   } else {
     stopMusic();
-    speakCurrentCard();
+    narrationIntent = true;
+    if (state.voice === 'google') {
+      playCloudNarration(card);
+    } else if (state.voice === 'ai') {
+      stopCloudNarration();
+      if (state.aiNarrationEnabled) playAiNarration(card);
+      else speakCurrentCard();
+    } else if (state.voice?.startsWith('piper-')) {
+      // Piper TTS uses the cloud narration endpoint with voice override
+      playCloudNarration(card);
+    } else {
+      stopCloudNarration();
+      stopAiNarration();
+      speakCurrentCard();
+    }
+    prefetchNarrationAround(currentIndex, 2);
   }
 }
 
 function stopCurrentAudio() {
   stopSpeech();
+  stopCloudNarration();
+  stopAiNarration();
   stopMusic();
 }
 
@@ -1368,17 +2274,240 @@ function updatePlayControls() {
   const visual = card.element.dataset.mode === 'visual';
   const synthesisActive = speechSupported() && (window.speechSynthesis.speaking || window.speechSynthesis.pending);
   const sessionActive = Boolean(speechSession && !speechSession.finished);
+  const narrationSession = cloudSession || aiSession;
+  const providerActive = Boolean(narrationSession && !narrationSession.finished);
   const active = visual
     ? !elements.musicPlayer.paused
-    : synthesisActive || sessionActive;
-  const paused = visual ? false : Boolean(speechSession?.paused || (speechSupported() && window.speechSynthesis.paused));
+    : synthesisActive || sessionActive || providerActive;
+  const paused = visual
+    ? false
+    : Boolean(
+      speechSession?.paused
+      || (cloudSession && !cloudSession.finished && cloudSession.paused)
+      || (aiSession && !aiSession.finished && aiSession.paused)
+    );
 
-  const audioName = visual ? 'music' : 'narration';
-  button.setAttribute('aria-label', active ? (paused ? `Resume ${audioName}` : `Pause ${audioName}`) : `Play ${audioName}`);
-  label.textContent = active ? (paused ? 'Resume' : 'Pause') : 'Play';
-  icon.innerHTML = active && !paused
-    ? '<path d="M8 7h3v10H8zM13 7h3v10h-3z" fill="currentColor"/>'
+  // Derive loading state
+  const loading = visual
+    ? false
+    : (cloudSession?.loading === true)
+      || (aiSession?.loading === true);
+
+  const actionWord = visual ? 'music' : 'narration';
+  const ariaLabel = loading
+    ? `Loading ${actionWord}`
+    : active ? (paused ? `Resume ${actionWord}` : `Pause ${actionWord}`) : `Play ${actionWord}`;
+  button.setAttribute('aria-label', ariaLabel);
+  button.setAttribute('aria-busy', String(loading));
+  button.dataset.loading = String(loading);
+  button.setAttribute('data-tooltip', loading ? 'Loading' : 'Listen');
+  label.textContent = loading ? 'Loading' : (active ? 'Pause' : 'Play');
+  icon.innerHTML = active
+    ? '<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>'
     : '<path d="m9 7 8 5-8 5Z" fill="currentColor"/>';
+}
+
+function splitIntoSentences(text) {
+  if (!text) return [];
+  const str = String(text).trim();
+  const regex = /(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    const end = match.index;
+    const sentence = str.slice(lastIndex, end).trim();
+    if (sentence) parts.push({ text: sentence, start: lastIndex, end });
+    lastIndex = match.index + match[0].length;
+  }
+  const tail = str.slice(lastIndex).trim();
+  if (tail) parts.push({ text: tail, start: lastIndex, end: str.length });
+  return parts;
+}
+
+function renderAiTranscript(card) {
+  if (!elements.transcriptPanel || !elements.transcriptContent || !elements.transcriptEmpty) return;
+
+  if (!state.aiNarrationEnabled || state.voice !== 'ai') {
+    elements.transcriptPanel.hidden = true;
+    elements.transcriptContent.innerHTML = '';
+    elements.transcriptEmpty.hidden = true;
+    subtitleSentences = [];
+    subtitleCurrentIndex = -1;
+    return;
+  }
+
+  const entryAiNarration = card?.entry?.aiTranscript;
+  if (!entryAiNarration) {
+    elements.transcriptPanel.hidden = true;
+    elements.transcriptContent.innerHTML = '';
+    elements.transcriptEmpty.hidden = true;
+    subtitleSentences = [];
+    subtitleCurrentIndex = -1;
+    return;
+  }
+
+  const segments = aiNarrationSegmentsForCard(card);
+  if (!segments.length) {
+    elements.transcriptPanel.hidden = true;
+    elements.transcriptContent.innerHTML = '';
+    elements.transcriptEmpty.hidden = true;
+    subtitleSentences = [];
+    subtitleCurrentIndex = -1;
+    return;
+  }
+
+  // Join all segment texts and split into sentences for progressive subtitle display
+  const fullText = segments.map(segment => segment.text).join(' ');
+  subtitleSentences = splitIntoSentences(fullText);
+
+  if (!subtitleSentences.length) {
+    elements.transcriptPanel.hidden = true;
+    elements.transcriptContent.innerHTML = '';
+    elements.transcriptEmpty.hidden = true;
+    subtitleCurrentIndex = -1;
+    return;
+  }
+
+  subtitleCurrentIndex = -1;
+  showSubtitleSentence(0);
+
+  elements.transcriptEmpty.hidden = true;
+  elements.transcriptPanel.hidden = false;
+}
+
+function showSubtitleSentence(index) {
+  if (!subtitleSentences.length || index < 0 || index >= subtitleSentences.length) return;
+  subtitleCurrentIndex = index;
+
+  const sentence = subtitleSentences[index];
+  const html = `<div class="transcript-segment subtitle-current" data-seg-idx="${index}">${escapeHtml(sentence.text)}</div>`;
+
+  elements.transcriptContent.innerHTML = html;
+  elements.transcriptPanel.hidden = false;
+}
+
+function stopSubtitleTracking() {
+  if (subtitleTimer) {
+    window.cancelAnimationFrame(subtitleTimer);
+    subtitleTimer = null;
+  }
+  if (subtitleFallbackTimer) {
+    window.clearTimeout(subtitleFallbackTimer);
+    subtitleFallbackTimer = null;
+  }
+  if (subtitleAudioPlayer) {
+    subtitleAudioPlayer.removeEventListener('timeupdate', handleSubtitleTimeUpdate);
+    subtitleAudioPlayer = null;
+  }
+}
+
+function showAllSubtitleSentences() {
+  if (!subtitleSentences.length) return;
+  // Audio is unavailable (e.g. production quota), so advance sentences on estimated timing
+  // instead of leaving everything visible at once. Start at sentence 0.
+  subtitleCurrentIndex = 0;
+  showSubtitleSentence(subtitleCurrentIndex);
+  startSubtitleFallbackTimer();
+}
+
+function estimatedSentenceMs(sentence) {
+  const words = sentence.text.trim().split(/\s+/).filter(Boolean).length;
+  const rate = clamp(Number(state.speechRate) || 1, 0.75, 1.25);
+  // ~2.5 words per second at rate 1.0, adjusted for playback rate; minimum 1.6s per sentence
+  const ms = Math.max(1600, Math.round((words / 2.5 / rate) * 1000));
+  return Math.min(ms, 12000);
+}
+
+function startSubtitleFallbackTimer() {
+  stopSubtitleTracking(); // clear any audio tracking first
+  advanceSubtitleFallback();
+}
+
+function advanceSubtitleFallback() {
+  if (!subtitleSentences.length || subtitleCurrentIndex >= subtitleSentences.length - 1) return;
+  const ms = estimatedSentenceMs(subtitleSentences[subtitleCurrentIndex]);
+  subtitleFallbackTimer = window.setTimeout(() => {
+    if (subtitleCurrentIndex >= subtitleSentences.length - 1) return;
+    subtitleCurrentIndex += 1;
+    showSubtitleSentence(subtitleCurrentIndex);
+    advanceSubtitleFallback();
+  }, ms);
+}
+
+function clearSubtitle() {
+  subtitleSentences = [];
+  subtitleCurrentIndex = -1;
+  if (subtitleTimer) {
+    window.cancelAnimationFrame(subtitleTimer);
+    subtitleTimer = null;
+  }
+  if (subtitleFallbackTimer) {
+    window.clearTimeout(subtitleFallbackTimer);
+    subtitleFallbackTimer = null;
+  }
+  if (subtitleAudioPlayer) {
+    subtitleAudioPlayer.removeEventListener('timeupdate', handleSubtitleTimeUpdate);
+    subtitleAudioPlayer = null;
+  }
+  if (elements.transcriptContent) elements.transcriptContent.innerHTML = '';
+  if (elements.transcriptEmpty) elements.transcriptEmpty.hidden = true;
+  if (elements.transcriptPanel) elements.transcriptPanel.hidden = true;
+}
+
+function handleSubtitleTimeUpdate() {
+  const player = subtitleAudioPlayer;
+  if (!player || !subtitleSentences.length || player.paused || player.ended) return;
+
+  const duration = player.duration || 0;
+  const currentTime = player.currentTime || 0;
+  if (!duration) return;
+
+  // Distribute audio duration across sentences proportional to character length
+  const totalChars = subtitleSentences.reduce((sum, s) => sum + s.text.length, 0);
+  if (totalChars <= 0) return;
+  const elapsedChars = totalChars * (currentTime / duration);
+  let cumChars = 0;
+  let targetIndex = subtitleSentences.length - 1;
+  for (let i = 0; i < subtitleSentences.length; i++) {
+    cumChars += subtitleSentences[i].text.length;
+    if (elapsedChars <= cumChars) {
+      targetIndex = i;
+      break;
+    }
+  }
+  const clampedIndex = Math.min(Math.max(targetIndex, 0), subtitleSentences.length - 1);
+
+  if (clampedIndex !== subtitleCurrentIndex) {
+    showSubtitleSentence(clampedIndex);
+  }
+}
+
+function syncMuteButtons() {
+  document.querySelectorAll('[data-action="mute"], #muteButton').forEach(button => {
+    button.setAttribute('aria-pressed', String(state.muted));
+    button.setAttribute('aria-label', state.muted ? 'Unmute audio' : 'Mute audio');
+    button.title = state.muted ? 'Unmute audio (M)' : 'Mute audio (M)';
+    const label = button.querySelector('[data-mute-label], #muteButtonLabel');
+    if (label) label.textContent = state.muted ? 'Unmute' : 'Mute';
+    button.classList.toggle('is-muted', state.muted);
+  });
+}
+
+function showPlaybackFeedback(icon, label = '') {
+  const card = cards[currentIndex];
+  if (!card) return;
+  const overlay = card.element?.querySelector('[data-playback-feedback]');
+  const iconNode = overlay?.querySelector('[data-feedback-icon]');
+  const labelNode = overlay?.querySelector('[data-feedback-label]');
+  if (!overlay || !iconNode) return;
+  iconNode.innerHTML = icon;
+  labelNode.textContent = label;
+  overlay.classList.remove('is-visible');
+  void overlay.offsetWidth;
+  overlay.classList.add('is-visible');
+  window.clearTimeout(overlay._timer);
+  overlay._timer = window.setTimeout(() => overlay.classList.remove('is-visible'), 1000);
 }
 
 function togglePlayback() {
@@ -1387,42 +2516,45 @@ function togglePlayback() {
   if (!card) return;
 
   if (card.element.dataset.mode === 'visual') {
-    if (elements.musicPlayer.paused) playCurrentAudio();
-    else {
-      elements.musicPlayer.pause();
-      elements.audioStatus.textContent = 'Music paused.';
-    }
-    updatePlayControls();
-    return;
-  }
-
-  if (!speechSupported()) {
-    speakCurrentCard();
-    return;
-  }
-
-  const synthesis = window.speechSynthesis;
-  if (speechSession?.paused) {
-    if (speechSession.waiting) speechSession.resumeGap();
-    else synthesis.resume();
-    speechSession.paused = false;
-    speechPaused = false;
-    elements.audioStatus.textContent = 'Narration resumed.';
-  } else if (synthesis.paused) {
-    synthesis.resume();
-    speechPaused = false;
-    elements.audioStatus.textContent = 'Narration resumed.';
-  } else if (speechSession?.waiting) {
-    speechSession.pauseGap();
-    speechPaused = true;
-    elements.audioStatus.textContent = 'Narration paused before the answer.';
-  } else if (synthesis.speaking || synthesis.pending) {
-    synthesis.pause();
-    if (speechSession) speechSession.paused = true;
-    speechPaused = true;
-    elements.audioStatus.textContent = 'Narration paused.';
+    const wasPaused = elements.musicPlayer.paused;
+    if (wasPaused) playMusicForCard(card);
+    else stopMusic();
+    showPlaybackFeedback(wasPaused
+      ? '<path d="m9 7 8 5-8 5Z" fill="currentColor"/>'
+      : '<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>',
+      wasPaused ? 'Resumed' : 'Paused');
   } else {
-    speakCurrentCard();
+    const synthesis = window.speechSynthesis;
+    const speechActive = speechSupported() && (synthesis.speaking || synthesis.pending);
+    const session = speechSession;
+    const cloud = cloudSession;
+    const providerActive = Boolean(cloud && !cloud.finished);
+
+    if (speechActive && !speechPaused) {
+      synthesis.pause();
+      if (session) session.paused = true;
+      speechPaused = true;
+      elements.audioStatus.textContent = 'Narration paused.';
+      showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
+    } else if (cloud && !cloud.finished && cloud.paused) {
+      resumeNarrationGap(cloud);
+      elements.audioStatus.textContent = 'Narration resumed.';
+      showPlaybackFeedback('<path d="m9 7 8 5-8 5Z" fill="currentColor"/>', 'Resumed');
+    } else if (providerActive) {
+      if (cloud && !cloud.finished) pauseNarrationGap(cloud);
+      elements.audioStatus.textContent = 'Narration paused.';
+      showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
+    } else if (speechActive && speechPaused) {
+      synthesis.resume();
+      speechPaused = false;
+      if (session) session.paused = false;
+      elements.audioStatus.textContent = 'Narration resumed.';
+      showPlaybackFeedback('<path d="m9 7 8 5-8 5Z" fill="currentColor"/>', 'Resumed');
+    } else {
+      narrationIntent = true;
+      playCurrentAudio();
+      showPlaybackFeedback('<path d="m9 7 8 5-8 5Z" fill="currentColor"/>', 'Playing');
+    }
   }
   updatePlayControls();
 }
@@ -1432,10 +2564,13 @@ function toggleMute() {
   state.muted = !state.muted;
   if (state.muted) stopCurrentAudio();
   saveState();
-  elements.muteButton.setAttribute('aria-pressed', String(state.muted));
-  elements.muteButtonLabel.textContent = state.muted ? 'Unmute audio' : 'Mute audio';
+  syncMuteButtons();
   elements.audioStatus.textContent = state.muted ? 'Audio is muted.' : 'Audio is on.';
   if (!state.muted && hasUserGesture) playCurrentAudio();
+  showPlaybackFeedback(state.muted
+    ? '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" fill="currentColor"/>'
+    : '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="currentColor"/>',
+    state.muted ? 'Muted' : 'Unmuted');
 }
 
 function applyAudioSettings() {
@@ -1445,6 +2580,7 @@ function applyAudioSettings() {
   elements.musicVolumeValue.textContent = `${Math.round(state.musicVolume * 100)}%`;
   elements.musicPlayer.volume = state.musicVolume;
   saveState();
+  updateHubSummaries();
 }
 
 function restorePosition(feedKey = currentFeedKey()) {
@@ -1465,7 +2601,6 @@ function bindVoiceChangeEvents() {
   const synthesis = window.speechSynthesis;
   synthesis.addEventListener?.('voiceschanged', refreshVoiceOptions);
 
-  // Older WebView implementations expose only the property callback.
   const previousHandler = synthesis.onvoiceschanged;
   synthesis.onvoiceschanged = event => {
     if (typeof previousHandler === 'function') previousHandler.call(synthesis, event);
@@ -1480,14 +2615,35 @@ function isBlankCardTap(event) {
   const body = target.closest('.reel-card__body');
   if (!body) return false;
 
-  const contentTarget = target.closest(
-    'a, button, input, select, textarea, summary, [role="button"], p, h1, h2, h3, h4, h5, h6, li, pre, table, blockquote, code, svg, img'
-  );
-  if (contentTarget) return false;
+  const card = body.closest('.reel-card');
+  const isVisual = card?.dataset.mode === 'visual';
+
+  // If the click is directly on the body element (not a child), allow it
+  if (target === body) return true;
+
+  // For visual cards, be more permissive - only exclude actual interactive elements
+  if (isVisual) {
+    const interactiveTarget = target.closest(
+      'a, button, input, select, textarea, summary, [role="button"]'
+    );
+    if (interactiveTarget) return false;
+  } else {
+    const contentTarget = target.closest(
+      'a, button, input, select, textarea, summary, [role="button"], p, h1, h2, h3, h4, h5, h6, li, pre, table, blockquote, code'
+    );
+    if (contentTarget) return false;
+
+    const visualTarget = target.closest('svg, img');
+    if (visualTarget) return false;
+  }
+
   if (window.getSelection?.()?.toString()) return false;
 
   const rect = body.getBoundingClientRect();
-  if (event.clientX > rect.right - 14) return false;
+  // Allow clicks with clientX/clientY of 0 (programmatic clicks)
+  if (event.clientX !== 0 || event.clientY !== 0) {
+    if (event.clientX > rect.right - 14) return false;
+  }
 
   if (cardPointerStart) {
     const distance = Math.hypot(event.clientX - cardPointerStart.x, event.clientY - cardPointerStart.y);
@@ -1499,12 +2655,64 @@ function isBlankCardTap(event) {
 
 function bindControls() {
   bindVoiceChangeEvents();
-  elements.railToggle.addEventListener('click', () => {
+
+  elements.hubToggle.addEventListener('click', () => {
     markGesture();
-    toggleRail();
+    toggleHubMenu();
   });
-  elements.railClose.addEventListener('click', () => toggleRail(false));
-  elements.railScrim.addEventListener('click', () => toggleRail(false));
+
+  elements.hubClose.addEventListener('click', () => closeHubMenu());
+
+  elements.hubMenu.addEventListener('click', event => {
+    const item = event.target.closest('.hub-menu__item[data-hub-target]');
+    if (!item) return;
+    markGesture();
+    const target = item.dataset.hubTarget;
+    if (target === 'feed') toggleSubmodal(elements.feedModal, item);
+    else if (target === 'progress') toggleSubmodal(elements.progressModal, item);
+    else if (target === 'audio') toggleSubmodal(elements.audioModal, item);
+    else if (target === 'reset') {
+      elements.feedModal.close();
+      state.order = 'ordered';
+      state.unit = 'all';
+      state.savedOnly = false;
+      saveState();
+      buildFeed({ restore: restorePosition(), speak: hasUserGesture, markSeen: false, persistPosition: true });
+      updateHubSummaries();
+    }
+  });
+
+  elements.hubMenu.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeHubMenu();
+    }
+  });
+
+  elements.hubMenu.addEventListener('close', () => {
+    if (elements.hubMenu.open) return;
+    elements.hubToggle.setAttribute('aria-expanded', 'false');
+    syncHubMenuAccessibility(false);
+    if (hubReturnFocus?.isConnected) hubReturnFocus.focus({ preventScroll: true });
+    hubReturnFocus = null;
+  });
+
+  elements.feedClose.addEventListener('click', () => closeSubmodal());
+  elements.progressClose.addEventListener('click', () => closeSubmodal());
+  elements.audioClose.addEventListener('click', () => closeSubmodal());
+
+  [elements.feedModal, elements.progressModal, elements.audioModal].forEach(modal => {
+    modal.addEventListener('close', () => {
+      if (modal.open) return;
+      if (modal === activeModal) {
+        activeModal = null;
+        const toFocus = submodalReturnFocus?.isConnected ? submodalReturnFocus : elements.hubToggle;
+        toFocus.focus({ preventScroll: true });
+        submodalReturnFocus = null;
+      }
+    });
+  });
+
   elements.themeToggle.addEventListener('click', () => {
     markGesture();
     setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
@@ -1531,6 +2739,11 @@ function bindControls() {
     state.savedOnly = !state.savedOnly;
     saveState();
     buildFeed({ restore: restorePosition(), speak: hasUserGesture, markSeen: false, persistPosition: true });
+  });
+
+  elements.feedApply.addEventListener('click', () => {
+    markGesture();
+    closeSubmodal();
   });
 
   elements.unitFilters.addEventListener('click', event => {
@@ -1564,6 +2777,7 @@ function bindControls() {
       if (action === 'previous') goTo(currentIndex - 1);
       if (action === 'next') goTo(currentIndex + 1);
       if (action === 'play') togglePlayback();
+      if (action === 'mute') toggleMute();
       if (action === 'done') toggleState('done', card.entry.id);
       if (action === 'save') toggleState('saved', card.entry.id);
       cardPointerStart = null;
@@ -1579,9 +2793,38 @@ function bindControls() {
 
   elements.voiceSelect.addEventListener('change', () => {
     markGesture();
-    state.voice = elements.voiceSelect.value;
+    const requestedNarrator = elements.voiceSelect.value;
+
+    abortCloudPrefetches();
+    abortAiPrefetches();
+    state.voice = requestedNarrator;
+    state.aiNarrationEnabled = requestedNarrator === 'ai';
+    state.narratorVersion = 2;
     cards.forEach(card => { card.narratorVoice = null; });
+    stopCurrentAudio();
     saveState();
+    refreshNarratorStatus();
+    prefetchNarrationAround(currentIndex, 2);
+    updateHubSummaries();
+    const currentCard = cards[currentIndex];
+    if (currentCard) renderAiTranscript(currentCard);
+  });
+
+  elements.narrationToggle?.addEventListener('click', () => {
+    markGesture();
+    state.aiNarrationEnabled = !state.aiNarrationEnabled;
+    saveState();
+    updateHubSummaries();
+    const currentCard = cards[currentIndex];
+    if (currentCard) renderAiTranscript(currentCard);
+    stopCurrentAudio();
+    if (state.aiNarrationEnabled && state.voice === 'ai' && currentCard) {
+      playAiNarration(currentCard);
+    }
+    elements.narrationToggle.setAttribute('aria-pressed', String(state.aiNarrationEnabled));
+    elements.narrationToggle.querySelector('.hub-menu__summary').textContent = state.aiNarrationEnabled
+      ? 'On · subtitle overlay'
+      : 'Off · deterministic';
   });
 
   elements.speechRate.addEventListener('input', () => {
@@ -1594,6 +2837,25 @@ function bindControls() {
   });
   elements.muteButton.addEventListener('click', toggleMute);
 
+  elements.resetProgress.addEventListener('click', () => {
+    markGesture();
+    closeSubmodal();
+    elements.resetConfirm.showModal();
+  });
+
+  elements.resetConfirmCancel.addEventListener('click', () => elements.resetConfirm.close());
+  elements.resetConfirmAccept.addEventListener('click', () => {
+    markGesture();
+    state.seen = [];
+    state.done = [];
+    state.saved = [];
+    state.lastPosition = null;
+    state.positions = {};
+    saveState();
+    buildFeed({ restore: null, speak: false, markSeen: false, persistPosition: true });
+    elements.resetConfirm.close();
+  });
+
   document.addEventListener('keydown', event => {
     const target = event.target;
     const isTextEntry = target instanceof HTMLElement && (
@@ -1601,21 +2863,21 @@ function bindControls() {
       || target.closest('input, select, textarea, [contenteditable]:not([contenteditable="false"])')
     );
     const isInteractive = target instanceof HTMLElement && target.closest('button, a, summary, [role="button"]');
-    const railOpen = elements.reelsRail.classList.contains('is-open');
+    const hubOpen = elements.hubMenu.open;
+    const modalOpen = activeModal?.open ?? false;
 
-    // Preserve browser and operating-system shortcuts. The app-level M/S/D
-    // keys are intentionally unmodified only.
     if (event.ctrlKey || event.metaKey || event.altKey) return;
 
-    if (event.key === 'Tab' && railOpen) {
-      const focusable = [...elements.reelsRail.querySelectorAll(
+    if (event.key === 'Tab' && (hubOpen || modalOpen)) {
+      const container = modalOpen ? activeModal : elements.hubMenu;
+      const focusable = [...container.querySelectorAll(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'
       )].filter(element => element.getClientRects().length > 0);
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
       if (first && last) {
-        if (!elements.reelsRail.contains(document.activeElement)) {
+        if (!container.contains(document.activeElement)) {
           event.preventDefault();
           (event.shiftKey ? last : first).focus();
         } else if (event.shiftKey && document.activeElement === first) {
@@ -1629,13 +2891,20 @@ function bindControls() {
       return;
     }
 
-    if (event.key === 'Escape' && railOpen) {
-      event.preventDefault();
-      toggleRail(false);
-      return;
+    if (event.key === 'Escape') {
+      if (modalOpen) {
+        event.preventDefault();
+        closeSubmodal();
+        return;
+      }
+      if (hubOpen) {
+        event.preventDefault();
+        closeHubMenu();
+        return;
+      }
     }
 
-    if (railOpen || isTextEntry || isInteractive) return;
+    if (hubOpen || modalOpen || isTextEntry || isInteractive) return;
 
     const key = event.key.toLowerCase();
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
@@ -1644,122 +2913,78 @@ function bindControls() {
         const canScroll = event.key === 'ArrowDown'
           ? scrollBody.scrollTop + scrollBody.clientHeight < scrollBody.scrollHeight - 2
           : scrollBody.scrollTop > 2;
-        if (canScroll) return;
+        if (!canScroll) {
+          event.preventDefault();
+          goTo(currentIndex + (event.key === 'ArrowDown' ? 1 : -1), { speak: hasUserGesture });
+        }
+      } else {
+        event.preventDefault();
+        goTo(currentIndex + (event.key === 'ArrowDown' ? 1 : -1), { speak: hasUserGesture });
       }
-      event.preventDefault();
-      markGesture();
-      goTo(currentIndex + (event.key === 'ArrowDown' ? 1 : -1));
       return;
     }
 
-    if (event.code === 'Space') {
+    if (key === ' ') {
       event.preventDefault();
-      markGesture();
       togglePlayback();
       return;
     }
-
-    if (event.repeat) return;
+    if (key === 's') {
+      event.preventDefault();
+      toggleState('saved', cards[currentIndex].entry.id);
+      return;
+    }
+    if (key === 'd') {
+      event.preventDefault();
+      toggleState('done', cards[currentIndex].entry.id);
+      return;
+    }
     if (key === 'm') {
       event.preventDefault();
       toggleMute();
-    } else if (key === 's' && cards[currentIndex]) {
-      event.preventDefault();
-      toggleState('saved', cards[currentIndex].entry.id);
-    } else if (key === 'd' && cards[currentIndex]) {
-      event.preventDefault();
-      toggleState('done', cards[currentIndex].entry.id);
+      return;
     }
   });
 
   window.addEventListener('resize', () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
-      if (!payload || !cards.length) return;
-      const active = cards[currentIndex];
-      currentRestore = {
-        key: active?.key || '',
-        entryId: active?.entry.id || '',
-        atomKey: active?.atoms[0]?.key || '',
-        atomKeys: active?.atoms.map(atom => atom.key) || [],
-        atomAnchor: active?.atoms[0]?.anchor || null,
-        atomAnchors: active?.atoms.map(atom => atom.anchor).filter(Boolean) || []
-      };
-      buildFeed({ restore: currentRestore, speak: false, markSeen: false, persistPosition: true });
-    }, 180);
+      updateScrollCues();
+      const viewport = elements.cardViewport;
+      cards.forEach(card => {
+        if (card.element) card.element.style.width = `${viewport.clientWidth}px`;
+      });
+      elements.cardTrack.style.transform = `translate3d(0, ${-currentIndex * 100}%, 0)`;
+    }, 80);
   });
-
-  window.matchMedia('(max-width: 900px)').addEventListener?.('change', syncRailAccessibility);
-  syncRailAccessibility();
 }
 
-async function loadFeed() {
-  elements.stageLoading.hidden = false;
-  elements.stageLoading.className = 'stage-loading';
-  elements.stageLoading.setAttribute('role', 'status');
-  elements.stageLoading.setAttribute('aria-live', 'polite');
-  elements.stageLoading.innerHTML = '<p>Loading the BI revision feed…</p>';
-
+async function init() {
   try {
     const response = await fetch('content.json', { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Feed request failed with ${response.status}`);
+    if (!response.ok) throw new Error(`Failed to load content.json: ${response.status}`);
     payload = await response.json();
-    if (!payload?.entries?.length) throw new Error('The feed contains no entries');
-    cleanPersistedEntryState();
-
-    elements.speechRate.value = String(state.speechRate);
-    elements.musicVolume.value = String(state.musicVolume);
-    elements.muteButton.setAttribute('aria-pressed', String(state.muted));
-    elements.muteButtonLabel.textContent = state.muted ? 'Unmute audio' : 'Mute audio';
-    applyAudioSettings();
-    refreshVoiceOptions();
-    bindControls();
-
-    let fontsReady = false;
-    if (document.fonts?.load) {
-      const readyPromise = Promise.all([
-        document.fonts.load('600 28px Newsreader'),
-        document.fonts.load('400 16px Newsreader')
-      ])
-        .then(() => document.fonts.ready)
-        .then(() => {
-          fontsReady = true;
-        })
-        .catch(() => {});
-      await Promise.race([
-        readyPromise,
-        new Promise(resolve => window.setTimeout(resolve, 2500))
-      ]);
-    }
-
-    const storedPosition = restorePosition();
-    buildFeed({
-      restore: storedPosition,
-      speak: false,
-      markSeen: !storedPosition,
-      persistPosition: true
-    });
-
-    if (document.fonts?.ready && !fontsReady) {
-      document.fonts.ready.then(() => {
-        if (!payload || !cards.length) return;
-        buildFeed({ restore: restorePosition(), speak: false, markSeen: false, persistPosition: false });
-      });
-    }
-
-    elements.stageCaption.textContent = `${payload.subject.code} · ${payload.subject.name} · exact note text`;
   } catch (error) {
+    elements.stageLoading.hidden = false;
     elements.stageLoading.className = 'stage-error';
-    elements.stageLoading.setAttribute('role', 'alert');
-    elements.stageLoading.setAttribute('aria-live', 'assertive');
-    elements.stageLoading.innerHTML = `
-      <p>The revision feed could not load. Check the local site server and try again.</p>
-      <button type="button" data-retry>Try again</button>
-    `;
-    elements.stageLoading.querySelector('[data-retry]')?.addEventListener('click', loadFeed);
+    elements.stageLoading.innerHTML = `<p>Failed to load the feed. Please reload.</p>`;
     console.error(error);
+    return;
   }
+
+  cleanPersistedEntryState();
+  refreshVoiceOptions();
+  refreshNarratorStatus();
+  bindControls();
+
+  elements.speechRate.value = String(state.speechRate);
+  elements.musicVolume.value = String(state.musicVolume);
+  elements.muteButton.setAttribute('aria-pressed', String(state.muted));
+  elements.muteButtonLabel.textContent = state.muted ? 'Unmute audio' : 'Mute audio';
+
+  const restore = restorePosition();
+  buildFeed({ restore, speak: false, markSeen: false, persistPosition: true });
+  updateHubSummaries();
 }
 
-syncRailAccessibility();
-loadFeed();
+init();

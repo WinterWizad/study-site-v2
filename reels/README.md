@@ -13,6 +13,8 @@ It is a static pilot built on the site's existing Node/Marked pipeline. There is
 - Tables, fenced diagrams, and the Unit 1 motion visual.
 - Question cards with the question before the answer.
 - Runtime pagination that splits at source-safe boundaries and uses a visible scroll fallback only when one indivisible passage cannot fit.
+- Google Chirp 3 HD narration by default, with deployment-time MP3 priming, background prefetch, and automatic browser-speech fallback.
+- **AI narration (build-time reel transcripts)** — one AI-generated reel transcript per entry, generated at build time via Groq (qwen primary, gpt-oss fallback), with deterministic fallback. Default on, switchable with a button. The AI transcript panel shows the generated script while leaving the original note visible.
 - Browser text-to-speech with a fixed or random narrator voice.
 - Local MP3 music for visual-only cards.
 - Seen, Done, Saved, resume position, feed preferences, and audio preferences stored in `localStorage`.
@@ -33,17 +35,52 @@ http://localhost:8080/reels/
 
 The source files live in `reels/`. The build writes the production route to `dist/reels/`.
 
+### Narration configuration
+
+The static build works without cloud credentials, but Google narration then falls back to browser speech. For the intended production setup, configure these environment variables in the build and runtime environments:
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `GOOGLE_CLOUD_TTS_API_KEY` | Production | Authenticates Chirp 3 HD synthesis in the build and `/api/narration`. |
+| `UPSTASH_REDIS_REST_URL` | Production | Provides the shared, durable narration quota store. |
+| `UPSTASH_REDIS_REST_TOKEN` | Production | Authenticates the Upstash quota store. |
+| `GOOGLE_TTS_VOICE` | No | Overrides `en-US-Chirp3-HD-Achernar`. |
+| `GOOGLE_TTS_LANGUAGE_CODE` | No | Overrides `en-US`. |
+| `GOOGLE_TTS_PACE` | No | Sets synthesis pace from `0.25` to `2`; the runtime also supports a `0.75×`–`1.25×` playback rate. |
+| `GOOGLE_TTS_MODEL_VERSION` | No | Changes the cache identity when the voice model changes. |
+| `GOOGLE_TTS_PRIME_ENTRIES` | No | Number of initial playable entries queued for deployment-time MP3 generation; default `12`. |
+| `GOOGLE_TTS_DAILY_CHAR_BUDGET` | No | Daily app-level character cap; default `100000`. |
+| `GOOGLE_TTS_MONTHLY_CHAR_BUDGET` | No | Monthly app-level character cap; default `900000`, below Google's 1M-character free monthly tier. |
+| `GOOGLE_TTS_REQUESTS_PER_FIVE_MINUTES` | No | Shared request cap; default `300`. |
+| `GOOGLE_TTS_MAX_PRIME_CHARS` | No | Safety cap for one priming run; default `900000`. |
+| `GOOGLE_TTS_PRIME_CONCURRENCY` | No | Parallel synthesis jobs during priming; default `4`, maximum `8`. |
+| `GROQ_API_KEY` | Production | Authenticates AI reel-transcript generation via Groq at build time. |
+| `GROQ_TTS_PRIME_ENTRIES` | No | Number of initial AI transcript entries queued for deployment-time MP3 generation; default `0` (AI transcripts generated on-demand). |
+
+`GOOGLE_TTS_ALLOW_LOCAL_QUOTA=true` is a diagnostic escape hatch. Do not enable it on Vercel: serverless instances need the durable Upstash counters to enforce one shared quota.
+
+Build and prime the initial narration with:
+
+```bash
+npm run build:narrated
+```
+
+`build:narrated` fails when the Google credential is missing. It primes the first playable entries, writes versioned MP3s to `dist/reels/audio/`, and marks those segments as static in `content.json`. Later segments remain available through the protected `/api/narration` endpoint.
+
 ## Test it
 
 ```bash
 npm run test:reels:content
+npm run test:narration
 npm run test:reels:browser
 npm run test:reels
 ```
 
 The content suite verifies source classification, exact official question wording, exact source-heading occurrences, source order, unique IDs, anchors, exclusions, narration text fidelity, sentence-boundary word preservation, table-row boundaries, diagrams, fail-fast handling for block, inline, nested, and table-cell HTML, and mojibake repair.
 
-The browser suite verifies the built route at `320×568`, `360×640`, `390×844`, `844×390`, `901×500`, `1024×600`, and `1440×900`. It covers the centred portrait stage, four-action edge rail, separate navigation group, action-rail clearance, blank-card audio toggling, internal clipping, the scroll fallback cue, source links, per-feed restoration, resize-safe source atoms, state cleanup, TTS ordering and gap pause/resume, delayed voice enumeration, local music, modifier-safe keyboard controls, focus restoration, the modal drawer at desktop and mobile sizes, live regions, SVG/table/diagram semantics, Saved-only removal, speech fallback, storage failure, and corrupt-state recovery.
+The narration suite verifies narration-only normalisation, protected known-segment requests, immutable cache headers, quota and rate-limit responses, concurrent-request deduplication, ETag reuse, Google request shape, pace retry, and deployment-prime selection.
+
+The browser suite verifies the built route at `320×568`, `360×640`, `390×844`, `844×390`, `901×500`, `1024×600`, and `1440×900`. It covers the centred portrait stage, four-action edge rail, separate navigation group, action-rail clearance, blank-card audio toggling, internal clipping, the scroll fallback cue, source links, per-feed restoration, resize-safe source atoms, state cleanup, TTS ordering and gap pause/resume, delayed voice enumeration, local music, modifier-safe keyboard controls, focus restoration, the modal drawer at desktop and mobile sizes, live regions, SVG/table/diagram semantics, Saved-only removal, Google playback and fallback, prefetch deduplication and limits, speech fallback, storage failure, and corrupt-state recovery.
 
 ## Files
 
@@ -51,11 +88,18 @@ The browser suite verifies the built route at `320×568`, `360×640`, `390×844`
 |---|---|
 | `reels/content.mjs` | Build-time Markdown extraction, source heading IDs, question parsing, Unit 1 mojibake repair, exclusions, source links, and audit data. |
 | `reels/bi-question-manifest.mjs` | The audited 42-question board/model-paper manifest. |
-| `reels/reels.js` | Runtime feed filtering, shuffling, pagination, rendering, TTS, music, persistence, keyboard controls, and drawer accessibility. |
-| `reels/reels.html` | The `/reels/` reel-stage shell, edge-rail card template, and modal drawer. |
+| `reels/reels.js` | Runtime feed filtering, shuffling, pagination, rendering, Google/AI/browser narration, prefetch, music, persistence, keyboard controls, and drawer accessibility. |
+| `reels/reels.html` | The `/reels/` reel-stage shell, edge-rail card template, narrator controls, and modal drawer. |
 | `reels/reels.css` | The portrait reel stage, edge-action rail, responsive drawer, card tables, diagrams, and theme values. |
+| `reels/speech.mjs` | Narration-only normalisation, contextual arrow wording, profile hashing, segment IDs, deterministic manifest generation, **and AI transcript manifest generation**. |
+| `reels/google-tts.mjs` | Google Chirp synthesis request and pace-rejection fallback. |
+| `api/narration.mjs` | Protected known-segment narration endpoint with durable quota controls and immutable caching; serves both deterministic and AI segment IDs. |
+| `scripts/prime-narration.mjs` | Deployment-time MP3 generation for deterministic and AI segments, static-asset marking. |
+| `scripts/reel-adapter.mjs` | Production-safe Groq client: qwen primary (`reasoning_effort: "none"`), gpt-oss fallback, per-entry cache by source/prompt/model hash, `cleanForTTS()`, protected-token validation, graceful no-key behavior. |
+| `scripts/reel-prompts/` | Copied canonical production prompts (`reel-writer.system.v3.txt`, `reel-writer.user.txt`) from `tools/reel/`. |
 | `reels/assets/music/` | Local MP3 files and their source/licence record. |
 | `test-reels-content.mjs` | Source-fidelity and extraction checks. |
+| `test-narration.mjs` | Normalisation, manifest, API, quota, cache, and priming checks. |
 | `test-reels.cjs` | Playwright checks against `dist/`. |
 
 ## Source-fidelity contract
@@ -69,7 +113,7 @@ The Markdown note is authoritative.
 5. A mapped question that does not have a dedicated note heading uses the official question unchanged and links its answer to the mapped note section.
 6. Coverage Map, Self-Test, Sixty-Second Check, and answer-skeleton repetitions stay out of the feed. A canonical question that appears first under an Answer Skeletons parent may still be included from its earlier teaching section.
 7. Long content continues on another card only at sentence, list-item, code-line, or table-row boundaries. Table cells are never expanded into invented sentence fragments. Splitting retains every source word, including text before inline formatting tokens.
-8. Every rendered text part has a matching narration transcript. Code identifiers, comparison operators, and emphasis remain readable in both display and TTS.
+8. Every rendered text part has a matching narration segment. The visible text stays unchanged; only the spoken copy removes structural labels, arrows, flags, and instructional annotations. Code identifiers, comparison operators, dates, money, percentages, and meaningful parentheses remain readable.
 9. Unsupported raw HTML fails the build at block, inline, nested-emphasis, table-cell, and reusable-details levels instead of disappearing silently. Reusable `<details>` blocks are extracted explicitly.
 10. Source links use the same deduplicated heading-ID assigner as the site build.
 
@@ -119,8 +163,10 @@ The current manifest contains:
 2. Calls `extractReelContent()` with the BI unit list and question manifest.
 3. Reconciles the heading audit.
 4. Rejects missing answers, unresolved mojibake, changed mapped-question counts, and missing source anchors.
-5. Writes `dist/reels/content.json`.
-6. Copies the Quick Reels route, CSS, JavaScript, and local MP3 assets.
+5. Builds the versioned narration manifest and entry-to-segment references.
+6. Builds a parallel AI transcript manifest: one reel transcript per entry, generated via Groq (qwen primary, gpt-oss fallback), with deterministic fallback and per-entry validation.
+7. Writes `dist/reels/content.json` with both `narration` and `aiTranscript` manifests.
+8. Copies the Quick Reels route, CSS, JavaScript, and local MP3 assets.
 
 The build exits non-zero if any gate fails.
 
@@ -158,20 +204,33 @@ Ordered and shuffled feeds use separate positions. Ordered positions do not depe
 
 ## Audio model
 
+### AI narration (build-time reel transcripts)
+
+- One AI-generated reel transcript is built per entry at build time using Groq. Primary model: `qwen/qwen3.8-27b` (temperature `0.7`, max tokens `900`, reasoning effort `none`). Fallback for RPD/TPM failures: `openai/gpt-oss-20b` (temperature `0.7`, max tokens `1400`, reasoning effort `low`).
+- The AI only transforms source notes into reel-style spoken transcripts. It never rewrites the authoritative Markdown, original cards, tables, or diagrams.
+- Each transcript preserves protected tokens (dates, money, percentages, formulas, identifiers) and exact blockquote wording when present. It runs through `cleanForTTS()` (cue removal, markdown stripping, emoji removal, whitespace collapse) before segmentation and TTS.
+- The AI manifest is parallel to the deterministic `narration` manifest. AI segment IDs use the `aiseg-` prefix and are versioned independently.
+- AI narration is **enabled by default** with a `aiNarrationEnabled` preference persisted in `localStorage`. A button in the hub menu toggles it on/off.
+- When AI narration is active, the generated transcript appears in a collapsible transcript panel below the card while the original note remains visible.
+- Deterministic narration remains the safety net for failed, invalid, or missing AI transcripts. Fallback preserves segment boundaries and speech rate.
+- `GROQ_API_KEY` must be set for AI generation. Without it, AI generation is skipped gracefully and deterministic narration is used.
+
 ### Text cards
 
-- Browser speech synthesis starts only after a user gesture.
-- The selected voice is reused for the question and answer of one card.
-- Random mode chooses one English voice per card, then keeps it for that card.
-- Fixed voices support both the modern `voiceschanged` event and legacy `onvoiceschanged` browsers. A saved voice that never appears shows an explicit unavailable/system-fallback label.
-- Question narration is one segment. Answer narration is the second segment.
-- A deliberate 450ms pause separates the two. Pause/resume during that gap keeps the answer pending and never restarts the question.
-- Speech rate is persisted from 0.75× to 1.25× and stays consistent across all segments of one card.
-- The full transcript remains visible when speech is unavailable or fails.
+- Google Chirp 3 HD is the default narrator. One voice reads every segment of a card.
+- Deployment builds versioned MP3s for the first playable entries. Static audio is immutable and safe to cache for one year.
+- The browser loads primed audio ahead of the learner and prefetches more after an explicit narration action. Dynamic synthesis remains lazy.
+- `/api/narration` accepts known segment IDs and matching profile versions only. It never accepts arbitrary client text.
+- Google quota, rate-limit, network, and media errors fall back to browser speech from the failed segment onward.
+- Browser speech synthesis is the fallback narrator. Random mode chooses one English voice per card, then keeps it for that card.
+- Fixed browser voices support both the modern `voiceschanged` event and legacy `onvoiceschanged` browsers. A saved voice that never appears shows an explicit unavailable/system-fallback label.
+- A deliberate 450ms pause separates the question from the answer. Pause/resume during that gap keeps the answer pending and never restarts the question.
+- Speech rate is persisted from 0.75× to 1.25× and stays consistent across all segments of one card, including a later provider fallback.
+- The full visible transcript remains unchanged when narration or speech is unavailable or fails.
 
 ### Visual cards
 
-- Visual cards use a local MP3 from `reels/assets/music/`.
+- Dedicated visual cards use a local MP3 from `reels/assets/music/`. Table and diagram cards keep their source layout and are narrated.
 - Navigation after a user gesture may start the visual track.
 - Play/Pause controls the track explicitly.
 - Visual cards do not start text narration.
@@ -191,18 +250,20 @@ State is stored under `quickReels.state.v1`:
   "saved": [],
   "lastPosition": null,
   "positions": {},
-  "voice": "random",
+  "voice": "google",
+  "narratorVersion": 2,
   "speechRate": 1,
   "shuffleSeed": 541385059,
   "order": "ordered",
   "unit": "all",
   "savedOnly": false,
   "musicVolume": 0.28,
-  "muted": false
+  "muted": false,
+  "aiNarrationEnabled": true
 }
 ```
 
-Malformed storage and unsupported state versions fall back to safe defaults. Removed entry IDs, removed units, and stale Saved-only references are cleaned on load. Storage failure does not stop the feed; the progress note then says that progress cannot be saved instead of falsely claiming it was saved.
+Malformed storage and unsupported state versions fall back to safe defaults. Removed entry IDs, removed units, and stale Saved-only references are cleaned on load. Storage failure does not stop the feed; the progress note then says that progress cannot be saved instead of falsely claiming it was saved. Narrator version `2` migrates the old random-browser default to Google while keeping explicitly selected browser voices.
 
 ## Keyboard and accessibility
 
@@ -220,7 +281,7 @@ The `M`, `S`, and `D` shortcuts run only without Ctrl, Meta, or Alt and only whe
 
 The controls drawer starts closed and inert at every viewport size. While open, it exposes `role="dialog"`, `aria-modal="true"`, traps focus in both directions, and makes the reading stage inert. Escape, scrim, the internal close button, and programmatic close paths restore focus to the menu trigger. The current card alone is exposed to assistive technology; inactive cards are inert.
 
-Long prose wraps instead of clipping, including long question titles at narrow landscape sizes. A card that still contains an indivisible over-height passage uses a named scrollable body with a visible scroll cue. The body reserves a clear strip beside the icon rail so actions never cover source text, tables, or diagrams. Card changes, audio state, Saved/Done state, load errors, and empty-feed recovery use separate live regions. The motion SVG is associated with its caption list; tables and diagrams have contextual accessible names and remain keyboard focusable.
+Long prose wraps instead of clipping, including long question titles at narrow landscape sizes. A card that still contains an indivisible over-height passage uses a named scrollable body with a visible scroll cue. The body reserves a clear strip beside the icon rail so actions never cover source text, tables, or diagrams. Card changes, audio state, Saved/Done state, load errors, empty-feed recovery, and provider loading or failure messages use separate live regions. The motion SVG is associated with its caption list; tables and diagrams have contextual accessible names and remain keyboard focusable.
 
 ## Add another subject
 
