@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Quick Reels | Business Intelligence | Worst Generation</title>
-  <meta name="description" content="A source-faithful, narrated Business Intelligence revision feed for BIM 8th semester students.">
+  <title>Quick Reels | Worst Generation</title>
+  <meta name="description" content="Source-faithful, narrated revision feeds for BIM 8th semester subjects.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/site.webmanifest">
@@ -21,9 +21,9 @@
 
   <header class="reels-topbar">
     <a class="reels-wordmark" href="../index.html">Worst Generation</a>
-    <div class="reels-topbar-context" aria-label="Quick Reels for Business Intelligence">
+    <div class="reels-topbar-context" id="topbarContext" aria-label="Quick Reels">
       <span class="reels-route">Quick Reels</span>
-      <span class="reels-subject">Business Intelligence</span>
+      <span class="reels-subject" id="topbarSubject">Study feed</span>
     </div>
     <div class="reels-topbar-actions">
       <button class="icon-button reels-menu-button" id="hubToggle" type="button" aria-label="Open Quick Reels menu" aria-controls="hubMenu" aria-expanded="false" aria-haspopup="dialog">
@@ -50,12 +50,12 @@
             <p class="reel-subtitle__empty" id="transcriptEmpty">No AI transcript available for this card.</p>
           </div>
           <div class="stage-loading" id="stageLoading" role="status" aria-live="polite">
-            <p>Loading the BI revision feed…</p>
+            <p id="stageLoadingText">Loading the revision feed…</p>
           </div>
         </div>
         <p class="reels-sr-only" id="cardAnnouncement" aria-live="polite" aria-atomic="true"></p>
         <p class="reels-sr-only" id="stateAnnouncement" aria-live="polite" aria-atomic="true"></p>
-        <p class="reels-sr-only" id="stageCaption">Business Intelligence · exact note text</p>
+        <p class="reels-sr-only" id="stageCaption">Exact note text</p>
       </div>
     </main>
   </div>
@@ -71,10 +71,14 @@
           <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </button>
       </header>
+      <section class="hub-subject-picker" aria-labelledby="hubSubjectsHeading">
+        <h3 id="hubSubjectsHeading">Subject</h3>
+        <div class="subject-chip-row" id="hubSubjects"></div>
+      </section>
       <nav class="hub-menu__list" role="list">
         <button class="hub-menu__item" type="button" data-hub-target="feed">
           <span class="hub-menu__label">Feed & filters</span>
-          <span class="hub-menu__summary" id="hubSummaryFeed">Unit 1 · Unit order</span>
+          <span class="hub-menu__summary" id="hubSummaryFeed">All units · Unit order</span>
           <svg class="hub-menu__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button class="hub-menu__item" type="button" data-hub-target="progress">
@@ -98,7 +102,7 @@
         </button>
       </nav>
       <div class="hub-menu__footer">
-        <a href="../bi/" class="hub-menu__link">Business Intelligence notes</a>
+        <a href="../bi/" class="hub-menu__link" id="hubNotesLink">Study notes</a>
         <a href="../index.html" class="hub-menu__link">All subjects</a>
       </div>
     </div>
@@ -130,6 +134,10 @@
             <span>Saved sections only</span>
             <span class="rail-count" id="savedFilterCount">0</span>
           </button>
+        </section>
+        <section class="modal-section" aria-labelledby="feedSubjectsHeading">
+          <h3 id="feedSubjectsHeading">Subject</h3>
+          <div id="subjectFilters" class="subject-chip-row"></div>
         </section>
         <section class="modal-section" aria-labelledby="feedUnitsHeading">
           <h3 id="feedUnitsHeading">Units</h3>

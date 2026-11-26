@@ -556,7 +556,7 @@ function generateUnitHtml(subject, unit, htmlContent) {
           `).join('')}
         </ul>
         <div class="sidebar-footer">
-          ${subject.id === 'bi' ? '<a href="../reels/" class="footer-link">Quick Reels</a>' : ''}
+          ${['bi', 'entrepreneurship'].includes(subject.id) ? `<a href="../reels/?subject=${subject.id}" class="footer-link">Quick Reels</a>` : ''}
           <a href="../index.html" class="footer-link">← All Subjects</a>
         </div>
       </div>
@@ -835,7 +835,7 @@ function generateSubjectIndexHtml(subject) {
             <li><a href="model-question.html">Model Question</a></li>
             <li><a href="model-question-answers.html">Model Question Answers</a></li>
             <li><a href="question-bank.html">Question Bank</a></li>
-            ${subject.id === 'bi' ? `<li><a href="../reels/">Quick Reels</a></li>` : ''}
+            ${['bi', 'entrepreneurship'].includes(subject.id) ? `<li><a href="../reels/?subject=${subject.id}">Quick Reels</a></li>` : ''}
             ${subject.id === 'bi' ? `<li><a href="cheat-sheet.html">&#x1F4CB; Cheat Sheet</a></li>` : ''}
             <li><a href="../_syllabus/${SYLLABUS_FILES[subject.code] || ''}" target="_blank">Syllabus</a></li>
           </ul>
@@ -1477,7 +1477,7 @@ function generateMainIndexHtml() {
                 <div class="door-links">
                   <a href="${s.id}/question-bank.html">Question bank</a>
                   <a href="${s.id}/model-question-answers.html">Model answers</a>
-                  ${s.id === 'bi' ? '<a href="reels/">Quick Reels</a>' : ''}
+                  ${['bi', 'entrepreneurship'].includes(s.id) ? `<a href="reels/?subject=${s.id}">Quick Reels</a>` : ''}
                   ${s.id === 'bi' ? '<a href="bi/cheat-sheet.html">Cheat sheet</a>' : ''}
                 </div>
               </div>
@@ -2077,86 +2077,130 @@ async function build() {
     console.log(`✅ Subject: ${subject.name} (${subject.units.length} units)`);
   }
 
-  // Generate the BI Quick Reels pilot. Source wording stays in Markdown;
-  // the extractor only turns its semantic blocks into a versioned feed payload.
+  // Quick Reels serves every subject from one /reels/ route. The index stays
+  // tiny; each subject's transcript payload loads on demand from content/.
   const reelsSourceDir = path.join(SRC_DIR, 'reels');
   const reelsDistDir = path.join(DIST_DIR, 'reels');
-  fs.mkdirSync(reelsDistDir, { recursive: true });
-
-  const reelsPayload = extractReelContent({
-    subject: SUBJECTS.bi,
-    units: SUBJECTS.bi.units,
-    rootDir: SRC_DIR,
-    questionManifest: BI_QUESTION_MANIFEST
-  });
-  reelsPayload.questionManifest = BI_QUESTION_MANIFEST;
+  const reelsContentDir = path.join(reelsDistDir, 'content');
+  fs.mkdirSync(reelsContentDir, { recursive: true });
 
   const narrationProfile = narrationProfileFromEnv();
-  const sectionNames = collectSectionHeadingNames(
-    SUBJECTS.bi.units,
-    SRC_DIR,
-    SUBJECTS.bi.folder
-  );
-  const primeNarrationEntryCount = Math.max(1, Math.min(30, Number(process.env.GOOGLE_TTS_PRIME_ENTRIES) || 12));
-  const primeNarrationEntryIds = reelsPayload.entries
-    .filter(entry => entry.parts.some(part => part.type === 'text' && String(part.text || '').trim()))
-    .slice(0, primeNarrationEntryCount)
-    .map(entry => entry.id);
-  const narration = buildNarrationManifest(reelsPayload.entries, {
-    profile: narrationProfile,
-    sectionNames,
-    primeEntryIds: primeNarrationEntryIds,
-    cloudEnabled: Boolean(String(process.env.GOOGLE_CLOUD_TTS_API_KEY || '').trim())
-  });
-  reelsPayload.narration = narration.manifest;
-  reelsPayload.entries.forEach(entry => {
-    entry.narration = narration.entryNarration[entry.id];
-  });
+  const cloudNarrationEnabled = Boolean(String(process.env.GOOGLE_CLOUD_TTS_API_KEY || '').trim());
+  const reelsBuiltAt = new Date().toISOString();
 
-  // Build AI transcript manifest (parallel to deterministic narration)
-  // Generate AI transcripts for entries with text content
-  const aiTranscript = buildAiTranscriptManifest(reelsPayload.entries, {
-    profile: DEFAULT_AI_TRANSCRIPT_PROFILE,
-    primeEntries: 0 // AI transcripts generated on-demand, not pre-primed
-  });
-  reelsPayload.aiTranscript = aiTranscript.manifest;
-  reelsPayload.entries.forEach(entry => {
-    entry.aiTranscript = aiTranscript.entryNarration[entry.id];
-  });
+  const reelSubjectConfigs = [
+    { subject: SUBJECTS.bi, units: SUBJECTS.bi.units, questionManifest: BI_QUESTION_MANIFEST },
+    { subject: SUBJECTS.entrepreneurship, units: SUBJECTS.entrepreneurship.units, questionManifest: ENTREPRENEURSHIP_QUESTION_MANIFEST }
+  ];
 
-  if (!reelsPayload.entries.length || !reelsPayload.audit.mappedQuestions) {
-    throw new Error('Quick Reels extraction produced no usable BI content.');
-  }
+  function mergeReelManifests(manifests, label) {
+    const base = manifests[0];
+    const segments = {};
 
-  const reelsAuditTotal = reelsPayload.audit.includedHeadings
-    + reelsPayload.audit.excludedHeadings.length
-    + reelsPayload.audit.containerHeadings
-    + reelsPayload.audit.duplicateHeadings;
-  if (reelsAuditTotal !== reelsPayload.audit.sourceHeadings) {
-    throw new Error(`Quick Reels heading audit does not reconcile (${reelsAuditTotal}/${reelsPayload.audit.sourceHeadings}).`);
-  }
-
-  if (reelsPayload.audit.mappedQuestions !== BI_QUESTION_MANIFEST.length || reelsPayload.units.length !== 6) {
-    throw new Error('Quick Reels BI coverage changed unexpectedly; reconcile the source audit before shipping.');
-  }
-
-  if (reelsPayload.entries.some(entry => entry.kind === 'question' && !entry.parts.some(part => part.section === 'answer'))) {
-    throw new Error('Quick Reels contains a mapped question without answer content.');
-  }
-
-  if (/[âÂÃð]/.test(JSON.stringify(reelsPayload))) {
-    throw new Error('Quick Reels contains unresolved Unit 1 mojibake.');
-  }
-
-  for (const entry of reelsPayload.entries) {
-    const unitHtmlPath = path.join(DIST_DIR, 'bi', `unit-${entry.unit}.html`);
-    const unitHtml = fs.readFileSync(unitHtmlPath, 'utf8');
-    if (!unitHtml.includes(`id="${entry.sourceAnchor}"`)) {
-      throw new Error(`Quick Reels source anchor is missing from the built unit page: ${entry.sourceUrl}`);
+    for (const manifest of manifests) {
+      for (const [segmentId, segment] of Object.entries(manifest.segments || {})) {
+        const existing = segments[segmentId];
+        if (existing && (existing.text !== segment.text || existing.version !== segment.version)) {
+          throw new Error(`Quick Reels ${label} segment collision with different content: ${segmentId}`);
+        }
+        segments[segmentId] = existing
+          ? {
+              ...existing,
+              prime: Boolean(existing.prime || segment.prime),
+              static: Boolean(existing.static || segment.static)
+            }
+          : { ...segment };
+      }
     }
+
+    const allSegments = Object.values(segments);
+    return {
+      ...base,
+      segments,
+      segmentCount: allSegments.length,
+      totalChars: allSegments.reduce((sum, segment) => sum + Number(segment.chars || String(segment.text || '').length), 0),
+      cloudEnabled: manifests.some(manifest => manifest.cloudEnabled),
+      staticAssets: manifests.every(manifest => manifest.staticAssets),
+      primedAssets: allSegments.filter(segment => segment.static).length,
+      generatedAt: reelsBuiltAt
+    };
   }
 
-  reelsPayload.music = [
+  function buildSubjectReelPayload({ subject, units, questionManifest }) {
+    const payload = extractReelContent({
+      subject,
+      units,
+      rootDir: SRC_DIR,
+      questionManifest
+    });
+    payload.questionManifest = questionManifest;
+    payload.entries.forEach(entry => {
+      entry.subjectId = subject.id;
+    });
+
+    const sectionNames = collectSectionHeadingNames(units, SRC_DIR, subject.folder);
+    const primeCount = Math.max(1, Math.min(30, Number(process.env.GOOGLE_TTS_PRIME_ENTRIES) || 12));
+    const primeIds = payload.entries
+      .filter(entry => entry.parts.some(part => part.type === 'text' && String(part.text || '').trim()))
+      .slice(0, primeCount)
+      .map(entry => entry.id);
+
+    const narration = buildNarrationManifest(payload.entries, {
+      profile: narrationProfile,
+      sectionNames,
+      primeEntryIds: primeIds,
+      cloudEnabled: cloudNarrationEnabled
+    });
+    payload.narration = narration.manifest;
+    payload.entries.forEach(entry => {
+      entry.narration = narration.entryNarration[entry.id];
+    });
+
+    const aiTranscript = buildAiTranscriptManifest(payload.entries, {
+      profile: DEFAULT_AI_TRANSCRIPT_PROFILE,
+      primeEntries: 0
+    });
+    payload.aiTranscript = aiTranscript.manifest;
+    payload.entries.forEach(entry => {
+      entry.aiTranscript = aiTranscript.entryNarration[entry.id];
+    });
+
+    if (!payload.entries.length || !payload.audit.mappedQuestions) {
+      throw new Error(`Quick Reels extraction produced no usable content for ${subject.name}.`);
+    }
+
+    const auditTotal = payload.audit.includedHeadings
+      + payload.audit.excludedHeadings.length
+      + payload.audit.containerHeadings
+      + payload.audit.duplicateHeadings;
+    if (auditTotal !== payload.audit.sourceHeadings) {
+      throw new Error(`Quick Reels heading audit does not reconcile for ${subject.name} (${auditTotal}/${payload.audit.sourceHeadings}).`);
+    }
+
+    if (payload.audit.mappedQuestions !== questionManifest.length || payload.units.length !== 6) {
+      throw new Error(`Quick Reels coverage changed unexpectedly for ${subject.name}; reconcile the source audit before shipping.`);
+    }
+
+    if (payload.entries.some(entry => entry.kind === 'question' && !entry.parts.some(part => part.section === 'answer'))) {
+      throw new Error(`Quick Reels ${subject.name} contains a mapped question without answer content.`);
+    }
+
+    if (/[âÂÃð]/.test(JSON.stringify(payload))) {
+      throw new Error(`Quick Reels ${subject.name} contains unresolved mojibake.`);
+    }
+
+    for (const entry of payload.entries) {
+      const unitHtmlPath = path.join(DIST_DIR, subject.id, `unit-${entry.unit}.html`);
+      const unitHtml = fs.readFileSync(unitHtmlPath, 'utf8');
+      if (!unitHtml.includes(`id="${entry.sourceAnchor}"`)) {
+        throw new Error(`Quick Reels source anchor is missing from the built unit page: ${entry.sourceUrl}`);
+      }
+    }
+
+    return payload;
+  }
+
+  const reelsMusic = [
     {
       title: 'Easy Lemon (60 second)',
       file: 'assets/music/easy-lemon-60-second.mp3',
@@ -2181,114 +2225,67 @@ async function build() {
     }
   }
 
-  fs.writeFileSync(path.join(reelsDistDir, 'content.json'), JSON.stringify(reelsPayload));
+  const builtReelPayloads = reelSubjectConfigs.map(config => {
+    const payload = buildSubjectReelPayload(config);
+    payload.music = reelsMusic;
+    fs.writeFileSync(path.join(reelsContentDir, `${config.subject.id}.json`), JSON.stringify(payload));
+    console.log(`✅ reels/content/${config.subject.id}.json (${payload.entries.length} sections, ${payload.audit.mappedQuestions} mapped questions)`);
+    return payload;
+  });
+  const reelsPayloadById = new Map(builtReelPayloads.map(payload => [payload.subject.id, payload]));
+
+  const reelsIndex = {
+    version: 2,
+    generatedAt: reelsBuiltAt,
+    defaultSubject: SUBJECTS.bi.id,
+    subjects: reelSubjectConfigs.map(({ subject }) => {
+      const payload = reelsPayloadById.get(subject.id);
+      return {
+        id: subject.id,
+        code: subject.code,
+        name: subject.name,
+        color: subject.color,
+        notesUrl: `/${subject.id}/`,
+        payloadUrl: `content/${subject.id}.json`,
+        entryCount: payload.entries.length,
+        questionCount: payload.audit.mappedQuestions,
+        units: subject.units.map(unit => ({
+          num: unit.num,
+          title: unit.title,
+          sourceUrl: `/${subject.id}/unit-${unit.num}.html`
+        }))
+      };
+    })
+  };
+  fs.writeFileSync(path.join(reelsDistDir, 'content.json'), JSON.stringify(reelsIndex));
+
+  const mergedNarrationManifest = mergeReelManifests(
+    builtReelPayloads.map(payload => payload.narration),
+    'narration'
+  );
+  const mergedAiTranscriptManifest = mergeReelManifests(
+    builtReelPayloads.map(payload => payload.aiTranscript),
+    'AI transcript'
+  );
+  fs.writeFileSync(path.join(reelsDistDir, 'narration-manifest.json'), JSON.stringify({
+    version: 1,
+    generatedAt: reelsBuiltAt,
+    subjects: reelsIndex.subjects.map(subject => subject.id),
+    narration: mergedNarrationManifest,
+    aiTranscript: mergedAiTranscriptManifest
+  }));
+
   ['reels.html', 'reels.css', 'reels.js'].forEach(file => {
     fs.copyFileSync(path.join(reelsSourceDir, file), path.join(reelsDistDir, file === 'reels.html' ? 'index.html' : file));
   });
 
   const reelsMusicDist = path.join(reelsDistDir, 'assets', 'music');
   fs.mkdirSync(reelsMusicDist, { recursive: true });
-  fs.readdirSync(path.join(reelsSourceDir, 'assets', 'music'))
+  fs.readdirSync(reelsMusicSource)
     .filter(file => file.endsWith('.mp3') || file === 'CREDITS.md')
-    .forEach(file => fs.copyFileSync(path.join(reelsSourceDir, 'assets', 'music', file), path.join(reelsMusicDist, file)));
+    .forEach(file => fs.copyFileSync(path.join(reelsMusicSource, file), path.join(reelsMusicDist, file)));
 
-  console.log(`✅ reels/ (${reelsPayload.entries.length} BI sections, ${reelsPayload.audit.mappedQuestions} mapped questions)`);
-
-  // ============================================================
-  // IT Entrepreneurship Quick Reels
-  // ============================================================
-  const entrepreneurshipReelsSourceDir = path.join(SRC_DIR, 'reels');
-  const entrepreneurshipReelsDistDir = path.join(DIST_DIR, 'reels', 'entrepreneurship');
-  fs.mkdirSync(entrepreneurshipReelsDistDir, { recursive: true });
-
-  const entrepreneurshipReelsPayload = extractReelContent({
-    subject: SUBJECTS.entrepreneurship,
-    units: SUBJECTS.entrepreneurship.units,
-    rootDir: SRC_DIR,
-    questionManifest: ENTREPRENEURSHIP_QUESTION_MANIFEST
-  });
-  entrepreneurshipReelsPayload.questionManifest = ENTREPRENEURSHIP_QUESTION_MANIFEST;
-
-  const entrepreneurshipNarrationProfile = narrationProfileFromEnv();
-  const entrepreneurshipSectionNames = collectSectionHeadingNames(
-    SUBJECTS.entrepreneurship.units,
-    SRC_DIR,
-    SUBJECTS.entrepreneurship.folder
-  );
-  const entrepreneurshipPrimeNarrationEntryCount = Math.max(1, Math.min(30, Number(process.env.GOOGLE_TTS_PRIME_ENTRIES) || 12));
-  const entrepreneurshipPrimeNarrationEntryIds = entrepreneurshipReelsPayload.entries
-    .filter(entry => entry.parts.some(part => part.type === 'text' && String(part.text || '').trim()))
-    .slice(0, entrepreneurshipPrimeNarrationEntryCount)
-    .map(entry => entry.id);
-  const entrepreneurshipNarration = buildNarrationManifest(entrepreneurshipReelsPayload.entries, {
-    profile: entrepreneurshipNarrationProfile,
-    sectionNames: entrepreneurshipSectionNames,
-    primeEntryIds: entrepreneurshipPrimeNarrationEntryIds,
-    cloudEnabled: Boolean(String(process.env.GOOGLE_CLOUD_TTS_API_KEY || '').trim())
-  });
-  entrepreneurshipReelsPayload.narration = entrepreneurshipNarration.manifest;
-  entrepreneurshipReelsPayload.entries.forEach(entry => {
-    entry.narration = entrepreneurshipNarration.entryNarration[entry.id];
-  });
-
-  const entrepreneurshipAiTranscript = buildAiTranscriptManifest(entrepreneurshipReelsPayload.entries, {
-    profile: DEFAULT_AI_TRANSCRIPT_PROFILE,
-    primeEntries: 0
-  });
-  entrepreneurshipReelsPayload.aiTranscript = entrepreneurshipAiTranscript.manifest;
-  entrepreneurshipReelsPayload.entries.forEach(entry => {
-    entry.aiTranscript = entrepreneurshipAiTranscript.entryNarration[entry.id];
-  });
-
-  if (!entrepreneurshipReelsPayload.entries.length || !entrepreneurshipReelsPayload.audit.mappedQuestions) {
-    throw new Error('Quick Reels Entrepreneurship extraction produced no usable content.');
-  }
-
-  const entrepreneurshipReelsAuditTotal = entrepreneurshipReelsPayload.audit.includedHeadings
-    + entrepreneurshipReelsPayload.audit.excludedHeadings.length
-    + entrepreneurshipReelsPayload.audit.containerHeadings
-    + entrepreneurshipReelsPayload.audit.duplicateHeadings;
-  if (entrepreneurshipReelsAuditTotal !== entrepreneurshipReelsPayload.audit.sourceHeadings) {
-    throw new Error(`Quick Reels Entrepreneurship heading audit does not reconcile (${entrepreneurshipReelsAuditTotal}/${entrepreneurshipReelsPayload.audit.sourceHeadings}).`);
-  }
-
-  if (entrepreneurshipReelsPayload.audit.mappedQuestions !== ENTREPRENEURSHIP_QUESTION_MANIFEST.length || entrepreneurshipReelsPayload.units.length !== 6) {
-    throw new Error('Quick Reels Entrepreneurship coverage changed unexpectedly; reconcile the source audit before shipping.');
-  }
-
-  if (entrepreneurshipReelsPayload.entries.some(entry => entry.kind === 'question' && !entry.parts.some(part => part.section === 'answer'))) {
-    throw new Error('Quick Reels Entrepreneurship contains a mapped question without answer content.');
-  }
-
-  entrepreneurshipReelsPayload.music = [
-    {
-      title: 'Easy Lemon (60 second)',
-      file: 'assets/music/easy-lemon-60-second.mp3',
-      artist: 'Kevin MacLeod',
-      licence: 'CC BY 4.0',
-      source: 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Easy%20Lemon%2060%20second.mp3'
-    },
-    {
-      title: 'Somewhere Sunny',
-      file: 'assets/music/somewhere-sunny.mp3',
-      artist: 'Kevin MacLeod',
-      licence: 'CC BY 4.0',
-      source: 'https://incompetech.com/music/royalty-free/mp3-royaltyfree/Somewhere%20Sunny.mp3'
-    }
-  ];
-
-  fs.writeFileSync(path.join(entrepreneurshipReelsDistDir, 'content.json'), JSON.stringify(entrepreneurshipReelsPayload));
-  ['reels.html', 'reels.css', 'reels.js'].forEach(file => {
-    fs.copyFileSync(path.join(entrepreneurshipReelsSourceDir, file), path.join(entrepreneurshipReelsDistDir, file === 'reels.html' ? 'index.html' : file));
-  });
-
-  const entrepreneurshipReelsMusicDist = path.join(entrepreneurshipReelsDistDir, 'assets', 'music');
-  fs.mkdirSync(entrepreneurshipReelsMusicDist, { recursive: true });
-  fs.readdirSync(path.join(entrepreneurshipReelsSourceDir, 'assets', 'music'))
-    .filter(file => file.endsWith('.mp3') || file === 'CREDITS.md')
-    .forEach(file => fs.copyFileSync(path.join(entrepreneurshipReelsSourceDir, 'assets', 'music', file), path.join(entrepreneurshipReelsMusicDist, file)));
-
-  console.log(`✅ reels/entrepreneurship/ (${entrepreneurshipReelsPayload.entries.length} sections, ${entrepreneurshipReelsPayload.audit.mappedQuestions} mapped questions)`);
+  console.log(`✅ reels/ (${reelsIndex.subjects.length} subjects, one route)`);
 
   // Copy syllabus files
   const syllabusDir = path.join(SRC_DIR, '_syllabus');

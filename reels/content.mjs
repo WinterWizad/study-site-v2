@@ -587,7 +587,7 @@ function makeConcept({ unit, subject, headingText, parts, sourceAnchor, audit, c
     title: headingText,
     speechTitle: cleanSpeech(headingText),
     sourceAnchor,
-    sourceUrl: `../${subject.id}/unit-${unit.num}.html#${sourceAnchor}`,
+    sourceUrl: `/${subject.id}/unit-${unit.num}.html#${sourceAnchor}`,
     parts: meaningful.map(part => ({ ...part, section: 'content' }))
   };
 }
@@ -617,7 +617,7 @@ function makeQuestion({ unit, subject, headingText, questionInfo, questionOverri
     questionText,
     speechTitle: cleanSpeech(questionText),
     sourceAnchor,
-    sourceUrl: `../${subject.id}/unit-${unit.num}.html#${sourceAnchor}`,
+    sourceUrl: `/${subject.id}/unit-${unit.num}.html#${sourceAnchor}`,
     parts
   };
 }
@@ -1035,7 +1035,7 @@ export function extractReelContent({ subject, units, rootDir, questionManifest =
     units: units.map(unit => ({
       num: unit.num,
       title: unit.title,
-      sourceUrl: `../${subject.id}/unit-${unit.num}.html`
+      sourceUrl: `/${subject.id}/unit-${unit.num}.html`
     })),
     entries,
     audit

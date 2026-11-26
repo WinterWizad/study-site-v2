@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'quickReels.state.v1';
 const SUPPORTED_STATE_VERSION = 1;
+const LEGACY_SUBJECT_ID = 'bi';
 const DEFAULT_STATE = {
   version: SUPPORTED_STATE_VERSION,
   seen: [],
@@ -13,6 +14,7 @@ const DEFAULT_STATE = {
   shuffleSeed: 541385059,
   order: 'ordered',
   unit: 'all',
+  subject: 'bi',
   savedOnly: false,
   musicVolume: 0.28,
   muted: false,
@@ -86,9 +88,16 @@ const elements = {
   speechRate: document.querySelector('#speechRate'),
   speechRateValue: document.querySelector('#speechRateValue'),
   stageLoading: document.querySelector('#stageLoading'),
+  stageLoadingText: document.querySelector('#stageLoadingText'),
+  stageCaption: document.querySelector('#stageCaption'),
   stateAnnouncement: document.querySelector('#stateAnnouncement'),
   themeToggle: document.querySelector('#themeToggle'),
+  topbarContext: document.querySelector('#topbarContext'),
+  topbarSubject: document.querySelector('#topbarSubject'),
   unitFilters: document.querySelector('#unitFilters'),
+  subjectFilters: document.querySelector('#subjectFilters'),
+  hubSubjects: document.querySelector('#hubSubjects'),
+  hubNotesLink: document.querySelector('#hubNotesLink'),
   voiceSelect: document.querySelector('#voiceSelect'),
   reelStage: document.querySelector('#reelStage'),
   narrationToggle: document.querySelector('#aiNarrationToggle'),
@@ -102,6 +111,8 @@ const elements = {
 let storageAvailable = true;
 let state = loadState();
 let payload = null;
+let catalog = null;
+const payloadCache = new Map();
 let cards = [];
 let currentIndex = 0;
 let hasUserGesture = false;
@@ -152,6 +163,16 @@ function escapeHtml(value) {
 
 function clamp(value, minimum, maximum) {
   return Math.min(maximum, Math.max(minimum, value));
+}
+
+function migrateFeedKey(feedKey, fallbackSubject = LEGACY_SUBJECT_ID) {
+  const parts = String(feedKey || '').split('|');
+  if (!['ordered', 'shuffled'].includes(parts[0])) return String(feedKey || '');
+  const unit = parts[1] || '';
+  if (unit === 'all' || /^\d+$/.test(unit)) {
+    return [parts[0], fallbackSubject, ...parts.slice(1)].join('|');
+  }
+  return parts.join('|');
 }
 
 function normalizeAtomAnchor(value) {
@@ -224,6 +245,9 @@ function loadState() {
   merged.shuffleSeed = Number(merged.shuffleSeed) || DEFAULT_STATE.shuffleSeed;
   merged.order = merged.order === 'shuffled' ? 'shuffled' : 'ordered';
   merged.unit = typeof merged.unit === 'string' ? merged.unit : 'all';
+  merged.subject = typeof merged.subject === 'string' && merged.subject.trim()
+    ? merged.subject
+    : LEGACY_SUBJECT_ID;
   merged.savedOnly = Boolean(merged.savedOnly);
   merged.muted = Boolean(merged.muted);
   merged.aiNarrationEnabled = Boolean(merged.aiNarrationEnabled);
@@ -231,13 +255,24 @@ function loadState() {
     ? { provider: String(merged.lastNarrationFallback.provider || ''), reason: String(merged.lastNarrationFallback.reason || ''), at: String(merged.lastNarrationFallback.at || '') }
     : null;
   merged.lastPosition = normalizePosition(merged.lastPosition);
-  merged.positions = merged.positions && typeof merged.positions === 'object' && !Array.isArray(merged.positions)
-    ? Object.fromEntries(
-      Object.entries(merged.positions)
-        .map(([feedKey, position]) => [feedKey, normalizePosition(position)])
-        .filter(([, position]) => Boolean(position))
-    )
-    : {};
+  if (merged.lastPosition) {
+    merged.lastPosition.feedKey = migrateFeedKey(merged.lastPosition.feedKey, LEGACY_SUBJECT_ID);
+  }
+
+  const migratedPositions = new Map();
+  if (merged.positions && typeof merged.positions === 'object' && !Array.isArray(merged.positions)) {
+    for (const [rawKey, storedPosition] of Object.entries(merged.positions)) {
+      const position = normalizePosition(storedPosition);
+      if (!position) continue;
+      const feedKey = migrateFeedKey(rawKey, LEGACY_SUBJECT_ID);
+      position.feedKey = feedKey;
+      const existing = migratedPositions.get(feedKey);
+      if (!existing || String(position.updatedAt || '').localeCompare(String(existing.updatedAt || '')) > 0) {
+        migratedPositions.set(feedKey, position);
+      }
+    }
+  }
+  merged.positions = Object.fromEntries(migratedPositions);
   return merged;
 }
 
@@ -256,17 +291,20 @@ function saveState() {
 }
 
 function currentFeedKey() {
-  const base = `${state.order}|${state.unit}|${state.savedOnly ? 'saved' : 'all'}`;
+  const base = `${state.order}|${state.subject}|${state.unit}|${state.savedOnly ? 'saved' : 'all'}`;
   return state.order === 'shuffled' ? `${base}|${state.shuffleSeed}` : base;
 }
 
 function parseFeedKey(feedKey = '') {
-  const [order, unit, mode, seed] = String(feedKey).split('|');
+  const parts = migrateFeedKey(feedKey).split('|');
+  const [order, subject, unit, mode, seed] = parts;
   if (!['ordered', 'shuffled'].includes(order)) return null;
+  if (!subject) return null;
   if (unit !== 'all' && !/^\d+$/.test(unit)) return null;
   if (!['all', 'saved'].includes(mode)) return null;
   return {
     order,
+    subject,
     unit,
     savedOnly: mode === 'saved',
     seed: /^\d+$/.test(seed || '') ? Number(seed) : null
@@ -329,10 +367,19 @@ function cleanPersistedEntryState() {
   const entriesById = new Map(entries.map(entry => [entry.id, entry]));
   const validIds = new Set(entriesById.keys());
   const validUnits = new Set((payload?.units || []).map(unit => String(unit.num)));
+  const subjectIds = new Set(catalog?.subjects?.map(subject => subject.id) || [state.subject]);
+  const knownPrefixes = [...subjectIds].map(id => `${id}-`);
   let changed = false;
 
+  if (!subjectIds.has(state.subject)) {
+    state.subject = catalog?.defaultSubject || LEGACY_SUBJECT_ID;
+    changed = true;
+  }
+
   for (const name of ['seen', 'done', 'saved']) {
-    const cleaned = [...new Set(state[name])].filter(id => validIds.has(id));
+    const cleaned = [...new Set(state[name])].filter(id =>
+      typeof id === 'string' && knownPrefixes.some(prefix => id.startsWith(prefix))
+    );
     if (cleaned.length !== state[name].length) changed = true;
     state[name] = cleaned;
   }
@@ -344,10 +391,12 @@ function cleanPersistedEntryState() {
 
   const saved = new Set(state.saved);
   const positionIsValid = position => {
-    if (!position || !validIds.has(position.entryId)) return false;
-    const entry = entriesById.get(position.entryId);
+    if (!position) return false;
     const feed = parseFeedKey(position.feedKey || '');
-    if (!feed) return false;
+    if (!feed || !subjectIds.has(feed.subject)) return false;
+    if (feed.subject !== state.subject) return true;
+    if (!validIds.has(position.entryId)) return false;
+    const entry = entriesById.get(position.entryId);
     if (feed.unit !== 'all' && String(entry.unit) !== feed.unit) return false;
     if (feed.savedOnly && !saved.has(entry.id)) return false;
     return true;
@@ -487,9 +536,11 @@ function toggleSubmodal(modal, returnFocus) {
 }
 
 function updateHubSummaries() {
+  const activeSubject = catalog?.subjects?.find(subject => subject.id === state.subject);
+  const subjectLabel = activeSubject?.name || state.subject;
   const unitLabel = state.unit === 'all' ? 'All units' : `Unit ${state.unit}`;
   const orderLabel = state.order === 'shuffled' ? 'Shuffled' : 'Unit order';
-  elements.hubSummaryFeed.textContent = `${unitLabel} · ${orderLabel}`;
+  elements.hubSummaryFeed.textContent = `${subjectLabel} · ${unitLabel} · ${orderLabel}`;
 
   const done = new Set(state.done).size;
   const saved = new Set(state.saved).size;
@@ -509,6 +560,106 @@ function updateHubSummaries() {
   elements.hubSummaryAiNarration.textContent = `${aiLabel} · reel transcript`;
 
   elements.hubResetFilters.hidden = state.unit === 'all' && state.order === 'ordered' && !state.savedOnly;
+}
+
+function activeSubjectConfig() {
+  return catalog?.subjects?.find(subject => subject.id === state.subject) || null;
+}
+
+function renderSubjectFilters() {
+  const containers = [elements.hubSubjects, elements.subjectFilters].filter(Boolean);
+  containers.forEach(container => {
+    container.replaceChildren();
+    (catalog?.subjects || []).forEach(subject => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'subject-chip';
+      button.dataset.subject = subject.id;
+      button.textContent = subject.name;
+      button.title = `${subject.code} · ${subject.entryCount} sections`;
+      button.style.setProperty('--subject-color', subject.color || '#2563eb');
+      container.appendChild(button);
+    });
+  });
+  syncSubjectChipState();
+}
+
+function syncSubjectChipState() {
+  document.querySelectorAll('.subject-chip[data-subject]').forEach(button => {
+    const isActive = button.dataset.subject === state.subject;
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+    button.removeAttribute('aria-busy');
+  });
+}
+
+function updateSubjectUi() {
+  const subject = activeSubjectConfig();
+  if (!subject) return;
+
+  document.title = `Quick Reels | ${subject.name} | Worst Generation`;
+  if (elements.topbarSubject) elements.topbarSubject.textContent = subject.name;
+  if (elements.topbarContext) elements.topbarContext.setAttribute('aria-label', `Quick Reels for ${subject.name}`);
+  if (elements.stageLoadingText) elements.stageLoadingText.textContent = `Loading the ${subject.name} revision feed…`;
+  if (elements.stageCaption) elements.stageCaption.textContent = `${subject.name} · exact note text`;
+  if (elements.hubNotesLink) {
+    elements.hubNotesLink.textContent = `${subject.name} notes`;
+    elements.hubNotesLink.href = subject.notesUrl;
+  }
+  document.documentElement.style.setProperty('--reels-subject-color', subject.color || '#2563eb');
+  syncSubjectChipState();
+}
+
+function updateSubjectUrl() {
+  try {
+    const url = new URL(window.location.href);
+    if (state.subject === catalog?.defaultSubject) url.searchParams.delete('subject');
+    else url.searchParams.set('subject', state.subject);
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (next !== current) window.history.replaceState(null, '', next);
+  } catch {
+  }
+}
+
+async function ensurePayload(subjectId) {
+  if (payloadCache.has(subjectId)) {
+    payload = payloadCache.get(subjectId);
+    return payload;
+  }
+  const subject = catalog?.subjects?.find(candidate => candidate.id === subjectId);
+  if (!subject) throw new Error(`Unknown Quick Reels subject: ${subjectId}`);
+  const response = await fetch(subject.payloadUrl, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`Failed to load ${subject.payloadUrl}: ${response.status}`);
+  const nextPayload = await response.json();
+  payloadCache.set(subjectId, nextPayload);
+  payload = nextPayload;
+  return nextPayload;
+}
+
+async function selectSubject(subjectId) {
+  if (!catalog?.subjects?.some(subject => subject.id === subjectId)) return false;
+  if (subjectId === state.subject && payload) return false;
+
+  const busyButtons = [...document.querySelectorAll(`.subject-chip[data-subject="${CSS.escape(subjectId)}"]`)];
+  busyButtons.forEach(button => button.setAttribute('aria-busy', 'true'));
+  try {
+    await ensurePayload(subjectId);
+  } catch (error) {
+    busyButtons.forEach(button => button.removeAttribute('aria-busy'));
+    console.error(error);
+    return false;
+  }
+
+  state.subject = subjectId;
+  state.unit = 'all';
+  state.savedOnly = false;
+  saveState();
+  cleanPersistedEntryState();
+  updateSubjectUi();
+  updateSubjectUrl();
+  buildFeed({ restore: restorePosition(), speak: hasUserGesture, markSeen: false, persistPosition: true });
+  return true;
 }
 
 function hashString(value) {
@@ -1024,7 +1175,9 @@ function getCardAtoms(card) {
 }
 
 function filteredEntries() {
-  let entries = payload.entries.slice();
+  let entries = payload.entries.filter(entry =>
+    !entry.subjectId || entry.subjectId === state.subject
+  );
   if (state.unit !== 'all') entries = entries.filter(entry => String(entry.unit) === String(state.unit));
   if (state.savedOnly) {
     const saved = stateSet('saved');
@@ -1109,7 +1262,7 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
   const total = grouped.length;
 
   cards = [];
-  grouped.forEach(({ entry, groups }) => {
+  grouped.forEach(({ entry, groups }, index) => {
     const key = `${entry.id}::carousel`;
     const isMultiSlide = groups.length > 1;
     
@@ -1122,6 +1275,7 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
     cards.push({
       key,
       entry,
+      entryIndex: index,
       groups, // All groups (slides) for this entry
       isMultiSlide,
       currentSlide: isMultiSlide ? restoredSlide : 0, // Track carousel position
@@ -2718,12 +2872,18 @@ function togglePlayback() {
     const synthesis = window.speechSynthesis;
     const speechActive = speechSupported() && (synthesis.speaking || synthesis.pending);
     const session = speechSession;
+    const speechGap = Boolean(session?.waiting && !session.paused);
     const cloud = cloudSession;
     const providerActive = Boolean(cloud && !cloud.finished);
 
     if (speechActive && !speechPaused) {
       synthesis.pause();
       if (session) session.paused = true;
+      speechPaused = true;
+      elements.audioStatus.textContent = 'Narration paused.';
+      showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
+    } else if (speechGap) {
+      session.pauseGap();
       speechPaused = true;
       elements.audioStatus.textContent = 'Narration paused.';
       showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
@@ -2735,6 +2895,11 @@ function togglePlayback() {
       if (cloud && !cloud.finished) pauseNarrationGap(cloud);
       elements.audioStatus.textContent = 'Narration paused.';
       showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
+    } else if (session?.waiting && session.paused) {
+      speechPaused = false;
+      session.resumeGap();
+      elements.audioStatus.textContent = 'Narration resumed.';
+      showPlaybackFeedback('<path d="m9 7 8 5-8 5Z" fill="currentColor"/>', 'Resumed');
     } else if (speechActive && speechPaused) {
       synthesis.resume();
       speechPaused = false;
@@ -2935,6 +3100,15 @@ function bindControls() {
   elements.feedApply.addEventListener('click', () => {
     markGesture();
     closeSubmodal();
+  });
+
+  [elements.hubSubjects, elements.subjectFilters].filter(Boolean).forEach(container => {
+    container.addEventListener('click', async event => {
+      const button = event.target.closest('[data-subject]');
+      if (!button) return;
+      markGesture();
+      await selectSubject(button.dataset.subject);
+    });
   });
 
   elements.unitFilters.addEventListener('click', event => {
@@ -3149,30 +3323,56 @@ function bindControls() {
   window.addEventListener('resize', () => {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
-      updateScrollCues();
       const viewport = elements.cardViewport;
       cards.forEach(card => {
         if (card.element) card.element.style.width = `${viewport.clientWidth}px`;
       });
       elements.cardTrack.style.transform = `translate3d(0, ${-currentIndex * 100}%, 0)`;
+      updateScrollCues();
     }, 80);
   });
 }
 
 async function init() {
+  // The hub is a modal dialog. Keep it inert and hidden from assistive tech
+  // from first paint, including while the subject index and payload load.
+  syncHubMenuAccessibility(false);
   try {
     const response = await fetch('content.json', { cache: 'no-store' });
     if (!response.ok) throw new Error(`Failed to load content.json: ${response.status}`);
-    payload = await response.json();
+    catalog = await response.json();
+    if (!Array.isArray(catalog?.subjects) || !catalog.subjects.length) {
+      throw new Error('The Quick Reels subject index is empty.');
+    }
+
+    const requestedSubject = new URLSearchParams(window.location.search).get('subject');
+    const hasSubject = id => catalog.subjects.some(subject => subject.id === id);
+    const initialSubject = hasSubject(requestedSubject)
+      ? requestedSubject
+      : hasSubject(state.subject)
+        ? state.subject
+        : (hasSubject(catalog.defaultSubject) ? catalog.defaultSubject : catalog.subjects[0].id);
+    if (initialSubject !== state.subject) {
+      state.subject = initialSubject;
+      state.unit = 'all';
+      state.savedOnly = false;
+    }
+    await ensurePayload(initialSubject);
   } catch (error) {
     elements.stageLoading.hidden = false;
     elements.stageLoading.className = 'stage-error';
+    elements.stageLoading.setAttribute('role', 'alert');
+    elements.stageLoading.setAttribute('aria-live', 'assertive');
     elements.stageLoading.innerHTML = `<p>Failed to load the feed. Please reload.</p>`;
     console.error(error);
     return;
   }
 
   cleanPersistedEntryState();
+  saveState();
+  renderSubjectFilters();
+  updateSubjectUi();
+  updateSubjectUrl();
   refreshVoiceOptions();
   refreshNarratorStatus();
   bindControls();
@@ -3189,6 +3389,8 @@ async function init() {
   } catch (error) {
   elements.stageLoading.hidden = false;
   elements.stageLoading.className = 'stage-error';
+  elements.stageLoading.setAttribute('role', 'alert');
+  elements.stageLoading.setAttribute('aria-live', 'assertive');
   elements.stageLoading.innerHTML = `<p>Failed to build the feed. Please reload.</p>`;
   console.error(error);
   }

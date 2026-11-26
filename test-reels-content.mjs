@@ -226,7 +226,7 @@ check('All included source sections produce feed entries', missingHeadings.lengt
 check('Excluded sections do not leak into the feed', unexpectedlyIncluded.length === 0, JSON.stringify(unexpectedlyIncluded));
 check('Every unit contributes sections', Object.keys(payload.audit.unitCounts).length === 6 && Object.values(payload.audit.unitCounts).every(count => count > 0));
 check('Every entry has a stable unique ID', new Set(payload.entries.map(entry => entry.id)).size === payload.entries.length);
-check('Every entry links to its own BI unit page', payload.entries.every(entry => entry.sourceUrl === `../bi/unit-${entry.unit}.html#${entry.sourceAnchor}`));
+check('Every entry links to its own BI unit page', payload.entries.every(entry => entry.sourceUrl === `/bi/unit-${entry.unit}.html#${entry.sourceAnchor}`));
 check('Every concept and question contains readable source content', payload.entries.every(entry => entry.parts.length > 0 && entry.parts.every(part => part.text?.trim() || /<svg/i.test(part.html || ''))));
 check('Tables and diagrams survive extraction', payload.audit.partCounts.table > 0 && payload.audit.partCounts.diagram > 0 && payload.audit.partCounts.visual > 0, JSON.stringify(payload.audit.partCounts));
 
@@ -272,7 +272,7 @@ check('The model manifest exactly matches all 22 official model-paper questions'
 check('The cross-unit D21 case is filed with its complete worked answer in Unit 6', manifestById.get('model-d21')?.unit === 6 && officialModelUnits.get('D21') === '2 + 6');
 
 check('Every mapped question has an answer', questionEntries.every(entry => entry.parts.some(part => part.section === 'answer')));
-check('Every mapped question links to a source anchor in its own unit', questionEntries.every(entry => entry.sourceUrl === `../bi/unit-${entry.unit}.html#${entry.sourceAnchor}`));
+check('Every mapped question links to a source anchor in its own unit', questionEntries.every(entry => entry.sourceUrl === `/bi/unit-${entry.unit}.html#${entry.sourceAnchor}`));
 
 const manifestAnchorMismatches = BI_QUESTION_MANIFEST.filter(question => {
   const sourceIds = sourceAnchorIdsByUnit.get(question.unit)?.get(question.sourceHeading) || [];
