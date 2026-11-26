@@ -9,8 +9,9 @@ import { buildNarrationManifest, narrationProfileFromEnv, buildAiTranscriptManif
 import { BI_QUESTION_MANIFEST } from './reels/bi-question-manifest.mjs';
 import { ENTREPRENEURSHIP_QUESTION_MANIFEST } from './reels/entrepreneurship-question-manifest.mjs';
 import { CLOUD_QUESTION_MANIFEST } from './reels/cloud-question-manifest.mjs';
+import { DIGITAL_ECONOMY_QUESTION_MANIFEST } from './reels/digital-economy-question-manifest.mjs';
 
-const REEL_SUBJECT_IDS = ['bi', 'entrepreneurship', 'cloud'];
+const REEL_SUBJECT_IDS = ['bi', 'entrepreneurship', 'cloud', 'de'];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SRC_DIR = __dirname;
@@ -2094,7 +2095,8 @@ async function build() {
   const reelSubjectConfigs = [
     { subject: SUBJECTS.bi, units: SUBJECTS.bi.units, questionManifest: BI_QUESTION_MANIFEST, expectedUnits: 6 },
     { subject: SUBJECTS.entrepreneurship, units: SUBJECTS.entrepreneurship.units, questionManifest: ENTREPRENEURSHIP_QUESTION_MANIFEST, expectedUnits: 6 },
-    { subject: SUBJECTS.cloud, units: SUBJECTS.cloud.units, questionManifest: CLOUD_QUESTION_MANIFEST, expectedUnits: 7 }
+    { subject: SUBJECTS.cloud, units: SUBJECTS.cloud.units, questionManifest: CLOUD_QUESTION_MANIFEST, expectedUnits: 7 },
+    { subject: SUBJECTS.de, units: SUBJECTS.de.units, questionManifest: DIGITAL_ECONOMY_QUESTION_MANIFEST, expectedUnits: 6 }
   ];
 
   function mergeReelManifests(manifests, label) {

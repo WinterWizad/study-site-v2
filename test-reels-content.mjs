@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 import { BI_QUESTION_MANIFEST, BI_QUESTION_UNIT_COUNTS } from './reels/bi-question-manifest.mjs';
 import { CLOUD_QUESTION_MANIFEST } from './reels/cloud-question-manifest.mjs';
+import { DIGITAL_ECONOMY_QUESTION_MANIFEST } from './reels/digital-economy-question-manifest.mjs';
 import {
   createHeadingIdAssigner,
   extractReelContent,
@@ -317,6 +318,38 @@ check('Cloud manifest preserves every official question wording', CLOUD_QUESTION
 check('Every Cloud unit contributes source sections', Object.keys(cloudPayload.audit.unitCounts).length === 7 && Object.values(cloudPayload.audit.unitCounts).every(count => count > 0), JSON.stringify(cloudPayload.audit.unitCounts));
 check('Cloud source links are root-absolute', cloudPayload.entries.every(entry => entry.sourceUrl === `/cloud/unit-${entry.unit}.html#${entry.sourceAnchor}`), String(cloudPayload.entries.find(entry => !entry.sourceUrl.startsWith('/cloud/unit-'))?.sourceUrl || ''));
 check('Every Cloud question has answer content', cloudQuestions.every(entry => entry.parts.some(part => part.section === 'answer')), JSON.stringify(cloudQuestions.filter(entry => !entry.parts.some(part => part.section === 'answer')).map(entry => entry.id)));
+
+const deSubject = {
+  id: 'de',
+  code: 'IT 250',
+  name: 'Digital Economy',
+  folder: '02-digital-economy',
+  color: '#059669'
+};
+const deFiles = [
+  'unit-1-introduction.md',
+  'unit-2-fundamentals.md',
+  'unit-3-markets-strategy.md',
+  'unit-4-transformation.md',
+  'unit-5-economics-of-information.md',
+  'unit-6-nepal-perspective.md'
+];
+const deUnits = deFiles.map((file, index) => ({ num: index + 1, title: `Unit ${index + 1}`, file }));
+const dePayload = extractReelContent({
+  subject: deSubject,
+  units: deUnits,
+  rootDir: __dirname,
+  questionManifest: DIGITAL_ECONOMY_QUESTION_MANIFEST
+});
+const deQuestions = dePayload.entries.filter(entry => entry.kind === 'question');
+const deOfficialText = fs.readFileSync(path.join(__dirname, deSubject.folder, 'model-question.md'), 'utf8');
+check('Digital Economy feed maps all 25 board-paper answer cards', deQuestions.length === 25 && new Set(deQuestions.map(entry => entry.id)).size === 25 && DIGITAL_ECONOMY_QUESTION_MANIFEST.length === 25, JSON.stringify({ questions: deQuestions.length, manifest: DIGITAL_ECONOMY_QUESTION_MANIFEST.length }));
+check('Digital Economy manifest preserves every official question wording', DIGITAL_ECONOMY_QUESTION_MANIFEST.every(question => deOfficialText.includes(question.officialQuestion)), JSON.stringify(DIGITAL_ECONOMY_QUESTION_MANIFEST.filter(question => !deOfficialText.includes(question.officialQuestion)).map(question => question.id)));
+check('D22 is split into four case cards', deQuestions.filter(entry => /^D22\(/.test(entry.code)).length === 4, JSON.stringify(deQuestions.filter(entry => /^D22\(/.test(entry.code)).map(entry => entry.id)));
+check('Every Digital Economy unit contributes source sections', Object.keys(dePayload.audit.unitCounts).length === 6 && Object.values(dePayload.audit.unitCounts).every(count => count > 0), JSON.stringify(dePayload.audit.unitCounts));
+check('Digital Economy source links are root-absolute', dePayload.entries.every(entry => entry.sourceUrl === `/de/unit-${entry.unit}.html#${entry.sourceAnchor}`), String(dePayload.entries.find(entry => !entry.sourceUrl.startsWith('/de/unit-'))?.sourceUrl || ''));
+check('Every Digital Economy question has answer content', deQuestions.every(entry => entry.parts.some(part => part.section === 'answer')), JSON.stringify(deQuestions.filter(entry => !entry.parts.some(part => part.section === 'answer')).map(entry => entry.id)));
+check('Every Digital Economy official question is preserved in feed metadata', deQuestions.every(entry => deOfficialText.includes(entry.officialQuestion)), JSON.stringify(deQuestions.filter(entry => !deOfficialText.includes(entry.officialQuestion)).map(entry => entry.id)));
 
 const duplicateSourceIds = [];
 for (const unit of units) {
