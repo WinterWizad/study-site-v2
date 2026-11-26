@@ -679,6 +679,11 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
   // index: index in the feed (for progress)
   // total: total number of entries in feed
   
+  // Find the card to get currentSlide for this entry (must be before template literals)
+  const carouselCard = cards.find(c => c.entry.id === entry.id);
+  const initialSlide = carouselCard?.currentSlide || 0;
+  const isMultiSlide = allGroups.length > 1;
+  
   const article = document.createElement('article');
   article.className = 'reel-card';
   article.dataset.entryId = entry.id;
@@ -687,21 +692,18 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
   article.dataset.unit = String(entry.unit);
   article.dataset.mode = allGroups[0].some(atom => atom.part?.type === 'visual') ? 'visual' : 'text';
   
-  const isMultiSlide = allGroups.length > 1;
-  
   // Build slides for carousel
   const slidesHtml = allGroups.map((atoms, slideIndex) => {
-    const isFirstSlide = slideIndex === 0;
-    const isLastSlide = slideIndex === allGroups.length - 1;
     const continuation = slideIndex > 0;
+    const isActive = slideIndex === initialSlide;
     
     return `
-      <div class="reel-carousel__slide${isFirstSlide ? ' reel-carousel__slide--active' : ''}" 
+      <div class="reel-carousel__slide${isActive ? ' reel-carousel__slide--active' : ''}" 
            data-slide-index="${slideIndex}" 
            role="group" 
            aria-roledescription="slide" 
            aria-label="${allGroups.length > 1 ? `Slide ${slideIndex + 1} of ${allGroups.length}` : 'Content'}"
-           ${slideIndex > 0 ? 'hidden' : ''}>
+           ${slideIndex !== initialSlide ? 'hidden' : ''}>
         <div class="reel-card__body" tabindex="0" aria-label="${continuation ? 'Answer continued' : 'Card content'}">${cardBodyHtml(entry, atoms, continuation)}</div>
       </div>
     `;
@@ -710,21 +712,21 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
   // Carousel navigation controls
   const carouselNavHtml = isMultiSlide ? `
     <nav class="reel-carousel__nav" aria-label="Carousel navigation">
-      <button class="reel-carousel__button reel-carousel__button--prev" type="button" data-action="carousel-prev" aria-label="Previous slide" disabled>
+      <button class="reel-carousel__button reel-carousel__button--prev" type="button" data-action="carousel-prev" aria-label="Previous slide" ${initialSlide === 0 ? 'disabled' : ''}>
         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
       <div class="reel-carousel__dots" role="tablist" aria-label="Slide indicators">
         ${allGroups.map((_, i) => `
-          <button class="reel-carousel__dot${i === 0 ? ' reel-carousel__dot--active' : ''}" 
+          <button class="reel-carousel__dot${i === initialSlide ? ' reel-carousel__dot--active' : ''}" 
                   type="button" 
                   role="tab" 
                   data-action="carousel-slide"
                   data-slide="${i}" 
-                  aria-selected="${i === 0}" 
+                  aria-selected="${i === initialSlide}" 
                   aria-label="Go to slide ${i + 1}"></button>
         `).join('')}
       </div>
-      <button class="reel-carousel__button reel-carousel__button--next" type="button" data-action="carousel-next" aria-label="Next slide">
+      <button class="reel-carousel__button reel-carousel__button--next" type="button" data-action="carousel-next" aria-label="Next slide" ${initialSlide === allGroups.length - 1 ? 'disabled' : ''}>
         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </nav>
@@ -739,30 +741,19 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
       ${carouselNavHtml}
     </div>
     ${cardActionsHtml(entry)}
-    <div class="reel-playback-feedback" aria-hidden="true" data-playback-feedback">
+    <div class="reel-playback-feedback" aria-hidden="true" data-playback-feedback>
       <svg data-feedback-icon viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"></svg>
       <span data-feedback-label class="feedback-label"></span>
     </div>
-    // Use card's currentSlide if available
-    const carouselCard = cards.find(c => c.entry.id === entry.id);
-    const initialSlide = carouselCard?.currentSlide || 0;
     ${cardFooterHtml(entry, index, total, isMultiSlide ? { totalSlides: allGroups.length, currentSlide: initialSlide } : null)}
   `;
   
-  // Store carousel state on the element - use the card's currentSlide
+  // Store carousel state on the element
   article._carouselState = {
     currentSlide: initialSlide,
     totalSlides: allGroups.length,
     entryId: entry.id
   };
-  
-  // Apply initial slide visibility if not first slide
-  if (initialSlide > 0) {
-    // This will be applied after the element is added to DOM
-    setTimeout(() => {
-      carouselGoToSlide(carouselCard, initialSlide, { speak: false });
-    }, 0);
-  }
   
   return article;
 }
@@ -1024,6 +1015,14 @@ function restoreAnchorScore(atom, savedAnchor) {
   return overlap;
 }
 
+// Get current atoms for a card (handles both carousel and regular cards)
+function getCardAtoms(card) {
+  if (card.isMultiSlide && card.groups) {
+    return card.groups[card.currentSlide] || [];
+  }
+  return card.atoms || card.groups?.[0] || [];
+}
+
 function filteredEntries() {
   let entries = payload.entries.slice();
   if (state.unit !== 'all') entries = entries.filter(entry => String(entry.unit) === String(state.unit));
@@ -1156,12 +1155,13 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
 
     let bestAtomIndex = -1;
     let bestAtomScore = 0;
-    cards.forEach((card, index) => {
-      if (card.entry.id !== restore.entryId) return;
-      const score = Math.max(
-        0,
-        ...card.atoms.flatMap(atom => savedAnchors.map(saved => restoreAnchorScore(atom, saved)))
-      );
+
+cards.forEach((card, index) => {
+  if (card.entry.id !== restore.entryId) return;
+  const score = Math.max(
+    0,
+    ...getCardAtoms(card).flatMap(atom => savedAnchors.map(saved => restoreAnchorScore(atom, saved)))
+  );
       if (score > bestAtomScore) {
         bestAtomScore = score;
         bestAtomIndex = index;
@@ -1578,7 +1578,7 @@ function narrationSegmentsForCard(card) {
   if (!entryNarration) return segments;
   addSegment(entryNarration.title);
 
-  card.atoms.forEach(atom => {
+  getCardAtoms(card).forEach(atom => {
     const partIndex = Number(atom.anchor?.partIndex);
     const narrationPart = entryNarration.parts?.[partIndex];
     if (!narrationPart) return;
@@ -1607,7 +1607,7 @@ function narrationSegmentsForCard(card) {
 function browserNarrationSegments(card) {
   const normalized = narrationSegmentsForCard(card);
   if (normalized.length) return normalized.map(segment => segment.text);
-  const answerText = card.atoms.map(atomText).filter(Boolean).join(' ');
+  const answerText = getCardAtoms(card).map(atomText).filter(Boolean).join(' ');
   return card.entry.kind === 'question'
     ? [card.entry.questionText, answerText].filter(Boolean)
     : [card.entry.speechTitle, answerText].filter(Boolean);
