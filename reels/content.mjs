@@ -485,7 +485,9 @@ function meaningfulParts(parts) {
 }
 
 export function parseQuestionHeading(headingText) {
-  const match = String(headingText).match(/^([ABCD]\d+)\s*·\s*(.+)$/i);
+  // Match codes like A1, B11, C18, C20a, C21a, C20b (half), D22(a), D22(b)
+  // Pattern: letter + digits + optional lowercase letter + optional (text in parens) before the middle dot
+  const match = String(headingText).match(/^([ABCD]\d+[a-z]?(?:\([^)]*\))?)\s*(?:\([^)]*\))?\s*·\s*(.+)$/i);
   if (!match) return null;
 
   const code = match[1].toUpperCase();

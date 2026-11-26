@@ -295,13 +295,17 @@ function positionForFeed(feedKey = currentFeedKey()) {
 }
 
 function rememberPosition(card) {
+  // For carousel cards, use the current slide's atoms
+  const currentAtoms = card.isMultiSlide ? card.groups[card.currentSlide] : card.groups[0];
   const position = {
     key: card.key,
     entryId: card.entry.id,
-    atomKey: card.atoms[0]?.key || '',
-    atomKeys: card.atoms.map(atom => atom.key),
-    atomAnchor: card.atoms[0]?.anchor || null,
-    atomAnchors: card.atoms.map(atom => atom.anchor).filter(Boolean),
+    atomKey: currentAtoms[0]?.key || '',
+    atomKeys: currentAtoms.map(atom => atom.key),
+    atomAnchor: currentAtoms[0]?.anchor || null,
+    atomAnchors: currentAtoms.map(atom => atom.anchor).filter(Boolean),
+    // Carousel-specific position
+    carouselSlide: card.isMultiSlide ? card.currentSlide : 0,
     feedKey: currentFeedKey(),
     updatedAt: new Date().toISOString()
   };
@@ -637,8 +641,21 @@ function cardActionsHtml(entry) {
   `;
 }
 
-function cardFooterHtml(entry, index, total) {
+function cardFooterHtml(entry, index, total, carouselData = null) {
   const percent = total > 1 ? ((index + 1) / total) * 100 : 100;
+  
+  // Carousel progress indicator for multi-slide entries
+  let carouselHtml = '';
+  if (carouselData && carouselData.totalSlides > 1) {
+    const slidePercent = ((carouselData.currentSlide + 1) / carouselData.totalSlides) * 100;
+    carouselHtml = `
+      <div class="reel-card__carousel-progress" role="progressbar" aria-valuenow="${carouselData.currentSlide + 1}" aria-valuemin="1" aria-valuemax="${carouselData.totalSlides}" aria-label="Carousel progress">
+        <span class="reel-card__carousel-indicator">${carouselData.currentSlide + 1} / ${carouselData.totalSlides}</span>
+        <div class="reel-card__carousel-line" aria-hidden="true"><span style="width:${slidePercent.toFixed(2)}%"></span></div>
+      </div>
+    `;
+  }
+  
   return `
     <footer class="reel-card__footer">
       <div class="reel-card__source-row">
@@ -646,6 +663,7 @@ function cardFooterHtml(entry, index, total) {
         <span class="reel-state" data-card-state></span>
       </div>
       <p class="reel-card__scroll-cue" data-scroll-cue hidden>Scroll inside this card for more</p>
+      ${carouselHtml}
       <div class="reel-card__position">
         <span>${index + 1} / ${total}</span>
         <span class="reel-card__position-line" aria-hidden="true"><span style="width:${percent.toFixed(2)}%"></span></span>
@@ -655,6 +673,101 @@ function cardFooterHtml(entry, index, total) {
   `;
 }
 
+function buildCarouselCardElement(entry, allGroups, index, total) {
+  // entry: the entry object
+  // allGroups: array of atom arrays (each group = one slide)
+  // index: index in the feed (for progress)
+  // total: total number of entries in feed
+  
+  const article = document.createElement('article');
+  article.className = 'reel-card';
+  article.dataset.entryId = entry.id;
+  article.dataset.cardIndex = String(index);
+  article.dataset.kind = entry.kind;
+  article.dataset.unit = String(entry.unit);
+  article.dataset.mode = allGroups[0].some(atom => atom.part?.type === 'visual') ? 'visual' : 'text';
+  
+  const isMultiSlide = allGroups.length > 1;
+  
+  // Build slides for carousel
+  const slidesHtml = allGroups.map((atoms, slideIndex) => {
+    const isFirstSlide = slideIndex === 0;
+    const isLastSlide = slideIndex === allGroups.length - 1;
+    const continuation = slideIndex > 0;
+    
+    return `
+      <div class="reel-carousel__slide${isFirstSlide ? ' reel-carousel__slide--active' : ''}" 
+           data-slide-index="${slideIndex}" 
+           role="group" 
+           aria-roledescription="slide" 
+           aria-label="${allGroups.length > 1 ? `Slide ${slideIndex + 1} of ${allGroups.length}` : 'Content'}"
+           ${slideIndex > 0 ? 'hidden' : ''}>
+        <div class="reel-card__body" tabindex="0" aria-label="${continuation ? 'Answer continued' : 'Card content'}">${cardBodyHtml(entry, atoms, continuation)}</div>
+      </div>
+    `;
+  }).join('');
+  
+  // Carousel navigation controls
+  const carouselNavHtml = isMultiSlide ? `
+    <nav class="reel-carousel__nav" aria-label="Carousel navigation">
+      <button class="reel-carousel__button reel-carousel__button--prev" type="button" data-action="carousel-prev" aria-label="Previous slide" disabled>
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="reel-carousel__dots" role="tablist" aria-label="Slide indicators">
+        ${allGroups.map((_, i) => `
+          <button class="reel-carousel__dot${i === 0 ? ' reel-carousel__dot--active' : ''}" 
+                  type="button" 
+                  role="tab" 
+                  data-action="carousel-slide"
+                  data-slide="${i}" 
+                  aria-selected="${i === 0}" 
+                  aria-label="Go to slide ${i + 1}"></button>
+        `).join('')}
+      </div>
+      <button class="reel-carousel__button reel-carousel__button--next" type="button" data-action="carousel-next" aria-label="Next slide">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </nav>
+  ` : '';
+  
+  article.innerHTML = `
+    ${cardHeaderHtml(entry)}
+    <div class="reel-carousel__container" data-carousel="${isMultiSlide ? 'true' : 'false'}" data-total-slides="${allGroups.length}">
+      <div class="reel-carousel__track" role="region" aria-roledescription="carousel" aria-label="${entry.questionText || entry.title}">
+        ${slidesHtml}
+      </div>
+      ${carouselNavHtml}
+    </div>
+    ${cardActionsHtml(entry)}
+    <div class="reel-playback-feedback" aria-hidden="true" data-playback-feedback">
+      <svg data-feedback-icon viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"></svg>
+      <span data-feedback-label class="feedback-label"></span>
+    </div>
+    // Use card's currentSlide if available
+    const carouselCard = cards.find(c => c.entry.id === entry.id);
+    const initialSlide = carouselCard?.currentSlide || 0;
+    ${cardFooterHtml(entry, index, total, isMultiSlide ? { totalSlides: allGroups.length, currentSlide: initialSlide } : null)}
+  `;
+  
+  // Store carousel state on the element - use the card's currentSlide
+  article._carouselState = {
+    currentSlide: initialSlide,
+    totalSlides: allGroups.length,
+    entryId: entry.id
+  };
+  
+  // Apply initial slide visibility if not first slide
+  if (initialSlide > 0) {
+    // This will be applied after the element is added to DOM
+    setTimeout(() => {
+      carouselGoToSlide(carouselCard, initialSlide, { speak: false });
+    }, 0);
+  }
+  
+  return article;
+}
+
+// Backward compatibility - for visual cards and single-slide entries
 function buildCardElement(entry, atoms, index, total, continuation = false) {
   const article = document.createElement('article');
   article.className = 'reel-card';
@@ -993,26 +1106,36 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
   stopCurrentAudio();
   const entries = filteredEntries();
   const grouped = entries.map(entry => ({ entry, groups: paginateEntry(entry, restore) }));
-  const total = grouped.reduce((sum, item) => sum + item.groups.length, 0);
+  // Total entries (not total groups) for progress
+  const total = grouped.length;
 
   cards = [];
   grouped.forEach(({ entry, groups }) => {
-    groups.forEach((atoms, entryIndex) => {
-      const key = `${entry.id}::${entryIndex}`;
-      cards.push({
-        key,
-        entry,
-        entryIndex,
-        atoms,
-        continuation: entryIndex > 0,
-        narratorVoice: null
-      });
+    const key = `${entry.id}::carousel`;
+    const isMultiSlide = groups.length > 1;
+    
+    // Restore carousel slide position if available
+    let restoredSlide = 0;
+    if (restore && restore.entryId === entry.id && restore.carouselSlide !== undefined) {
+      restoredSlide = clamp(restore.carouselSlide, 0, groups.length - 1);
+    }
+    
+    cards.push({
+      key,
+      entry,
+      groups, // All groups (slides) for this entry
+      isMultiSlide,
+      currentSlide: isMultiSlide ? restoredSlide : 0, // Track carousel position
+      narratorVoice: null
     });
   });
 
   elements.cardTrack.replaceChildren();
   cards.forEach((card, index) => {
-    const element = buildCardElement(card.entry, card.atoms, index, total, card.continuation);
+    // Use carousel card for multi-slide entries, regular card for single-slide
+    const element = card.isMultiSlide 
+      ? buildCarouselCardElement(card.entry, card.groups, index, total)
+      : buildCardElement(card.entry, card.groups[0], index, total, false);
     element.dataset.cardKey = card.key;
     if (element.dataset.mode === 'visual') {
       element.querySelector('[data-card-mode]').textContent = 'Visual + music';
@@ -1211,6 +1334,74 @@ function updateCurrentCard({ speak = false, markSeen = true, persistPosition = t
   }
 
   if (speak && hasUserGesture && !state.muted) playCurrentAudio();
+}
+
+// Carousel navigation functions
+function carouselGoToSlide(card, slideIndex, { speak = false } = {}) {
+  if (!card.isMultiSlide) return;
+  const totalSlides = card.groups.length;
+  slideIndex = clamp(slideIndex, 0, totalSlides - 1);
+  
+  if (card.currentSlide === slideIndex) return;
+  
+  card.currentSlide = slideIndex;
+  
+  // Update slide visibility
+  const track = card.element?.querySelector('.reel-carousel__track');
+  if (track) {
+    const slides = track.querySelectorAll('.reel-carousel__slide');
+    slides.forEach((slide, i) => {
+      const isActive = i === slideIndex;
+      slide.hidden = !isActive;
+      slide.classList.toggle('reel-carousel__slide--active', isActive);
+      slide.setAttribute('aria-label', `Slide ${i + 1} of ${totalSlides}`);
+    });
+  }
+  
+  // Update navigation buttons
+  const prevBtn = card.element?.querySelector('[data-action="carousel-prev"]');
+  const nextBtn = card.element?.querySelector('[data-action="carousel-next"]');
+  if (prevBtn) prevBtn.disabled = slideIndex === 0;
+  if (nextBtn) nextBtn.disabled = slideIndex === totalSlides - 1;
+  
+  // Update dots
+  const dots = card.element?.querySelectorAll('.reel-carousel__dot');
+  dots?.forEach((dot, i) => {
+    const isActive = i === slideIndex;
+    dot.classList.toggle('reel-carousel__dot--active', isActive);
+    dot.setAttribute('aria-selected', String(isActive));
+  });
+  
+  // Update carousel progress in footer
+  const progressEl = card.element?.querySelector('.reel-card__carousel-progress');
+  if (progressEl) {
+    const slidePercent = ((slideIndex + 1) / totalSlides) * 100;
+    progressEl.querySelector('.reel-card__carousel-indicator').textContent = `${slideIndex + 1} / ${totalSlides}`;
+    progressEl.querySelector('.reel-card__carousel-line span').style.width = `${slidePercent.toFixed(2)}%`;
+    progressEl.setAttribute('aria-valuenow', String(slideIndex + 1));
+  }
+  
+  // Persist carousel position
+  rememberPosition(card);
+  saveState();
+  
+  // Play narration for new slide if requested
+  if (speak && hasUserGesture && !state.muted) {
+    playCurrentAudio();
+  }
+  
+  // Announce slide change
+  if (elements.cardAnnouncement) {
+    elements.cardAnnouncement.textContent = `Slide ${slideIndex + 1} of ${totalSlides}`;
+  }
+}
+
+function carouselPrev(card) {
+  carouselGoToSlide(card, card.currentSlide - 1);
+}
+
+function carouselNext(card) {
+  carouselGoToSlide(card, card.currentSlide + 1);
 }
 
 function goTo(index, { speak = true } = {}) {
@@ -2776,10 +2967,19 @@ function bindControls() {
 
       if (action === 'previous') goTo(currentIndex - 1);
       if (action === 'next') goTo(currentIndex + 1);
+      if (action === 'carousel-prev') carouselPrev(card);
+      if (action === 'carousel-next') carouselNext(card);
       if (action === 'play') togglePlayback();
       if (action === 'mute') toggleMute();
       if (action === 'done') toggleState('done', card.entry.id);
       if (action === 'save') toggleState('saved', card.entry.id);
+      // Carousel dot navigation
+      if (action === 'carousel-slide') {
+        const slideIndex = Number(button.dataset.slide);
+        if (!isNaN(slideIndex)) carouselGoToSlide(card, slideIndex);
+        cardPointerStart = null;
+        return;
+      }
       cardPointerStart = null;
       return;
     }
