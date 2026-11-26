@@ -684,16 +684,43 @@ function startServer() {
     check('Subtitle container blocks pointer events', cardTextWithSubtitle && cardTextWithSubtitle.panelPointer === 'none');
     check('Subtitle content allows interaction', cardTextWithSubtitle && cardTextWithSubtitle.panelHidden === false, JSON.stringify(cardTextWithSubtitle));
 
-    // Progressive caption dock tests
+    // Progressive caption tests — transparent prose, no box, no scrollbar
     const subtitleCompact = await page.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
       if (!panel || panel.hidden) return null;
       const style = window.getComputedStyle(panel);
-      return { maxHeight: style.maxHeight, bottom: style.bottom, right: style.right, overflowY: style.overflowY };
+      const contentStyle = getComputedStyle(document.querySelector('#transcriptContent'));
+      return {
+        maxHeight: style.maxHeight,
+        bottom: style.bottom,
+        right: style.right,
+        overflowY: style.overflowY,
+        backgroundColor: style.backgroundColor,
+        boxShadow: style.boxShadow,
+        color: contentStyle.color
+      };
     });
-    check('AI caption dock has a bounded height', subtitleCompact && subtitleCompact.maxHeight !== '18%' && Number.parseFloat(subtitleCompact.maxHeight) > 0, JSON.stringify(subtitleCompact));
-    check('AI caption sits above the action rail', subtitleCompact && subtitleCompact.bottom === '82px' && subtitleCompact.right !== '0px', JSON.stringify(subtitleCompact));
+    check('AI caption has a bounded height', subtitleCompact && Number.parseFloat(subtitleCompact.maxHeight) > 0, JSON.stringify(subtitleCompact));
+    check('AI caption clears the action rail', subtitleCompact && subtitleCompact.bottom === '112px' && subtitleCompact.right !== '0px', JSON.stringify(subtitleCompact));
     check('AI caption never scrolls internally', subtitleCompact && subtitleCompact.overflowY === 'hidden', JSON.stringify(subtitleCompact));
+    check('AI caption has no background or shadow', subtitleCompact && subtitleCompact.backgroundColor === 'rgba(0, 0, 0, 0)' && subtitleCompact.boxShadow === 'none', JSON.stringify(subtitleCompact));
+    check('AI caption uses black text in light theme', subtitleCompact && subtitleCompact.color === 'rgb(17, 24, 39)', JSON.stringify(subtitleCompact));
+
+    const captionGeometry = await page.evaluate(() => {
+      const rect = selector => {
+        const el = document.querySelector(selector);
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return { top: r.top, bottom: r.bottom, left: r.left, right: r.right };
+      };
+      return {
+        caption: rect('#transcriptPanel'),
+        footer: rect('.reel-card[aria-hidden="false"] .reel-card__footer')
+      };
+    });
+    check('Transparent caption does not cover the footer',
+      captionGeometry.caption && captionGeometry.footer && captionGeometry.caption.bottom <= captionGeometry.footer.top,
+      JSON.stringify(captionGeometry));
 
     const subtitleFirstSentence = await page.evaluate(() => {
       const content = document.querySelector('#transcriptContent');
@@ -731,6 +758,45 @@ function startServer() {
       } : null;
     });
     check('AI subtitle resets on card change', subtitleReset && subtitleReset.hidden === false && subtitleReset.hasCurrent && subtitleReset.totalSegments > 0, JSON.stringify(subtitleReset));
+
+    // Move to a genuinely multi-slide card before checking dots and slide keys.
+    await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('.reel-card:not(.reel-measure)')];
+      const target = cards.find(card => card.querySelector('.reel-carousel__dots'));
+      if (!target) return;
+      const targetIndex = Number(target.dataset.cardIndex);
+      let active = document.querySelector('.reel-card[aria-hidden="false"]');
+      let activeIndex = Number(active?.dataset.cardIndex || 0);
+      while (activeIndex !== targetIndex) {
+        const action = activeIndex < targetIndex ? 'next' : 'previous';
+        active?.querySelector(`[data-action="${action}"]`)?.click();
+        active = document.querySelector('.reel-card[aria-hidden="false"]');
+        activeIndex = Number(active?.dataset.cardIndex || 0);
+      }
+    });
+    await page.waitForTimeout(300);
+
+    const carouselDots = await page.evaluate(() => {
+      const dots = [...document.querySelectorAll('.reel-card[aria-hidden="false"] .reel-carousel__dot')];
+      return dots.map(dot => {
+        const r = dot.getBoundingClientRect();
+        const s = getComputedStyle(dot);
+        return { w: Math.round(r.width), h: Math.round(r.height), radius: s.borderRadius, padding: s.padding, bg: s.backgroundColor };
+      });
+    });
+    check('Carousel indicators are real circles, not ovals',
+      carouselDots.length > 0 && carouselDots.every(dot => dot.w === dot.h && dot.w <= 8 && dot.radius === '50%' && dot.padding === '0px'),
+      JSON.stringify(carouselDots));
+    check('Carousel arrows are removed', await page.evaluate(() => document.querySelectorAll('[data-action="carousel-prev"], [data-action="carousel-next"]').length === 0));
+
+    const slideBefore = await page.evaluate(() => document.querySelector('.reel-card[aria-hidden="false"] .reel-carousel__dot--active')?.dataset.slide);
+    await page.evaluate(() => document.activeElement?.blur());
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(150);
+    const slideAfter = await page.evaluate(() => document.querySelector('.reel-card[aria-hidden="false"] .reel-carousel__dot--active')?.dataset.slide);
+    check('ArrowRight replaces the removed slide arrow',
+      slideBefore !== undefined && slideAfter !== undefined && Number(slideAfter) === Number(slideBefore) + 1,
+      JSON.stringify({ slideBefore, slideAfter }));
 
     // Regression: a persisted AI-voice state used to hang the feed build.
     // splitCaptionSentences() called regex.exec() in a while loop without /g,

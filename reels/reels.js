@@ -849,9 +849,6 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
   // Carousel navigation controls
   const carouselNavHtml = isMultiSlide ? `
     <nav class="reel-carousel__nav" aria-label="Carousel navigation">
-      <button class="reel-carousel__button reel-carousel__button--prev" type="button" data-action="carousel-prev" aria-label="Previous slide" ${initialSlide === 0 ? 'disabled' : ''}>
-        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m15 18-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
       <div class="reel-carousel__dots" role="tablist" aria-label="Slide indicators">
         ${allGroups.map((_, i) => `
           <button class="reel-carousel__dot${i === initialSlide ? ' reel-carousel__dot--active' : ''}" 
@@ -863,9 +860,6 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
                   aria-label="Go to slide ${i + 1}"></button>
         `).join('')}
       </div>
-      <button class="reel-carousel__button reel-carousel__button--next" type="button" data-action="carousel-next" aria-label="Next slide" ${initialSlide === allGroups.length - 1 ? 'disabled' : ''}>
-        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
     </nav>
   ` : '';
   
@@ -1498,12 +1492,6 @@ function carouselGoToSlide(card, slideIndex, { speak = false } = {}) {
     });
   }
   
-  // Update navigation buttons
-  const prevBtn = card.element?.querySelector('[data-action="carousel-prev"]');
-  const nextBtn = card.element?.querySelector('[data-action="carousel-next"]');
-  if (prevBtn) prevBtn.disabled = slideIndex === 0;
-  if (nextBtn) nextBtn.disabled = slideIndex === totalSlides - 1;
-  
   // Update dots
   const dots = card.element?.querySelectorAll('.reel-carousel__dot');
   dots?.forEach((dot, i) => {
@@ -1525,14 +1513,6 @@ function carouselGoToSlide(card, slideIndex, { speak = false } = {}) {
   if (elements.cardAnnouncement) {
     elements.cardAnnouncement.textContent = `Slide ${slideIndex + 1} of ${totalSlides}`;
   }
-}
-
-function carouselPrev(card) {
-  carouselGoToSlide(card, card.currentSlide - 1);
-}
-
-function carouselNext(card) {
-  carouselGoToSlide(card, card.currentSlide + 1);
 }
 
 function goTo(index, { speak = true } = {}) {
@@ -2694,11 +2674,18 @@ function firstDisplayableCaptionIndex() {
   return subtitleUnits.findIndex(unit => unit.display);
 }
 
+function setCaptionDockVisible(visible) {
+  if (!elements.transcriptPanel) return;
+  elements.transcriptPanel.hidden = !visible;
+  const stage = elements.transcriptPanel.closest('.reels-stage');
+  if (stage) stage.dataset.captions = visible ? 'on' : 'off';
+}
+
 function renderAiTranscript(card) {
   if (!elements.transcriptPanel || !elements.transcriptContent || !elements.transcriptEmpty) return;
 
   if (!state.aiNarrationEnabled || state.voice !== 'ai') {
-    elements.transcriptPanel.hidden = true;
+    setCaptionDockVisible(false);
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
     subtitleUnits = [];
@@ -2708,7 +2695,7 @@ function renderAiTranscript(card) {
 
   const entryAiNarration = card?.entry?.aiTranscript;
   if (!entryAiNarration) {
-    elements.transcriptPanel.hidden = true;
+    setCaptionDockVisible(false);
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
     subtitleUnits = [];
@@ -2718,7 +2705,7 @@ function renderAiTranscript(card) {
 
   const segments = aiNarrationSegmentsForCard(card);
   if (!segments.length) {
-    elements.transcriptPanel.hidden = true;
+    setCaptionDockVisible(false);
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
     subtitleUnits = [];
@@ -2746,7 +2733,7 @@ function renderAiTranscript(card) {
   }
 
   if (firstVisible < 0) {
-    elements.transcriptPanel.hidden = true;
+    setCaptionDockVisible(false);
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
     subtitleCurrentIndex = -1;
@@ -2757,7 +2744,7 @@ function renderAiTranscript(card) {
   showSubtitleSentence(firstVisible);
 
   elements.transcriptEmpty.hidden = true;
-  elements.transcriptPanel.hidden = false;
+  setCaptionDockVisible(true);
 }
 
 function showSubtitleSentence(index) {
@@ -2770,7 +2757,7 @@ function showSubtitleSentence(index) {
   const html = `<div class="transcript-segment subtitle-current" data-seg-idx="${index}">${escapeHtml(sentence.text)}</div>`;
 
   elements.transcriptContent.innerHTML = html;
-  elements.transcriptPanel.hidden = false;
+  setCaptionDockVisible(true);
 }
 
 function stopSubtitleTracking() {
@@ -2838,7 +2825,7 @@ function clearSubtitle() {
   }
   if (elements.transcriptContent) elements.transcriptContent.innerHTML = '';
   if (elements.transcriptEmpty) elements.transcriptEmpty.hidden = true;
-  if (elements.transcriptPanel) elements.transcriptPanel.hidden = true;
+  setCaptionDockVisible(false);
 }
 
 function handleSubtitleTimeUpdate() {
@@ -3182,8 +3169,6 @@ function bindControls() {
 
       if (action === 'previous') goTo(currentIndex - 1);
       if (action === 'next') goTo(currentIndex + 1);
-      if (action === 'carousel-prev') carouselPrev(card);
-      if (action === 'carousel-next') carouselNext(card);
       if (action === 'play') togglePlayback();
       if (action === 'mute') toggleMute();
       if (action === 'done') toggleState('done', card.entry.id);
@@ -3322,6 +3307,15 @@ function bindControls() {
     if (hubOpen || modalOpen || isTextEntry || isInteractive) return;
 
     const key = event.key.toLowerCase();
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      // Left/Right replace the removed slide arrows; Up/Down still move cards.
+      const activeCard = cards[currentIndex];
+      if (!activeCard?.isMultiSlide) return;
+      event.preventDefault();
+      carouselGoToSlide(activeCard, activeCard.currentSlide + (event.key === 'ArrowRight' ? 1 : -1));
+      return;
+    }
+
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       const scrollBody = target instanceof HTMLElement ? target.closest('.reel-card__body') : null;
       if (scrollBody && scrollBody.scrollHeight > scrollBody.clientHeight + 2) {
