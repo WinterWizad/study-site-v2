@@ -655,9 +655,9 @@ function startServer() {
         ? { hidden: panel.hidden, role: panel.getAttribute('role'), live: panel.getAttribute('aria-live'), text: content?.textContent.trim().slice(0, 80) }
         : null;
     });
-    check('AI subtitle is visible when AI voice selected', subtitleAiVisible && subtitleAiVisible.hidden === false);
+    check('AI subtitle is visible when AI voice selected', subtitleAiVisible && subtitleAiVisible.hidden === false, JSON.stringify(subtitleAiVisible));
     check('AI subtitle is a polite status region, not a dialog', subtitleAiVisible && subtitleAiVisible.role === 'status' && subtitleAiVisible.live === 'polite');
-    check('AI subtitle shows generated transcript text', subtitleAiVisible && subtitleAiVisible.text && subtitleAiVisible.text.length > 0);
+    check('AI subtitle shows generated transcript text', subtitleAiVisible && subtitleAiVisible.text && subtitleAiVisible.text.length > 0, JSON.stringify(subtitleAiVisible));
 
     await openSubmodal(page, 'audio');
     await page.selectOption('#voiceSelect', 'random');
@@ -682,18 +682,18 @@ function startServer() {
     });
     check('Original card body text stays visible under subtitle', cardTextWithSubtitle && cardTextWithSubtitle.bodyTextLength > 0);
     check('Subtitle container blocks pointer events', cardTextWithSubtitle && cardTextWithSubtitle.panelPointer === 'none');
-    check('Subtitle content allows interaction', cardTextWithSubtitle && cardTextWithSubtitle.panelHidden === false);
+    check('Subtitle content allows interaction', cardTextWithSubtitle && cardTextWithSubtitle.panelHidden === false, JSON.stringify(cardTextWithSubtitle));
 
-    // Progressive subtitle tests
+    // Progressive caption dock tests
     const subtitleCompact = await page.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
       if (!panel || panel.hidden) return null;
       const style = window.getComputedStyle(panel);
-      return { maxHeight: style.maxHeight, bottom: style.bottom, overflowY: style.overflowY };
+      return { maxHeight: style.maxHeight, bottom: style.bottom, right: style.right, overflowY: style.overflowY };
     });
-    check('AI subtitle is compact (max-height 18%)', subtitleCompact && subtitleCompact.maxHeight === '18%');
-    check('AI subtitle sits above action rail', subtitleCompact && subtitleCompact.bottom === '82px');
-    check('AI subtitle allows vertical scroll', subtitleCompact && subtitleCompact.overflowY === 'auto');
+    check('AI caption dock has a bounded height', subtitleCompact && subtitleCompact.maxHeight !== '18%' && Number.parseFloat(subtitleCompact.maxHeight) > 0, JSON.stringify(subtitleCompact));
+    check('AI caption sits above the action rail', subtitleCompact && subtitleCompact.bottom === '82px' && subtitleCompact.right !== '0px', JSON.stringify(subtitleCompact));
+    check('AI caption never scrolls internally', subtitleCompact && subtitleCompact.overflowY === 'hidden', JSON.stringify(subtitleCompact));
 
     const subtitleFirstSentence = await page.evaluate(() => {
       const content = document.querySelector('#transcriptContent');
@@ -705,7 +705,14 @@ function startServer() {
         currentText: current?.textContent.trim().slice(0, 60) || ''
       };
     });
-    check('AI subtitle shows first sentence highlighted', subtitleFirstSentence && subtitleFirstSentence.hasCurrent && subtitleFirstSentence.totalSegments > 0);
+    check('AI caption shows exactly one highlighted sentence', subtitleFirstSentence && subtitleFirstSentence.hasCurrent && subtitleFirstSentence.totalSegments === 1, JSON.stringify(subtitleFirstSentence));
+    check('AI caption excludes transcript scaffolding', subtitleFirstSentence && !/TITLE:|TABLE:|\|/.test(subtitleFirstSentence.currentText), subtitleFirstSentence?.currentText || '');
+
+    const footerIndicators = await page.evaluate(() => ({
+      slideCounters: document.querySelectorAll('.reel-card__carousel-progress').length,
+      positionRows: document.querySelectorAll('.reel-card__position').length
+    }));
+    check('The redundant slide counter is gone but feed position remains', footerIndicators.slideCounters === 0 && footerIndicators.positionRows > 20, JSON.stringify(footerIndicators));
 
     // Switch to a different card and verify subtitle resets
     await page.keyboard.press('ArrowDown');
@@ -723,10 +730,10 @@ function startServer() {
         currentText: current?.textContent.trim().slice(0, 60) || ''
       } : null;
     });
-    check('AI subtitle resets on card change', subtitleReset && subtitleReset.hidden === false && subtitleReset.hasCurrent && subtitleReset.totalSegments > 0);
+    check('AI subtitle resets on card change', subtitleReset && subtitleReset.hidden === false && subtitleReset.hasCurrent && subtitleReset.totalSegments > 0, JSON.stringify(subtitleReset));
 
     // Regression: a persisted AI-voice state used to hang the feed build.
-    // splitIntoSentences() called regex.exec() in a while loop without /g,
+    // splitCaptionSentences() called regex.exec() in a while loop without /g,
     // so exec() returned the same match forever and froze the main thread.
     // Fresh test profiles used a non-AI voice and never reached this path.
     const persistedAiContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -791,9 +798,10 @@ function startServer() {
     }
     const afterNavigation = await persistedAiPage.evaluate(() => ({
       cards: document.querySelectorAll('.reel-card:not(.reel-measure)').length,
-      currentSentence: document.querySelector('#transcriptContent .subtitle-current')?.textContent.trim().slice(0, 80) || ''
+      currentSentence: document.querySelector('#transcriptContent .subtitle-current')?.textContent.trim() || ''
     }));
-    check('Multi-sentence AI transcript does not freeze navigation', afterNavigation.cards > 20 && afterNavigation.currentSentence.length > 0, JSON.stringify({ multiSentenceEntryId, ...afterNavigation }));
+    check('Multi-sentence AI transcript does not freeze navigation', afterNavigation.cards > 20 && afterNavigation.currentSentence.length > 0, JSON.stringify({ multiSentenceEntryId, cards: afterNavigation.cards, currentSentence: afterNavigation.currentSentence.slice(0, 80) }));
+    check('AI caption stays one readable prose unit', afterNavigation.currentSentence.length > 0 && afterNavigation.currentSentence.length <= 180 && !/TITLE:|TABLE:|\|/.test(afterNavigation.currentSentence), afterNavigation.currentSentence.slice(0, 180));
     check('Persisted AI voice produces no browser errors', persistedAiErrors.length === 0, persistedAiErrors.join(' | '));
     await persistedAiContext.close();
 

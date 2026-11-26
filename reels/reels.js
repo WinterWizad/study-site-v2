@@ -39,7 +39,7 @@ const MUSIC_TRACKS = [
 ];
 
 // Progressive subtitle state for AI narration
-let subtitleSentences = [];
+let subtitleUnits = [];
 let subtitleCurrentIndex = -1;
 let subtitleTimer = null;
 let subtitleFallbackTimer = null;
@@ -792,21 +792,8 @@ function cardActionsHtml(entry) {
   `;
 }
 
-function cardFooterHtml(entry, index, total, carouselData = null) {
+function cardFooterHtml(entry, index, total) {
   const percent = total > 1 ? ((index + 1) / total) * 100 : 100;
-  
-  // Carousel progress indicator for multi-slide entries
-  let carouselHtml = '';
-  if (carouselData && carouselData.totalSlides > 1) {
-    const slidePercent = ((carouselData.currentSlide + 1) / carouselData.totalSlides) * 100;
-    carouselHtml = `
-      <div class="reel-card__carousel-progress" role="progressbar" aria-valuenow="${carouselData.currentSlide + 1}" aria-valuemin="1" aria-valuemax="${carouselData.totalSlides}" aria-label="Carousel progress">
-        <span class="reel-card__carousel-indicator">${carouselData.currentSlide + 1} / ${carouselData.totalSlides}</span>
-        <div class="reel-card__carousel-line" aria-hidden="true"><span style="width:${slidePercent.toFixed(2)}%"></span></div>
-      </div>
-    `;
-  }
-  
   return `
     <footer class="reel-card__footer">
       <div class="reel-card__source-row">
@@ -814,7 +801,6 @@ function cardFooterHtml(entry, index, total, carouselData = null) {
         <span class="reel-state" data-card-state></span>
       </div>
       <p class="reel-card__scroll-cue" data-scroll-cue hidden>Scroll inside this card for more</p>
-      ${carouselHtml}
       <div class="reel-card__position">
         <span>${index + 1} / ${total}</span>
         <span class="reel-card__position-line" aria-hidden="true"><span style="width:${percent.toFixed(2)}%"></span></span>
@@ -896,7 +882,7 @@ function buildCarouselCardElement(entry, allGroups, index, total) {
       <svg data-feedback-icon viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"></svg>
       <span data-feedback-label class="feedback-label"></span>
     </div>
-    ${cardFooterHtml(entry, index, total, isMultiSlide ? { totalSlides: allGroups.length, currentSlide: initialSlide } : null)}
+    ${cardFooterHtml(entry, index, total)}
   `;
   
   // Store carousel state on the element
@@ -1526,15 +1512,6 @@ function carouselGoToSlide(card, slideIndex, { speak = false } = {}) {
     dot.setAttribute('aria-selected', String(isActive));
   });
   
-  // Update carousel progress in footer
-  const progressEl = card.element?.querySelector('.reel-card__carousel-progress');
-  if (progressEl) {
-    const slidePercent = ((slideIndex + 1) / totalSlides) * 100;
-    progressEl.querySelector('.reel-card__carousel-indicator').textContent = `${slideIndex + 1} / ${totalSlides}`;
-    progressEl.querySelector('.reel-card__carousel-line span').style.width = `${slidePercent.toFixed(2)}%`;
-    progressEl.setAttribute('aria-valuenow', String(slideIndex + 1));
-  }
-  
   // Persist carousel position
   rememberPosition(card);
   saveState();
@@ -2114,7 +2091,7 @@ function fallbackToBrowserSpeech(session, reason = 'Cloud narration is unavailab
 
   // Re-establish progressive subtitle for AI fallback (stopAiNarration cleared it via clearSubtitle).
   if (session.mode === 'ai' && state.aiNarrationEnabled && state.voice === 'ai') {
-    renderAiTranscript(card); // populates subtitleSentences, shows sentence 0, unhides panel
+    renderAiTranscript(card); // populates subtitleUnits, shows sentence 0, unhides panel
     startSubtitleFallbackTimer();
   }
 
@@ -2652,22 +2629,69 @@ function updatePlayControls() {
     : '<path d="m9 7 8 5-8 5Z" fill="currentColor"/>';
 }
 
-function splitIntoSentences(text) {
-  if (!text) return [];
-  const str = String(text).trim();
+const CAPTION_MAX_CHARS = 180;
+
+function isCaptionProseLine(line) {
+  const trimmed = String(line || '').trim();
+  if (!trimmed || trimmed.includes('|')) return false;
+  // Transcript scaffolding such as TITLE:, TABLE:, ANSWER: is spoken by the
+  // narrator but duplicates the card or reads as metadata. Keep it in the
+  // audio timeline, but never paint it in the caption dock.
+  if (/^[A-Z][A-Z \t]{2,}:(\s|$)/.test(trimmed)) return false;
+  return true;
+}
+
+function splitCaptionSentences(lineText) {
+  const str = String(lineText || '');
+  if (!str.trim()) return [];
   const regex = /(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/g;
   const parts = [];
   let lastIndex = 0;
   let match;
   while ((match = regex.exec(str)) !== null) {
-    const end = match.index;
-    const sentence = str.slice(lastIndex, end).trim();
-    if (sentence) parts.push({ text: sentence, start: lastIndex, end });
+    const sentence = str.slice(lastIndex, match.index).trim();
+    if (sentence) parts.push(sentence);
     lastIndex = match.index + match[0].length;
   }
   const tail = str.slice(lastIndex).trim();
-  if (tail) parts.push({ text: tail, start: lastIndex, end: str.length });
+  if (tail) parts.push(tail);
   return parts;
+}
+
+function splitLongCaption(text) {
+  if (text.length <= CAPTION_MAX_CHARS) return [text];
+
+  // Long enumerations are semantically lists even though they end in one full
+  // stop. Break them at their numbered clauses so one caption stays readable.
+  const clauses = text.split(/;\s+(?=\(?\d+\)?\s|[A-Z])/);
+  if (clauses.length > 1) {
+    return clauses.map((clause, index) => `${clause.trim()}${index < clauses.length - 1 ? ';' : ''}`);
+  }
+  const leadIn = text.split(/:\s+(?=\()/);
+  if (leadIn.length > 1) {
+    return leadIn.map((part, index) => `${part.trim()}${index < leadIn.length - 1 ? ':' : ''}`);
+  }
+  return [text];
+}
+
+function splitTranscriptIntoUnits(text) {
+  if (!text) return [];
+  const units = [];
+  String(text).split(/\r?\n+/).forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    const display = isCaptionProseLine(trimmed);
+    splitCaptionSentences(trimmed).forEach(sentence => {
+      splitLongCaption(sentence).forEach(piece => {
+        if (piece) units.push({ text: piece, display });
+      });
+    });
+  });
+  return units;
+}
+
+function firstDisplayableCaptionIndex() {
+  return subtitleUnits.findIndex(unit => unit.display);
 }
 
 function renderAiTranscript(card) {
@@ -2677,7 +2701,7 @@ function renderAiTranscript(card) {
     elements.transcriptPanel.hidden = true;
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
-    subtitleSentences = [];
+    subtitleUnits = [];
     subtitleCurrentIndex = -1;
     return;
   }
@@ -2687,7 +2711,7 @@ function renderAiTranscript(card) {
     elements.transcriptPanel.hidden = true;
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
-    subtitleSentences = [];
+    subtitleUnits = [];
     subtitleCurrentIndex = -1;
     return;
   }
@@ -2697,16 +2721,31 @@ function renderAiTranscript(card) {
     elements.transcriptPanel.hidden = true;
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
-    subtitleSentences = [];
+    subtitleUnits = [];
     subtitleCurrentIndex = -1;
     return;
   }
 
-  // Join all segment texts and split into sentences for progressive subtitle display
-  const fullText = segments.map(segment => segment.text).join(' ');
-  subtitleSentences = splitIntoSentences(fullText);
+  // Split the transcript at line and sentence boundaries. Structural rows stay
+  // in the timeline for audio sync, but never appear in the caption dock.
+  const fullText = segments.map(segment => segment.text).join('\n');
+  subtitleUnits = splitTranscriptIntoUnits(fullText);
+  let firstVisible = firstDisplayableCaptionIndex();
 
-  if (!subtitleSentences.length) {
+  // A few visual cards have a transcript made only of scaffolding (e.g. just
+  // "TITLE: Learn in Motion"). Show the card title as their single prose caption
+  // rather than hiding the dock entirely.
+  if (firstVisible < 0) {
+    const fallback = String(card?.entry?.speechTitle || card?.entry?.title || '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (fallback) {
+      subtitleUnits = [{ text: fallback, display: true }];
+      firstVisible = 0;
+    }
+  }
+
+  if (firstVisible < 0) {
     elements.transcriptPanel.hidden = true;
     elements.transcriptContent.innerHTML = '';
     elements.transcriptEmpty.hidden = true;
@@ -2714,18 +2753,20 @@ function renderAiTranscript(card) {
     return;
   }
 
-  subtitleCurrentIndex = -1;
-  showSubtitleSentence(0);
+  subtitleCurrentIndex = firstVisible;
+  showSubtitleSentence(firstVisible);
 
   elements.transcriptEmpty.hidden = true;
   elements.transcriptPanel.hidden = false;
 }
 
 function showSubtitleSentence(index) {
-  if (!subtitleSentences.length || index < 0 || index >= subtitleSentences.length) return;
+  if (!subtitleUnits.length || index < 0 || index >= subtitleUnits.length) return;
   subtitleCurrentIndex = index;
 
-  const sentence = subtitleSentences[index];
+  const sentence = subtitleUnits[index];
+  if (!sentence.display) return;
+
   const html = `<div class="transcript-segment subtitle-current" data-seg-idx="${index}">${escapeHtml(sentence.text)}</div>`;
 
   elements.transcriptContent.innerHTML = html;
@@ -2748,10 +2789,10 @@ function stopSubtitleTracking() {
 }
 
 function showAllSubtitleSentences() {
-  if (!subtitleSentences.length) return;
+  if (!subtitleUnits.length) return;
   // Audio is unavailable (e.g. production quota), so advance sentences on estimated timing
-  // instead of leaving everything visible at once. Start at sentence 0.
-  subtitleCurrentIndex = 0;
+  // instead of leaving everything visible at once. Begin with the first spoken prose line.
+  subtitleCurrentIndex = Math.max(firstDisplayableCaptionIndex(), 0);
   showSubtitleSentence(subtitleCurrentIndex);
   startSubtitleFallbackTimer();
 }
@@ -2770,10 +2811,10 @@ function startSubtitleFallbackTimer() {
 }
 
 function advanceSubtitleFallback() {
-  if (!subtitleSentences.length || subtitleCurrentIndex >= subtitleSentences.length - 1) return;
-  const ms = estimatedSentenceMs(subtitleSentences[subtitleCurrentIndex]);
+  if (!subtitleUnits.length || subtitleCurrentIndex >= subtitleUnits.length - 1) return;
+  const ms = estimatedSentenceMs(subtitleUnits[subtitleCurrentIndex]);
   subtitleFallbackTimer = window.setTimeout(() => {
-    if (subtitleCurrentIndex >= subtitleSentences.length - 1) return;
+    if (subtitleCurrentIndex >= subtitleUnits.length - 1) return;
     subtitleCurrentIndex += 1;
     showSubtitleSentence(subtitleCurrentIndex);
     advanceSubtitleFallback();
@@ -2781,7 +2822,7 @@ function advanceSubtitleFallback() {
 }
 
 function clearSubtitle() {
-  subtitleSentences = [];
+  subtitleUnits = [];
   subtitleCurrentIndex = -1;
   if (subtitleTimer) {
     window.cancelAnimationFrame(subtitleTimer);
@@ -2802,26 +2843,26 @@ function clearSubtitle() {
 
 function handleSubtitleTimeUpdate() {
   const player = subtitleAudioPlayer;
-  if (!player || !subtitleSentences.length || player.paused || player.ended) return;
+  if (!player || !subtitleUnits.length || player.paused || player.ended) return;
 
   const duration = player.duration || 0;
   const currentTime = player.currentTime || 0;
   if (!duration) return;
 
   // Distribute audio duration across sentences proportional to character length
-  const totalChars = subtitleSentences.reduce((sum, s) => sum + s.text.length, 0);
+  const totalChars = subtitleUnits.reduce((sum, s) => sum + s.text.length, 0);
   if (totalChars <= 0) return;
   const elapsedChars = totalChars * (currentTime / duration);
   let cumChars = 0;
-  let targetIndex = subtitleSentences.length - 1;
-  for (let i = 0; i < subtitleSentences.length; i++) {
-    cumChars += subtitleSentences[i].text.length;
+  let targetIndex = subtitleUnits.length - 1;
+  for (let i = 0; i < subtitleUnits.length; i++) {
+    cumChars += subtitleUnits[i].text.length;
     if (elapsedChars <= cumChars) {
       targetIndex = i;
       break;
     }
   }
-  const clampedIndex = Math.min(Math.max(targetIndex, 0), subtitleSentences.length - 1);
+  const clampedIndex = Math.min(Math.max(targetIndex, 0), subtitleUnits.length - 1);
 
   if (clampedIndex !== subtitleCurrentIndex) {
     showSubtitleSentence(clampedIndex);
