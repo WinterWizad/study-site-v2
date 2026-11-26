@@ -3185,6 +3185,11 @@ async function init() {
   const restore = restorePosition();
   buildFeed({ restore, speak: false, markSeen: false, persistPosition: true });
   updateHubSummaries();
+} catch (error) {
+  elements.stageLoading.hidden = false;
+  elements.stageLoading.className = 'stage-error';
+  elements.stageLoading.innerHTML = `<p>Failed to build the feed. Please reload.</p>`;
+  console.error(error);
 }
 
 init();
