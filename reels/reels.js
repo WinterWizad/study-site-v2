@@ -2501,7 +2501,7 @@ function updatePlayControls() {
 function splitIntoSentences(text) {
   if (!text) return [];
   const str = String(text).trim();
-  const regex = /(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/;
+  const regex = /(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/g;
   const parts = [];
   let lastIndex = 0;
   let match;

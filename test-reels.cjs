@@ -677,6 +677,72 @@ function startServer() {
     });
     check('AI subtitle resets on card change', subtitleReset && subtitleReset.hidden === false && subtitleReset.hasCurrent && subtitleReset.totalSegments > 0);
 
+    // Regression: a persisted AI-voice state used to hang the feed build.
+    // splitIntoSentences() called regex.exec() in a while loop without /g,
+    // so exec() returned the same match forever and froze the main thread.
+    // Fresh test profiles used a non-AI voice and never reached this path.
+    const persistedAiContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await persistedAiContext.addInitScript(() => {
+      localStorage.setItem('quickReels.state.v1', JSON.stringify({
+        version: 1,
+        seen: [], done: [], saved: [], lastPosition: null, positions: {},
+        voice: 'ai', narratorVersion: 2, aiNarrationEnabled: true,
+        order: 'ordered', unit: 'all', savedOnly: false,
+        speechRate: 1, shuffleSeed: 541385059, musicVolume: 0.28, muted: false
+      }));
+    });
+    const persistedAiPage = await persistedAiContext.newPage();
+    const persistedAiErrors = [];
+    persistedAiPage.on('console', message => {
+      if (message.type() === 'error') persistedAiErrors.push(message.text());
+    });
+    persistedAiPage.on('pageerror', error => persistedAiErrors.push(error.message));
+
+    const persistedAiStart = Date.now();
+    await persistedAiPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    let persistedAiReady = false;
+    while (Date.now() - persistedAiStart < 20000) {
+      persistedAiReady = await persistedAiPage.evaluate(() => document.querySelectorAll('.reel-card:not(.reel-measure)').length > 20);
+      if (persistedAiReady) break;
+      await persistedAiPage.waitForTimeout(200);
+    }
+    const persistedAiLoadMs = Date.now() - persistedAiStart;
+    const persistedAiState = await persistedAiPage.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      const current = document.querySelector('#transcriptContent .subtitle-current');
+      return {
+        cards: document.querySelectorAll('.reel-card:not(.reel-measure)').length,
+        loadingHidden: document.querySelector('#stageLoading')?.hidden === true,
+        voice: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').voice,
+        subtitleVisible: panel ? panel.hidden === false : false,
+        currentSentence: current?.textContent.trim().slice(0, 80) || ''
+      };
+    });
+    check('Persisted AI voice loads the feed without hanging', persistedAiReady && persistedAiState.cards > 20 && persistedAiState.loadingHidden, JSON.stringify({ persistedAiLoadMs, ...persistedAiState }));
+    check('Persisted AI voice keeps the progressive subtitle visible', persistedAiState.subtitleVisible && persistedAiState.currentSentence.length > 0, JSON.stringify(persistedAiState));
+
+    // Move to a transcript that actually contains sentence boundaries. With the
+    // old regex this navigation froze the browser; now it must stay responsive.
+    const multiSentenceEntryId = await persistedAiPage.evaluate(async () => {
+      const feed = await fetch('content.json').then(response => response.json());
+      const entry = feed.entries.find(candidate => {
+        const id = candidate.aiTranscript?.transcript;
+        const text = id ? (feed.aiTranscript?.segments?.[id]?.text || '') : '';
+        return /(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/.test(text);
+      });
+      return entry?.id || '';
+    });
+    if (multiSentenceEntryId) {
+      await activateCard(persistedAiPage, `.reel-card[data-entry-id="${multiSentenceEntryId}"]`);
+    }
+    const afterNavigation = await persistedAiPage.evaluate(() => ({
+      cards: document.querySelectorAll('.reel-card:not(.reel-measure)').length,
+      currentSentence: document.querySelector('#transcriptContent .subtitle-current')?.textContent.trim().slice(0, 80) || ''
+    }));
+    check('Multi-sentence AI transcript does not freeze navigation', afterNavigation.cards > 20 && afterNavigation.currentSentence.length > 0, JSON.stringify({ multiSentenceEntryId, ...afterNavigation }));
+    check('Persisted AI voice produces no browser errors', persistedAiErrors.length === 0, persistedAiErrors.join(' | '));
+    await persistedAiContext.close();
+
     await openSubmodal(page, 'feed');
     await page.click('#unitFilters [data-unit="3"]');
     await page.waitForTimeout(100);
