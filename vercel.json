@@ -20,6 +20,28 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/_syllabus/it248-it-entrepreneurship-management.md",
+      "destination": "/_syllabus/IT248-it-entrepreneurship-management.md",
+      "permanent": true
+    },
+    {
+      "source": "/_syllabus/it249-business-intelligence.md",
+      "destination": "/_syllabus/IT249-business-intelligence.md",
+      "permanent": true
+    },
+    {
+      "source": "/_syllabus/it250-digital-economy.md",
+      "destination": "/_syllabus/IT250-digital-economy.md",
+      "permanent": true
+    },
+    {
+      "source": "/_syllabus/it277-cloud-computing.md",
+      "destination": "/_syllabus/IT277-cloud-computing.md",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/_syllabus/(.*)",

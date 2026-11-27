@@ -40,10 +40,10 @@ const RAIL_STOPS = [...EXAM_ROUTINE, CINEMA_STOP];
 const EXAM_CENTRE = 'Kirtipur';
 
 const SYLLABUS_FILES = {
-  'IT 248': 'it248-it-entrepreneurship-management.md',
-  'IT 249': 'it249-business-intelligence.md',
-  'IT 250': 'it250-digital-economy.md',
-  'IT 277': 'it277-cloud-computing.md',
+  'IT 248': 'IT248-it-entrepreneurship-management.md',
+  'IT 249': 'IT249-business-intelligence.md',
+  'IT 250': 'IT250-digital-economy.md',
+  'IT 277': 'IT277-cloud-computing.md',
 };
 
 const EXAM_NOTES = [
@@ -2003,9 +2003,33 @@ function writeCleanRouteAlias(subjectDistDir, subjectId, pageFilename, pageHtml)
   fs.writeFileSync(path.join(routeDir, 'index.html'), routeHtml);
 }
 
+function validateSyllabusSources() {
+  const syllabusDir = path.join(SRC_DIR, '_syllabus');
+  if (!fs.existsSync(syllabusDir)) {
+    throw new Error(`Syllabus directory is missing: ${syllabusDir}`);
+  }
+
+  const availableFiles = new Set(fs.readdirSync(syllabusDir));
+  const invalidMappings = [];
+
+  for (const subject of Object.values(SUBJECTS)) {
+    const filename = SYLLABUS_FILES[subject.code];
+    if (!filename || path.basename(filename) !== filename || !availableFiles.has(filename)) {
+      invalidMappings.push(`${subject.code} -> ${filename || '(missing mapping)'}`);
+    }
+  }
+
+  if (invalidMappings.length) {
+    throw new Error(
+      `Syllabus source mismatch (filename case is significant on Vercel): ${invalidMappings.join(', ')}`
+    );
+  }
+}
+
 // Main build function
 async function build() {
   console.log('🔨 Building study site...');
+  validateSyllabusSources();
   
   // Clean dist
   if (fs.existsSync(DIST_DIR)) {

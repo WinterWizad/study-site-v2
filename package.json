@@ -14,6 +14,8 @@
     "test:mobile": "node test-mobile.cjs",
     "test:comprehensive": "node test-comprehensive.cjs",
     "test:routes": "node test-clean-routes.cjs",
+    "test:links": "node test-production-links.mjs",
+    "test:production": "npm run build && node test-production-links.mjs",
     "test:reels:content": "node test-reels-content.mjs",
     "test:narration": "node test-narration.mjs",
     "test:reels:browser": "node test-reels.cjs",
