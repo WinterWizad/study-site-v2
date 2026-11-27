@@ -88,11 +88,18 @@ function collectExpectedRoutes() {
     }
   }
 
+  // Syllabus canonical directories (styled HTML pages)
+  for (const subject of Object.values(SUBJECTS)) {
+    const slug = subject.syllabusFile.replace(/\.md$/i, '');
+    routes.add(`/_syllabus/${slug}/`);
+    routes.add(`/_syllabus/${slug}`);
+  }
+
+  // Legacy raw .md URLs kept for regression (lowercase and uppercase)
   const syllabusDir = path.join(DIST_DIR, '_syllabus');
   if (fs.existsSync(syllabusDir)) {
     for (const filename of fs.readdirSync(syllabusDir).filter(file => file.endsWith('.md'))) {
       routes.add(`/_syllabus/${filename}`);
-      routes.add(`/_syllabus/${filename.replace(/\.md$/i, '')}`);
     }
   }
 
@@ -117,21 +124,25 @@ function checkLocalArtifacts() {
     if (!subjectIndexExists) continue;
 
     const subjectIndex = fs.readFileSync(subjectIndexPath, 'utf8');
+    const slug = subject.syllabusFile.replace(/\.md$/i, '');
+    const expectedLink = `../_syllabus/${slug}/`;
     const syllabusLink = subjectIndex.match(/<a\s+href="([^"]*\/_syllabus\/[^"]+)"\s+target="_blank">Syllabus<\/a>/i)?.[1];
 
-    check(`${subjectId} syllabus link uses the exact deployed filename`, syllabusLink === `../_syllabus/${subject.syllabusFile}`, syllabusLink || 'Syllabus link not found');
+    check(`${subjectId} syllabus link points to canonical directory`, syllabusLink === expectedLink, syllabusLink || 'Syllabus link not found');
 
     if (!syllabusLink) continue;
 
-    const syllabusPath = path.resolve(path.dirname(subjectIndexPath), syllabusLink);
-    const syllabusExists = fs.existsSync(syllabusPath);
-    check(`${subjectId} linked syllabus artifact exists`, syllabusExists, syllabusPath);
+    // The canonical syllabus page is an HTML file inside the slug directory
+    const syllabusHtmlPath = path.resolve(path.dirname(subjectIndexPath), syllabusLink, 'index.html');
+    const syllabusExists = fs.existsSync(syllabusHtmlPath);
+    check(`${subjectId} linked syllabus HTML exists`, syllabusExists, syllabusHtmlPath);
 
     if (!syllabusExists) continue;
 
-    const syllabus = fs.readFileSync(syllabusPath, 'utf8');
-    const heading = syllabus.match(/^#\s+(.+)$/m)?.[1] || '';
-    check(`${subjectId} linked syllabus contains the expected heading`, heading.includes(subject.code) && heading.toLowerCase().includes('syllabus'), heading);
+    const syllabusHtml = fs.readFileSync(syllabusHtmlPath, 'utf8');
+    const title = syllabusHtml.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || '';
+    check(`${subjectId} linked syllabus has correct title`, title.includes(subject.code) && title.includes('Syllabus'), title);
+    check(`${subjectId} linked syllabus has markdown body`, syllabusHtml.includes('class="markdown-body"'), '');
   }
 }
 
@@ -193,6 +204,14 @@ function validateResponse(requestPath, finalPath, status, contentType, body, byt
     } else if (/^\/(?:bi|de|cloud|entrepreneurship)\/(?:model-question|model-question-answers|question-bank)(?:\.html)?\/?$/.test(finalPath)) {
       if (!body.includes('class="resource-content"')) issues.push('Resource content is missing');
       if (!body.includes('class="markdown-body"')) issues.push('Resource Markdown body is missing');
+    } else if (/^\/_syllabus\/IT\d+[^\/]*\/?$/.test(finalPath)) {
+      // Syllabus canonical HTML page (styled)
+      const title = body.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]?.trim() || '';
+      if (!title) issues.push('Syllabus page has no title');
+      if (!title.includes('Syllabus')) issues.push('Syllabus page title missing "Syllabus"');
+      const syllabusSubject = Object.values(SUBJECTS).find(subject => finalPath.includes(subject.syllabusFile.replace(/\.md$/i, '')));
+      if (syllabusSubject && !title.includes(syllabusSubject.code)) issues.push(`Syllabus page missing subject code ${syllabusSubject.code}`);
+      if (!body.includes('class="markdown-body"')) issues.push('Syllabus page missing markdown body');
     }
   } else if (normalizedType.includes('markdown') || normalizedType.includes('text/plain')) {
     const heading = body.match(/^#\s+(.+)$/m)?.[1]?.trim() || '';

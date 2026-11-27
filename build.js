@@ -639,6 +639,135 @@ function generateUnitHtml(subject, unit, htmlContent) {
 </html>`;
 }
 
+// Generate syllabus HTML page
+function generateSyllabusHtml(subject, title, htmlContent, rawFilename) {
+  const slug = rawFilename.replace(/\.md$/i, '');
+  const downloadUrl = `/downloads/syllabus/${rawFilename}`;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title} | ${subject.code} | Worst Generation</title>
+  <meta name="description" content="${subject.code} - ${title} — Worst Generation">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="${subject.color}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/styles/github.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+</head>
+<body class="syllabus-page" data-subject="${subject.id}">
+  <header class="site-header">
+    <div class="header-content">
+      <a href="../../index.html" class="site-title">Worst Generation</a>
+      <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
+      <button class="theme-toggle" aria-label="Toggle theme" onclick="toggleTheme()"><svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12.3 3a9 9 0 1 0 8.7 11.4A7.5 7.5 0 0 1 12.3 3z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/></g></svg></button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-toggle" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+      <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+      <div class="sidebar-content">
+        <h3>${subject.name}</h3>
+        <p class="subject-meta">${subject.code} • ${subject.marks} marks</p>
+        <ul class="unit-list">
+          ${subject.units.map((u, i) => `
+            <li>
+              <a href="../${subject.id}/unit-${u.num}.html" class="">
+                <span class="unit-num">Unit ${u.num}</span>
+                <span class="unit-title">${u.title}</span>
+              </a>
+            </li>
+          `).join('')}
+        </ul>
+        <div class="sidebar-footer">
+          ${REEL_SUBJECT_IDS.includes(subject.id) ? `<a href="../reels/?subject=${subject.id}" class="footer-link">Quick Reels</a>` : ''}
+          <a href="../../index.html" class="footer-link">← All Subjects</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content" role="main">
+      <article class="syllabus-content">
+        <header class="syllabus-header">
+          <div class="syllabus-meta">
+            <span class="subject-badge" style="background: ${subject.color}">${subject.code}</span>
+            <h1>${title}</h1>
+            <div class="unit-meta">${subject.name} · ${subject.marks} marks · ${subject.passMarks} pass • 48 lecture hours</div>
+          </div>
+          <p class="syllabus-source"><a href="${downloadUrl}" target="_blank" rel="noopener">Download Markdown source</a></p>
+        </header>
+
+        <div class="markdown-body">
+          ${htmlContent}
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    // Initialize Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+
+    // Initialize highlight.js
+    document.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+
+    // Copy code function
+    window.copyCode = function(btn) {
+      const code = btn.closest('.code-block').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 1500);
+      });
+    };
+
+    // Sidebar toggle
+    window.toggleSidebar = function() {
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.toggle('open');
+    };
+    window.closeSidebar = function() {
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.remove('open');
+    };
+    document.querySelectorAll('.sidebar-content a').forEach(link => {
+      link.addEventListener('click', () => closeSidebar());
+    });
+
+    // Theme toggle
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeBtn = document.querySelector('.theme-toggle');
+    if (themeBtn) themeBtn.classList.toggle('is-dark', savedTheme === 'dark');
+
+    window.toggleTheme = function() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (themeBtn) themeBtn.classList.toggle('is-dark', next === 'dark');
+    };
+
+    // Trailing slash redirect for subject index pages
+    const subjectIndexRegex = new RegExp('^/(bi|de|cloud|entrepreneurship)$');
+    if (subjectIndexRegex.test(window.location.pathname)) {
+      window.location.href = window.location.pathname + '/';
+    }
+  </script>
+</body>
+</html>`;
+}
+
 function generateResourceHtml(subject, title, htmlContent) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -841,7 +970,7 @@ function generateSubjectIndexHtml(subject) {
             <li><a href="question-bank.html">Question Bank</a></li>
             ${REEL_SUBJECT_IDS.includes(subject.id) ? `<li><a href="../reels/?subject=${subject.id}">Quick Reels</a></li>` : ''}
             ${subject.id === 'bi' ? `<li><a href="cheat-sheet.html">&#x1F4CB; Cheat Sheet</a></li>` : ''}
-            <li><a href="../_syllabus/${SYLLABUS_FILES[subject.code] || ''}" target="_blank">Syllabus</a></li>
+            <li><a href="../_syllabus/${(SYLLABUS_FILES[subject.code] || '').replace(/\.md$/i, '')}/" target="_blank">Syllabus</a></li>
           </ul>
         </section>
       </article>
@@ -2326,6 +2455,40 @@ async function build() {
     for (const file of syllabusFiles) {
       fs.copyFileSync(path.join(syllabusDir, file), path.join(destSyllabusDir, file));
       console.log(`  ✅ _syllabus/${file}`);
+    }
+
+    // Generate syllabus HTML pages
+    const syllabusSlugs = {};
+    for (const [code, filename] of Object.entries(SYLLABUS_FILES)) {
+      const subjectObj = Object.values(SUBJECTS).find(s => s.code === code);
+      if (!subjectObj) continue;
+      const slug = filename.replace(/\.md$/i, '');
+      syllabusSlugs[filename] = { slug, subject: subjectObj };
+    }
+
+    // Ensure downloads dir
+    const downloadsSyllabusDir = path.join(DIST_DIR, 'downloads', 'syllabus');
+    fs.mkdirSync(downloadsSyllabusDir, { recursive: true });
+
+    for (const file of syllabusFiles) {
+      const info = syllabusSlugs[file];
+      if (!info) continue;
+      const { slug, subject } = info;
+      const rawPath = path.join(syllabusDir, file);
+      const { content: mdContent } = readMarkdownFile(rawPath);
+      const htmlContent = renderMarkdown(mdContent);
+      // Extract title from first h1
+      const titleMatch = mdContent.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1].trim() : slug;
+      const syllabusHtml = generateSyllabusHtml(subject, title, htmlContent, file);
+      const slugDir = path.join(destSyllabusDir, slug);
+      fs.mkdirSync(slugDir, { recursive: true });
+      fs.writeFileSync(path.join(slugDir, 'index.html'), syllabusHtml);
+      console.log(`  ✅ _syllabus/${slug}/index.html`);
+
+      // Copy raw markdown to downloads
+      fs.copyFileSync(rawPath, path.join(downloadsSyllabusDir, file));
+      console.log(`  ✅ downloads/syllabus/${file}`);
     }
   }
 
