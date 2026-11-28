@@ -530,7 +530,8 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   font-weight: 600;
 }
 
-/* AI narration caption — prose only, no box, no scrollbar. */
+/* AI narration caption — YouTube-style: white text on a soft black scrim
+   that hugs the text width instead of spanning the whole card. */
 .reel-subtitle {
   position: absolute;
   left: 24px;
@@ -538,13 +539,13 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   bottom: 112px;
   z-index: 40;
   display: flex;
+  justify-content: center;
   align-items: flex-start;
   min-height: 0;
-  max-height: 5.8em;
+  max-height: 92px;
   overflow: hidden;
   padding: 0;
   background: transparent;
-  color: var(--reels-ink);
   pointer-events: none;
 }
 
@@ -552,15 +553,21 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   display: none;
 }
 
-.reel-subtitle__content {
-  width: 100%;
-  padding: 0;
+.reel-subtitle__content,
+.reel-subtitle__empty {
+  width: fit-content;
+  max-width: 100%;
+  max-height: 92px;
+  overflow: hidden;
+  padding: 6px 10px;
   margin: 0;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.72);
   font-family: var(--reels-ui);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.45;
-  color: var(--reels-ink);
+  color: #ffffff;
   pointer-events: auto;
   overflow-wrap: break-word;
 }
@@ -577,12 +584,8 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 }
 
 .reel-subtitle__empty {
-  padding: 0;
-  margin: 0;
   font-size: 12px;
-  color: var(--reels-ink);
-  opacity: 0.65;
-  pointer-events: auto;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 /* Reserve room so the transparent caption never lands on top of card text. */

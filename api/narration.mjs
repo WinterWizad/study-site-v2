@@ -334,6 +334,7 @@ export function createNarrationHandler({
     try {
       const cacheKey = `${segment.id}-${segment.version}`;
       const apiKey = String(env.GOOGLE_CLOUD_TTS_API_KEY || '').trim();
+      const serverless = Boolean(String(env.VERCEL || '').trim() || env.VERCEL_ENV);
       let audio;
       let contentType = 'audio/mpeg';
 
@@ -359,6 +360,16 @@ export function createNarrationHandler({
             inFlightAudio.delete(cacheKey);
           }
         }
+      } else if (serverless) {
+        // The local Piper provider writes WAV files into the function bundle and
+        // runs a native binary. Neither works on a read-only serverless
+        // filesystem, so fail fast with a clear reason instead of burning the
+        // request on a doomed mkdir.
+        sendJson(response, 503, {
+          error: 'narration_not_configured',
+          message: 'Narration is not configured. The transcript remains available.'
+        });
+        return;
       } else {
         // Local Piper narration: generate WAV on-demand, cache to disk, serve.
         const rootDir = process.cwd();

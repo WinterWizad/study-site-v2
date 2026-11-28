@@ -1567,12 +1567,19 @@ function refreshVoiceOptions() {
   const voices = availableVoices();
   elements.voiceSelect.replaceChildren();
 
+  // Only advertise narrators that can actually answer. Google narration needs
+  // a configured server provider. The Piper entries were a local-only provider
+  // that never shipped to the deployed function, so they are gone rather than
+  // silently handing the learner the browser default voice.
+  const cloudReady = Boolean(payload?.narration?.cloudEnabled);
   const fixedOptions = [
-    ['google', 'Google Chirp 3 HD (recommended)'],
+    [
+      'google',
+      cloudReady
+        ? 'Google Chirp 3 HD (recommended)'
+        : 'Google Chirp 3 HD — not configured (browser voice)'
+    ],
     ['ai', 'AI narration (reel transcript)'],
-    ['piper-amy', 'Amy (Piper) — warm, conversational'],
-    ['piper-ljspeech', 'LJSpeech (Piper) — clear, articulate'],
-    ['piper-ryan', 'Ryan (Piper) — steady, neutral'],
     ['random', 'Random browser voice per card'],
     ['system', 'Browser system voice']
   ];
@@ -1610,13 +1617,37 @@ function refreshVoiceOptions() {
   elements.voiceSelect.value = selected;
 }
 
+// The best English voice the platform offers. Used for the reel transcript so
+// AI narration is not stuck on the browser's generic default voice.
+function preferredBrowserVoice() {
+  const voices = availableVoices();
+  const english = voices.filter(voice => /^en/i.test(voice.lang));
+  const pool = english.length ? english : voices;
+  if (!pool.length) return null;
+
+  const preferred = [
+    /natural/i,
+    /google uk english female/i,
+    /google us english/i,
+    /microsoft (aria|jenny|michelle|sonia|libby|sara)/i,
+    /samantha/i
+  ];
+  for (const pattern of preferred) {
+    const match = pool.find(voice => pattern.test(voice.name));
+    if (match) return match;
+  }
+  return pool[0];
+}
+
 function chooseNarrator(card) {
   if (card.narratorVoice) return card.narratorVoice;
   const voices = availableVoices();
   const english = voices.filter(voice => /^en/i.test(voice.lang));
   const pool = english.length ? english : voices;
 
-  if (state.voice === 'random') {
+  if (state.voice === 'ai') {
+    card.narratorVoice = preferredBrowserVoice();
+  } else if (state.voice === 'random') {
     if (!pool.length) return null;
     const index = Math.floor(Math.random() * pool.length);
     card.narratorVoice = pool[index];
@@ -1637,25 +1668,19 @@ function refreshNarratorStatus() {
   if (state.voice === 'google') {
     setNarratorStatus(payload?.narration?.cloudEnabled
       ? 'Google Chirp 3 HD is configured. Narration loads ahead of the card.'
-      : 'Google narration is not configured. Browser speech is the fallback.');
+      : 'Google narration is not configured. The browser voice is used instead.');
     return;
   }
   if (state.voice === 'ai') {
-    setNarratorStatus(payload?.aiTranscript?.cloudEnabled
-      ? 'AI narration is configured. Reel transcript loads ahead of the card.'
-      : 'AI narration uses the build-time transcript with deterministic fallback.');
+    const activeCard = cards[currentIndex];
+    const audioReady = aiNarrationAudioAvailable(aiNarrationSegmentsForCard(activeCard));
+    setNarratorStatus(audioReady
+      ? 'AI narration is configured. The reel transcript loads ahead of the card.'
+      : 'AI narration audio is not configured. The reel transcript is read with the browser voice.');
     return;
   }
-  if (state.voice === 'piper-amy') {
-    setNarratorStatus('Piper TTS (Amy) — warm, conversational female voice. Generated locally.');
-    return;
-  }
-  if (state.voice === 'piper-ljspeech') {
-    setNarratorStatus('Piper TTS (LJSpeech) — clear, articulate female voice. Generated locally.');
-    return;
-  }
-  if (state.voice === 'piper-ryan') {
-    setNarratorStatus('Piper TTS (Ryan) — steady, neutral male voice. Generated locally.');
+  if (state.voice === 'piper-amy' || state.voice === 'piper-ljspeech' || state.voice === 'piper-ryan') {
+    setNarratorStatus('Piper voices are no longer available. The browser voice is used instead.');
     return;
   }
   if (state.voice === 'random') {
@@ -1730,12 +1755,29 @@ function aiNarrationSegmentsForCard(card) {
   const addSegment = id => {
     if (!id) return;
     const segment = aiSegmentRecord(id);
-    if (segment?.text) segments.push({ id, text: segment.text });
+    if (!segment?.text) return;
+    // Carry the version and static flag. Without them the client cannot tell a
+    // pre-generated asset from a server-rendered one and always hits the API.
+    segments.push({
+      id,
+      text: segment.text,
+      version: segment.version || '',
+      static: Boolean(segment.static)
+    });
   };
 
   if (!entryAiNarration) return segments;
   addSegment(entryAiNarration.transcript);
   return segments;
+}
+
+// AI audio is playable when a pre-generated asset exists, or when the server
+// has a working narration provider. Without either, the endpoint can only
+// answer with an error, so the client must not wait on it.
+function aiNarrationAudioAvailable(segments) {
+  if (!segments?.length) return false;
+  if (segments.some(segment => segment.static)) return true;
+  return Boolean(payload?.aiTranscript?.cloudEnabled);
 }
 
 function reelsBaseUrl() {
@@ -2048,13 +2090,21 @@ function isCurrentNarrationSession(session) {
   if (session.mode === 'cloud') {
     return cloudSession === session && session.generation === cloudGeneration;
   }
+  // AI sessions must be recognised too. Without this branch the browser-speech
+  // fallback bails out immediately and a failed request leaves the UI loading
+  // forever with no audio.
+  if (session.mode === 'ai') {
+    return aiSession === session && session.generation === aiGeneration;
+  }
   return false;
 }
 
 function fallbackToBrowserSpeech(session, reason = 'Cloud narration is unavailable. Using the browser voice.') {
   if (!isCurrentNarrationSession(session)) return;
   session.fallbackAttempted = true;
-  const remaining = session.segments.slice(session.segmentIndex).map(segment => segment.text).filter(Boolean);
+  const remaining = session.segments
+    .slice(session.segmentIndex)
+    .flatMap(segment => speechChunks(segment.text));
   const card = session.card;
   if (session.mode === 'cloud') stopCloudNarration();
   else if (session.mode === 'ai') stopAiNarration();
@@ -2158,7 +2208,9 @@ function playAiSegment(session) {
   }
 
   const segment = session.segments[session.segmentIndex];
-  session.loading = true;
+  // Only the first segment waits on the network. Later segments reuse a player
+  // that is already warm, so a loading flash between them reads as a glitch.
+  if (!session.started) session.loading = true;
   updatePlayControls();
   try {
     const source = aiSegmentUrl(segment);
@@ -2166,10 +2218,25 @@ function playAiSegment(session) {
     player.src = source;
     player.defaultPlaybackRate = session.rate;
     player.playbackRate = session.rate;
-    elements.audioStatus.textContent = 'AI narration is playing.';
+    elements.audioStatus.textContent = 'Preparing AI narration…';
     if (session.paused) return;
-    session.started = true;
     session.paused = false;
+
+    // Clear the loading state as soon as the media has data. Waiting for the
+    // "playing" event alone leaves the button spinning when autoplay is
+    // blocked or the device has no audio output.
+    let ready = false;
+    const markReady = () => {
+      if (ready || elements.narrationPlayer !== player) return;
+      ready = true;
+      session.loading = false;
+      session.started = true;
+      elements.audioStatus.textContent = 'AI narration is playing.';
+      updatePlayControls();
+    };
+    ['canplay', 'loadeddata', 'playing', 'timeupdate'].forEach(type => {
+      player.addEventListener(type, markReady, { passive: true });
+    });
 
     // Set up progressive subtitle tracking
     stopSubtitleTracking();
@@ -2181,20 +2248,96 @@ function playAiSegment(session) {
     if (playPromise?.catch) {
       playPromise.catch(() => {
         // Stop progress tracking; fallbackToBrowserSpeech re-establishes subtitles
-        fallbackToBrowserSpeech(session, 'AI narration could not play. Using deterministic narration.');
+        session.loading = false;
+        stopSubtitleTracking();
+        fallbackToBrowserSpeech(session, 'AI narration could not play. Using the browser voice.');
       });
     }
   } catch (error) {
     // Stop progress tracking; fallbackToBrowserSpeech re-establishes subtitles
-    fallbackToBrowserSpeech(session, `AI narration could not narrate this card. Using deterministic narration. ${error.message}`);
+    session.loading = false;
+    stopSubtitleTracking();
+    fallbackToBrowserSpeech(session, `AI narration could not narrate this card. Using the browser voice. ${error.message}`);
   }
   updatePlayControls();
+}
+
+// Split narration text into utterances short enough that the browser does not
+// cut them off. Chrome and Edge stop long speechSynthesis utterances early,
+// and a reel transcript is often a single paragraph of several hundred words.
+function speechChunks(text, limit = 220) {
+  const value = String(text || '').trim();
+  if (!value) return [];
+  if (value.length <= limit) return [value];
+
+  const pieces = value
+    .split(/(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/)
+    .flatMap(sentence => {
+      const trimmed = sentence.trim();
+      if (!trimmed) return [];
+      if (trimmed.length <= limit) return [trimmed];
+
+      const words = trimmed.split(/\s+/);
+      const chunks = [];
+      let current = '';
+      words.forEach(word => {
+        if (!current) {
+          current = word;
+        } else if ((current + ' ' + word).length <= limit) {
+          current += ' ' + word;
+        } else {
+          chunks.push(current);
+          current = word;
+        }
+      });
+      if (current) chunks.push(current);
+      return chunks;
+    });
+
+  return pieces.length ? pieces : [value];
+}
+
+// Read the reel transcript with the browser voice. This is the deterministic
+// fallback the narrator menu promises: the script is the build-time Groq
+// transcript, split into short utterances so the browser speaks all of it.
+function speakAiTranscript(card) {
+  stopSpeech();
+  stopCloudNarration();
+  stopAiNarration();
+
+  const chunks = aiNarrationSegmentsForCard(card)
+    .flatMap(segment => speechChunks(segment.text));
+  if (!chunks.length || !speechSupported()) {
+    elements.audioStatus.textContent = 'Narration is unavailable. The transcript is still available.';
+    updatePlayControls();
+    return;
+  }
+
+  const voice = chooseNarrator(card);
+  elements.audioStatus.textContent = voice
+    ? `Reading the reel transcript with ${voice.name}.`
+    : 'Reading the reel transcript with the system voice.';
+
+  if (state.aiNarrationEnabled && state.voice === 'ai') {
+    renderAiTranscript(card);
+    startSubtitleFallbackTimer();
+  }
+
+  speakSegments(chunks, voice, speechGeneration, state.speechRate);
 }
 
 function playAiNarration(card) {
   const segments = aiNarrationSegmentsForCard(card);
   if (!segments.length) {
     speakCurrentCard();
+    return;
+  }
+
+  if (!aiNarrationAudioAvailable(segments)) {
+    // No narration provider is configured for the reel transcript. Read it
+    // with the browser voice instead of waiting on an endpoint that can only
+    // answer with an error.
+    speakAiTranscript(card);
     return;
   }
 
@@ -2332,6 +2475,7 @@ function handleNarrationEnded(sessionId, segmentId) {
 function handleNarrationError(sessionId, segmentId) {
   const session = activeNarrationSession(sessionId, segmentId);
   if (!session || session.finished) return;
+  session.loading = false;
   const reason = session.mode === 'ai'
     ? 'AI narration could not play. Using the browser voice.'
     : 'Google narration could not play. Using the browser voice.';

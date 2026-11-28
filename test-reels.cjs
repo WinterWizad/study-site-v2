@@ -219,6 +219,20 @@ function startServer() {
     });
   }
 
+  async function forceAiTranscriptManifest(page) {
+    await page.route('**/reels/content/bi.json', async route => {
+      const response = await route.fetch();
+      const payload = await response.json();
+      payload.aiTranscript = payload.aiTranscript || {};
+      payload.aiTranscript.cloudEnabled = true;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(payload)
+      });
+    });
+  }
+
   async function installSpeechMock(context) {
     await context.addInitScript(() => {
       const log = {
@@ -684,27 +698,38 @@ function startServer() {
     check('Subtitle container blocks pointer events', cardTextWithSubtitle && cardTextWithSubtitle.panelPointer === 'none');
     check('Subtitle content allows interaction', cardTextWithSubtitle && cardTextWithSubtitle.panelHidden === false, JSON.stringify(cardTextWithSubtitle));
 
-    // Progressive caption tests — transparent prose, no box, no scrollbar
+    // Progressive caption tests — YouTube-style white text on a soft black scrim
     const subtitleCompact = await page.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
       if (!panel || panel.hidden) return null;
       const style = window.getComputedStyle(panel);
-      const contentStyle = getComputedStyle(document.querySelector('#transcriptContent'));
+      const content = document.querySelector('#transcriptContent');
+      const contentStyle = getComputedStyle(content);
+      const panelRect = panel.getBoundingClientRect();
+      const contentRect = content.getBoundingClientRect();
       return {
         maxHeight: style.maxHeight,
         bottom: style.bottom,
         right: style.right,
         overflowY: style.overflowY,
-        backgroundColor: style.backgroundColor,
-        boxShadow: style.boxShadow,
-        color: contentStyle.color
+        panelBackground: style.backgroundColor,
+        contentBackground: contentStyle.backgroundColor,
+        contentBorderRadius: contentStyle.borderRadius,
+        contentPadding: contentStyle.padding,
+        color: contentStyle.color,
+        panelWidth: Math.round(panelRect.width),
+        contentWidth: Math.round(contentRect.width)
       };
     });
     check('AI caption has a bounded height', subtitleCompact && Number.parseFloat(subtitleCompact.maxHeight) > 0, JSON.stringify(subtitleCompact));
     check('AI caption clears the action rail', subtitleCompact && subtitleCompact.bottom === '112px' && subtitleCompact.right !== '0px', JSON.stringify(subtitleCompact));
     check('AI caption never scrolls internally', subtitleCompact && subtitleCompact.overflowY === 'hidden', JSON.stringify(subtitleCompact));
-    check('AI caption has no background or shadow', subtitleCompact && subtitleCompact.backgroundColor === 'rgba(0, 0, 0, 0)' && subtitleCompact.boxShadow === 'none', JSON.stringify(subtitleCompact));
-    check('AI caption uses black text in light theme', subtitleCompact && subtitleCompact.color === 'rgb(17, 24, 39)', JSON.stringify(subtitleCompact));
+    check('AI caption uses a soft black scrim', subtitleCompact && subtitleCompact.contentBackground === 'rgba(0, 0, 0, 0.72)', JSON.stringify(subtitleCompact));
+    check('AI caption uses white text', subtitleCompact && subtitleCompact.color === 'rgb(255, 255, 255)', JSON.stringify(subtitleCompact));
+    check('AI caption scrim is rounded and padded', subtitleCompact && subtitleCompact.contentBorderRadius === '6px' && subtitleCompact.contentPadding === '6px 10px', JSON.stringify(subtitleCompact));
+    check('AI caption scrim hugs the text instead of spanning the card',
+      subtitleCompact && subtitleCompact.contentWidth > 0 && subtitleCompact.contentWidth < subtitleCompact.panelWidth * 0.95,
+      JSON.stringify(subtitleCompact));
 
     const captionGeometry = await page.evaluate(() => {
       const rect = selector => {
@@ -718,7 +743,7 @@ function startServer() {
         footer: rect('.reel-card[aria-hidden="false"] .reel-card__footer')
       };
     });
-    check('Transparent caption does not cover the footer',
+    check('Caption does not cover the footer',
       captionGeometry.caption && captionGeometry.footer && captionGeometry.caption.bottom <= captionGeometry.footer.top,
       JSON.stringify(captionGeometry));
 
@@ -797,6 +822,137 @@ function startServer() {
     check('ArrowRight replaces the removed slide arrow',
       slideBefore !== undefined && slideAfter !== undefined && Number(slideAfter) === Number(slideBefore) + 1,
       JSON.stringify({ slideBefore, slideAfter }));
+
+    // Regression: selecting AI narration used to spin forever.
+    // The endpoint answered 503, the AI fallback was unreachable dead code
+    // (isCurrentNarrationSession only recognised cloud sessions), and the
+    // loading flag was never reset, so the button never left "Loading".
+    const aiFailureContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(aiFailureContext);
+    const aiFailurePage = await aiFailureContext.newPage();
+    const aiFailureErrors = [];
+    aiFailurePage.on('console', message => {
+      if (message.type() === 'error') aiFailureErrors.push(message.text());
+    });
+    aiFailurePage.on('pageerror', error => aiFailureErrors.push(error.message));
+    await forceAiTranscriptManifest(aiFailurePage);
+    await aiFailurePage.route('**/api/narration?**', route => route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'narration_unavailable', message: 'Narration is temporarily unavailable.' })
+    }));
+    await aiFailurePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(aiFailurePage);
+    await openSubmodal(aiFailurePage, 'audio');
+    await aiFailurePage.selectOption('#voiceSelect', 'ai');
+    await closeSubmodal(aiFailurePage, 'audioModal');
+    await aiFailurePage.waitForTimeout(150);
+    await aiFailurePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await aiFailurePage.waitForFunction(
+      () => (window.__speechLog?.speaks?.length || 0) > 0,
+      null,
+      { timeout: 10000 }
+    );
+    await aiFailurePage.waitForTimeout(200);
+    const aiFailureState = await aiFailurePage.evaluate(() => {
+      const playButton = document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]');
+      return {
+        busy: playButton?.getAttribute('aria-busy') || '',
+        loading: playButton?.dataset.loading || '',
+        status: document.querySelector('#audioStatus')?.textContent.trim() || '',
+        speaks: [...(window.__speechLog?.speaks || [])],
+        captionVisible: document.querySelector('#transcriptPanel')?.hidden === false
+      };
+    });
+    check('AI narration failure does not leave the play button loading',
+      aiFailureState.busy === 'false' && aiFailureState.loading === 'false',
+      JSON.stringify({ busy: aiFailureState.busy, loading: aiFailureState.loading, status: aiFailureState.status }));
+    check('AI narration failure falls back to the browser voice',
+      aiFailureState.speaks.length > 0,
+      JSON.stringify({ status: aiFailureState.status, speaks: aiFailureState.speaks.length }));
+    check('AI narration failure keeps the reel transcript visible',
+      aiFailureState.captionVisible,
+      JSON.stringify({ captionVisible: aiFailureState.captionVisible }));
+    check('AI fallback speaks short utterances, not one long block',
+      aiFailureState.speaks.length > 0
+        && aiFailureState.speaks.every(text => text.length <= 240),
+      JSON.stringify({ count: aiFailureState.speaks.length, longest: Math.max(0, ...aiFailureState.speaks.map(text => text.length)) }));
+    // The 503 is deliberate, so the browser logs a resource-load error. Any
+    // other console error is a real fault.
+    const aiUnexpectedErrors = aiFailureErrors.filter(text => !/Failed to load resource|503 \(Service Unavailable\)/i.test(text));
+    check('AI narration failure produces no unexpected browser errors',
+      aiUnexpectedErrors.length === 0,
+      aiUnexpectedErrors.join(' | '));
+    await aiFailureContext.close();
+
+    // The AI path must also clear its loading state when the provider works.
+    const aiProviderAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
+    const aiSuccessContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(aiSuccessContext);
+    const aiSuccessPage = await aiSuccessContext.newPage();
+    await forceAiTranscriptManifest(aiSuccessPage);
+    await aiSuccessPage.route('**/api/narration?**', route => route.fulfill({
+      status: 200,
+      contentType: 'audio/mpeg',
+      body: aiProviderAudio
+    }));
+    await aiSuccessPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(aiSuccessPage);
+    await openSubmodal(aiSuccessPage, 'audio');
+    await aiSuccessPage.selectOption('#voiceSelect', 'ai');
+    await closeSubmodal(aiSuccessPage, 'audioModal');
+    await aiSuccessPage.waitForTimeout(150);
+    await aiSuccessPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await aiSuccessPage.waitForFunction(
+      () => document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]')?.dataset.loading === 'false',
+      null,
+      { timeout: 10000 }
+    );
+    const aiSuccessState = await aiSuccessPage.evaluate(() => {
+      const playButton = document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]');
+      return {
+        busy: playButton?.getAttribute('aria-busy') || '',
+        loading: playButton?.dataset.loading || '',
+        status: document.querySelector('#audioStatus')?.textContent.trim() || '',
+        playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || ''
+      };
+    });
+    check('AI narration clears the loading state once the provider answers',
+      aiSuccessState.busy === 'false' && aiSuccessState.loading === 'false' && aiSuccessState.playerSource.includes('/api/narration'),
+      JSON.stringify(aiSuccessState));
+    await aiSuccessContext.close();
+
+    // With no provider configured, the client must read the reel transcript
+    // with the browser voice instead of waiting on an endpoint that can only
+    // answer with an error.
+    const aiOfflineContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(aiOfflineContext);
+    const aiOfflinePage = await aiOfflineContext.newPage();
+    let aiOfflineRequests = 0;
+    await aiOfflinePage.route('**/api/narration?**', route => {
+      aiOfflineRequests += 1;
+      route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+    });
+    await aiOfflinePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(aiOfflinePage);
+    await openSubmodal(aiOfflinePage, 'audio');
+    await aiOfflinePage.selectOption('#voiceSelect', 'ai');
+    await closeSubmodal(aiOfflinePage, 'audioModal');
+    await aiOfflinePage.waitForTimeout(150);
+    await aiOfflinePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await aiOfflinePage.waitForFunction(
+      () => (window.__speechLog?.speaks?.length || 0) > 0,
+      null,
+      { timeout: 10000 }
+    );
+    const aiOfflineState = await aiOfflinePage.evaluate(() => ({
+      speaks: [...(window.__speechLog?.speaks || [])],
+      status: document.querySelector('#audioStatus')?.textContent.trim() || ''
+    }));
+    check('Unconfigured AI narration reads the transcript without calling the API',
+      aiOfflineRequests === 0 && aiOfflineState.speaks.length > 0,
+      JSON.stringify({ requests: aiOfflineRequests, speaks: aiOfflineState.speaks.length, status: aiOfflineState.status }));
+    await aiOfflineContext.close();
 
     // Regression: a persisted AI-voice state used to hang the feed build.
     // splitCaptionSentences() called regex.exec() in a while loop without /g,
