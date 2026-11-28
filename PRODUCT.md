@@ -23,6 +23,7 @@ The product turns the current website notes into a narrated carousel without cre
 - The site is a static Node/Marked build deployed through Vercel.
 - The Quick Reels pilot lives at `/reels/` and covers all six Business Intelligence units.
 - Learners navigate manually; there is no autoplay feed.
+- On touch devices a vertical swipe moves one card at a time. The card follows the finger and settles by distance or flick velocity; a short drag springs back and the first/last card rubber-bands. A slow drag inside overflowing text scrolls the text first, and only promotes to a card change at its boundary. Buttons and keyboard controls keep working.
 - Narration reads the build-time Groq reel transcript with a browser voice. There is no cloud account, no per-play API call, and no second narration source.
 - The transcript is the only script: a card without one plays nothing and says so, instead of falling back to card text.
 - The hub-menu `Subtitles` switch toggles the caption dock; captions are on by default and always show the sentence being spoken.

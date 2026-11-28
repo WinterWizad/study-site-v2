@@ -142,8 +142,23 @@ const LAYOUT_IDS = ['column', 'manifesto', 'caption'];
 const CAPTION_BODY_RESERVE_PX = 44;
 const CAPTION_SLIDE_RESERVE_PX = 12;
 let measurementPresentation = { skin: SKIN_IDS[0], layout: LAYOUT_IDS[0] };
+
+// Mobile swipe. One card per screen: the finger drags the stack, then the
+// gesture either commits to the neighbour or springs back. A scrollable card
+// body consumes the first part of the drag, so text can still be read.
+const SWIPE_ACTIVATION_PX = 8;
+const SWIPE_COMMIT_RATIO = 0.3;
+const SWIPE_COMMIT_VELOCITY = 0.5; // px per ms
+const SWIPE_RUBBER_BAND = 0.3;
+const SWIPE_VELOCITY_WINDOW_MS = 100;
+const SWIPE_SNAP_TIMEOUT_MS = 700;
+
 let currentRestore = null;
 let cardPointerStart = null;
+let swipeState = null;
+let swipeSnapFrame = 0;
+let bodyScrollFrame = 0;
+let suppressClickUntil = 0;
 let hubReturnFocus = null;
 let submodalReturnFocus = null;
 let activeModal = null;
@@ -1497,6 +1512,7 @@ function updateAllCardStates() {
 
 function updateCurrentCard({ speak = false, markSeen = true, persistPosition = true } = {}) {
   if (!cards.length) return;
+  cancelSwipeSnap();
   currentIndex = clamp(currentIndex, 0, cards.length - 1);
   const card = cards[currentIndex];
   let stateChanged = false;
@@ -2714,6 +2730,258 @@ function bindVoiceChangeEvents() {
   };
 }
 
+function prefersReducedMotion() {
+  return Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
+}
+
+function trackTransformForIndex(index) {
+  return `translate3d(0, ${-index * 100}%, 0)`;
+}
+
+function applyTrackDrag(index, offsetPx) {
+  elements.cardTrack.style.transform = `translate3d(0, calc(${-index * 100}% + ${offsetPx.toFixed(2)}px), 0)`;
+}
+
+function activeScrollableBody() {
+  const card = cards[currentIndex]?.element;
+  if (!card) return null;
+  // A carousel slide is its own scroller; a plain card scrolls in its body.
+  // Only the visible one may consume the gesture.
+  const candidates = [...card.querySelectorAll('.reel-carousel__slide, .reel-card__body')]
+    .filter(candidate => !candidate.closest('[hidden]'));
+  return candidates.find(candidate => candidate.scrollHeight - candidate.clientHeight > 2) || null;
+}
+
+function endSwipeListeners() {
+  window.removeEventListener('pointermove', onSwipeMove);
+  window.removeEventListener('pointerup', onSwipeEnd);
+  window.removeEventListener('pointercancel', onSwipeCancel);
+}
+
+function cancelBodyInertia() {
+  if (!bodyScrollFrame) return;
+  cancelAnimationFrame(bodyScrollFrame);
+  bodyScrollFrame = 0;
+}
+
+function cancelSwipeSnap() {
+  if (!swipeSnapFrame) return;
+  cancelAnimationFrame(swipeSnapFrame);
+  swipeSnapFrame = 0;
+  elements.cardTrack.style.transition = '';
+}
+
+function swipeVelocity(swipe) {
+  const samples = swipe.samples;
+  if (samples.length < 2) return 0;
+  const first = samples[0];
+  const last = samples[samples.length - 1];
+  const elapsed = last.t - first.t;
+  return elapsed > 0 ? (last.y - first.y) / elapsed : 0;
+}
+
+function recordSwipeSample(swipe, y, time) {
+  swipe.samples.push({ y, t: time });
+  while (swipe.samples.length > 2 && time - swipe.samples[0].t > SWIPE_VELOCITY_WINDOW_MS) {
+    swipe.samples.shift();
+  }
+}
+
+function beginSwipe(event) {
+  if (!cards.length || swipeState || swipeSnapFrame) return;
+  if (elements.hubMenu.open || activeModal?.open) return;
+  // Touch and pen only. Desktop keeps text selection intact; navigation there
+  // stays on the buttons and keyboard shortcuts.
+  if (event.pointerType === 'mouse') return;
+  if (event.button !== 0) return;
+  const target = event.target instanceof Element ? event.target : null;
+  if (!target) return;
+  // Controls keep their own click behaviour; a swipe never starts on them.
+  if (target.closest('button, a, input, select, textarea, summary, [role="button"], [data-action]')) return;
+
+  cancelBodyInertia();
+  const body = activeScrollableBody();
+  const now = performance.now();
+  swipeState = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    body,
+    bodyLimit: body ? Math.max(0, body.scrollHeight - body.clientHeight) : 0,
+    startScrollTop: body ? body.scrollTop : 0,
+    mode: 'undecided', // undecided -> body -> card, or undecided -> locked
+    direction: 0,
+    offset: 0,
+    samples: [{ y: event.clientY, t: now }]
+  };
+  window.addEventListener('pointermove', onSwipeMove, { passive: false });
+  window.addEventListener('pointerup', onSwipeEnd);
+  window.addEventListener('pointercancel', onSwipeCancel);
+}
+
+function onSwipeMove(event) {
+  const swipe = swipeState;
+  if (!swipe || event.pointerId !== swipe.pointerId) return;
+  const now = performance.now();
+  recordSwipeSample(swipe, event.clientY, now);
+
+  const dx = event.clientX - swipe.startX;
+  const dy = event.clientY - swipe.startY;
+
+  if (swipe.mode === 'undecided') {
+    if (Math.hypot(dx, dy) < SWIPE_ACTIVATION_PX) return;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      swipe.mode = 'locked'; // Phase 1 keeps horizontal gestures out of card nav.
+      return;
+    }
+    swipe.direction = dy < 0 ? -1 : 1;
+    swipe.mode = swipe.body ? 'body' : 'card';
+    if (swipe.body) {
+      const canScroll = swipe.direction < 0
+        ? swipe.body.scrollTop < swipe.bodyLimit - 1
+        : swipe.body.scrollTop > 1;
+      if (!canScroll) swipe.mode = 'card';
+    }
+    if (swipe.mode === 'card') {
+      elements.cardTrack.classList.add('is-swiping');
+      elements.cardTrack.style.transition = 'none';
+    }
+  }
+
+  if (swipe.mode === 'locked') return;
+
+  if (swipe.mode === 'body') {
+    const targetScroll = Math.max(0, Math.min(swipe.bodyLimit, swipe.startScrollTop - dy));
+    swipe.body.scrollTop = targetScroll;
+    // Once the text hits its edge, the remaining finger travel drives the card.
+    const overflow = dy - (swipe.startScrollTop - swipe.body.scrollTop);
+    if (Math.abs(overflow) <= SWIPE_ACTIVATION_PX) return;
+    swipe.mode = 'card';
+    elements.cardTrack.classList.add('is-swiping');
+    elements.cardTrack.style.transition = 'none';
+  }
+
+  let offset = swipe.body ? dy - (swipe.startScrollTop - swipe.body.scrollTop) : dy;
+  if ((currentIndex === 0 && offset > 0) || (currentIndex === cards.length - 1 && offset < 0)) {
+    offset *= SWIPE_RUBBER_BAND;
+  }
+  swipe.offset = offset;
+  applyTrackDrag(currentIndex, offset);
+  if (event.cancelable) event.preventDefault();
+}
+
+function startBodyInertia(body, velocity) {
+  if (!body || prefersReducedMotion() || Math.abs(velocity) < 0.1) return;
+  let frameVelocity = velocity * 16; // px per ~60fps frame
+  let last = performance.now();
+  const step = now => {
+    const ratio = Math.min((now - last) / 16.67, 2);
+    last = now;
+    const limit = Math.max(0, body.scrollHeight - body.clientHeight);
+    const next = Math.max(0, Math.min(limit, body.scrollTop - frameVelocity * ratio));
+    body.scrollTop = next;
+    frameVelocity *= Math.pow(0.92, ratio);
+    if (Math.abs(frameVelocity) < 0.4 || next <= 0 || next >= limit - 1) {
+      bodyScrollFrame = 0;
+      return;
+    }
+    bodyScrollFrame = requestAnimationFrame(step);
+  };
+  bodyScrollFrame = requestAnimationFrame(step);
+}
+
+function finishSwipeSnap(index, fromPx, targetPx, onDone) {
+  const settle = () => {
+    swipeSnapFrame = 0;
+    elements.cardTrack.classList.remove('is-swiping');
+    elements.cardTrack.style.transition = '';
+    onDone();
+  };
+  if (prefersReducedMotion() || Math.abs(targetPx - fromPx) < 1) {
+    applyTrackDrag(index, targetPx);
+    settle();
+    return;
+  }
+
+  let value = fromPx;
+  let velocity = 0;
+  let last = performance.now();
+  const started = last;
+  const stiffness = 320;
+  const damping = 34; // near-critical: settles without a visible bounce
+  const step = now => {
+    const dt = Math.min((now - last) / 1000, 0.032);
+    last = now;
+    velocity += (-stiffness * (value - targetPx) - damping * velocity) * dt;
+    value += velocity * dt;
+    applyTrackDrag(index, value);
+    if ((Math.abs(value - targetPx) < 0.5 && Math.abs(velocity) < 1) || now - started > SWIPE_SNAP_TIMEOUT_MS) {
+      applyTrackDrag(index, targetPx);
+      settle();
+      return;
+    }
+    swipeSnapFrame = requestAnimationFrame(step);
+  };
+  swipeSnapFrame = requestAnimationFrame(step);
+}
+
+function snapSwipeBack(fromPx) {
+  finishSwipeSnap(currentIndex, fromPx, 0, () => {
+    elements.cardTrack.style.transform = trackTransformForIndex(currentIndex);
+  });
+}
+
+function onSwipeEnd(event) {
+  const swipe = swipeState;
+  if (!swipe || event.pointerId !== swipe.pointerId) return;
+  endSwipeListeners();
+  swipeState = null;
+  elements.cardTrack.classList.remove('is-swiping');
+
+  if (Math.hypot(event.clientX - swipe.startX, event.clientY - swipe.startY) > SWIPE_ACTIVATION_PX) {
+    suppressClickUntil = performance.now() + 350;
+  }
+
+  if (swipe.mode === 'body') {
+    recordSwipeSample(swipe, event.clientY, performance.now());
+    startBodyInertia(swipe.body, swipeVelocity(swipe));
+    return;
+  }
+  if (swipe.mode !== 'card') return;
+
+  recordSwipeSample(swipe, event.clientY, performance.now());
+  const velocity = swipeVelocity(swipe);
+  const cardHeight = cards[currentIndex]?.element?.getBoundingClientRect().height
+    || elements.cardViewport.clientHeight;
+  const farEnough = Math.abs(swipe.offset) >= cardHeight * SWIPE_COMMIT_RATIO;
+  const fastEnough = Math.abs(velocity) >= SWIPE_COMMIT_VELOCITY
+    && Math.sign(velocity) === Math.sign(swipe.offset);
+  const atEdge = (currentIndex === 0 && swipe.offset > 0)
+    || (currentIndex === cards.length - 1 && swipe.offset < 0);
+  const target = clamp(currentIndex + (swipe.offset < 0 ? 1 : -1), 0, cards.length - 1);
+
+  if (atEdge || target === currentIndex || (!farEnough && !fastEnough)) {
+    snapSwipeBack(swipe.offset);
+    return;
+  }
+  finishSwipeSnap(currentIndex, swipe.offset, -(target - currentIndex) * cardHeight, () => {
+    goTo(target, { speak: hasUserGesture });
+  });
+}
+
+function onSwipeCancel(event) {
+  const swipe = swipeState;
+  if (!swipe || (event && event.pointerId !== swipe.pointerId)) return;
+  endSwipeListeners();
+  swipeState = null;
+  elements.cardTrack.classList.remove('is-swiping');
+  if (swipe.mode === 'card') {
+    snapSwipeBack(swipe.offset);
+  } else if (swipe.mode === 'body') {
+    elements.cardTrack.style.transform = trackTransformForIndex(currentIndex);
+  }
+}
+
 function isBlankCardTap(event) {
   const target = event.target instanceof Element ? event.target : null;
   if (!target) return false;
@@ -2876,6 +3144,7 @@ function bindControls() {
     cardPointerStart = body
       ? { x: event.clientX, y: event.clientY, scrollTop: body.scrollTop }
       : null;
+    beginSwipe(event);
   });
 
   elements.cardTrack.addEventListener('pointercancel', () => {
@@ -2883,6 +3152,13 @@ function bindControls() {
   });
 
   elements.cardTrack.addEventListener('click', event => {
+    // A completed swipe must not also count as a tap on whatever is under the
+    // finger when it lifts.
+    if (performance.now() < suppressClickUntil) {
+      suppressClickUntil = 0;
+      cardPointerStart = null;
+      return;
+    }
     const button = event.target instanceof Element ? event.target.closest('[data-action]') : null;
     if (button) {
       markGesture();

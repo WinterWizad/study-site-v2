@@ -2386,6 +2386,129 @@ function startServer() {
     check('Migrated last position carries the BI feed key', migratedState.lastPosition?.feedKey === 'ordered|bi|all|all', JSON.stringify(migratedState.lastPosition));
     await migrationContext.close();
 
+    // Mobile swipe (Phase 1). Real touch events go through CDP so the browser's
+    // touch-action decision is exercised, not just the JS pointer handlers.
+    const swipeContext = await browser.newContext({
+      viewport: { width: 390, height: 640 }, hasTouch: true, isMobile: true
+    });
+    await swipeContext.addInitScript(() => {
+      localStorage.setItem('quickReels.state.v1', JSON.stringify({
+        version: 1,
+        seen: [], done: [], saved: [], lastPosition: null, positions: {},
+        voice: 'random', narratorVersion: 3, speechRate: 1,
+        shuffleSeed: 541385059, order: 'ordered', unit: 'all', subject: 'bi',
+        savedOnly: false, musicVolume: 0.28, muted: true, subtitlesEnabled: true
+      }));
+      Object.defineProperty(window, 'speechSynthesis', {
+        configurable: true,
+        value: { getVoices: () => [], speak() {}, cancel() {}, addEventListener() {} }
+      });
+    });
+    const swipePage = await swipeContext.newPage();
+    swipePage.on('console', message => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
+    swipePage.on('pageerror', error => errors.push(error.message));
+    await swipePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(swipePage);
+    const swipeClient = await swipeContext.newCDPSession(swipePage);
+
+    async function swipeSnapshot() {
+      return swipePage.evaluate(() => {
+        const active = document.querySelector('.reel-card[aria-hidden="false"]');
+        const track = document.querySelector('#cardTrack');
+        const scroller = active && [...active.querySelectorAll('.reel-carousel__slide, .reel-card__body')]
+          .find(element => !element.closest('[hidden]'));
+        return {
+          index: Number(active?.dataset.cardIndex ?? -1),
+          transform: track.style.transform,
+          transition: track.style.transition,
+          scrollTop: scroller?.scrollTop ?? -1,
+          overflow: scroller ? scroller.scrollHeight - scroller.clientHeight : 0,
+          touchAction: getComputedStyle(track).touchAction
+        };
+      });
+    }
+
+    async function waitForSwipeSettle() {
+      // Let the pointerup handler install the snap frame before polling.
+      await swipePage.waitForTimeout(120);
+      await pollUntil(swipePage, () => {
+        const track = document.querySelector('#cardTrack');
+        return track.style.transition === '' && !track.style.transform.includes('calc');
+      }, null, 4000, 60);
+      return swipeSnapshot();
+    }
+
+    async function touchDrag(fromY, toY, steps = 6, stepDelay = 8, x = 190) {
+      await swipeClient.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: fromY }] });
+      for (let step = 1; step <= steps; step += 1) {
+        const y = fromY + ((toY - fromY) * step) / steps;
+        await swipeClient.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y }] });
+        await swipePage.waitForTimeout(stepDelay);
+      }
+      await swipeClient.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    }
+
+    const swipeInitial = await waitForSwipeSettle();
+    check('The swipe track disables native pan but keeps pinch zoom', swipeInitial.touchAction === 'pinch-zoom', swipeInitial.touchAction);
+
+    await touchDrag(500, 220);
+    const afterSwipeUp = await waitForSwipeSettle();
+    check('Swiping up advances one card', afterSwipeUp.index === swipeInitial.index + 1, JSON.stringify(afterSwipeUp));
+    check('A settled swipe restores the exact percentage transform', afterSwipeUp.transform === `translate3d(0px, -${afterSwipeUp.index * 100}%, 0px)`, afterSwipeUp.transform);
+
+    await touchDrag(220, 500);
+    const afterSwipeDown = await waitForSwipeSettle();
+    check('Swiping down returns to the previous card', afterSwipeDown.index === swipeInitial.index, JSON.stringify(afterSwipeDown));
+
+    await touchDrag(500, 470);
+    const afterShortDrag = await waitForSwipeSettle();
+    check('A short drag springs back without navigating', afterShortDrag.index === swipeInitial.index, JSON.stringify(afterShortDrag));
+
+    await touchDrag(400, 560);
+    const afterEdgeDrag = await waitForSwipeSettle();
+    check('The first card rubber-bands instead of navigating past the start', afterEdgeDrag.index === 0, JSON.stringify(afterEdgeDrag));
+
+    const mostScrollable = await swipePage.evaluate(() => {
+      const cards = [...document.querySelectorAll('.reel-card:not(.reel-measure)')];
+      return cards.map(card => {
+        const scroller = [...card.querySelectorAll('.reel-carousel__slide, .reel-card__body')]
+          .find(element => !element.closest('[hidden]'));
+        return { index: Number(card.dataset.cardIndex), overflow: scroller ? scroller.scrollHeight - scroller.clientHeight : 0 };
+      }).sort((a, b) => b.overflow - a.overflow)[0];
+    });
+    check('A mobile card exposes scrollable text for gesture promotion', mostScrollable.overflow > 20, JSON.stringify(mostScrollable));
+    if (mostScrollable.overflow > 20) {
+      await activateCard(swipePage, `[data-card-index="${mostScrollable.index}"]`);
+      // A long jump leaves the CSS transform transition running. Wait until the
+      // card is actually on screen before choosing a touch coordinate.
+      await pollUntil(swipePage, () => {
+        const active = document.querySelector('.reel-card[aria-hidden="false"]');
+        const scroller = active && [...active.querySelectorAll('.reel-carousel__slide, .reel-card__body')]
+          .find(element => !element.closest('[hidden]'));
+        if (!scroller) return false;
+        const rect = scroller.getBoundingClientRect();
+        return rect.top >= -5 && rect.top < innerHeight - 40;
+      }, null, 8000, 100);
+      const gesturePoint = await swipePage.evaluate(() => {
+        const active = document.querySelector('.reel-card[aria-hidden="false"]');
+        const scroller = [...active.querySelectorAll('.reel-carousel__slide, .reel-card__body')]
+          .find(element => !element.closest('[hidden]'));
+        const rect = scroller.getBoundingClientRect();
+        return { x: Math.round(rect.left + rect.width / 2), y: Math.round(rect.top + rect.height / 2) };
+      });
+      const beforeTextScroll = await swipeSnapshot();
+      // Slow, short drag inside the scroller: well under its overflow and under
+      // the velocity threshold, so it must scroll text and not move the card.
+      await touchDrag(gesturePoint.y + 10, gesturePoint.y - 11, 4, 45, gesturePoint.x);
+      const afterTextScroll = await waitForSwipeSettle();
+      check('Text scroll consumes a slow drag before the card moves',
+        afterTextScroll.index === beforeTextScroll.index && afterTextScroll.scrollTop > beforeTextScroll.scrollTop,
+        JSON.stringify({ beforeTextScroll, afterTextScroll }));
+    }
+    await swipeContext.close();
+
     const perfContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     await perfContext.addInitScript(() => {
       window.__reelsLongTasks = [];
