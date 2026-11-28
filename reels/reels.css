@@ -10,8 +10,12 @@
   --reels-ink: #111827;
   --reels-muted: #56616d;
   --reels-faint: #68737e;
-  --reels-accent: #2563eb;
-  --reels-accent-dark: #1d4ed8;
+  --reels-subject-color: #2563eb;
+  --reels-subject-color-dark: #60a5fa;
+  --reels-subject-color-hover: #1d4ed8;
+  --reels-subject-color-dark-hover: #93c5fd;
+  --reels-accent: var(--reels-subject-color);
+  --reels-accent-dark: var(--reels-subject-color-hover);
   --reels-positive: #17633f;
   --reels-warning: #8a4b08;
   --reels-destructive: #dc2626;
@@ -37,12 +41,38 @@ html[data-theme="dark"] {
   --reels-ink: #f5f7f8;
   --reels-muted: #b7c0c8;
   --reels-faint: #99a4ae;
-  --reels-accent: #60a5fa;
-  --reels-accent-dark: #93c5fd;
+  --reels-accent: var(--reels-subject-color-dark);
+  --reels-accent-dark: var(--reels-subject-color-dark-hover);
   --reels-positive: #71d6a4;
   --reels-warning: #f2bd72;
   --reels-destructive: #ef4444;
   --reels-destructive-hover: #dc2626;
+}
+
+/* Accessible subject accents for dark surfaces. The base colour is assigned
+   inline from the catalog so the unit label still says which subject this is. */
+html[data-reels-subject="bi"] {
+  --reels-subject-color-dark: #60a5fa;
+  --reels-subject-color-hover: #1d4ed8;
+  --reels-subject-color-dark-hover: #93c5fd;
+}
+
+html[data-reels-subject="entrepreneurship"] {
+  --reels-subject-color-dark: #f87171;
+  --reels-subject-color-hover: #b91c1c;
+  --reels-subject-color-dark-hover: #fca5a5;
+}
+
+html[data-reels-subject="cloud"] {
+  --reels-subject-color-dark: #a78bfa;
+  --reels-subject-color-hover: #6d28d9;
+  --reels-subject-color-dark-hover: #c4b5fd;
+}
+
+html[data-reels-subject="de"] {
+  --reels-subject-color-dark: #34d399;
+  --reels-subject-color-hover: #047857;
+  --reels-subject-color-dark-hover: #6ee7b7;
 }
 
 * {
@@ -531,23 +561,25 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 }
 
 /* AI narration caption — YouTube-style: white text on a soft black scrim
-   that hugs the text width instead of spanning the whole card. */
+   that hugs the text width instead of spanning the whole card. It sits in the
+   footer's lower-right corner, over the progress line, because the progress
+   bar does not need to be read continuously. */
 .reel-subtitle {
   position: absolute;
   left: 24px;
   right: calc(18px + var(--reels-rail-space));
-  bottom: 112px;
+  bottom: 4px;
   z-index: 40;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-end;
+  align-items: flex-end;
   min-height: 0;
   max-height: 92px;
   overflow: hidden;
   padding: 0;
   background: transparent;
   pointer-events: none;
-  text-align: center;
+  text-align: right;
 }
 
 .reel-subtitle[hidden] {
@@ -558,6 +590,7 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 .reel-subtitle__empty {
   display: inline-flex;
   flex-direction: column;
+  align-items: flex-end;
   max-width: 100%;
   max-height: 92px;
   overflow: hidden;
@@ -572,6 +605,7 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   color: #ffffff;
   pointer-events: auto;
   overflow-wrap: break-word;
+  text-align: right;
 }
 
 .reel-subtitle__content .subtitle-current {
@@ -590,9 +624,22 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   color: rgba(255, 255, 255, 0.78);
 }
 
-/* Reserve room so the transparent caption never lands on top of card text. */
+/* The shared rule above sets an explicit display, which beats the user-agent
+   [hidden] rule — so a hidden element would still render an empty black pill
+   beside the caption and push it off-centre. */
+.reel-subtitle__empty[hidden] {
+  display: none;
+}
+
+.reel-subtitle__content:empty {
+  display: none;
+}
+
+/* Reserve room so the transparent caption never lands on top of card text.
+   The caption now sits over the footer, so only the strip it can grow into
+   needs reserving — not a full caption's worth of body height. */
 .reels-stage[data-captions="on"] .reel-card__body {
-  padding-bottom: 96px;
+  padding-bottom: 44px;
 }
 
 .reels-stage[data-captions="on"] .reel-carousel__slide .reel-card__body {
@@ -600,7 +647,7 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 }
 
 .reels-stage[data-captions="on"] .reel-carousel__slide {
-  padding-bottom: 96px;
+  padding-bottom: 12px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -938,7 +985,9 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   color: var(--reels-accent);
   font-size: 10px;
   font-weight: 650;
-  text-align: right;
+  /* Left-aligned so the caption can own the lower-right corner without
+     hiding the "this card scrolls" hint. */
+  text-align: left;
 }
 
 .reel-card__scroll-cue[hidden] {
@@ -1781,12 +1830,396 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   }
 
   .reel-card__title {
-    font-size: 23px.
+    font-size: 23px;
   }
 
   .reel-card__footer {
     padding-left: 10px;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Presentation system — six curated revision-paper skins.
+
+   A skin changes surface hue, texture, panel tone and frame only. It never
+   changes font, size, weight, line-height, letter-spacing, padding or
+   alignment, so pagination measurements stay valid. The subject accent is
+   deliberately not owned by the skin: a Cloud Computing card must never read
+   as another subject.
+   --------------------------------------------------------------------------- */
+
+.reel-card[data-skin] {
+  --reels-sheet: var(--skin-surface);
+  --reels-raised: var(--skin-panel-fill);
+  --reels-active: var(--skin-surface-2);
+  --reels-border: var(--skin-rule);
+  --reels-rule: var(--skin-rule);
+  --reels-ink: var(--skin-ink);
+  --reels-muted: var(--skin-muted);
+  --reels-faint: var(--skin-muted);
+  --reels-control: var(--skin-muted);
+
+  background-color: var(--skin-surface);
+  color: var(--skin-ink);
+  box-shadow: inset 0 0 0 var(--skin-frame-weight) var(--skin-rule);
+}
+
+.reel-card[data-skin] .reel-card__title,
+.reel-card[data-skin] .reel-card__question {
+  box-shadow: var(--skin-title-marker);
+}
+
+/* --------------------------------------------------------------
+   Pattern layer — every card gets a ::before with its geometric
+   motif. The active card drifts; all others stay static.
+   -------------------------------------------------------------- */
+.reel-card {
+  isolation: isolate;
+}
+.reel-card::before {
+  content: "";
+  position: absolute;
+  inset: -60px;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--skin-texture);
+  background-size: var(--skin-texture-size);
+  background-position: var(--skin-texture-position);
+  background-repeat: repeat;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Only the active card animates */
+.reel-card[aria-hidden="false"]::before {
+  animation: var(--skin-drift-name) var(--skin-drift-duration) linear infinite;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------
+   Drift keyframes — each vector is an integer multiple of its tile,
+   so the loop is perfectly seamless.
+   -------------------------------------------------------------- */
+@keyframes reel-drift-paper      { to { transform: translate3d( 28px,  28px, 0); } }
+@keyframes reel-drift-oxblood    { to { transform: translate3d( 18px, -18px, 0); } }
+@keyframes reel-drift-ochre      { to { transform: translate3d(  0px,  32px, 0); } }
+@keyframes reel-drift-inkblue    { to { transform: translate3d( 24px,  24px, 0); } }
+@keyframes reel-drift-forest     { to { transform: translate3d( 36px, -36px, 0); } }
+@keyframes reel-drift-aubergine  { to { transform: translate3d( 40px,  40px, 0); } }
+
+/* Reduced motion — kill travel completely */
+@media (prefers-reduced-motion: reduce) {
+  .reel-card::before {
+    animation: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+}
+
+/* Skins that remain dark in both themes use the dark accent variants. */
+.reel-card[data-skin="aubergine"] {
+  --reels-accent: var(--reels-subject-color-dark);
+  --reels-accent-dark: var(--reels-subject-color-dark-hover);
+}
+
+/* 1. Paper Graphite — the untouched reference sheet. */
+.reel-card[data-skin="paper"] {
+  --skin-surface: #f7f5f1;
+  --skin-surface-2: #ece9e3;
+  --skin-ink: #17181b;
+  --skin-muted: #5a5f5c;
+  --skin-rule: #c8c4ba;
+  --skin-texture: radial-gradient(circle at 50% 50%, rgb(23 24 27 / var(--skin-texture-opacity)) 0 0.65px, transparent 0.8px);
+  --skin-texture-opacity: 0.018;
+  --skin-texture-size: 28px 28px;
+  --skin-texture-position: 7px 11px;
+  --skin-frame-weight: 1px;
+  --skin-panel-fill: var(--skin-surface-2);
+  --skin-title-marker: none;
+  --skin-inverted: 0;
+  --skin-accent-mode: base;
+  --skin-drift-name: reel-drift-paper;
+  --skin-drift-duration: 28s;
+}
+
+html[data-theme="dark"] .reel-card[data-skin="paper"] {
+  --skin-surface: #1b1d1f;
+  --skin-surface-2: #25282b;
+  --skin-ink: #f4f2ec;
+  --skin-muted: #bab7b1;
+  --skin-rule: #3b3d40;
+  --skin-texture: radial-gradient(circle at 50% 50%, rgb(244 242 236 / var(--skin-texture-opacity)) 0 0.65px, transparent 0.8px);
+  --skin-texture-opacity: 0.028;
+  --skin-accent-mode: dark;
+}
+
+/* 2. Oxblood Draft — a subdued red-ink manuscript. */
+.reel-card[data-skin="oxblood"] {
+  --skin-surface: #f5dfdb;
+  --skin-surface-2: #e9cdc9;
+  --skin-ink: #231413;
+  --skin-muted: #674e4f;
+  --skin-rule: #d0b2af;
+  --skin-texture: repeating-linear-gradient(45deg, rgb(35 20 19 / var(--skin-texture-opacity)) 0 1px, transparent 1px 18px);
+  --skin-texture-opacity: 0.020;
+  --skin-texture-size: 18px 18px;
+  --skin-texture-position: 5px 13px;
+  --skin-frame-weight: 1px;
+  --skin-panel-fill: var(--skin-surface-2);
+  --skin-title-marker: inset 0 -1px var(--skin-rule);
+  --skin-inverted: 0;
+  --skin-accent-mode: base;
+  --skin-drift-name: reel-drift-oxblood;
+  --skin-drift-duration: 20s;
+}
+
+html[data-theme="dark"] .reel-card[data-skin="oxblood"] {
+  --skin-surface: #2e1818;
+  --skin-surface-2: #3f2222;
+  --skin-ink: #f7e7e4;
+  --skin-muted: #ccb4b3;
+  --skin-rule: #563132;
+  --skin-texture: repeating-linear-gradient(45deg, rgb(247 231 228 / var(--skin-texture-opacity)) 0 1px, transparent 1px 18px);
+  --skin-texture-opacity: 0.030;
+  --skin-accent-mode: dark;
+}
+
+/* 3. Ochre Rules — the colour of a well-used rule-book margin. */
+.reel-card[data-skin="ochre"] {
+  --skin-surface: #f2e3c3;
+  --skin-surface-2: #e5d2ac;
+  --skin-ink: #261e0e;
+  --skin-muted: #64563f;
+  --skin-rule: #ccb48c;
+  --skin-texture: repeating-linear-gradient(to bottom, rgb(38 30 14 / var(--skin-texture-opacity)) 0 1px, transparent 1px 32px);
+  --skin-texture-opacity: 0.018;
+  --skin-texture-size: 100% 32px;
+  --skin-texture-position: 0 9px;
+  --skin-frame-weight: 1px;
+  --skin-panel-fill: var(--skin-surface-2);
+  --skin-title-marker: none;
+  --skin-inverted: 0;
+  --skin-accent-mode: base;
+  --skin-drift-name: reel-drift-ochre;
+  --skin-drift-duration: 30s;
+}
+
+html[data-theme="dark"] .reel-card[data-skin="ochre"] {
+  --skin-surface: #2c230f;
+  --skin-surface-2: #3b2e14;
+  --skin-ink: #f6eed8;
+  --skin-muted: #d0c3a7;
+  --skin-rule: #574423;
+  --skin-texture: repeating-linear-gradient(to bottom, rgb(246 238 216 / var(--skin-texture-opacity)) 0 1px, transparent 1px 32px);
+  --skin-texture-opacity: 0.028;
+  --skin-accent-mode: dark;
+}
+
+/* 4. Inkblue Index — a calm blue-grey technical index card. */
+.reel-card[data-skin="inkblue"] {
+  --skin-surface: #d7e9f8;
+  --skin-surface-2: #c2d9ee;
+  --skin-ink: #0c1a25;
+  --skin-muted: #455868;
+  --skin-rule: #a9bdd0;
+  --skin-texture:
+    linear-gradient(to right, rgb(12 26 37 / var(--skin-texture-opacity)) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(to bottom, rgb(12 26 37 / var(--skin-texture-opacity)) 0 1px, transparent 1px 24px);
+  --skin-texture-opacity: 0.020;
+  --skin-texture-size: 12px 24px;
+  --skin-texture-position: 4px 6px;
+  --skin-frame-weight: 1px;
+  --skin-panel-fill: var(--skin-surface-2);
+  --skin-title-marker: inset 0 -1px var(--skin-rule);
+  --skin-inverted: 0;
+  --skin-accent-mode: base;
+  --skin-drift-name: reel-drift-inkblue;
+  --skin-drift-duration: 24s;
+}
+
+html[data-theme="dark"] .reel-card[data-skin="inkblue"] {
+  --skin-surface: #10212f;
+  --skin-surface-2: #193043;
+  --skin-ink: #e6f0f8;
+  --skin-muted: #b0c0cd;
+  --skin-rule: #30485c;
+  --skin-texture:
+    linear-gradient(to right, rgb(230 240 248 / var(--skin-texture-opacity)) 0 1px, transparent 1px 12px),
+    repeating-linear-gradient(to bottom, rgb(230 240 248 / var(--skin-texture-opacity)) 0 1px, transparent 1px 24px);
+  --skin-texture-opacity: 0.030;
+  --skin-accent-mode: dark;
+}
+
+/* 5. Forest Ledger — the green of a field notebook. */
+.reel-card[data-skin="forest"] {
+  --skin-surface: #d9ecde;
+  --skin-surface-2: #c4decb;
+  --skin-ink: #111e15;
+  --skin-muted: #475b4e;
+  --skin-rule: #a7c3b0;
+  --skin-texture:
+    radial-gradient(circle at 50% 50%, rgb(17 30 21 / var(--skin-texture-opacity)) 0 0.55px, transparent 0.7px),
+    linear-gradient(45deg, rgb(17 30 21 / var(--skin-texture-opacity)) 0 0.8px, transparent 0.8px 18px);
+  --skin-texture-opacity: 0.020;
+  --skin-texture-size: 36px 36px;
+  --skin-texture-position: 11px 7px;
+  --skin-frame-weight: 1px;
+  --skin-panel-fill: var(--skin-surface-2);
+  --skin-title-marker: inset 0 -1px var(--skin-rule);
+  --skin-inverted: 0;
+  --skin-accent-mode: base;
+  --skin-drift-name: reel-drift-forest;
+  --skin-drift-duration: 28s;
+}
+
+html[data-theme="dark"] .reel-card[data-skin="forest"] {
+  --skin-surface: #122419;
+  --skin-surface-2: #1c3424;
+  --skin-ink: #e8f1e9;
+  --skin-muted: #b5c6ba;
+  --skin-rule: #2e4a38;
+  --skin-texture:
+    radial-gradient(circle at 50% 50%, rgb(232 241 233 / var(--skin-texture-opacity)) 0 0.55px, transparent 0.7px),
+    linear-gradient(45deg, rgb(232 241 233 / var(--skin-texture-opacity)) 0 0.8px, transparent 0.8px 18px);
+  --skin-texture-opacity: 0.030;
+  --skin-accent-mode: dark;
+}
+
+/* 6. Aubergine Carbon — low-glare late-night card, dark in BOTH themes. */
+.reel-card[data-skin="aubergine"] {
+  --skin-surface: #2a1b2e;
+  --skin-surface-2: #39253d;
+  --skin-ink: #f2e7f2;
+  --skin-muted: #c8b7c9;
+  --skin-rule: #58415d;
+  --skin-texture: conic-gradient(from 45deg at 50% 50%, rgb(242 231 242 / var(--skin-texture-opacity)) 0 25%, transparent 0 50%, rgb(242 231 242 / var(--skin-texture-opacity)) 0 75%, transparent 0);
+  --skin-texture-opacity: 0.032;
+  --skin-texture-size: 40px 40px;
+  --skin-texture-position: 9px 14px;
+  --skin-frame-weight: 1px;
+  --skin-panel-fill: var(--skin-surface-2);
+  --skin-title-marker: inset 0 -1px var(--skin-rule);
+  --skin-inverted: 1;
+  --skin-accent-mode: dark;
+  --skin-drift-name: reel-drift-aubergine;
+  --skin-drift-duration: 30s;
+}
+
+html[data-theme="dark"] .reel-card[data-skin="aubergine"] {
+  --skin-surface: #170e18;
+  --skin-surface-2: #231626;
+  --skin-rule: #46324b;
+  --skin-texture-opacity: 0.038;
+  --skin-accent-mode: dark;
+}
+
+/* DE override on the four tinted light skins: use the hover variant so the
+   Digital Economy accent stays ≥ 3:1 after the pattern overlay. */
+html[data-reels-subject="de"] .reel-card[data-skin="oxblood"],
+html[data-reels-subject="de"] .reel-card[data-skin="ochre"],
+html[data-reels-subject="de"] .reel-card[data-skin="inkblue"],
+html[data-reels-subject="de"] .reel-card[data-skin="forest"] {
+  --reels-accent: #047857;
+  --reels-accent-dark: #047857;
+}
+
+/* Layout variants. Geometry follows content type, never a coin flip. The
+   measurement card carries the same data-layout, so wrapped text is measured
+   in the same measure it will be rendered in. */
+.reel-card[data-layout="manifesto"] .reel-card__body {
+  text-align: center;
+}
+
+.reel-card[data-layout="manifesto"] .reel-card__title {
+  max-width: 22ch;
+  margin-inline: auto;
+}
+
+.reel-card[data-layout="manifesto"] .reel-parts {
+  max-width: 36ch;
+  margin-inline: auto;
+}
+
+.reel-card[data-layout="manifesto"] .reel-card__body blockquote {
+  text-align: left;
+}
+
+.reel-card[data-layout="caption"] .reel-card__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.reel-card[data-layout="caption"] .reel-card__answer-label,
+.reel-card[data-layout="caption"] .reel-card__continued-label {
+  margin-top: auto;
+}
+
+.reel-card[data-layout="caption"] .reel-parts {
+  width: min(100%, 38ch);
+  margin-inline: auto;
+}
+
+/* Motion: one signature strike plus a transform/opacity-only entrance. The
+   active-card selector restarts the sequence naturally on every swipe. */
+.reel-card__header {
+  position: relative;
+}
+
+.reel-card__header::after {
+  position: absolute;
+  left: 22px;
+  bottom: 0;
+  width: 44px;
+  height: 1px;
+  background: var(--reels-accent);
+  content: "";
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.reel-card[aria-hidden="false"] .reel-card__header::after {
+  animation: reel-rule-strike 220ms cubic-bezier(0.2, 0.8, 0.2, 1) 40ms backwards;
+}
+
+@keyframes reel-rule-strike {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes reel-rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes reel-rise-title {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reel-card[aria-hidden="false"] .reel-card__unit {
+  animation: reel-rise 180ms cubic-bezier(0.2, 0.8, 0.2, 1) 0ms backwards;
+}
+
+.reel-card[aria-hidden="false"] .reel-card__title,
+.reel-card[aria-hidden="false"] .reel-card__question {
+  animation: reel-rise-title 300ms cubic-bezier(0.2, 0.8, 0.2, 1) 60ms backwards;
+}
+
+.reel-card[aria-hidden="false"] .reel-card__answer-label,
+.reel-card[aria-hidden="false"] .reel-card__continued-label {
+  animation: reel-rise 220ms cubic-bezier(0.2, 0.8, 0.2, 1) 130ms backwards;
+}
+
+.reel-card[aria-hidden="false"] .reel-parts > :nth-child(1) {
+  animation: reel-rise 280ms cubic-bezier(0.2, 0.8, 0.2, 1) 200ms backwards;
+}
+
+.reel-card[aria-hidden="false"] .reel-parts > :nth-child(2) {
+  animation: reel-rise 280ms cubic-bezier(0.2, 0.8, 0.2, 1) 280ms backwards;
+}
+
+.reel-card[aria-hidden="false"] .reel-parts > :nth-child(n+3),
+.reel-card[aria-hidden="false"] .reel-card__footer {
+  animation: reel-rise 240ms cubic-bezier(0.2, 0.8, 0.2, 1) 320ms backwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1797,5 +2230,22 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .reel-card__unit,
+  .reel-card__title,
+  .reel-card__question,
+  .reel-card__answer-label,
+  .reel-card__continued-label,
+  .reel-card__footer,
+  .reel-parts > * {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .reel-card__header::after {
+    animation: none !important;
+    transform: scaleX(1) !important;
   }
 }

@@ -1,0 +1,8 @@
+Turn this note into a reel transcript.
+
+NOTE:
+{note}
+
+Decide for yourself which parts of the note are essential. Keep every
+definition, term, list item and step a student might be asked to reproduce.
+Output only the transcript.

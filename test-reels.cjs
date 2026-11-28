@@ -500,6 +500,51 @@ function startServer() {
     check('Coverage and self-test sections stay excluded', payload.audit.excludedHeadings.some(item => /coverage map/i.test(item.heading)) && payload.audit.excludedHeadings.some(item => /self-test/i.test(item.heading)));
     check('No Unit 1 mojibake reaches the feed', !JSON.stringify(payload).match(/[âÂÃð]/));
 
+    const skinState = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('.reel-card:not(.reel-measure)')];
+      const skins = cards.map(card => card.dataset.skin || '');
+      const layouts = cards.map(card => card.dataset.layout || '');
+      const repeats = skins.filter((skin, index) => index > 0 && skin === skins[index - 1]).length;
+      return {
+        count: cards.length,
+        skins: [...new Set(skins)].sort(),
+        layouts: [...new Set(layouts)].sort(),
+        repeats,
+        everyCardHasSkin: skins.every(Boolean),
+        everyCardHasLayout: layouts.every(Boolean),
+        subject: document.documentElement.dataset.reelsSubject || ''
+      };
+    });
+    check('All six curated skins appear in the feed',
+      JSON.stringify(skinState.skins) === JSON.stringify(['aubergine', 'forest', 'inkblue', 'ochre', 'oxblood', 'paper']),
+      JSON.stringify(skinState.skins));
+    check('Every card declares a content-driven layout',
+      skinState.everyCardHasLayout && skinState.layouts.every(layout => ['caption', 'column', 'manifesto'].includes(layout)),
+      JSON.stringify(skinState.layouts));
+    check('Layout variants are actually used', skinState.layouts.length >= 2, JSON.stringify(skinState.layouts));
+    check('Two consecutive cards never share a skin', skinState.repeats === 0, JSON.stringify(skinState.repeats));
+    check('The document carries the active subject for accent variants', skinState.subject === 'bi', skinState.subject);
+
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    const reducedMotionState = await page.evaluate(() => {
+      const active = document.querySelector('.reel-card[aria-hidden="false"]');
+      const unit = active?.querySelector('.reel-card__unit');
+      const body = active?.querySelector('.reel-parts > *');
+      const header = active?.querySelector('.reel-card__header');
+      const styles = element => element ? {
+        animation: getComputedStyle(element).animationName,
+        opacity: getComputedStyle(element).opacity,
+        transform: getComputedStyle(element).transform
+      } : null;
+      return { unit: styles(unit), body: styles(body), header: styles(header) };
+    });
+    check('Reduced motion leaves every animated element visible',
+      [reducedMotionState.unit, reducedMotionState.body, reducedMotionState.header].every(style =>
+        style && style.animation === 'none' && style.opacity === '1'
+        && (style.transform === 'none' || style.transform === 'matrix(1, 0, 0, 1, 0, 0)')),
+      JSON.stringify(reducedMotionState));
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+
     const generatedUnit1 = await page.evaluate(async () => {
       const response = await fetch('../bi/unit-1.html');
       const html = await response.text();
@@ -718,10 +763,14 @@ function startServer() {
       const contentStyle = getComputedStyle(content);
       const panelRect = panel.getBoundingClientRect();
       const contentRect = content.getBoundingClientRect();
+      const rail = document.querySelector('.reel-card[aria-hidden="false"] .reel-card__actions');
+      const railRect = rail?.getBoundingClientRect();
       return {
         maxHeight: style.maxHeight,
         bottom: style.bottom,
         right: style.right,
+        justifyContent: style.justifyContent,
+        textAlign: contentStyle.textAlign,
         overflowY: style.overflowY,
         panelBackground: style.backgroundColor,
         contentBackground: contentStyle.backgroundColor,
@@ -729,17 +778,27 @@ function startServer() {
         contentPadding: contentStyle.padding,
         color: contentStyle.color,
         panelWidth: Math.round(panelRect.width),
-        contentWidth: Math.round(contentRect.width)
+        contentWidth: Math.round(contentRect.width),
+        captionTop: Math.round(panelRect.top),
+        captionBottom: Math.round(panelRect.bottom),
+        railBottom: railRect ? Math.round(railRect.bottom) : null
       };
     });
     check('AI caption has a bounded height', subtitleCompact && Number.parseFloat(subtitleCompact.maxHeight) > 0, JSON.stringify(subtitleCompact));
-    check('AI caption clears the action rail', subtitleCompact && subtitleCompact.bottom === '112px' && subtitleCompact.right !== '0px', JSON.stringify(subtitleCompact));
+    check('AI caption clears the action rail',
+      subtitleCompact && subtitleCompact.bottom === '4px' && subtitleCompact.railBottom !== null
+        && subtitleCompact.captionTop >= subtitleCompact.railBottom,
+      JSON.stringify(subtitleCompact));
+    check('AI caption is right-aligned in the lower corner',
+      subtitleCompact && (subtitleCompact.justifyContent === 'flex-end' || subtitleCompact.justifyContent === 'flow-end') && subtitleCompact.textAlign === 'right',
+      JSON.stringify({ justify: subtitleCompact?.justifyContent, align: subtitleCompact?.textAlign }));
     check('AI caption never scrolls internally', subtitleCompact && subtitleCompact.overflowY === 'hidden', JSON.stringify(subtitleCompact));
     check('AI caption uses a soft black scrim', subtitleCompact && subtitleCompact.contentBackground === 'rgba(0, 0, 0, 0.72)', JSON.stringify(subtitleCompact));
     check('AI caption uses white text', subtitleCompact && subtitleCompact.color === 'rgb(255, 255, 255)', JSON.stringify(subtitleCompact));
     check('AI caption scrim is rounded and padded', subtitleCompact && subtitleCompact.contentBorderRadius === '6px' && subtitleCompact.contentPadding === '6px 10px', JSON.stringify(subtitleCompact));
-    check('AI caption scrim hugs the text instead of spanning the card',
-      subtitleCompact && subtitleCompact.contentWidth > 0 && subtitleCompact.contentWidth < subtitleCompact.panelWidth * 0.95,
+    check('AI caption stays inside the text column',
+      subtitleCompact && subtitleCompact.contentWidth > 0 && subtitleCompact.contentWidth <= subtitleCompact.panelWidth
+        && subtitleCompact.panelWidth < 400,
       JSON.stringify(subtitleCompact));
 
     const captionGeometry = await page.evaluate(() => {
@@ -751,12 +810,51 @@ function startServer() {
       };
       return {
         caption: rect('#transcriptPanel'),
-        footer: rect('.reel-card[aria-hidden="false"] .reel-card__footer')
+        footer: rect('.reel-card[aria-hidden="false"] .reel-card__footer'),
+        position: rect('.reel-card[aria-hidden="false"] .reel-card__position'),
+        progress: rect('.reel-card[aria-hidden="false"] .reel-card__position-line')
       };
     });
-    check('Caption does not cover the footer',
-      captionGeometry.caption && captionGeometry.footer && captionGeometry.caption.bottom <= captionGeometry.footer.top,
+    check('Caption sits low, over the progress line',
+      captionGeometry.caption && captionGeometry.footer && captionGeometry.position
+        && captionGeometry.caption.bottom <= captionGeometry.footer.bottom + 1
+        && captionGeometry.caption.bottom >= captionGeometry.footer.top
+        && captionGeometry.caption.top < captionGeometry.position.bottom,
       JSON.stringify(captionGeometry));
+    check('Caption is flush with the right edge of the progress row',
+      captionGeometry.caption && captionGeometry.position
+        && Math.abs(captionGeometry.caption.right - captionGeometry.position.right) <= 2,
+      JSON.stringify(captionGeometry));
+
+    // A short caption must hug its text, not paint a full-width band. Find a
+    // card whose first caption is short enough to prove the scrim shrinks.
+    const captionHomeIndex = await page.evaluate(() =>
+      document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.cardIndex || '0');
+    let hugState = null;
+    // Search up to 30 cards to find one with a short enough caption.
+    for (let index = 0; index < 30 && !hugState; index += 1) {
+      await activateCard(page, `.reel-card[data-card-index="${index}"]`);
+      await page.waitForTimeout(150);
+      hugState = await page.evaluate(() => {
+        const panel = document.querySelector('#transcriptPanel');
+        const content = document.querySelector('#transcriptContent');
+        if (!panel || panel.hidden) return null;
+        const text = (content?.textContent || '').trim();
+        if (text.length > 40) return null;
+        const panelRect = panel.getBoundingClientRect();
+        const contentRect = content.getBoundingClientRect();
+        return {
+          text,
+          panelWidth: Math.round(panelRect.width),
+          contentWidth: Math.round(contentRect.width)
+        };
+      });
+    }
+    check('A short caption hugs its text instead of spanning the column',
+      hugState && hugState.contentWidth > 0 && hugState.contentWidth < hugState.panelWidth * 0.95,
+      JSON.stringify(hugState));
+    await activateCard(page, `.reel-card[data-card-index="${captionHomeIndex}"]`);
+    await page.waitForTimeout(120);
 
     const subtitleFirstSentence = await page.evaluate(() => {
       const content = document.querySelector('#transcriptContent');

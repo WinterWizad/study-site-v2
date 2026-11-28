@@ -131,6 +131,17 @@ const MAX_AI_PREFETCH_SEGMENTS = 18;
 const AI_PREFETCH_CONCURRENCY = 3;
 let resizeTimer = 0;
 let measurementCard = null;
+// Curated skins, in rotation order. Presentation = skin (surface, texture,
+// frame) + layout (reading geometry). The off-screen measurement card wears
+// the same combination as the card being measured, otherwise a layout that
+// changes wrapping overflows the real card.
+const SKIN_IDS = ['paper', 'oxblood', 'ochre', 'inkblue', 'forest', 'aubergine'];
+const LAYOUT_IDS = ['column', 'manifesto', 'caption'];
+// Space the caption dock can grow into above the footer. Mirrors
+// .reels-stage[data-captions="on"] in reels.css — keep the two in step.
+const CAPTION_BODY_RESERVE_PX = 44;
+const CAPTION_SLIDE_RESERVE_PX = 12;
+let measurementPresentation = { skin: SKIN_IDS[0], layout: LAYOUT_IDS[0] };
 let currentRestore = null;
 let cardPointerStart = null;
 let hubReturnFocus = null;
@@ -600,6 +611,9 @@ function updateSubjectUi() {
     elements.hubNotesLink.href = subject.notesUrl;
   }
   document.documentElement.style.setProperty('--reels-subject-color', subject.color || '#2563eb');
+  // Unlocks the accessible dark/hover accent variants without replacing the
+  // inline subject colour assignment above.
+  document.documentElement.dataset.reelsSubject = subject.id;
   syncSubjectChipState();
 }
 
@@ -918,6 +932,11 @@ function measureFits(entry, atoms, continuation = false) {
   const card = ensureMeasurementCard();
   card.style.width = `${viewport.clientWidth}px`;
   card.style.height = `${viewport.clientHeight}px`;
+  // Measure in the exact presentation the card will wear. Materialised before
+  // innerHTML so all skin/layout selectors affect wrapping during measurement.
+  card.dataset.skin = measurementPresentation.skin;
+  card.dataset.layout = measurementPresentation.layout;
+  card.dataset.kind = entry.kind;
   card.innerHTML = `
     ${cardHeaderHtml(entry)}
     <div class="reel-card__body" tabindex="0" aria-label="Card content">${cardBodyHtml(entry, atoms, continuation)}</div>
@@ -927,14 +946,15 @@ function measureFits(entry, atoms, continuation = false) {
   const body = card.querySelector('.reel-card__body');
   // The measurement card lives outside .reels-stage, so it must reproduce the
   // caption dock's reserved space itself or pagination overfills the real card.
+  // These values mirror .reels-stage[data-captions="on"] in reels.css.
   if (state.subtitlesEnabled) {
     card.querySelectorAll('.reel-carousel__slide').forEach(slide => {
-      slide.style.paddingBottom = '96px';
+      slide.style.paddingBottom = `${CAPTION_SLIDE_RESERVE_PX}px`;
       slide.querySelectorAll('.reel-card__body').forEach(slideBody => {
         slideBody.style.paddingBottom = '16px';
       });
     });
-    if (!body.closest('.reel-carousel__slide')) body.style.paddingBottom = '96px';
+    if (!body.closest('.reel-carousel__slide')) body.style.paddingBottom = `${CAPTION_BODY_RESERVE_PX}px`;
   }
   return body.scrollHeight <= body.clientHeight + 2;
 }
@@ -1072,7 +1092,42 @@ function partToAtoms(entry, part, partIndex, restoreAnchor = null) {
   }];
 }
 
-function paginateEntry(entry, restore = null) {
+// Layout is driven by content, not whim: only short, unstructured cards get a
+// narrower reading measure. Tables, diagrams and long answers stay in the
+// default column so nothing becomes arbitrary or unreadable.
+function layoutForEntry(entry) {
+  const parts = entry.parts || [];
+  const structured = parts.some(part => part.type !== 'text' || part.visual);
+  const textChars = parts
+    .filter(part => part.type === 'text' && !part.visual)
+    .reduce((total, part) => total + String(part.text || part.html || '').length, 0);
+
+  if (entry.kind !== 'question' && !structured
+    && String(entry.title || '').length <= 72 && textChars <= 260) return 'manifesto';
+  if (entry.kind === 'question' && !structured
+    && String(entry.questionText || '').length <= 180 && textChars <= 420) return 'caption';
+  return 'column';
+}
+
+// Skin rotation: every card wears one of six curated skins. A stable hash of
+// entry.id keeps the choice identical across reloads, so no persisted
+// assignment map is needed; one ordered pass repairs any adjacency collision.
+function planPresentations(entries) {
+  const presentations = [];
+  let previousSkin = '';
+  entries.forEach(entry => {
+    const ranked = SKIN_IDS
+      .map((skin, index) => ({ skin, score: hashString(`${entry.id}:${index}`) }))
+      .sort((left, right) => left.score - right.score);
+    const chosen = ranked.find(item => item.skin !== previousSkin) || ranked[0];
+    previousSkin = chosen.skin;
+    presentations.push({ skin: chosen.skin, layout: layoutForEntry(entry) });
+  });
+  return presentations;
+}
+
+function paginateEntry(entry, restore = null, presentation = null) {
+  measurementPresentation = presentation || { skin: SKIN_IDS[0], layout: layoutForEntry(entry) };
   const restoreAnchor = restore?.atomAnchor || anchorFromAtomKey(restore?.atomKey || '');
   const atoms = entry.parts.flatMap((part, index) => partToAtoms(entry, part, index, restoreAnchor));
   const groups = [];
@@ -1241,21 +1296,26 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
   const focusContext = captureRebuildFocus();
   stopCurrentAudio();
   const entries = filteredEntries();
-  const grouped = entries.map(entry => ({ entry, groups: paginateEntry(entry, restore) }));
+  const presentations = planPresentations(entries);
+  const grouped = entries.map((entry, index) => ({
+    entry,
+    groups: paginateEntry(entry, restore, presentations[index]),
+    presentation: presentations[index]
+  }));
   // Total entries (not total groups) for progress
   const total = grouped.length;
 
   cards = [];
-  grouped.forEach(({ entry, groups }, index) => {
+  grouped.forEach(({ entry, groups, presentation }, index) => {
     const key = `${entry.id}::carousel`;
     const isMultiSlide = groups.length > 1;
-    
+
     // Restore carousel slide position if available
     let restoredSlide = 0;
     if (restore && restore.entryId === entry.id && restore.carouselSlide !== undefined) {
       restoredSlide = clamp(restore.carouselSlide, 0, groups.length - 1);
     }
-    
+
     cards.push({
       key,
       entry,
@@ -1263,6 +1323,7 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
       groups, // All groups (slides) for this entry
       isMultiSlide,
       currentSlide: isMultiSlide ? restoredSlide : 0, // Track carousel position
+      presentation,
       narratorVoice: null
     });
   });
@@ -1270,10 +1331,12 @@ function buildFeed({ restore = null, speak = false, markSeen = true, persistPosi
   elements.cardTrack.replaceChildren();
   cards.forEach((card, index) => {
     // Use carousel card for multi-slide entries, regular card for single-slide
-    const element = card.isMultiSlide 
+    const element = card.isMultiSlide
       ? buildCarouselCardElement(card.entry, card.groups, index, total)
       : buildCardElement(card.entry, card.groups[0], index, total, false);
     element.dataset.cardKey = card.key;
+    element.dataset.skin = card.presentation.skin;
+    element.dataset.layout = card.presentation.layout;
     if (element.dataset.mode === 'visual') {
       element.querySelector('[data-card-mode]').textContent = 'Visual + music';
     }
