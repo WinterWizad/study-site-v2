@@ -8,8 +8,10 @@ const DEFAULT_STATE = {
   saved: [],
   lastPosition: null,
   positions: {},
-  voice: 'google',
-  narratorVersion: 2,
+  // Every narrator is a real, switchable browser voice. There is no cloud or
+  // local provider to choose: the reel transcript is always the script.
+  voice: 'random',
+  narratorVersion: 3,
   speechRate: 1,
   shuffleSeed: 541385059,
   order: 'ordered',
@@ -18,12 +20,8 @@ const DEFAULT_STATE = {
   savedOnly: false,
   musicVolume: 0.28,
   muted: false,
-  aiNarrationEnabled: true,
-  lastNarrationFallback: null
+  subtitlesEnabled: true
 };
-
-const MAX_CLOUD_PREFETCH_SEGMENTS = 18;
-const CLOUD_PREFETCH_CONCURRENCY = 3;
 
 const MUSIC_TRACKS = [
   {
@@ -38,11 +36,9 @@ const MUSIC_TRACKS = [
   }
 ];
 
-// Progressive subtitle state for AI narration
+// Progressive subtitle state for the reel transcript.
 let subtitleUnits = [];
 let subtitleCurrentIndex = -1;
-let subtitleTimer = null;
-let subtitleFallbackTimer = null;
 let subtitleAudioPlayer = null;
 
 const elements = {
@@ -100,12 +96,12 @@ const elements = {
   hubNotesLink: document.querySelector('#hubNotesLink'),
   voiceSelect: document.querySelector('#voiceSelect'),
   reelStage: document.querySelector('#reelStage'),
-  narrationToggle: document.querySelector('#aiNarrationToggle'),
+  subtitlesToggle: document.querySelector('#subtitlesToggle'),
   transcriptPanel: document.querySelector('#transcriptPanel'),
   transcriptContent: document.querySelector('#transcriptContent'),
   transcriptEmpty: document.querySelector('#transcriptEmpty'),
   transcriptClose: document.querySelector('#transcriptClose'),
-  hubSummaryAiNarration: document.querySelector('#hubSummaryAiNarration')
+  hubSummarySubtitles: document.querySelector('#hubSummarySubtitles')
 };
 
 let storageAvailable = true;
@@ -121,15 +117,6 @@ let speechGeneration = 0;
 let speechPaused = false;
 let speechSession = null;
 let speechGapTimer = 0;
-let cloudGeneration = 0;
-let cloudSession = null;
-let cloudPreloadPromises = new Map();
-let cloudAudioBlobs = new Map();
-let cloudObjectUrls = [];
-let cloudPrefetchQueue = [];
-let cloudPrefetchActive = 0;
-let cloudPrefetchControllers = new Map();
-let cloudPrefetchPromises = new Map();
 let musicGeneration = 0;
 let musicFadeFrame = 0;
 
@@ -226,16 +213,20 @@ function loadState() {
     stored = null;
   }
 
-  const merged = { ...DEFAULT_STATE, ...(stored && typeof stored === 'object' ? stored : {}) };
+  const storedState = stored && typeof stored === 'object' ? stored : {};
+  const merged = { ...DEFAULT_STATE, ...storedState };
   merged.version = SUPPORTED_STATE_VERSION;
 
-  if (Number(merged.narratorVersion || 1) < 2) {
-    if (merged.voice === 'random') merged.voice = 'google';
-    merged.narratorVersion = 2;
-  } else {
-    merged.narratorVersion = 2;
+  // Narrator v3: only real, switchable browser voices remain. Retired
+  // providers (Google, Piper, the old "AI narration" pseudo-voice) map to the
+  // default browser narrator. A saved real voice URI is preserved; if the
+  // browser no longer exposes it, refreshVoiceOptions() shows the fallback.
+  const retiredVoice = value => ['google', 'ai', 'kokoro'].includes(value)
+    || String(value || '').startsWith('piper-');
+  if (retiredVoice(merged.voice) || !merged.voice) {
+    merged.voice = DEFAULT_STATE.voice;
   }
-  if (merged.voice === 'kokoro') merged.voice = DEFAULT_STATE.voice;
+  merged.narratorVersion = 3;
 
   merged.seen = Array.isArray(merged.seen) ? merged.seen.filter(value => typeof value === 'string') : [];
   merged.done = Array.isArray(merged.done) ? merged.done.filter(value => typeof value === 'string') : [];
@@ -250,10 +241,12 @@ function loadState() {
     : LEGACY_SUBJECT_ID;
   merged.savedOnly = Boolean(merged.savedOnly);
   merged.muted = Boolean(merged.muted);
-  merged.aiNarrationEnabled = Boolean(merged.aiNarrationEnabled);
-  merged.lastNarrationFallback = merged.lastNarrationFallback && typeof merged.lastNarrationFallback === 'object'
-    ? { provider: String(merged.lastNarrationFallback.provider || ''), reason: String(merged.lastNarrationFallback.reason || ''), at: String(merged.lastNarrationFallback.at || '') }
-    : null;
+  // Carry the old "AI narration" switch over to the subtitles switch it became.
+  merged.subtitlesEnabled = storedState.subtitlesEnabled === undefined && storedState.aiNarrationEnabled !== undefined
+    ? Boolean(storedState.aiNarrationEnabled)
+    : Boolean(merged.subtitlesEnabled);
+  delete merged.aiNarrationEnabled;
+  delete merged.lastNarrationFallback;
   merged.lastPosition = normalizePosition(merged.lastPosition);
   if (merged.lastPosition) {
     merged.lastPosition.feedKey = migrateFeedKey(merged.lastPosition.feedKey, LEGACY_SUBJECT_ID);
@@ -546,18 +539,18 @@ function updateHubSummaries() {
   const saved = new Set(state.saved).size;
   elements.hubSummaryProgress.textContent = `${done} done · ${saved} saved`;
 
-  let voiceLabel = state.voice;
-  if (state.voice === 'google') voiceLabel = 'Google Chirp 3 HD';
-  else if (state.voice === 'ai') voiceLabel = 'AI narration';
-  else if (state.voice === 'piper-amy') voiceLabel = 'Piper (Amy)';
-  else if (state.voice === 'piper-ljspeech') voiceLabel = 'Piper (LJSpeech)';
-  else if (state.voice === 'piper-ryan') voiceLabel = 'Piper (Ryan)';
-  else if (state.voice === 'random') voiceLabel = 'Random browser voice';
-  else if (state.voice === 'system') voiceLabel = 'Browser system voice';
+  let voiceLabel = 'Random browser voice';
+  if (state.voice === 'system') {
+    voiceLabel = 'Browser system voice';
+  } else if (state.voice !== 'random') {
+    const match = availableVoices().find(voice => voice.voiceURI === state.voice);
+    voiceLabel = match ? match.name : 'Saved browser voice';
+  }
   elements.hubSummaryAudio.textContent = `${voiceLabel} · ${state.speechRate.toFixed(1).replace(/\.0$/, '')}×`;
 
-  const aiLabel = state.aiNarrationEnabled ? 'On' : 'Off';
-  elements.hubSummaryAiNarration.textContent = `${aiLabel} · reel transcript`;
+  if (elements.hubSummarySubtitles) {
+    elements.hubSummarySubtitles.textContent = state.subtitlesEnabled ? 'On · caption overlay' : 'Off';
+  }
 
   elements.hubResetFilters.hidden = state.unit === 'all' && state.order === 'ordered' && !state.savedOnly;
 }
@@ -932,6 +925,17 @@ function measureFits(entry, atoms, continuation = false) {
     ${cardFooterHtml(entry, 0, 1)}
   `;
   const body = card.querySelector('.reel-card__body');
+  // The measurement card lives outside .reels-stage, so it must reproduce the
+  // caption dock's reserved space itself or pagination overfills the real card.
+  if (state.subtitlesEnabled) {
+    card.querySelectorAll('.reel-carousel__slide').forEach(slide => {
+      slide.style.paddingBottom = '96px';
+      slide.querySelectorAll('.reel-card__body').forEach(slideBody => {
+        slideBody.style.paddingBottom = '16px';
+      });
+    });
+    if (!body.closest('.reel-carousel__slide')) body.style.paddingBottom = '96px';
+  }
   return body.scrollHeight <= body.clientHeight + 2;
 }
 
@@ -1520,7 +1524,6 @@ function goTo(index, { speak = true } = {}) {
   const previousCard = cards[currentIndex];
   const moveFocus = Boolean(previousCard?.element?.contains(document.activeElement));
   stopCurrentAudio();
-  abortCloudPrefetches();
   abortAiPrefetches();
   currentIndex = clamp(index, 0, cards.length - 1);
   updateCurrentCard({ speak });
@@ -1567,19 +1570,11 @@ function refreshVoiceOptions() {
   const voices = availableVoices();
   elements.voiceSelect.replaceChildren();
 
-  // Only advertise narrators that can actually answer. Google narration needs
-  // a configured server provider. The Piper entries were a local-only provider
-  // that never shipped to the deployed function, so they are gone rather than
-  // silently handing the learner the browser default voice.
-  const cloudReady = Boolean(payload?.narration?.cloudEnabled);
+  // Every entry here is a voice the browser can actually switch to. Google
+  // needs a billing-enabled Cloud project and Piper never shipped to the
+  // deployed function, so neither is advertised. The script itself is always
+  // the build-time reel transcript; only the voice reading it changes.
   const fixedOptions = [
-    [
-      'google',
-      cloudReady
-        ? 'Google Chirp 3 HD (recommended)'
-        : 'Google Chirp 3 HD — not configured (browser voice)'
-    ],
-    ['ai', 'AI narration (reel transcript)'],
     ['random', 'Random browser voice per card'],
     ['system', 'Browser system voice']
   ];
@@ -1606,7 +1601,7 @@ function refreshVoiceOptions() {
   }
 
   const selectedOption = Array.from(elements.voiceSelect.options).find(option => option.value === selected);
-  if (!selectedOption && !['google', 'random', 'system'].includes(selected)) {
+  if (!selectedOption && !['random', 'system'].includes(selected)) {
     const pendingOption = document.createElement('option');
     pendingOption.value = selected;
     pendingOption.textContent = voices.length
@@ -1617,37 +1612,13 @@ function refreshVoiceOptions() {
   elements.voiceSelect.value = selected;
 }
 
-// The best English voice the platform offers. Used for the reel transcript so
-// AI narration is not stuck on the browser's generic default voice.
-function preferredBrowserVoice() {
-  const voices = availableVoices();
-  const english = voices.filter(voice => /^en/i.test(voice.lang));
-  const pool = english.length ? english : voices;
-  if (!pool.length) return null;
-
-  const preferred = [
-    /natural/i,
-    /google uk english female/i,
-    /google us english/i,
-    /microsoft (aria|jenny|michelle|sonia|libby|sara)/i,
-    /samantha/i
-  ];
-  for (const pattern of preferred) {
-    const match = pool.find(voice => pattern.test(voice.name));
-    if (match) return match;
-  }
-  return pool[0];
-}
-
 function chooseNarrator(card) {
   if (card.narratorVoice) return card.narratorVoice;
   const voices = availableVoices();
   const english = voices.filter(voice => /^en/i.test(voice.lang));
   const pool = english.length ? english : voices;
 
-  if (state.voice === 'ai') {
-    card.narratorVoice = preferredBrowserVoice();
-  } else if (state.voice === 'random') {
+  if (state.voice === 'random') {
     if (!pool.length) return null;
     const index = Math.floor(Math.random() * pool.length);
     card.narratorVoice = pool[index];
@@ -1665,88 +1636,22 @@ function setNarratorStatus(message, { announce = false } = {}) {
 }
 
 function refreshNarratorStatus() {
-  if (state.voice === 'google') {
-    setNarratorStatus(payload?.narration?.cloudEnabled
-      ? 'Google Chirp 3 HD is configured. Narration loads ahead of the card.'
-      : 'Google narration is not configured. The browser voice is used instead.');
-    return;
-  }
-  if (state.voice === 'ai') {
-    const activeCard = cards[currentIndex];
-    const audioReady = aiNarrationAudioAvailable(aiNarrationSegmentsForCard(activeCard));
-    setNarratorStatus(audioReady
-      ? 'AI narration is configured. The reel transcript loads ahead of the card.'
-      : 'AI narration audio is not configured. The reel transcript is read with the browser voice.');
-    return;
-  }
-  if (state.voice === 'piper-amy' || state.voice === 'piper-ljspeech' || state.voice === 'piper-ryan') {
-    setNarratorStatus('Piper voices are no longer available. The browser voice is used instead.');
-    return;
-  }
   if (state.voice === 'random') {
-    setNarratorStatus('A random browser voice is selected for each card.');
+    setNarratorStatus('A random browser voice reads each card.');
     return;
   }
   if (state.voice === 'system') {
-    setNarratorStatus('The browser system voice will read each card.');
+    setNarratorStatus('The browser system voice reads each card.');
     return;
   }
-  setNarratorStatus('A saved browser voice will read each card.');
-}
-
-function narrationSegmentRecord(id) {
-  return payload?.narration?.segments?.[id] || null;
+  const voice = availableVoices().find(item => item.voiceURI === state.voice);
+  setNarratorStatus(voice
+    ? `${voice.name} reads each card.`
+    : 'The browser system voice reads each card.');
 }
 
 function aiSegmentRecord(id) {
   return payload?.aiTranscript?.segments?.[id] || null;
-}
-
-function narrationSegmentsForCard(card) {
-  const entryNarration = card?.entry?.narration;
-  const segments = [];
-  const addSegment = id => {
-    if (!id) return;
-    const segment = narrationSegmentRecord(id);
-    if (segment?.text) segments.push({ id, text: segment.text });
-  };
-
-  if (!entryNarration) return segments;
-  addSegment(entryNarration.title);
-
-  getCardAtoms(card).forEach(atom => {
-    const partIndex = Number(atom.anchor?.partIndex);
-    const narrationPart = entryNarration.parts?.[partIndex];
-    if (!narrationPart) return;
-
-    if (atom.part?.type === 'table') {
-      addSegment(narrationPart.header);
-      const start = Number(atom.anchor?.start || 0);
-      const end = Number(atom.anchor?.end ?? start);
-      (narrationPart.rows || []).slice(start, end + 1).forEach(addSegment);
-      return;
-    }
-
-    if (atom.part?.type === 'diagram') {
-      const start = Number(atom.anchor?.start || 0);
-      const end = Number(atom.anchor?.end ?? start);
-      (narrationPart.lines || []).slice(start, end + 1).forEach(addSegment);
-      return;
-    }
-
-    addSegment(narrationPart.text);
-  });
-
-  return segments;
-}
-
-function browserNarrationSegments(card) {
-  const normalized = narrationSegmentsForCard(card);
-  if (normalized.length) return normalized.map(segment => segment.text);
-  const answerText = getCardAtoms(card).map(atomText).filter(Boolean).join(' ');
-  return card.entry.kind === 'question'
-    ? [card.entry.questionText, answerText].filter(Boolean)
-    : [card.entry.speechTitle, answerText].filter(Boolean);
 }
 
 function aiNarrationSegmentsForCard(card) {
@@ -1784,22 +1689,6 @@ function reelsBaseUrl() {
   return new URL('./', import.meta.url);
 }
 
-function cloudSegmentUrl(segment) {
-  if (segment.static) {
-    const fileName = `${segment.id}-${segment.version}.mp3`;
-    return new URL(`audio/${fileName}`, reelsBaseUrl()).href;
-  }
-  const url = new URL('/api/narration', window.location.origin);
-  url.searchParams.set('segment', segment.id);
-  url.searchParams.set('v', segment.version);
-  // Pass selected Piper voice as override
-  if (state.voice?.startsWith('piper-')) {
-    const piperVoice = state.voice.replace('piper-', '');
-    url.searchParams.set('voice', piperVoice);
-  }
-  return url.href;
-}
-
 function trimAudioObjectUrls(blobMap, objectUrls, maximum = 72) {
   let attempts = objectUrls.length;
   while (objectUrls.length > maximum && attempts > 0) {
@@ -1813,89 +1702,6 @@ function trimAudioObjectUrls(blobMap, objectUrls, maximum = 72) {
     if (blobMap.get(oldest.id) === oldest.url) blobMap.delete(oldest.id);
     URL.revokeObjectURL(oldest.url);
   }
-}
-
-function fetchCloudSegment(id, { signal } = {}) {
-  if (cloudAudioBlobs.has(id)) return Promise.resolve(cloudAudioBlobs.get(id));
-  if (cloudPreloadPromises.has(id)) return cloudPreloadPromises.get(id);
-
-  const segment = narrationSegmentRecord(id);
-  if (!segment) return Promise.reject(new Error(`Unknown narration segment: ${id}`));
-
-  const promise = fetch(cloudSegmentUrl(segment), {
-    cache: segment.static ? 'force-cache' : 'default',
-    credentials: 'same-origin',
-    signal
-  })
-    .then(response => {
-      if (!response.ok) throw new Error(`Narration request failed with ${response.status}`);
-      return response.blob();
-    })
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      cloudAudioBlobs.set(id, url);
-      cloudObjectUrls.push({ id, url });
-      cloudPreloadPromises.delete(id);
-      trimAudioObjectUrls(cloudAudioBlobs, cloudObjectUrls);
-      return url;
-    })
-    .catch(error => {
-      cloudPreloadPromises.delete(id);
-      throw error;
-    });
-
-  cloudPreloadPromises.set(id, promise);
-  return promise;
-}
-
-function drainCloudPrefetchQueue() {
-  while (cloudPrefetchActive < CLOUD_PREFETCH_CONCURRENCY && cloudPrefetchQueue.length) {
-    const task = cloudPrefetchQueue.shift();
-    if (!task) break;
-    if (task.controller.signal.aborted) {
-      task.reject(new DOMException('Narration prefetch was aborted.', 'AbortError'));
-      cloudPrefetchPromises.delete(task.id);
-      continue;
-    }
-
-    cloudPrefetchActive += 1;
-    fetchCloudSegment(task.id, { signal: task.controller.signal })
-      .then(task.resolve, task.reject)
-      .finally(() => {
-        cloudPrefetchActive = Math.max(0, cloudPrefetchActive - 1);
-        cloudPrefetchControllers.delete(task.id);
-        cloudPrefetchPromises.delete(task.id);
-        drainCloudPrefetchQueue();
-      });
-  }
-}
-
-function queueCloudSegment(id) {
-  if (cloudAudioBlobs.has(id)) return Promise.resolve(cloudAudioBlobs.get(id));
-  if (cloudPreloadPromises.has(id)) return cloudPreloadPromises.get(id);
-  if (cloudPrefetchPromises.has(id)) return cloudPrefetchPromises.get(id);
-
-  const controller = new AbortController();
-  let resolveTask;
-  let rejectTask;
-  const promise = new Promise((resolve, reject) => {
-    resolveTask = resolve;
-    rejectTask = reject;
-  });
-  cloudPrefetchPromises.set(id, promise);
-  cloudPrefetchControllers.set(id, controller);
-  cloudPrefetchQueue.push({ id, controller, resolve: resolveTask, reject: rejectTask });
-  drainCloudPrefetchQueue();
-  return promise;
-}
-
-function abortCloudPrefetches() {
-  cloudPrefetchControllers.forEach(controller => controller.abort());
-  cloudPrefetchControllers.clear();
-  cloudPrefetchPromises.clear();
-  cloudPrefetchQueue.splice(0).forEach(task => {
-    task.reject(new DOMException('Narration prefetch was aborted.', 'AbortError'));
-  });
 }
 
 // --- AI narration audio blob storage ---
@@ -1987,54 +1793,23 @@ function abortAiPrefetches() {
 }
 
 function prefetchNarrationAround(index, ahead = 2) {
-  if (!cards.length) return;
+  if (!cards.length || !payload?.aiTranscript?.cloudEnabled) return;
 
   const windowCards = cards.slice(index, index + ahead + 1)
     .filter(card => card.element?.dataset.mode !== 'visual');
   const ids = new Set();
   windowCards.forEach(card => {
-    narrationSegmentsForCard(card).forEach(segment => ids.add(segment.id));
-    if (state.voice === 'ai') {
-      aiNarrationSegmentsForCard(card).forEach(segment => ids.add(segment.id));
-    }
+    aiNarrationSegmentsForCard(card).forEach(segment => ids.add(segment.id));
   });
 
-  const activeSegmentId = cloudSession?.segments?.[cloudSession.segmentIndex]?.id
-    || aiSession?.segments?.[aiSession.segmentIndex]?.id;
+  const activeSegmentId = aiSession?.segments?.[aiSession.segmentIndex]?.id;
   if (activeSegmentId) ids.delete(activeSegmentId);
 
-  if (state.voice === 'google' && payload?.narration?.cloudEnabled) {
-    [...ids].slice(0, MAX_CLOUD_PREFETCH_SEGMENTS).forEach(id => {
-      const segment = narrationSegmentRecord(id);
-      if (!segment?.static && !narrationIntent) return;
-      queueCloudSegment(id).catch(() => {});
-    });
-    return;
-  }
-
-
-  if (state.voice === 'ai' && state.aiNarrationEnabled && payload?.aiTranscript?.cloudEnabled) {
-    [...ids].slice(0, MAX_AI_PREFETCH_SEGMENTS).forEach(id => {
-      const segment = aiSegmentRecord(id);
-      if (!segment?.static && !narrationIntent) return;
-      queueAiPrefetch(id).catch(() => {});
-    });
-  }
-}
-
-function stopCloudNarration() {
-  cloudGeneration += 1;
-  if (cloudSession?.gapTimer) {
-    window.clearTimeout(cloudSession.gapTimer);
-    cloudSession.gapTimer = 0;
-  }
-  cloudSession = null;
-  const player = elements.narrationPlayer;
-  player.pause();
-  delete player.dataset.narrationSessionId;
-  delete player.dataset.narrationSegmentId;
-  player.removeAttribute('src');
-  player.load();
+  [...ids].slice(0, MAX_AI_PREFETCH_SEGMENTS).forEach(id => {
+    const segment = aiSegmentRecord(id);
+    if (!segment?.static && !narrationIntent) return;
+    queueAiPrefetch(id).catch(() => {});
+  });
 }
 
 function scheduleNarrationGap(session, delay) {
@@ -2047,11 +1822,10 @@ function scheduleNarrationGap(session, delay) {
     session.gapTimer = 0;
     session.waiting = false;
     session.gapRemaining = 0;
-    const activeGeneration = session.mode === 'cloud' ? cloudGeneration : aiGeneration;
+    const activeGeneration = aiGeneration;
     if (session.generation !== activeGeneration) return;
     if (session.paused || session.finished) return;
-    if (session.mode === 'cloud') playCloudSegment(session);
-    else playAiSegment(session);
+    playAiSegment(session);
   }, session.gapRemaining);
 }
 
@@ -2074,118 +1848,14 @@ function finishNarrationSession(session) {
   if (!session) return;
   session.finished = true;
   session.waiting = false;
-  if (session.mode === 'cloud' && cloudSession === session) cloudSession = null;
-  if (session.mode === 'ai' && aiSession === session) aiSession = null;
+  if (aiSession === session) aiSession = null;
   if (elements.narrationPlayer?.dataset?.narrationSessionId === session.id) {
     delete elements.narrationPlayer.dataset.narrationSessionId;
     delete elements.narrationPlayer.dataset.narrationSegmentId;
   }
   elements.audioStatus.textContent = 'Narration finished. The transcript stays visible.';
   updatePlayControls();
-  if (session.mode === 'ai') stopSubtitleTracking(); // keep last sentence visible until card change
-}
-
-function isCurrentNarrationSession(session) {
-  if (!session || session.finished || session.fallbackAttempted || session.paused) return false;
-  if (session.mode === 'cloud') {
-    return cloudSession === session && session.generation === cloudGeneration;
-  }
-  // AI sessions must be recognised too. Without this branch the browser-speech
-  // fallback bails out immediately and a failed request leaves the UI loading
-  // forever with no audio.
-  if (session.mode === 'ai') {
-    return aiSession === session && session.generation === aiGeneration;
-  }
-  return false;
-}
-
-function fallbackToBrowserSpeech(session, reason = 'Cloud narration is unavailable. Using the browser voice.') {
-  if (!isCurrentNarrationSession(session)) return;
-  session.fallbackAttempted = true;
-  const remaining = session.segments
-    .slice(session.segmentIndex)
-    .flatMap(segment => speechChunks(segment.text));
-  const card = session.card;
-  if (session.mode === 'cloud') stopCloudNarration();
-  else if (session.mode === 'ai') stopAiNarration();
-  stopSpeech();
-
-  if (!remaining.length || !speechSupported()) {
-    elements.audioStatus.textContent = 'Narration is unavailable. The transcript is still available.';
-    updatePlayControls();
-    return;
-  }
-
-  const voice = chooseNarrator(card);
-  elements.audioStatus.textContent = reason;
-
-  // Re-establish progressive subtitle for AI fallback (stopAiNarration cleared it via clearSubtitle).
-  if (session.mode === 'ai' && state.aiNarrationEnabled && state.voice === 'ai') {
-    renderAiTranscript(card); // populates subtitleUnits, shows sentence 0, unhides panel
-    startSubtitleFallbackTimer();
-  }
-
-  speakSegments(remaining, voice, speechGeneration, session.rate);
-}
-
-async function playCloudSegment(session) {
-  if (!session || session.finished || session.generation !== cloudGeneration) return;
-  if (session.segmentIndex >= session.segments.length) {
-    finishNarrationSession(session);
-    return;
-  }
-
-  const segment = session.segments[session.segmentIndex];
-  const record = narrationSegmentRecord(segment.id);
-  if (!record) {
-    fallbackToBrowserSpeech(session);
-    return;
-  }
-
-  let source = cloudAudioBlobs.get(segment.id);
-  const pendingPrefetch = source
-    ? null
-    : (cloudPreloadPromises.get(segment.id) || cloudPrefetchPromises.get(segment.id));
-  if (pendingPrefetch) {
-    session.loading = true;
-    elements.audioStatus.textContent = 'Loading Google narration…';
-    updatePlayControls();
-    try {
-      source = await pendingPrefetch;
-    } catch {
-      source = null;
-    } finally {
-      session.loading = false;
-    }
-  }
-  if (!session || session.finished || session.generation !== cloudGeneration) return;
-  if (session.paused) {
-    updatePlayControls();
-    return;
-  }
-
-  const player = createNarrationPlayer(session, segment.id);
-  player.src = source || cloudSegmentUrl(record);
-  player.defaultPlaybackRate = session.rate;
-  player.playbackRate = session.rate;
-  player.preload = 'auto';
-  // Show appropriate narrator name
-  const voiceLabel = (() => {
-    if (state.voice === 'google') return 'Google Chirp 3 HD';
-    if (state.voice === 'piper-amy') return 'Piper TTS (Amy)';
-    if (state.voice === 'piper-ljspeech') return 'Piper TTS (LJSpeech)';
-    if (state.voice === 'piper-ryan') return 'Piper TTS (Ryan)';
-    return 'Narrator';
-  })();
-  elements.audioStatus.textContent = `Reading with ${voiceLabel}.`;
-  session.started = true;
-  session.paused = false;
-
-  const playPromise = player.play();
-  if (playPromise?.catch) {
-    playPromise.catch(() => fallbackToBrowserSpeech(session));
-  }
-  updatePlayControls();
+  stopSubtitleTracking(); // keep last sentence visible until card change
 }
 
 function aiSegmentUrl(segment) {
@@ -2238,111 +1908,110 @@ function playAiSegment(session) {
       player.addEventListener(type, markReady, { passive: true });
     });
 
-    // Set up progressive subtitle tracking
+    // Subtitles are built from the same transcript the audio was rendered from,
+    // so the caption timeline and the spoken timeline cannot drift apart.
     stopSubtitleTracking();
-    renderAiTranscript(session.card);
+    renderAiTranscript(session.card, transcriptSpeechUnits(session.segments.map(segment => segment.text).join('\n')));
     subtitleAudioPlayer = player;
     player.addEventListener('timeupdate', handleSubtitleTimeUpdate, { passive: true });
 
     const playPromise = player.play();
     if (playPromise?.catch) {
       playPromise.catch(() => {
-        // Stop progress tracking; fallbackToBrowserSpeech re-establishes subtitles
         session.loading = false;
         stopSubtitleTracking();
-        fallbackToBrowserSpeech(session, 'AI narration could not play. Using the browser voice.');
+        speakAiTranscript(session.card);
       });
     }
   } catch (error) {
-    // Stop progress tracking; fallbackToBrowserSpeech re-establishes subtitles
     session.loading = false;
     stopSubtitleTracking();
-    fallbackToBrowserSpeech(session, `AI narration could not narrate this card. Using the browser voice. ${error.message}`);
+    elements.audioStatus.textContent = `AI narration could not play. ${error.message}`;
+    speakAiTranscript(session.card);
   }
   updatePlayControls();
 }
 
-// Split narration text into utterances short enough that the browser does not
-// cut them off. Chrome and Edge stop long speechSynthesis utterances early,
-// and a reel transcript is often a single paragraph of several hundred words.
-function speechChunks(text, limit = 220) {
-  const value = String(text || '').trim();
-  if (!value) return [];
-  if (value.length <= limit) return [value];
+// --- Transcript → speakable units -------------------------------------------
+// The build-time Groq transcript is the only narration script in the app. There
+// is no second source: no card text, no atom narration, no cloud provider.
+//
+// One unit is one utterance AND one subtitle. Keeping the two identical is what
+// makes the captions track the voice instead of drifting on an estimated timer.
+const SPEECH_UNIT_MAX_CHARS = 180;
 
-  const pieces = value
-    .split(/(?<=[.!?])\s+(?=[A-Z0-9"‘“(])/)
-    .flatMap(sentence => {
-      const trimmed = sentence.trim();
-      if (!trimmed) return [];
-      if (trimmed.length <= limit) return [trimmed];
+// Scaffolding lines are structural, not prose. Reading them aloud produces
+// "TITLE colon ..." and painting them looks like debug output, so they are
+// dropped from both the audio and the captions.
+const TRANSCRIPT_MARKER = /^[A-Z][A-Z0-9 \t&/'-]{2,}:(\s|$)/;
+const BOX_DRAWING = /[┌┐└┘─│├┤┬┴┼]/;
 
-      const words = trimmed.split(/\s+/);
-      const chunks = [];
-      let current = '';
-      words.forEach(word => {
-        if (!current) {
-          current = word;
-        } else if ((current + ' ' + word).length <= limit) {
-          current += ' ' + word;
-        } else {
-          chunks.push(current);
-          current = word;
-        }
-      });
-      if (current) chunks.push(current);
-      return chunks;
-    });
-
-  return pieces.length ? pieces : [value];
+function isSpeakableTranscriptLine(line) {
+  const trimmed = String(line || '').trim();
+  if (!trimmed) return false;
+  if (trimmed.includes('|')) return false;            // pipe table rows
+  if (BOX_DRAWING.test(trimmed)) return false;        // diagram frames
+  if (TRANSCRIPT_MARKER.test(trimmed)) return false;  // TITLE:, TABLE:, DIAGRAM:
+  return /[\p{L}\p{N}]/u.test(trimmed);
 }
 
-// Read the reel transcript with the browser voice. This is the deterministic
-// fallback the narrator menu promises: the script is the build-time Groq
-// transcript, split into short utterances so the browser speaks all of it.
+function transcriptSpeechUnits(text) {
+  const units = [];
+  String(text || '').split(/\r?\n+/).forEach(line => {
+    const trimmed = line.trim();
+    if (!isSpeakableTranscriptLine(trimmed)) return;
+    // Arrow notation is spoken as "then" so the sentence keeps its meaning.
+    const cleaned = trimmed.replace(/→/g, ' then ').replace(/\s+/g, ' ').trim();
+    splitCaptionSentences(cleaned).forEach(sentence => {
+      splitLongCaption(sentence).forEach(piece => {
+        const value = piece.replace(/\s+/g, ' ').trim();
+        if (value) units.push(value);
+      });
+    });
+  });
+  return units;
+}
+
+// Read the reel transcript with the selected browser voice. This is the normal
+// narration path: the script is the Groq transcript, one caption per utterance.
 function speakAiTranscript(card) {
   stopSpeech();
-  stopCloudNarration();
   stopAiNarration();
 
-  const chunks = aiNarrationSegmentsForCard(card)
-    .flatMap(segment => speechChunks(segment.text));
-  if (!chunks.length || !speechSupported()) {
-    elements.audioStatus.textContent = 'Narration is unavailable. The transcript is still available.';
+  const segments = aiNarrationSegmentsForCard(card);
+  const units = transcriptSpeechUnits(segments.map(segment => segment.text).join('\n'));
+
+  if (!units.length) {
+    // No transcript means no narration. Card text is never substituted, because
+    // the narrator promises the reel script and nothing else.
+    clearSubtitle();
+    elements.audioStatus.textContent = 'No narration for this card.';
+    updatePlayControls();
+    return;
+  }
+  if (!speechSupported()) {
+    elements.audioStatus.textContent = 'Speech is unavailable in this browser. Read the transcript below.';
     updatePlayControls();
     return;
   }
 
   const voice = chooseNarrator(card);
+  speechPaused = false;
   elements.audioStatus.textContent = voice
     ? `Reading the reel transcript with ${voice.name}.`
     : 'Reading the reel transcript with the system voice.';
 
-  if (state.aiNarrationEnabled && state.voice === 'ai') {
-    renderAiTranscript(card);
-    startSubtitleFallbackTimer();
-  }
-
-  speakSegments(chunks, voice, speechGeneration, state.speechRate);
+  renderAiTranscript(card, units);
+  speakSegments(units, voice, speechGeneration, state.speechRate, {
+    onSegmentStart: index => showSubtitleSentence(index)
+  });
 }
 
-function playAiNarration(card) {
-  const segments = aiNarrationSegmentsForCard(card);
-  if (!segments.length) {
-    speakCurrentCard();
-    return;
-  }
-
-  if (!aiNarrationAudioAvailable(segments)) {
-    // No narration provider is configured for the reel transcript. Read it
-    // with the browser voice instead of waiting on an endpoint that can only
-    // answer with an error.
-    speakAiTranscript(card);
-    return;
-  }
-
+// Play pre-rendered AI narration audio when the build shipped it. The transcript
+// is still the script; this path only replaces the voice that reads it.
+function playAiNarrationAudio(card, segments) {
   stopSpeech();
-  stopCloudNarration();
+  stopAiNarration();
   const session = {
     id: `ai-${aiGeneration + 1}`,
     mode: 'ai',
@@ -2358,50 +2027,30 @@ function playAiNarration(card) {
     gapRemaining: 0,
     gapStartedAt: 0,
     gapTimer: 0,
-    finished: false,
-    fallbackAttempted: false
+    finished: false
   };
   aiSession = session;
-  setNarratorStatus('AI narration is ready.', { announce: true });
   elements.audioStatus.textContent = 'Preparing AI narration…';
   playAiSegment(session);
 }
 
-function playCloudNarration(card) {
-  if (!payload?.narration?.cloudEnabled) {
-    speakCurrentCard();
-    return;
-  }
-
-  const segments = narrationSegmentsForCard(card);
+// The single narration entry point. Either the card has a transcript and it is
+// read, or nothing plays at all.
+function playReelNarration(card) {
+  const segments = aiNarrationSegmentsForCard(card);
   if (!segments.length) {
-    speakCurrentCard();
+    stopSpeech();
+    stopAiNarration();
+    clearSubtitle();
+    elements.audioStatus.textContent = 'No narration for this card.';
+    updatePlayControls();
     return;
   }
-
-  stopSpeech();
-  stopAiNarration();
-  stopCloudNarration();
-  const session = {
-    id: `cloud-${cloudGeneration + 1}`,
-    mode: 'cloud',
-    generation: ++cloudGeneration,
-    card,
-    segments,
-    segmentIndex: 0,
-    rate: clamp(Number(state.speechRate) || 1, 0.75, 1.25),
-    started: false,
-    waiting: false,
-    paused: false,
-    loading: false,
-    gapRemaining: 0,
-    gapStartedAt: 0,
-    gapTimer: 0,
-    finished: false,
-    fallbackAttempted: false
-  };
-  cloudSession = session;
-  playCloudSegment(session);
+  if (aiNarrationAudioAvailable(segments)) {
+    playAiNarrationAudio(card, segments);
+    return;
+  }
+  speakAiTranscript(card);
 }
 
 function stopAiNarration() {
@@ -2426,7 +2075,6 @@ function activeNarrationSession(sessionId = '', segmentId = '') {
   if (!activeId) return null;
   if (segmentId && player?.dataset?.narrationSegmentId !== segmentId) return null;
 
-  if (cloudSession?.id === activeId) return cloudSession;
   if (aiSession?.id === activeId) return aiSession;
   return null;
 }
@@ -2465,9 +2113,7 @@ function handleNarrationEnded(sessionId, segmentId) {
   session.segmentIndex += 1;
   if (completedIndex === 0) {
     scheduleNarrationGap(session, 450);
-  } else if (session.mode === 'cloud') {
-    playCloudSegment(session);
-  } else if (session.mode === 'ai') {
+  } else {
     playAiSegment(session);
   }
 }
@@ -2476,13 +2122,10 @@ function handleNarrationError(sessionId, segmentId) {
   const session = activeNarrationSession(sessionId, segmentId);
   if (!session || session.finished) return;
   session.loading = false;
-  const reason = session.mode === 'ai'
-    ? 'AI narration could not play. Using the browser voice.'
-    : 'Google narration could not play. Using the browser voice.';
-  if (session.mode === 'ai') {
-    stopSubtitleTracking();
-  }
-  fallbackToBrowserSpeech(session, reason);
+  stopSubtitleTracking();
+  // The rendered audio failed, but the transcript is still the script, so read
+  // it with the selected browser voice rather than dropping to card text.
+  speakAiTranscript(session.card);
 }
 
 function speechSupported() {
@@ -2501,7 +2144,7 @@ function stopSpeech() {
   updatePlayControls();
 }
 
-function speakSegments(segments, voice, generation, rate = state.speechRate, onBoundary) {
+function speakSegments(segments, voice, generation, rate = state.speechRate, { onSegmentStart } = {}) {
   if (!speechSupported() || !segments.length) return;
 
   const synthesis = window.speechSynthesis;
@@ -2572,10 +2215,8 @@ function speakSegments(segments, voice, generation, rate = state.speechRate, onB
     utterance.rate = session.rate;
     utterance.pitch = 1;
     utterance.volume = 1;
-    utterance.onboundary = ev => {
-      if (!onBoundary || generation !== speechGeneration || session.finished) return;
-      onBoundary({ charIndex: ev.charIndex || 0, segmentIndex: session.segmentIndex, totalSegments: session.segments.length });
-    };
+    // Captions advance with the voice: one utterance is one caption.
+    if (onSegmentStart) onSegmentStart(session.segmentIndex);
     utterance.onend = () => {
       if (generation !== speechGeneration || session.finished) return;
       const completed = session.segmentIndex;
@@ -2602,27 +2243,6 @@ function speakSegments(segments, voice, generation, rate = state.speechRate, onB
   }
 
   speakNext();
-}
-
-function speakCurrentCard() {
-  if (!speechSupported()) {
-    elements.audioStatus.textContent = 'Speech is unavailable in this browser. Read the transcript below.';
-    updatePlayControls();
-    return;
-  }
-
-  const card = cards[currentIndex];
-  if (!card) return;
-
-  stopSpeech();
-  const voice = chooseNarrator(card);
-  const segments = browserNarrationSegments(card);
-
-  speechPaused = false;
-  elements.audioStatus.textContent = voice
-    ? `Reading with ${voice.name}.`
-    : 'Reading with the system voice.';
-  speakSegments(segments, voice, speechGeneration);
 }
 
 function fadeMusic(target, duration = 240) {
@@ -2678,34 +2298,22 @@ function playCurrentAudio() {
   if (!card) return;
 
   if (card.element.dataset.mode === 'visual') {
+    // The one visual card keeps its music bed and has no narration.
     stopSpeech();
-    stopCloudNarration();
     stopAiNarration();
+    clearSubtitle();
     playMusicForCard(card);
-  } else {
-    stopMusic();
-    narrationIntent = true;
-    if (state.voice === 'google') {
-      playCloudNarration(card);
-    } else if (state.voice === 'ai') {
-      stopCloudNarration();
-      if (state.aiNarrationEnabled) playAiNarration(card);
-      else speakCurrentCard();
-    } else if (state.voice?.startsWith('piper-')) {
-      // Piper TTS uses the cloud narration endpoint with voice override
-      playCloudNarration(card);
-    } else {
-      stopCloudNarration();
-      stopAiNarration();
-      speakCurrentCard();
-    }
-    prefetchNarrationAround(currentIndex, 2);
+    return;
   }
+
+  stopMusic();
+  narrationIntent = true;
+  playReelNarration(card);
+  prefetchNarrationAround(currentIndex, 2);
 }
 
 function stopCurrentAudio() {
   stopSpeech();
-  stopCloudNarration();
   stopAiNarration();
   stopMusic();
 }
@@ -2720,8 +2328,7 @@ function updatePlayControls() {
   const visual = card.element.dataset.mode === 'visual';
   const synthesisActive = speechSupported() && (window.speechSynthesis.speaking || window.speechSynthesis.pending);
   const sessionActive = Boolean(speechSession && !speechSession.finished);
-  const narrationSession = cloudSession || aiSession;
-  const providerActive = Boolean(narrationSession && !narrationSession.finished);
+  const providerActive = Boolean(aiSession && !aiSession.finished);
   const active = visual
     ? !elements.musicPlayer.paused
     : synthesisActive || sessionActive || providerActive;
@@ -2729,15 +2336,11 @@ function updatePlayControls() {
     ? false
     : Boolean(
       speechSession?.paused
-      || (cloudSession && !cloudSession.finished && cloudSession.paused)
       || (aiSession && !aiSession.finished && aiSession.paused)
     );
 
   // Derive loading state
-  const loading = visual
-    ? false
-    : (cloudSession?.loading === true)
-      || (aiSession?.loading === true);
+  const loading = visual ? false : aiSession?.loading === true;
 
   const actionWord = visual ? 'music' : 'narration';
   const ariaLabel = loading
@@ -2751,18 +2354,6 @@ function updatePlayControls() {
   icon.innerHTML = active
     ? '<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>'
     : '<path d="m9 7 8 5-8 5Z" fill="currentColor"/>';
-}
-
-const CAPTION_MAX_CHARS = 180;
-
-function isCaptionProseLine(line) {
-  const trimmed = String(line || '').trim();
-  if (!trimmed || trimmed.includes('|')) return false;
-  // Transcript scaffolding such as TITLE:, TABLE:, ANSWER: is spoken by the
-  // narrator but duplicates the card or reads as metadata. Keep it in the
-  // audio timeline, but never paint it in the caption dock.
-  if (/^[A-Z][A-Z \t]{2,}:(\s|$)/.test(trimmed)) return false;
-  return true;
 }
 
 function splitCaptionSentences(lineText) {
@@ -2782,40 +2373,46 @@ function splitCaptionSentences(lineText) {
   return parts;
 }
 
+// Wrap on word boundaries so one caption never exceeds one utterance. Caption
+// and voice therefore always cover exactly the same text.
+function wrapCaption(text) {
+  const words = String(text || '').split(/\s+/).filter(Boolean);
+  const chunks = [];
+  let current = '';
+  words.forEach(word => {
+    if (!current) {
+      current = word;
+    } else if ((current + ' ' + word).length <= SPEECH_UNIT_MAX_CHARS) {
+      current += ' ' + word;
+    } else {
+      chunks.push(current);
+      current = word;
+    }
+  });
+  if (current) chunks.push(current);
+  return chunks;
+}
+
 function splitLongCaption(text) {
-  if (text.length <= CAPTION_MAX_CHARS) return [text];
+  const value = String(text || '').trim();
+  if (!value) return [];
+  if (value.length <= SPEECH_UNIT_MAX_CHARS) return [value];
 
   // Long enumerations are semantically lists even though they end in one full
   // stop. Break them at their numbered clauses so one caption stays readable.
-  const clauses = text.split(/;\s+(?=\(?\d+\)?\s|[A-Z])/);
+  const clauses = value.split(/;\s+(?=\(?\d+\)?\s|[A-Z])/);
   if (clauses.length > 1) {
-    return clauses.map((clause, index) => `${clause.trim()}${index < clauses.length - 1 ? ';' : ''}`);
+    return clauses
+      .map((clause, index) => `${clause.trim()}${index < clauses.length - 1 ? ';' : ''}`)
+      .flatMap(piece => wrapCaption(piece));
   }
-  const leadIn = text.split(/:\s+(?=\()/);
+  const leadIn = value.split(/:\s+(?=\()/);
   if (leadIn.length > 1) {
-    return leadIn.map((part, index) => `${part.trim()}${index < leadIn.length - 1 ? ':' : ''}`);
+    return leadIn
+      .map((part, index) => `${part.trim()}${index < leadIn.length - 1 ? ':' : ''}`)
+      .flatMap(piece => wrapCaption(piece));
   }
-  return [text];
-}
-
-function splitTranscriptIntoUnits(text) {
-  if (!text) return [];
-  const units = [];
-  String(text).split(/\r?\n+/).forEach(line => {
-    const trimmed = line.trim();
-    if (!trimmed) return;
-    const display = isCaptionProseLine(trimmed);
-    splitCaptionSentences(trimmed).forEach(sentence => {
-      splitLongCaption(sentence).forEach(piece => {
-        if (piece) units.push({ text: piece, display });
-      });
-    });
-  });
-  return units;
-}
-
-function firstDisplayableCaptionIndex() {
-  return subtitleUnits.findIndex(unit => unit.display);
+  return wrapCaption(value);
 }
 
 function setCaptionDockVisible(visible) {
@@ -2825,78 +2422,45 @@ function setCaptionDockVisible(visible) {
   if (stage) stage.dataset.captions = visible ? 'on' : 'off';
 }
 
-function renderAiTranscript(card) {
+function renderAiTranscript(card, units = null) {
   if (!elements.transcriptPanel || !elements.transcriptContent || !elements.transcriptEmpty) return;
 
-  if (!state.aiNarrationEnabled || state.voice !== 'ai') {
-    setCaptionDockVisible(false);
-    elements.transcriptContent.innerHTML = '';
-    elements.transcriptEmpty.hidden = true;
-    subtitleUnits = [];
-    subtitleCurrentIndex = -1;
+  // The toggle only controls the caption dock. Narration itself always uses the
+  // transcript, so switching captions off never silences the reel.
+  if (!state.subtitlesEnabled) {
+    hideTranscriptDock();
     return;
   }
 
-  const entryAiNarration = card?.entry?.aiTranscript;
-  if (!entryAiNarration) {
-    setCaptionDockVisible(false);
-    elements.transcriptContent.innerHTML = '';
-    elements.transcriptEmpty.hidden = true;
-    subtitleUnits = [];
-    subtitleCurrentIndex = -1;
+  const list = units || transcriptSpeechUnits(aiNarrationSegmentsForCard(card).map(segment => segment.text).join('\n'));
+  if (!list.length) {
+    hideTranscriptDock();
     return;
   }
 
-  const segments = aiNarrationSegmentsForCard(card);
-  if (!segments.length) {
-    setCaptionDockVisible(false);
-    elements.transcriptContent.innerHTML = '';
-    elements.transcriptEmpty.hidden = true;
-    subtitleUnits = [];
-    subtitleCurrentIndex = -1;
-    return;
-  }
-
-  // Split the transcript at line and sentence boundaries. Structural rows stay
-  // in the timeline for audio sync, but never appear in the caption dock.
-  const fullText = segments.map(segment => segment.text).join('\n');
-  subtitleUnits = splitTranscriptIntoUnits(fullText);
-  let firstVisible = firstDisplayableCaptionIndex();
-
-  // A few visual cards have a transcript made only of scaffolding (e.g. just
-  // "TITLE: Learn in Motion"). Show the card title as their single prose caption
-  // rather than hiding the dock entirely.
-  if (firstVisible < 0) {
-    const fallback = String(card?.entry?.speechTitle || card?.entry?.title || '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    if (fallback) {
-      subtitleUnits = [{ text: fallback, display: true }];
-      firstVisible = 0;
-    }
-  }
-
-  if (firstVisible < 0) {
-    setCaptionDockVisible(false);
-    elements.transcriptContent.innerHTML = '';
-    elements.transcriptEmpty.hidden = true;
-    subtitleCurrentIndex = -1;
-    return;
-  }
-
-  subtitleCurrentIndex = firstVisible;
-  showSubtitleSentence(firstVisible);
+  subtitleUnits = list.map(text => ({ text }));
+  subtitleCurrentIndex = 0;
+  showSubtitleSentence(0);
 
   elements.transcriptEmpty.hidden = true;
   setCaptionDockVisible(true);
 }
 
+function hideTranscriptDock() {
+  setCaptionDockVisible(false);
+  if (elements.transcriptContent) elements.transcriptContent.innerHTML = '';
+  if (elements.transcriptEmpty) elements.transcriptEmpty.hidden = true;
+  subtitleUnits = [];
+  subtitleCurrentIndex = -1;
+}
+
 function showSubtitleSentence(index) {
+  if (!state.subtitlesEnabled) return;
   if (!subtitleUnits.length || index < 0 || index >= subtitleUnits.length) return;
   subtitleCurrentIndex = index;
 
   const sentence = subtitleUnits[index];
-  if (!sentence.display) return;
+  if (!sentence) return;
 
   const html = `<div class="transcript-segment subtitle-current" data-seg-idx="${index}">${escapeHtml(sentence.text)}</div>`;
 
@@ -2905,64 +2469,15 @@ function showSubtitleSentence(index) {
 }
 
 function stopSubtitleTracking() {
-  if (subtitleTimer) {
-    window.cancelAnimationFrame(subtitleTimer);
-    subtitleTimer = null;
-  }
-  if (subtitleFallbackTimer) {
-    window.clearTimeout(subtitleFallbackTimer);
-    subtitleFallbackTimer = null;
-  }
   if (subtitleAudioPlayer) {
     subtitleAudioPlayer.removeEventListener('timeupdate', handleSubtitleTimeUpdate);
     subtitleAudioPlayer = null;
   }
 }
 
-function showAllSubtitleSentences() {
-  if (!subtitleUnits.length) return;
-  // Audio is unavailable (e.g. production quota), so advance sentences on estimated timing
-  // instead of leaving everything visible at once. Begin with the first spoken prose line.
-  subtitleCurrentIndex = Math.max(firstDisplayableCaptionIndex(), 0);
-  showSubtitleSentence(subtitleCurrentIndex);
-  startSubtitleFallbackTimer();
-}
-
-function estimatedSentenceMs(sentence) {
-  const words = sentence.text.trim().split(/\s+/).filter(Boolean).length;
-  const rate = clamp(Number(state.speechRate) || 1, 0.75, 1.25);
-  // ~2.5 words per second at rate 1.0, adjusted for playback rate; minimum 1.6s per sentence
-  const ms = Math.max(1600, Math.round((words / 2.5 / rate) * 1000));
-  return Math.min(ms, 12000);
-}
-
-function startSubtitleFallbackTimer() {
-  stopSubtitleTracking(); // clear any audio tracking first
-  advanceSubtitleFallback();
-}
-
-function advanceSubtitleFallback() {
-  if (!subtitleUnits.length || subtitleCurrentIndex >= subtitleUnits.length - 1) return;
-  const ms = estimatedSentenceMs(subtitleUnits[subtitleCurrentIndex]);
-  subtitleFallbackTimer = window.setTimeout(() => {
-    if (subtitleCurrentIndex >= subtitleUnits.length - 1) return;
-    subtitleCurrentIndex += 1;
-    showSubtitleSentence(subtitleCurrentIndex);
-    advanceSubtitleFallback();
-  }, ms);
-}
-
 function clearSubtitle() {
   subtitleUnits = [];
   subtitleCurrentIndex = -1;
-  if (subtitleTimer) {
-    window.cancelAnimationFrame(subtitleTimer);
-    subtitleTimer = null;
-  }
-  if (subtitleFallbackTimer) {
-    window.clearTimeout(subtitleFallbackTimer);
-    subtitleFallbackTimer = null;
-  }
   if (subtitleAudioPlayer) {
     subtitleAudioPlayer.removeEventListener('timeupdate', handleSubtitleTimeUpdate);
     subtitleAudioPlayer = null;
@@ -3045,8 +2560,8 @@ function togglePlayback() {
     const speechActive = speechSupported() && (synthesis.speaking || synthesis.pending);
     const session = speechSession;
     const speechGap = Boolean(session?.waiting && !session.paused);
-    const cloud = cloudSession;
-    const providerActive = Boolean(cloud && !cloud.finished);
+    const ai = aiSession;
+    const aiActive = Boolean(ai && !ai.finished);
 
     if (speechActive && !speechPaused) {
       synthesis.pause();
@@ -3059,12 +2574,12 @@ function togglePlayback() {
       speechPaused = true;
       elements.audioStatus.textContent = 'Narration paused.';
       showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
-    } else if (cloud && !cloud.finished && cloud.paused) {
-      resumeNarrationGap(cloud);
+    } else if (aiActive && ai.paused) {
+      resumeNarrationGap(ai);
       elements.audioStatus.textContent = 'Narration resumed.';
       showPlaybackFeedback('<path d="m9 7 8 5-8 5Z" fill="currentColor"/>', 'Resumed');
-    } else if (providerActive) {
-      if (cloud && !cloud.finished) pauseNarrationGap(cloud);
+    } else if (aiActive) {
+      pauseNarrationGap(ai);
       elements.audioStatus.textContent = 'Narration paused.';
       showPlaybackFeedback('<path d="M9 7h3v10H9zM13 7h3v10h-3z" fill="currentColor"/>', 'Paused');
     } else if (session?.waiting && session.paused) {
@@ -3337,38 +2852,36 @@ function bindControls() {
 
   elements.voiceSelect.addEventListener('change', () => {
     markGesture();
-    const requestedNarrator = elements.voiceSelect.value;
-
-    abortCloudPrefetches();
-    abortAiPrefetches();
-    state.voice = requestedNarrator;
-    state.aiNarrationEnabled = requestedNarrator === 'ai';
-    state.narratorVersion = 2;
+    state.voice = elements.voiceSelect.value;
+    state.narratorVersion = 3;
     cards.forEach(card => { card.narratorVoice = null; });
     stopCurrentAudio();
+    // Changing the voice stops speech, but captions belong to the card and the
+    // transcript — not to the playback session. Keep the dock in sync.
+    if (state.subtitlesEnabled && cards[currentIndex]) renderAiTranscript(cards[currentIndex]);
     saveState();
     refreshNarratorStatus();
     prefetchNarrationAround(currentIndex, 2);
     updateHubSummaries();
-    const currentCard = cards[currentIndex];
-    if (currentCard) renderAiTranscript(currentCard);
   });
 
-  elements.narrationToggle?.addEventListener('click', () => {
+  elements.subtitlesToggle?.addEventListener('click', () => {
     markGesture();
-    state.aiNarrationEnabled = !state.aiNarrationEnabled;
+    state.subtitlesEnabled = !state.subtitlesEnabled;
     saveState();
     updateHubSummaries();
     const currentCard = cards[currentIndex];
-    if (currentCard) renderAiTranscript(currentCard);
-    stopCurrentAudio();
-    if (state.aiNarrationEnabled && state.voice === 'ai' && currentCard) {
-      playAiNarration(currentCard);
+    if (currentCard) {
+      if (state.subtitlesEnabled) {
+        renderAiTranscript(currentCard);
+      } else {
+        clearSubtitle();
+      }
     }
-    elements.narrationToggle.setAttribute('aria-pressed', String(state.aiNarrationEnabled));
-    elements.narrationToggle.querySelector('.hub-menu__summary').textContent = state.aiNarrationEnabled
-      ? 'On · subtitle overlay'
-      : 'Off · deterministic';
+    elements.subtitlesToggle.setAttribute('aria-pressed', String(state.subtitlesEnabled));
+    elements.subtitlesToggle.querySelector('.hub-menu__summary').textContent = state.subtitlesEnabled
+      ? 'On · caption overlay'
+      : 'Off';
   });
 
   elements.speechRate.addEventListener('input', () => {

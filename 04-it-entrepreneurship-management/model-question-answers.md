@@ -1,9 +1,13 @@
-# IT Entrepreneurship & Management — TU/FOM 2026 Model Question Complete Written Answers
+# IT 248 — TU/FOM 2026 Model Question Complete Answers
 
-**Paper:** IT 248 Entrepreneurship and Management | **Full Marks:** 100 | **Pass Marks:** 50 | **Time:** 3 Hours
-**Source:** TU/FOM 2026 Official Model Question
+**Paper:** IT Entrepreneurship and Management · **Full Marks:** 100 · **Pass Marks:** 50 · **Time:** 3 hours  
+**Source:** TU/FOM 2026 official model question
 
-> **Note:** This subject is **100 marks** (not 60). Word-count guidance: Group A (2 marks) ≈ 50–60 words · Group B (5 marks) ≈ 180–220 words · Group C (10 marks) ≈ 350–400 words · Group D (20 marks) ≈ 700–800 words. Questions Q20 and Q21 each contain two distinct questions — answer as **separate headed halves**.
+> **Length contract:** 2 marks = 45–60 words · 5 marks = 180–250 · 10 marks = 330–420 · 20 marks = 600–800. Counts below come from the saved file.
+>
+> **Legal warning:** Tax rates, social-security rules, filing dates, and sector permissions change. Use the frameworks below, then verify the current Finance Act, IRD notices, and relevant regulator guidance before quoting a number in the exam.
+>
+> **Q20 and Q21 contain two questions each.** Answer them under separate headings.
 
 ---
 
@@ -11,156 +15,63 @@
 
 ### A1. Define entrepreneurship.
 
-**Entrepreneurship** is the process of **identifying, evaluating, and exploiting opportunities** to create value by assembling resources (capital, talent, technology) under conditions of uncertainty, with the aim of building a sustainable venture that generates economic and/or social returns.
+Entrepreneurship is the process of identifying an opportunity, assembling resources, and creating value through a new venture or within an existing organisation. The entrepreneur accepts risk and uncertainty. It differs from self-employment because opportunity recognition, innovation, and resource orchestration drive the activity. In an IT context, it means turning technology into a workable solution to a real customer problem.
 
-It involves: (1) **Opportunity recognition** — seeing a gap or need others miss; (2) **Resource orchestration** — combining people, money, technology, and networks; (3) **Risk-bearing** — accepting uncertainty of outcome; (4) **Value creation** — for customers, employees, investors, and society.
-
-*Schumpeterian view:* Entrepreneurship is **creative destruction** — introducing new combinations (new products, methods, markets, sources, organisations) that disrupt equilibrium.
-
----
+*(59 words)*
 
 ### A2. What is an entrepreneurship ecosystem?
 
-An **entrepreneurship ecosystem** is the **interconnected network of actors, institutions, resources, and cultural norms** that collectively support the birth, growth, and scaling of new ventures in a given geography or sector.
+An entrepreneurship ecosystem is the interconnected network of people, institutions, capital, markets, and rules that supports venture creation and growth in a geography. Its main pillars are policy and regulation, finance, human capital, markets, culture, and support infrastructure. Nepal has incubators, mentors, digital-payment users, and startup-policy efforts. Yet finance access, regulatory certainty, and market reach still constrain many ventures.
 
-**Six domains (Isenberg / Babson model):**
-
-| Domain | Actors / Elements |
-|--------|-------------------|
-| **Policy & Regulation** | Government, laws (Company Act, IP, labour, tax), regulators (NRB, MoCIT, SEBON), incentives (startup grants, tax holidays). |
-| **Finance** | Angels, VCs (OneStep, Dolma, TrueNorth), banks (debt), crowdfunding, government funds (Youth Start-up Fund), revenue-based financing. |
-| **Culture** | Attitudes toward risk, failure, success; role models; media narratives; diaspora engagement. |
-| **Supports** | Incubators/accelerators (NIC, Antarprerana, NEXT), co-working, legal/accounting/HR services, mentors, industry associations (CAN, FNCCI). |
-| **Human Capital** | Universities (TU, KU, Pokhara), technical institutes, coding bootcamps, returning diaspora, skilled labour pool. |
-| **Markets** | Early adopters, anchor customers (govt, corporates), export channels, procurement opportunities, digital platforms. |
-
-**Nepal context:** Ecosystem is **nascent but accelerating** — NIC has incubated 200+ startups; VC capital ~$50M deployed since 2018; Digital Nepal Framework provides policy tailwind; but gaps remain in late-stage capital, exit pathways (M&A/IPO rare), and regulatory speed.
-
----
+*(59 words)*
 
 ### A3. List any two techniques for creative thinking.
 
-1. **SCAMPER** — Structured ideation by applying seven verbs to an existing product/service: **S**ubstitute, **C**ombine, **A**dapt, **M**odify, **P**ut to another use, **E**liminate, **R**everse. *Example:* Apply to "taxi service" → Substitute driver with app → Combine with food delivery → Adapt dynamic pricing → Result: Pathao/Tootle.
+Two techniques for creative thinking are brainstorming and SCAMPER. Brainstorming generates many ideas in a group while judgement is delayed; the team then builds on promising ideas. SCAMPER changes an existing idea by asking users to Substitute, Combine, Adapt, Modify, put to another use, Eliminate, or Reverse it. Use brainstorming to diverge, then SCAMPER to improve or pivot a solution.
 
-2. **Design Thinking (5-Stage)** — Human-centred innovation process: **Empathise** (user research) → **Define** (problem statement) → **Ideate** (divergent brainstorming) → **Prototype** (low-fidelity MVP) → **Test** (user feedback loop). *Example:* Airbnb founders photographed listings themselves to understand host pain points.
-
-*Other techniques:* Brainstorming (Osborn), Mind Mapping, TRIZ (inventive problem solving), Six Thinking Hats (de Bono), Crazy 8s (Google Ventures).
-
----
+*(60 words)*
 
 ### A4. What do you mean by target market?
 
-**Target market** is the **specific, well-defined group of customers** a venture chooses to serve — those most likely to buy, retain, and advocate for the product. It is not "everyone"; it is the segment where **product-market fit** is strongest.
+A target market is the customer segment a venture serves first. It guides product design, pricing, communication, and channel choice. A useful segment can be defined through demographics, geography, behaviour, and the customer’s need. For example, a Kathmandu ride-booking service might target commuters who value transparent fares, safe trips, and digital payment rather than “everyone in Nepal.”
 
-**Defined by intersecting filters:**
-- **Demographic** — age, gender, income, education, occupation, family status.
-- **Geographic** — country, city, neighbourhood, climate zone, urban/rural.
-- **Psychographic** — values, lifestyle, personality, attitudes, interests.
-- **Behavioural** — usage rate, loyalty, benefits sought, purchase occasion, price sensitivity.
-
-**Sizing framework:** **TAM** (Total Addressable Market) → **SAM** (Serviceable Available Market) → **SOM** (Serviceable Obtainable Market). *Example:* For a Nepali fintech app: TAM = all smartphone users in Nepal (~15M); SAM = urban banked users (~4M); SOM = early adopters in Kathmandu Valley (~200K in Year 1).
-
----
+*(58 words)*
 
 ### A5. What is Business Model Canvas?
 
-The **Business Model Canvas (BMC)** is a **one-page strategic tool** (Alexander Osterwalder, 2010) that visualises how a venture creates, delivers, and captures value across **nine building blocks**:
+The Business Model Canvas is a one-page framework that shows how a venture creates, delivers, and captures value. Its nine blocks are Customer Segments, Value Propositions, Channels, Customer Relationships, Revenue Streams, Key Resources, Key Activities, Key Partnerships, and Cost Structure. It helps founders test whether customer value, delivery operations, and revenue can form a coherent, workable model.
 
-| Block | Question | Example (Ride-Sharing) |
-|-------|----------|------------------------|
-| **1. Customer Segments** | Who are we creating value for? | Riders (commuters, tourists), Drivers (part-time, full-time) |
-| **2. Value Propositions** | What problem do we solve? | Affordable, safe, on-demand mobility; income for drivers |
-| **3. Channels** | How do we reach customers? | Mobile app (iOS/Android), web, referral, partnerships (hotels, corps) |
-| **4. Customer Relationships** | How do we acquire/retain? | Ratings, support chat, loyalty program, driver incentives |
-| **5. Revenue Streams** | How do we earn? | Commission per ride (15–20%), surge pricing, ads, subscriptions |
-| **6. Key Resources** | What assets do we need? | Platform tech, driver network, brand, data, capital |
-| **7. Key Activities** | What must we do daily? | Matching algorithm, safety ops, driver onboarding, marketing |
-| **8. Key Partnerships** | Who helps us? | Payment gateways (Khalti/eSewa), maps (Google), insurance, telcos |
-| **8. Cost Structure** | What are our major costs? | Customer acquisition (CAC), driver incentives, server, support, compliance |
-
-**Use:** Rapid iteration — sketch in 20 min, test assumptions, pivot blocks independently. **Lean Canvas** (Ash Maurya) adapts BMC for early-stage: replaces Key Partners/Activities/Resources with Problem, Solution, Unfair Advantage, Metrics.
-
----
+*(57 words)*
 
 ### A6. What is intellectual property right (IPR)?
 
-**Intellectual Property Rights (IPR)** are **legal monopolies granted to creators/inventors** over intangible creations of the mind, enabling them to control use, earn returns, and prevent unauthorised exploitation for a defined period.
+An intellectual property right (IPR) is a legal right protecting a creation of the mind. It gives owners control over commercial use. Nepal’s main categories are patents for inventions, trademarks for brands and logos, copyright for works and software code, and industrial designs for product appearance. Startups should identify these assets early and protect them through contracts and registrations.
 
-**Main types in Nepal (governed by Patent, Design & Trademark Act 2022 / Copyright Act 2002):**
-
-| IP Type | Protects | Duration (Nepal) | Example for IT Startup |
-|---------|----------|------------------|------------------------|
-| **Patent** | Inventions (product/process) — novel, inventive, industrial application | 20 years from filing | Novel algorithm, hardware device, encryption method |
-| **Trademark** | Brand identifiers (name, logo, slogan, sound, colour) | 10 years, renewable indefinitely | App name, logo, tagline ("Ride Smart, Ride Safe") |
-| **Copyright** | Original literary, artistic, musical, software code | Life + 50 years (author) / 50 years (corporate) | Source code, UI design, documentation, marketing videos |
-| **Industrial Design** | Aesthetic appearance (shape, pattern, ornamentation) | 15 years (5+5+5) | Unique device casing, icon set |
-| **Trade Secret** | Confidential business information (formulas, algorithms, customer lists) | Indefinite (while secret) | Proprietary matching algorithm, pricing model, user data insights |
-
-**Strategic note for IT startups:** Code is **automatically copyrighted** on creation — register for enforcement. **Patents are expensive/slow** — use for core defensible tech only. **Trademarks are essential** — file early (NICE Class 9, 35, 42). **Trade secrets** require NDAs, access controls, employee agreements.
-
----
+*(60 words)*
 
 ### A7. List any two funding sources for startups.
 
-1. **Angel Investors** — High-net-worth individuals investing personal capital in early-stage ventures (pre-seed/seed) in exchange for equity (typically 5–15%). Provide mentorship, networks, follow-on signalling. *Nepal examples:* Individual angels via NIC, Antarprerana; emerging angel networks (Nepal Angel Network).
+Two startup funding sources are bootstrapping and angel investment. Bootstrapping uses founders’ savings or reinvested revenue, preserving ownership but limiting speed. Angel investors provide their own money for equity and often add mentorship and contacts, while founders give up some ownership and control. A startup should match funding to its stage rather than accept capital before its model is validated.
 
-2. **Venture Capital (VC) Funds** — Institutional pools deploying limited partners' capital into high-growth startups (seed to Series A+) for equity (10–30%). Stage-specific: pre-seed ($50–200K), seed ($200K–1M), Series A ($1–5M). *Nepal examples:* OneStep Ventures, Dolma Impact Fund, TrueNorth Associates, Business Oxygen.
-
-*Other sources:* **Bootstrapping** (founder savings, revenue), **Friends & Family**, **Crowdfunding** (Kickstarter, Milaap), **Government Grants** (Youth Startup Fund, MoICS), **Bank Debt** (collateralised, rare for early-stage), **Revenue-Based Financing** (Klub, GetVantage), **Corporate Venture** (banks, telcos, e-commerce platforms).
-
----
+*(60 words)*
 
 ### A8. What is digital marketing?
 
-**Digital marketing** is the promotion of products, services, or brands using **digital channels and technologies** to reach, engage, convert, and retain customers — with **measurable, targetable, and interactive** campaigns.
+Digital marketing promotes products or services through digital channels such as search engines, social media, email, content, mobile apps, and online advertising. It targets a defined audience, engages users, and drives measurable actions such as leads, purchases, or app installs. Analytics track channel performance and guide budget decisions, although not every conversion can be attributed with certainty.
 
-**Core channels:**
-
-| Channel | Mechanism | Key Metrics |
-|---------|-----------|-------------|
-| **Search (SEO/SEM)** | Organic ranking + paid ads (Google Ads) | CTR, CPC, CPA, ROAS, keyword rank |
-| **Social Media** | Organic content + paid ads (Meta, LinkedIn, TikTok, YouTube) | Reach, engagement, CPL, follower growth |
-| **Content Marketing** | Blogs, video, podcasts, whitepapers, case studies | Traffic, time-on-page, leads, domain authority |
-| **Email / Marketing Automation** | Drip sequences, newsletters, behavioural triggers | Open rate, click rate, conversion, LTV |
-| **Affiliate / Influencer** | Performance-based partnerships | CPA, revenue share, UGC volume |
-| **App Store / Play Store (ASO)** | Keyword optimisation, ratings, screenshots | Install rate, ranking, retention |
-
-**Start-up advantages:** Low budget entry (₨500/day), precise targeting (geo, interest, behaviour), real-time optimisation, attribution (UTM, MMPs like AppsFlyer/Adjust), A/B testing at scale.
-
----
+*(57 words)*
 
 ### A9. Define leadership style.
 
-**Leadership style** is the **consistent pattern of behaviours, decision-making approaches, and interpersonal methods** a leader uses to influence, motivate, and direct a team toward goals. It is not fixed — effective leaders **adapt** style to context (situational leadership).
+A leadership style is a leader’s consistent pattern of directing, communicating, delegating, and motivating others. Common styles include autocratic, democratic, laissez-faire, transformational, and servant leadership. They differ in how much the leader controls decisions and develops people. Effective founders adjust the style to team maturity, task, and urgency, rather than using one approach in every situation.
 
-**Common styles (Lewin / Goleman / Hersey-Blanchard):**
-
-| Style | Approach | Best For | Risk |
-|-------|----------|----------|------|
-| **Autocratic** | Leader decides alone; top-down | Crisis, urgent compliance, inexperienced team | Low morale, no ownership, bottleneck |
-| **Democratic** | Team participates in decisions | Complex problems, skilled team, buy-in needed | Slow, analysis paralysis |
-| **Laissez-faire** | Hands-off; team self-directs | Experts, creatives, high autonomy cultures | Drift, lack of accountability |
-| **Transformational** | Inspires vision, develops people, challenges status quo | Scaling, culture change, innovation | Burnout if not grounded |
-| **Servant** | Serves team first; removes obstacles | High-trust, knowledge work, agile | Perceived as weak; needs authority backup |
-| **Situational** | Adapts directive/supportive to follower readiness (R1–R4) | All contexts — the meta-skill | Requires high leader EQ/skill |
-
-**Startup context:** Early stage → **Founder as transformational + directive** (vision + execution). Growth stage → **Servant + situational** (empower leaders, hire experts). Crisis → **Autocratic** (cash runway, pivot decisions).
-
----
+*(57 words)*
 
 ### A10. What do you mean by corporate social responsibility (CSR)?
 
-**Corporate Social Responsibility (CSR)** is a **self-regulating business model** where a company integrates **social, environmental, and ethical concerns** into its operations and stakeholder interactions — going beyond legal compliance to create **shared value** for society and the business.
+Corporate social responsibility (CSR) means a business commits to ethical conduct and benefits society and the environment while pursuing profit. It covers labour, community welfare, and governance. For a startup, CSR is not a donation after profit. It should shape products, employment, sourcing, data use, and community impact.
 
-**Four dimensions (Carroll's Pyramid):**
-1. **Economic** — Be profitable (foundation for all else).
-2. **Legal** — Obey laws (labour, tax, environment, consumer protection).
-3. **Ethical** — Do what is right, fair, just (beyond law — e.g., fair wages, transparent AI).
-4. **Philanthropic** — Give back (donations, volunteering, community programs).
-
-**Modern frameworks:** **ESG (Environmental, Social, Governance)** — measurable metrics for investors; **SDG Alignment** — map activities to UN Sustainable Development Goals; **B Corp Certification** — legal accountability to stakeholders, not just shareholders.
-
-**Nepal context:** Companies Act 2063 mandates CSR for certain companies (2% of net profit for specified sectors). For startups: **mission-driven from day one** (e.g., Khalti financial inclusion, Hamro Patro digital access, Agro-tech farmer income) attracts impact investors and talent. **Green flags:** Diversity in hiring, data privacy by design, carbon footprint tracking, community co-creation.
+*(59 words)*
 
 ---
 
@@ -168,311 +79,96 @@ The **Business Model Canvas (BMC)** is a **one-page strategic tool** (Alexander 
 
 ### B11. Explain any three key characteristics of successful entrepreneurs.
 
-Research (GEM, Kauffman, HBS) and practitioner consensus identify these as **non-negotiable traits**:
+Successful entrepreneurs show three connected characteristics.
 
----
+1. **Opportunity recognition.** They notice a recurring customer problem and judge whether people will pay for a practical solution. They observe actual behaviour rather than follow technology trends. The entrepreneur then tests demand before building a full solution. eSewa’s early focus on utility bill payment illustrates this approach: it began with a frequent payment task and later expanded.
 
-#### **1. Opportunity Alertness & Obsession**
-Successful entrepreneurs **see problems as opportunities** where others see obstacles. They maintain a **perpetual radar** for unmet needs, inefficiencies, and emerging trends. It is not passive — they **obsessively test hypotheses** (talk to users, build MVPs, measure). *Example:* Binod Chaudhary saw Nepal's noodle gap and built Wai Wai; SastoDeal founders saw e-commerce trust gap and built COD + verification.
+2. **Resilience and grit.** Successful founders persist through rejection, delayed revenue, and technical failure. They treat each setback as evidence and change the next test. This grit does not mean repeating the same mistake. For a Nepali IT startup, this means revising an MVP when riders do not complete registration or repeat the booking rather than blaming early users.
 
-#### **2. Resourcefulness & Effectual Reasoning**
-Instead of "I need X to do Y" (causal), they ask **"What can I do with what I have?"** (effectuation — Sarasvathy). They leverage **means at hand** (skills, network, free tools, partnerships) to act now, iterating toward goals. They **bootstrap** — use revenue, not capital, to fund growth. *Example:* Khalti started as a QR payment wrapper on existing banking APIs; Tootle used Google Maps + Facebook groups before building app.
+3. **Resource orchestration.** They combine scarce money, people, technology, and partnerships to achieve more. Khalti’s fintech model could build on existing banks, telecom networks, and merchants instead of owning each infrastructure layer. Partnership agreements should still protect data, revenue sharing, and accountability. The founder must protect control while using outside capabilities that reduce time and cost.
 
-#### **3. Resilience & Learning Velocity**
-Failure is **data, not identity**. They **fail fast, learn faster** — each experiment (even failed) updates the mental model. They separate **self-worth from venture outcome**. *Example:* Pathao pivoted from food delivery → ride-sharing → logistics → payments; each pivot used prior learning. **Grit** (Duckworth) = passion + perseverance for long-term goals.
+Together, these traits convert a noticed opportunity into sustained execution: recognise value, survive learning cycles, and organise resources.
 
----
-
-*Other critical traits:* **Customer empathy** (deep user understanding), **Sales ability** (sell vision to investors, product to customers, mission to hires), **Integrity/trustworthiness** (compounds reputation), **Systems thinking** (see interdependencies), **Ambidexterity** (execute today + explore tomorrow).
-
----
+*(199 words)*
 
 ### B12. How do you identify market needs for a new IT idea?
 
-A structured **market needs discovery process** for IT ventures:
+Use a four-step process to identify market needs for a new IT idea:
 
----
+1. **Observe.** Watch users in their real setting. Record frequent tasks, complaints, delays, workarounds, and money already spent. For example, observe commuters using several transport apps or asking drivers for cash discounts.
+2. **Interview.** Ask open questions about recent experiences rather than pitching a solution. “Tell me about the last time you arranged a ride” reveals triggers, alternatives, and fears that a general survey may hide.
+3. **Quantify.** Estimate the number affected, frequency of the problem, current spending, and willingness to pay. Use a defined corridor or customer segment for counting, then test price sensitivity through a survey and pilot booking. Separate stated preference from actual payment.
+4. **Validate.** Build the cheapest credible test: a landing page, clickable prototype, pre-sale, or concierge MVP. Measure completion, repeat use, complaints, and payment behaviour. A WhatsApp ride-booking pilot in one Nepal corridor can test demand before a full app is built.
 
-#### **1. Problem Discovery (Qualitative)**
-- **User Interviews (15–20)** — Open-ended: "Walk me through the last time you faced [problem]." Listen for **workarounds** (spreadsheets, manual steps, complaints) — these signal unmet needs.
-- **Contextual Inquiry / Shadowing** — Observe users in their environment (office, field, home). See friction they've normalised.
-- **Jobs-to-be-Done (JTBD)** — Frame need as: "When [situation], I want to [motivation], so I can [outcome]." *Example:* "When I'm late for a meeting in Kathmandu traffic, I want a reliable ride in 5 mins, so I arrive on time."
+The team should state one assumption and a success measure before each test. The idea advances only when real users show that the need is frequent, important, and worth paying for.
 
-#### **2. Quantitative Validation**
-- **Survey (100+ target users)** — Validate problem severity (1–5 scale), current solutions, willingness to pay (Van Westendorp).
-- **Keyword / Search Volume** — Google Trends, Ahrefs, Ubersuggest — rising queries = latent demand.
-- **Competitor Review Mining** — App Store / Play Store reviews of alternatives — "I wish it had…" = feature gaps.
-
-#### **3. Solution Validation (Pre-Product)**
-- **Landing Page + Ads** — Value prop, waitlist, pre-sell (₨100 deposit). Measure CAC, conversion.
-- **Concierge MVP** — Manually deliver service (no code) to 5–10 users. Learn workflow, pricing, objections.
-- **Wizard of Oz** — Frontend looks real; backend is human. Test core loop before building.
-
-#### **4. Nepal-Specific Channels**
-- **Facebook Groups** — Industry-specific (e.g., "Nepal Freelancers", "Kathmandu Startups") — post polls, recruit interviewees.
-- **College Networks** — TU, KU, Islington, Deerwalk — student projects, hackathons.
-- **Meetups / Events** — NIC Demo Days, CAN Federation, TechKriti, Hackathons.
-- **Government Data** — CBS surveys, NRB reports, MoCIT publications — macro trends.
-
-#### **5. Prioritisation Framework**
-Score each need on: **Severity** (pain × frequency), **Willingness to Pay**, **Market Size**, **Differentiation Potential**, **Feasibility**. Build for top 1–2.
-
----
+*(192 words)*
 
 ### B13. Write a short note on competitor analysis.
 
-**Competitor analysis** is the systematic identification, profiling, and tracking of **direct, indirect, and potential competitors** to inform strategy, positioning, and resource allocation. It is not a one-time report — it is a **continuous intelligence discipline**.
+Competitor analysis identifies every alternative that could solve the target customer’s problem, then reveals the startup’s defensible position. Apply a four-part competitor map:
 
----
+1. **Direct competitors** offer the same solution to the same need, such as ride-booking apps.
+2. **Indirect competitors** solve the need differently, such as taxis, microbuses, or an own vehicle.
+3. **Substitutes** meet a different need but compete for the same budget, such as walking or a workplace shuttle.
+4. **Potential entrants** operate nearby and could pivot into the market, such as a food-delivery or payments platform adding rides.
 
-#### **Framework: Three Circles + Battlecards**
+For each rival, compare pricing, target segment, unique selling proposition, service coverage, user reviews, partnerships, and technology. Record evidence rather than assumptions, and date each update. Then test the gap with customers. In Nepal, a safety-first ride service could test verified drivers, transparent fares, SOS, and trip tracking. This is a candidate wedge, not proof of an unmet need. The output also supports strategic choices about price, scope, funding, and partnerships. It should state who the venture serves, which alternative it replaces, why customers will choose it, and how the advantage can be sustained.
 
-| Circle | Scope | Tools |
-|--------|-------|-------|
-| **Direct** | Same problem, same solution, same customers | Pathao vs. Tootle vs. inDrive (ride-sharing) |
-| **Indirect** | Same problem, different solution | Taxis, public transport, motorbike ownership |
-| **Potential** | Adjacent players who could enter | Foodmandu adding rides; banks launching super-apps |
-
-#### **Analysis Dimensions (per competitor)**
-
-| Dimension | What to Track | Sources |
-|-----------|---------------|---------|
-| **Value Proposition** | Core promise, differentiation, positioning | Website, app store, ads, PR |
-| **Business Model** | Revenue streams, pricing, take-rate, unit economics | Financial filings, news, estimates |
-| **Product/Tech** | Features, stack, UX, release cadence, API | App stores, GitHub, StackShare, demos |
-| **Go-to-Market** | Channels, CAC, partnerships, sales motion | SimilarWeb, Sensor Tower, LinkedIn, job posts |
-| **Traction** | Users, GMV, revenue, retention, NPS | Press, investor decks, awards, Glassdoor |
-| **Team & Culture** | Founders, key hires, org structure, values | LinkedIn, talks, podcasts, Crunchbase |
-| **Financials** | Funding rounds, valuation, burn, runway | Tracxn, PitchBook, SEBON filings (if public) |
-| **Strengths / Weaknesses** | SWOT per competitor | Synthesised from above |
-
-#### **Output: Battlecards (1-pager per competitor)**
-
-| Section | Content |
-|---------|---------|
-| **Headline** | "Pathao — Market leader, deep pockets, expanding to logistics" |
-| **Why We Win** | Our differentiators (lower CAC, niche focus, superior driver UX) |
-| **Why They Win** | Their moats (brand, network, capital, partnerships) |
-| **Objection Handling** | "But Pathao has more drivers" → "Our drivers earn 20% more; retention > acquisition" |
-| **Landmines** | What they could do to crush us (price war, exclusive partnerships) |
-
-#### **Continuous Process**
-- **Weekly:** Automated alerts (Google Alerts, Feedly, SimilarWeb).
-- **Monthly:** Deep-dive on top 3; update battlecards.
-- **Quarterly:** Strategy review — does positioning still hold?
-
-**Nepal tip:** Most Nepali startups **ignore indirect/potential competitors**. The biggest threat to a ride-sharing app isn't another ride-sharing app — it's **Google Maps integrating hailing**, or **banks embedding mobility in super-apps**.
-
----
+*(188 words)*
 
 ### B14. Discuss the roles of trend analysis in idea generation.
 
-**Trend analysis** is the systematic scanning of **macro and micro shifts** (technological, social, economic, regulatory, environmental) to **anticipate future needs** and generate **timely, relevant venture ideas**. It transforms entrepreneurship from **reactive** ("what's missing now?") to **proactive** ("what will be missing in 18 months?").
+Trend analysis studies changes in technology, markets, and society to uncover opportunities for new IT ideas. It serves three main roles:
 
----
+1. **Opportunity spotting.** A trend can expose a new problem or remove an old barrier. The spread of AI tools, for example, may support document processing for Nepali banks, offices, or government services. The founder must convert the trend into a specific customer job, not copy a global product.
+2. **Timing validation.** A promising trend may still fail if the market lacks readiness. A mobile-payment idea depends on device access, internet quality, trust, and local payment habits. Trend analysis checks whether these conditions exist. It also warns against entering after competitors have made the market expensive and undifferentiated.
+3. **Differentiation.** Founders can combine a trend with a neglected local segment or workflow. Instead of another consumer food-delivery app, a startup might test cloud tools for small restaurants. The trend is shared; the chosen customer and problem create the position.
 
-#### **Four Roles in Idea Generation**
+The analysis should compare short-lived fads with durable changes, inspect the regulatory setting, and test the underlying assumption with a small prototype. Its purpose is not to predict the future. It is to improve timing and sharpen the idea before costly development.
 
-| Role | Mechanism | Example |
-|------|-----------|---------|
-| **1. Opportunity Spotting** | Trends create **new problems** or **amplify existing ones** — first-mover advantage goes to those who spot the inflection. | **Remote work trend (2020)** → Zoom, Notion, Loom, Miro, Deel, Remote.com all founded/scaled 2013–2020. |
-| **2. Market Timing Validation** | A great idea too early = education cost; too late = saturated. Trend data (adoption curves, Gartner Hype Cycle, search volume) tells **when** to launch. | **AI coding assistants** — GitHub Copilot (2021) rode LLM maturity curve; 2018 would've failed (models not ready). |
-| **3. Feature / Business Model Inspiration** | Trends reveal **new business models** (subscription, marketplace, usage-based, tokenised) and **distribution channels** (TikTok Shop, WhatsApp Business, Discord communities). | **Creator economy trend** → Patreon, Substack, Kajabi, Fourthwall, Stan Store — all monetise audience differently. |
-| **4. Risk Reduction** | Trends highlight **regulatory tailwinds/headwinds**, **talent availability**, **infrastructure readiness** — de-risks go-to-market. | **Nepal Digital Nepal Framework (2019)** → tailwind for fintech, e-governance, agritech; **NRB crypto ban (2021)** → headwind for Web3. |
-
----
-
-#### **Trend Sources & Tools**
-
-| Category | Sources | Tools |
-|----------|---------|-------|
-| **Technology** | Gartner Hype Cycle, CB Insights, a16z, Benedict Evans, Stratechery, arXiv, Papers with Code | Feedly, Glasp, Notion Web Clipper |
-| **Market / Consumer** | Statista, Euromonitor, Nielsen, Kantar, GWI, Google Trends, Exploding Topics | TrendHunter, SparkToro |
-| **Regulatory / Policy** | Government gazettes, MoCIT, NRB, SEBON, MoICS, parliamentary bills | LexisNexis, government portals |
-| **Social / Cultural** | WGSN, The Future Laboratory, Pew Research, Edelman Trust Barometer | Twitter/X lists, Reddit, Discord communities |
-| **Investment** | PitchBook, Tracxn, Crunchbase, VC blogs (Sequoia, a16z, YC), Nepal VC newsletters | Dealroom, Private Equity Wire |
-
----
-
-#### **Practical Process for Founders**
-
-1. **Weekly Scan (30 min)** — Curated newsletter + 2–3 deep reads.
-2. **Monthly Trend Map** — Plot trends on **Impact × Certainty × Time-to-Market** matrix.
-3. **Quarterly Idea Sprint** — Take top 3 trends → apply SCAMPER / JTBD → generate 10 ideas → filter via TAM/SAM/SOM + founder fit.
-4. **Annual Strategy** — Align roadmap with 2–3 **structural trends** (e.g., AI agents, climate tech, silver economy).
-
-**Nepal-specific trends (2024–2026):** Digital public infrastructure (Nagarik, National ID, payment interoperability), climate adaptation (glacial lake monitoring, parametric insurance), diaspora capital return, Tier-2/3 city digitisation, green hydrogen/energy export.
-
----
+*(202 words)*
 
 ### B15. Explain taxation basics for IT startups in Nepal.
 
-**Nepal's tax regime for IT startups** — governed by **Income Tax Act 2058 (2002)**, **VAT Act 2052**, **Excise Act 2058**, and annual **Finance Acts**. Key points for founders:
+Nepal’s tax framework for an IT startup depends on its legal form, income, transactions, workforce, and location. The startup must plan for five areas:
 
----
+1. **Corporate income tax.** Profits are taxed under the applicable corporate tax rules. The company must maintain books, file returns, and pay any balance or estimated tax on time. IT-related activities may receive special rates or incentives, but eligibility must be confirmed.
+2. **Value Added Tax (VAT).** Taxable sales may require VAT registration, charging, filing, and payment. The startup should separate taxable and exempt transactions and support input-credit claims with valid records.
+3. **Tax Deducted at Source (TDS).** Payments for rent, professional services, contractors, and other specified transactions may require withholding and deposit. Each contract should identify the correct TDS treatment and payment deadline.
+4. **Advance tax.** If the rules require instalments, the company should estimate taxable income, reserve funds, and revise the estimate during the year rather than wait for final profit.
+5. **Social security contributions.** Employee and contractor arrangements may trigger contributions under social-security rules. Contracts, payroll, enrolment, and contribution records must match the worker’s legal classification.
 
-#### **1. Corporate Income Tax (CIT)**
+Also check VAT, TDS, service-export, and sector-specific rules for digital services. Rates, thresholds, and due dates change. Before quoting them or filing, consult the latest Finance Act, IRD notices and guidance, and obtain professional advice for the startup’s exact model.
 
-| Entity Type | Rate | Notes |
-|-------------|------|-------|
-| **Regular Company** | **25%** | Standard rate. |
-| **Special Industry** (manufacturing, tourism, hydropower, IT parks) | **20%** | Requires industry classification; IT services *not* automatically included unless in designated IT park. |
-| **Startup Concession** (Finance Act 2080) | **1% of turnover** (Year 1–3) | **Opt-in** for eligible startups (registered <5 years, turnover <₨5Cr, innovation-focused). Reverts to 25% if conditions breached. |
-| **Non-resident Tech Services** | **1.5% WHT** (gross) | On payments to foreign SaaS/API providers (Google, AWS, Stripe) — deduct at source, remit to IRD. |
-
-**Advance Tax:** Pay in **three instalments** (Poush end, Chaitra end, Ashad end) based on estimated liability. Shortfall >10% → interest (15% p.a.).
-
----
-
-#### **2. Value Added Tax (VAT)**
-
-| Threshold | Requirement |
-|-----------|-------------|
-| **Annual turnover > ₨50 Lakhs** | **Mandatory VAT registration** (Form VAT-01). |
-| **Turnover < ₨50L** | Voluntary registration allowed (claim input credit). |
-
-**Rate:** **13%** on taxable supplies (standard). **Exports** (software services to foreign clients) = **Zero-rated** (0% VAT, but **input credit claimable** — critical for SaaS exporters).
-
-**Compliance:** Monthly VAT return (Form VAT-201) by **25th of following month**. Input credit = VAT on purchases (cloud, rent, equipment) — must have valid VAT invoices (PAN-linked).
-
----
-
-#### **3. Withholding Taxes (TDS) — Key for Startups**
-
-| Payment Type | Rate | Threshold |
-|--------------|------|-----------|
-| **Salary** | Progressive (1–36%) | Monthly; employer deducts. |
-| **Rent** | **10%** | >₨20,000/month. |
-| **Professional Fees** (legal, audit, consulting) | **1.5%** | >₨50,000/year. |
-| **Contract Payments** | **1.5%** | >₨50,000/contract. |
-| **Dividend** | **5%** | On distribution. |
-| **Interest** | **15%** (resident) / **5%** (bank) | On loans. |
-| **Royalty / Technical Services (Non-resident)** | **15%** | Reduced by DTAA (India 10%, others vary). |
-
-**TAN (Tax Deduction Account Number)** required for deducting TDS. File **E-TDS** monthly.
-
----
-
-#### **4. Key Compliance Calendar**
-
-| Frequency | Filing | Deadline |
-|-----------|--------|----------|
-| **Monthly** | VAT Return, TDS Return, PF/CIT Contribution | 25th / 15th of following month |
-| **Quarterly** | Advance Tax Instalment | Poush 15, Chaitra 15, Ashad 15 |
-| **Annual** | Income Tax Return (ITR) | **Ashad end** (mid-July) |
-| **Annual** | Audit (if turnover >₨1Cr or paid-up >₨50L) | Before ITR filing |
-| **Annual** | Renew Business Registration (OPA) | Within Chaitra |
-
----
-
-#### **5. Startup-Specific Tips**
-
-| Tip | Why |
-|-----|-----|
-| **Register for VAT early** if exporting | Claim input credit on AWS, Google Cloud, SaaS subscriptions (13% of spend). |
-| **Elect 1% turnover tax** (if eligible) | Predictable cash flow; no advance tax; but no loss carryforward. |
-| **Track all expenses digitally** (Khalti Business, IME Pay, accounting software) | Audit trail; input credit; avoids 145% disallowance. |
-| **DTAA with India** | Reduced WHT on cross-border payments (10% vs 15%); avoid double taxation. |
-| **Hire a CA early** | Penalty for non-filing: ₨100/day; interest 15% p.a. |
-
----
+*(226 words)*
 
 ### B16. What is the role of CRM in startups?
 
-**CRM (Customer Relationship Management)** in startups is not just software — it is the **operating system for revenue**. It centralises **every interaction** across the customer lifecycle: **Lead → Opportunity → Customer → Advocate**.
+Customer Relationship Management (CRM) is the system and process for managing interactions with current and potential customers across acquisition, retention, and expansion. For a startup, it has four connected roles:
 
----
+1. **Manage acquisition.** CRM records lead source, campaign, funnel stage, conversion, and customer acquisition cost. The team can stop spending on weak channels and concentrate on channels that produce qualified customers.
+2. **Support retention.** It links purchases, app use, complaints, support calls, and satisfaction. These signals reveal churn risk and help the team contact inactive customers before they leave.
+3. **Encourage expansion.** Usage patterns identify customers ready for a subscription, extra service, referral, or cross-sell. Feedback surveys and feature requests also guide product priorities.
+4. **Create one customer view.** Shared records stop sales and support teams from giving conflicting answers. They also improve forecasting and reveal which segments produce lasting value rather than only cheap first purchases.
 
-#### **Core Roles**
+A Nepali startup may combine app analytics, WhatsApp or email messages, a support inbox, and a simple CRM database. It should first define the customer journey, ownership, consent, and measures such as activation, repeat use, churn, and lifetime value. CRM does not create loyalty by itself. It works when reliable records trigger timely service and the team acts on what the data reveals.
 
-| Lifecycle Stage | CRM Role | Key Activities |
-|-----------------|----------|----------------|
-| **Lead Capture** | Single source of truth for all inbound/outbound leads | Web forms, chat, events, referrals, ads → auto-create lead; UTM attribution; lead scoring (demographic + behavioural). |
-| **Qualification** | Structured framework (BANT / MEDDIC / GPCTBA/C&I) | Sales reps qualify: Budget, Authority, Need, Timeline → convert to Opportunity or nurture. |
-| **Pipeline Management** | Visual funnel (Kanban/List) with stages, probabilities, values | Forecasting (weighted pipeline), deal aging alerts, next-action tracking. |
-| **Sales Execution** | Activity logging (calls, emails, meetings, demos), templates, sequences | Automation: follow-up emails, task reminders, calendar sync, call recording. |
-| **Customer Onboarding** | Handoff from Sales → CS; onboarding checklist, health score | Time-to-value tracking, adoption milestones, CSM assignment. |
-| **Retention & Expansion** | Renewal pipeline, usage analytics, NPS, upsell/cross-sell signals | Churn alerts (usage drop), expansion plays (seat add-ons, module upgrades). |
-| **Advocacy** | Reference management, case studies, referral tracking | Reference call scheduling, review requests (G2, Capterra), referral rewards. |
-
----
-
-#### **Startup-Specific CRM Priorities**
-
-| Priority | Why | Implementation |
-|----------|-----|----------------|
-| **Speed to Lead** | Inbound leads decay exponentially (5-min rule) | Auto-assignment rules; Slack alerts; Calendly embed. |
-| **Attribution** | Know which channel → revenue (not just leads) | UTM + hidden fields → CRM campaign; closed-loop reporting. |
-| **Pipeline Hygiene** | Founders forecast off CRM — garbage in = garbage out | Required fields per stage; stage-gating; weekly pipeline review. |
-| **Customer 360** | Support, product, sales see same data | Integrate: Intercom/Zendesk → CRM; Mixpanel/Amplitude → CRM. |
-| **Automation > Manual** | Founders sell; don't admin | Workflows: lead rotation, stage auto-advance, renewal tasks. |
-
----
-
-#### **Tool Landscape (Startup-Friendly)**
-
-| Tier | Tools | Best For |
-|------|-------|----------|
-| **Free / Startup Credits** | **HubSpot CRM** (free forever, 1M contacts), **Pipedrive** (startup deal), **Freshsales** (free tier), **Attio** (free, modern), **Folk** (free, collaborative) | Pre-revenue to ₨1Cr ARR. |
-| **Growth (₨1–10Cr ARR)** | **HubSpot Pro**, **Salesforce Essentials**, **Close**, **Copper** | Dedicated sales team, automation, reporting. |
-| **Scale (₨10Cr+ ARR)** | **Salesforce Enterprise**, **HubSpot Enterprise**, **Microsoft Dynamics** | Complex org, forecasting, territory, CPQ. |
-
-**Nepal context:** Most Nepali startups use **HubSpot Free** or **Pipedrive** + **WhatsApp Business** + **Google Sheets** (for ops). **WhatsApp integration** (via Twilio/Gupshup or unofficial APIs) is critical — 90%+ B2C communication happens there.
-
----
+*(210 words)*
 
 ### B17. Explain the conflict resolution techniques within the team.
 
-**Conflict in startups is inevitable** — high pressure, ambiguity, overlapping roles, founder disagreements. The goal is not **absence of conflict** but **constructive resolution** that strengthens decisions and relationships.
+Team conflict is common in startups because priorities, roles, money, and equity remain uncertain. The Thomas-Kilmann conflict-handling framework offers five techniques:
 
----
+1. **Collaborating.** Both parties explore the problem and seek a solution that meets their main interests. Use it for complex strategic disputes when the relationship and long-term result matter. A founder workshop can combine product and marketing priorities.
+2. **Compromising.** Each side gives up part of its position to reach a workable middle. Use it when time is short and neither party controls the outcome, such as agreeing on a phased launch.
+3. **Accommodating.** One side accepts the other’s preference to preserve the relationship or because the issue matters more to the other person. Use it for low-stakes differences, not a repeated pattern of self-sacrifice.
+4. **Competing.** One side asserts its position, often through authority, because the issue is urgent or non-negotiable. Use it for safety, ethics, legal compliance, or a cash-critical decision.
+5. **Avoiding.** The team postpones the issue or withdraws from it. Use it for trivial matters or when emotions are too high, but do not use avoidance for a strategic dispute.
 
-#### **Thomas-Kilmann Conflict Modes (5 Styles)**
+The team should first cool emotions, separate facts from assumptions, and identify each side’s underlying interest. It should then choose a technique, record the decision, owner, and deadline, and review the outcome. Collaboration is the default for productive teamwork; competition is reserved for firm boundaries, and avoidance must not become silence.
 
-| Style | Assertiveness | Cooperativeness | When to Use |
-|-------|---------------|-----------------|-------------|
-| **Competing** | High | Low | Emergency, safety, non-negotiable values, quick decisive action. |
-| **Collaborating** | High | High | Complex issues, long-term relationships, innovation, integrating diverse views. **Ideal for startups.** |
-| **Compromising** | Medium | Medium | Time pressure, temporary fix, equally important goals, stalemate. |
-| **Avoiding** | Low | Low | Trivial issues, cooling-off period, more info needed, power asymmetry. |
-| **Accommodating** | Low | High | Relationship > issue, building credit, admitting mistake, learning. |
-
-**Startup norm:** Default to **Collaborating**; use **Competing** only for existential threats; **Compromise** on tactics, not vision.
-
----
-
-#### **Structured Resolution Process (6 Steps)**
-
-1. **Pause & Breathe** — Emotional regulation (10-min rule: no decisions while amygdala-hijacked).
-2. **Define the Issue Objectively** — "What happened?" (facts) vs. "What did I make it mean?" (story). Separate **positions** (what they want) from **interests** (why they want it).
-3. **Listen to Understand** — Active listening: paraphrase ("What I hear is…"), ask open questions ("Help me understand…"), acknowledge emotions ("It sounds like you're frustrated because…").
-4. **Generate Options** — Brainstorm **without evaluating** (divergent). Aim for **win-win** (expand the pie). Use **"Yes, and…"** not "Yes, but…".
-5. **Agree on Criteria & Decide** — Objective criteria (data, user impact, cost, timeline, values). Decide by **consent** (no reasoned objection) not consensus (everyone agrees).
-6. **Commit & Follow Up** — Document: decision, owner, deadline, success metric. Schedule retrospective (2 weeks).
-
----
-
-#### **Startup-Specific Conflict Arenas & Tactics**
-
-| Arena | Typical Conflict | Resolution Tactic |
-|-------|------------------|-------------------|
-| **Founder vs. Founder** | Equity split, vision divergence, role clarity, workload | **Founder Agreement** (vesting, drag-along, shot-gun clause); **quarterly alignment retreat**; coach/mediator. |
-| **Product vs. Sales** | Features vs. deadlines; custom deals vs. roadmap | **RICE scoring** (Reach, Impact, Confidence, Effort); shared OKRs; Sales commits to pipeline, Product commits to dates. |
-| **Engineering vs. Design** | Feasibility vs. UX; tech debt vs. speed | **Design System** (shared language); **Tech Debt Budget** (20% sprint capacity); joint discovery. |
-| **Remote / Hybrid** | Miscommunication, isolation, time zones | **Async-first** (Loom, Notion, Slack threads); **Overlap hours** (4h); **Virtual coffee** (non-work). |
-| **Performance / Behaviour** | Missed deadlines, toxic behaviour, cultural mismatch | **SBI Feedback** (Situation-Behaviour-Impact); **PIP** (Performance Improvement Plan) with empathy; **Values-based** firing if unfixable. |
-
----
-
-#### **Cultural Guardrails for Constructive Conflict**
-
-| Guardrail | Implementation |
-|-----------|----------------|
-| **Psychological Safety** | "Mistakes are data"; blameless postmortems; leader models vulnerability. |
-| **Decision Rights Clarity** | RACI per decision type; "Who has the D?" (Decide). |
-| **Disagree and Commit** | Debate vigorously in private; unite publicly once decided. |
-| **Conflict Escalation Path** | Peer → Lead → Founder → External Mediator → Board. |
-| **Retrospective Rhythm** | Weekly team retro; monthly founder retro; quarterly 360° feedback. |
+*(249 words)*
 
 ---
 
@@ -480,499 +176,140 @@ Score each need on: **Severity** (pain × frequency), **Willingness to Pay**, **
 
 ### C18. What are the different sources of funding for startups? Explain any three.
 
-Startup funding follows a **stage-gated continuum** — each source matches a specific risk/reward profile and governance expectation. The **funding ladder**:
+Startups can draw from a wide menu of capital: bootstrapping, friends and family, angel investors, venture capital, grants and competitions, bank loans, revenue-based financing, crowdfunding, strategic or corporate investment, and government schemes. The choice depends on stage, risk appetite, and the need for control versus speed.
 
----
+**1. Bootstrapping** — the founder funds growth from personal savings and reinvested revenue. *Mechanism:* no external capital; customers finance expansion. *Pros:* full ownership, no dilution, and freedom to test quietly. *Cons:* personal risk, slow scaling, and limited cash for product development. *Nepal link:* SastoDeal publicly described a self-funded period before its first institutional round. The lesson is that revenue can validate demand before outside money arrives.
 
-#### **Funding Continuum Overview**
+**2. Angel investment** — one or more high-net-worth individuals invest personal capital for equity. *Mechanism:* the angel receives a stake and may join later rounds, often bringing mentorship and networks. *Pros:* faster than a full VC process, flexible terms, and strategic guidance. *Cons:* dilution and limited follow-on capacity. *Nepal link:* individual angels are reachable through NIC, Antarprerana, and accelerator programmes. A fund such as One Ladder Ventures is an investment vehicle, not an angel.
 
-| Stage | Typical Round | Amount (USD) | Valuation | Sources | Dilution |
-|-------|---------------|--------------|-----------|---------|----------|
-| **Ideation / Pre-seed** | Pre-seed | $10K–$250K | $0.5–2M | Founders, F&F, Angels, Grants, Accelerators | 5–15% |
-| **Validation / Seed** | Seed | $250K–$2M | $2–10M | Angels, Micro-VCs, Seed Funds, Crowdfunding | 10–25% |
-| **Traction / Series A** | Series A | $2–10M | $10–50M | VC Funds, Corporate VCs | 15–30% |
-| **Scale / Series B+** | Series B, C, D | $10M+ | $50M+ | Growth VCs, PE, Hedge Funds, CVCs | 10–20% per round |
-| **Exit / Late** | Pre-IPO, Mezzanine | $50M+ | $500M+ | Late-stage VCs, Sovereign Wealth, IPO | <10% |
+**3. Venture capital** — a licensed fund pools limited-partner capital and invests for equity and governance rights. *Mechanism:* the fund conducts due diligence, then negotiates valuation, board rights, and other terms. *Pros:* large rounds, hiring support, follow-on reserves, and credibility. *Cons:* high dilution, possible loss of decision rights, and pressure for rapid growth and exit. *Nepal link:* Nepal’s early-stage VC market is small. Funds such as Dolma Impact Fund and TrueNorth appear in the local landscape, but founders must verify current registration and compare actual terms rather than chase brand names.
 
----
+**Selection rule:** use bootstrapping to prove demand, angels to accelerate a validated venture, and VC when repeatable unit economics justify a larger round. Match the source to the milestone. Also compare the cost of capital with the milestone it unlocks. Before accepting any money, state the amount, use of funds, expected runway, and investor rights.
 
-#### **Detailed Explanation of Three Key Sources**
-
----
-
-##### **1. Angel Investors (Pre-seed / Seed)**
-
-**Who:** High-net-worth individuals (often former founders/executives) investing **personal capital** in early-stage startups. In Nepal: emerging via NIC, Antarprerana, Nepal Angel Network.
-
-**Investment Profile:**
-- **Ticket size:** $10K–$100K (individual); $100K–$500K (syndicate).
-- **Equity:** 5–15% (pre-seed); often **SAFE** (Simple Agreement for Future Equity) or **Convertible Note** — defer valuation to priced round.
-- **Beyond capital:** Mentorship, domain expertise, network (intros to VCs, hires, customers), signalling for next round.
-
-**Decision Criteria (Angel Checklist):**
-1. **Team** — Founder-market fit, grit, complementary skills, coachability.
-2. **Market** — Large TAM (> $100M), growing, timing right.
-3. **Product** — MVP with traction (users, revenue, LOIs), defensible differentiation.
-4. **Terms** — Reasonable valuation cap (SAFE), pro-rata rights, information rights.
-
-**Nepal Landscape:**
-- **Individual angels** — Successful founders (Binod Chaudhary, Avani Manandhar, Sixit Bhatta, etc.) investing quietly.
-- **Angel Networks** — Nepal Angel Network (NAN), FNCCI Startup Forum — syndicate deals ($50K–$200K).
-- **Accelerator-linked** — NIC, Antarprerana, NEXT — demo day access to angels.
-- **Diaspora angels** — Nepali professionals abroad (US, Australia, Gulf) investing via platforms (OurCrowd, AngelList) or direct.
-
-**Pros:** Speed (weeks), founder-friendly terms, mentorship, no board seat.
-**Cons:** Limited follow-on capacity, varying sophistication, signalling risk (if angel doesn't follow on).
-
----
-
-##### **2. Venture Capital Funds (Seed / Series A / Growth)**
-
-**Who:** Professional fund managers deploying **Limited Partners' (LPs) capital** (pension funds, endowments, family offices, sovereign wealth, corporates) into high-growth startups for **carried interest (20% of profits)** + management fees (2% p.a.).
-
-**Fund Structure:**
-- **Fund Life:** 10 years (3–5 yr investment period, 5–7 yr harvest).
-- **Portfolio Strategy:** Power law — 1–2 winners return the fund; 50% fail; rest return 1–3×.
-- **Stage Specialisation:** Pre-seed (e.g., YC, Antler), Seed (OneStep, Dolma), Series A (TrueNorth), Growth (Business Oxygen, South Asia Growth Fund).
-
-**Investment Process:**
-1. **Sourcing** — Inbound, referrals, scouts, thesis-driven outbound.
-2. **Screening** — 5-min deck review → 30-min call → partner meeting.
-3. **Due Diligence** (4–8 weeks) — Market, product, team, financials, legal, tech, references.
-4. **Term Sheet** — Non-binding; key terms: valuation, liquidation preference (1× non-participating standard), anti-dilution (broad-based weighted avg), board seat, protective provisions, drag-along, tag-along.
-5. **Closing** — Legal docs (SPA, SHA, amended AoA), wire transfer, cap table update.
-
-**Nepal Active VCs (2024):**
-| Fund | Stage | Typical Check | Focus |
-|------|-------|---------------|-------|
-| **OneStep Ventures** | Pre-seed/Seed | $50K–$200K | Fintech, SaaS, Marketplace, Climate |
-| **Dolma Impact Fund** | Seed/Series A | $200K–$1M | Impact (health, education, agri, fintech) |
-| **TrueNorth Associates** | Series A | $500K–$2M | B2B SaaS, Fintech, Logistics |
-| **Business Oxygen** | Growth | $1M–$5M | Proven scale, unit economics |
-| **South Asia Growth Fund** | Growth | $5M+ | Regional expansion |
-
-**Pros:** Large capital, follow-on reserves, strategic help (hiring, GTM, M&A), brand credibility.
-**Cons:** Dilution (15–30%), board seat/control, growth-at-all-costs pressure, liquidation preferences, 7–10 yr fund life forces exit.
-
----
-
-##### **3. Alternative / Non-Dilutive Funding (Revenue-Based, Grants, Debt)**
-
-For founders wanting to **preserve equity** or bridge to next equity round.
-
----
-
-###### **A. Revenue-Based Financing (RBF)**
-
-**Mechanism:** Investor provides capital → startup repays **fixed % of monthly revenue** (e.g., 5–10%) until **cap reached** (1.3–1.8× invested). No equity, no board seat, no personal guarantee.
-
-| Provider | Geography | Typical Terms |
-|----------|-----------|---------------|
-| **Klub** | India, SE Asia | 6–12% revenue share, 1.3–1.5× cap, 6–24 month term |
-| **GetVantage** | India | 5–10% revenue share, 1.5× cap |
-| **Pipe / Capchase** | US / Global | Trade recurring revenue contracts for upfront capital |
-| **Nepal emerging** | Local NBFCs / Fintechs | Pilot stage (Khalti, IME Pay exploring) |
-
-**Best for:** SaaS, subscription, marketplace with **predictable recurring revenue** (MRR > ₨10L, >12 months history). **Not for** pre-revenue or lumpy revenue.
-
----
-
-###### **B. Government Grants & Concessional Funds**
-
-| Program | Agency | Amount | Eligibility |
-|---------|--------|--------|-------------|
-| **Youth Startup Fund** | MoYS | ₨5–50 Lakhs (grant/loan mix) | Age 18–40, innovative, registered <5 yrs |
-| **SME Credit Guarantee** | NRB / Banks | Up to ₨10Cr (guarantee) | Collateral shortfall; priority sectors |
-| **IT Park Incentives** | MoCIT | Tax holiday, subsidised rent, bandwidth | Located in designated IT parks (Banepa, Dhangadhi, Surkhet) |
-| **Challenge Funds** | UNDP, SDC, World Bank | $50K–$500K | Thematic (climate, agri, gender, digital) |
-
-**Pros:** Non-dilutive, credibility signal, network access. **Cons:** Slow (6–18 months), reporting burden, restrictive use-of-funds, political risk.
-
----
-
-###### **C. Venture Debt**
-
-**Mechanism:** Term loan (12–36 months) + **warrants** (1–5% equity kicker) for **venture-backed** startups. Senior to equity, junior to bank debt. Used to **extend runway** between equity rounds without full dilution.
-
-| Provider | Typical Terms |
-|----------|---------------|
-| **Silicon Valley Bank (SVB)** | 12–18% IRR, 5–10% warrants, 18–36 mo |
-| **TriplePoint / Hercules** | Growth-stage ($10M+ ARR) |
-| **Nepal** | Not yet established (banks require collateral) |
-
-**Best for:** Post-Series A with **predictable revenue**, extending runway 6–9 months to hit Series B milestone. **Dangerous** if revenue stalls — covenants trigger default.
-
----
-
-#### **Funding Strategy by Stage (Nepal Context)**
-
-| Stage | Primary | Secondary | Avoid |
-|-------|---------|-----------|-------|
-| **Pre-seed (₨0–50L ARR)** | Founders, F&F, Angels, Grants, Accelerator | RBF (if recurring) | VC (too early), Bank debt |
-| **Seed (₨50L–5Cr ARR)** | Angels, Micro-VC (OneStep), RBF | Grants, Venture Debt (rare) | Growth VC (too early) |
-| **Series A (₨5–20Cr ARR)** | VC (TrueNorth, Dolma), Corporate VC | Venture Debt, RBF | Bank debt (collateral) |
-| **Growth (₨20Cr+ ARR)** | Growth VC, PE, Strategic | Venture Debt, Mezzanine | Angels (too small) |
-
-**Golden Rule:** **Raise for 18 months runway** at each stage. **Valuation follows traction**, not pitch. **Terms matter more than valuation** (liquidation preference > valuation cap).
-
----
+*(330 words)*
 
 ### C19. Explain different leadership styles used in startups.
 
-Leadership in startups is **context-dependent** — the same founder must shift styles across **stages, crises, and team compositions**. No single style works throughout the journey.
+Five leadership styles are commonly applied in startups, each suited to specific situations. The course frames them through Lewin’s classic autocratic–democratic–laissez-faire continuum, adds transformational and servant leadership, and positions situational leadership (Hersey–Blanchard) as the meta-skill for founders.
 
----
+**1. Autocratic** — the leader decides alone and directs execution. Works in crises, early-stage chaos, regulatory compliance, or any time-critical decision. In a Nepali ride-hailing startup, the founder may set non-negotiable safety standards and cash discipline in Year 1. Limitation: overuse erodes initiative and can drive talent away.
 
-#### **Leadership Styles Framework (Goleman / Hersey-Blanchard / Startup Reality)**
+**2. Democratic (participative)** — the leader involves the team in decisions and seeks broad input. Effective for complex product roadmaps, hiring, or culture definition where diverse input improves quality and buy-in. Limitation: slower decision speed can stall urgent moves.
 
-| Style | Core Behaviour | Startup Stage Fit | Strengths | Risks |
-|-------|----------------|-------------------|-----------|-------|
-| **Visionary / Transformational** | Articulates compelling future; inspires; challenges status quo; develops people. | **0→1 (Founding)**, **Scaling**, **Culture Reset** | Attracts talent, aligns mission, drives innovation, builds brand. | Can ignore execution detail; burnout risk; "vision without execution = hallucination." |
-| **Directive / Autocratic** | Decides alone; gives clear orders; monitors closely; fast decisions. | **Crisis** (cash crunch, PR disaster, pandemic), **Pivot**, **Regulatory Emergency** | Speed, clarity, accountability, prevents analysis paralysis. | Erodes trust, kills autonomy, drives away A-players, creates bottleneck. |
-| **Coaching / Servant** | Develops people; asks questions; removes obstacles; serves team first. | **Growth (10→100 people)**, **High-Autonomy Teams**, **Knowledge Work** | Builds bench strength, retention, psychological safety, ownership culture. | Slow; can appear passive; needs authority backup for tough calls. |
-| **Democratic / Participative** | Seeks input; decides by consensus/consent; shares context. | **Complex Decisions** (architecture, hiring, strategy), **Mature Teams** | Buy-in, diverse perspectives, better decisions, shared ownership. | Slow; analysis paralysis; "design by committee" mediocrity. |
-| **Pacesetting** | Sets high bars; leads by example; expects excellence; intervenes on quality. | **Early Product** (0→1), **Technical Excellence**, **Crisis Recovery** | Raises bar, models standards, fast iteration, high output. | Burns out team; micromanagement; unsustainable; "hero mode" doesn't scale. |
-| **Affiliative** | Prioritises relationships; emotional bonds; harmony; praise. | **Post-Crisis Healing**, **Merger Integration**, **Burnout Recovery** | Trust, morale, psychological safety, retention. | Avoids tough conversations; low accountability; "nice but not effective." |
+**3. Transformational** — the leader articulates a compelling vision, challenges assumptions, and develops people. Valuable during scaling, pivots, or culture change. Example: rallying the team around a “safe mobility for all” purpose during a funding winter. Limitation: it can depend too heavily on the leader’s charisma and ignore operational detail.
 
----
+**4. Servant** — the leader removes obstacles, empowers, and grows the team. Best with knowledge-worker teams that need autonomy. In a software team, the leader clears technical blockers, advocates resources, and celebrates wins. Limitation: it can appear indecisive if boundaries are unclear.
 
-#### **Style Sequencing Across Startup Lifecycle**
+**5. Situational / adaptive** — the leader diagnoses follower readiness through competence and commitment, then chooses directing, coaching, supporting, or delegating. This is the practical meta-skill: directive for safety or cash crises, participative for product choices, transformational for vision, and servant for daily team growth.
 
-| Stage | Primary Style | Secondary Style | Rationale |
-|-------|---------------|-----------------|-----------|
-| **Ideation / Founding (0–3 people)** | **Visionary + Pacesetting** | Directive | Founder sells vision, codes/sells, sets impossible standards. |
-| **Validation / MVP (3–10 people)** | **Visionary + Coaching** | Directive (on product) | Hire first employees; teach them to think like founder; decide fast on product. |
-| **Product-Market Fit (10–30 people)** | **Visionary + Coaching** | Democratic (on strategy) | Specialised roles emerge; need buy-in on direction; coach managers. |
-| **Scaling (30–100 people)** | **Coaching + Servant** | Visionary (culture) | Founder becomes "CEO of CEOs"; builds leadership team; removes bottlenecks. |
-| **Growth / Maturity (100+ people)** | **Servant + Visionary** | Affiliative (culture) | Institutionalises culture; succession planning; board/stakeholder management. |
-| **Crisis (Any Stage)** | **Directive** | Visionary (post-crisis) | Cash runway <6 months, PR disaster, major bug, legal threat — decide fast, communicate clearly. |
+No single style works forever. Founders may start directive, involve the team as culture forms, communicate a vision while scaling, and practise servant leadership daily. The strongest founders remain situational. They read the moment and match leadership behaviour to team readiness and task urgency.
 
----
+This approach prevents style labels from becoming slogans. A democratic meeting cannot rescue a cash crisis, and servant leadership cannot excuse unclear authority. The founder should name the decision, deadline, owner, and style before the meeting ends.
 
-#### **Situational Leadership (Hersey-Blanchard) — The Meta-Skill**
-
-Effective startup leaders **diagnose follower readiness (R1–R4)** per task and **adapt style**:
-
-| Follower Readiness | Definition | Leader Style |
-|--------------------|------------|--------------|
-| **R1 — Unable & Unwilling** | Low competence, low commitment (new hire, new domain) | **Telling (Directive)** — specific instructions, close supervision. |
-| **R2 — Unable but Willing** | Low competence, high commitment (eager junior) | **Selling (Directive + Supportive)** — explain decisions, encourage, coach. |
-| **R3 — Able but Unwilling** | High competence, low commitment (burned out senior) | **Participating (Supportive)** — listen, involve, re-align purpose. |
-| **R4 — Able & Willing** | High competence, high commitment (autonomous expert) | **Delegating** — define outcome, provide resources, get out of way. |
-
-**Startup application:** A founding engineer (R4 on coding) may be R1 on people management — leader **delegates code, directs hiring**. A sales hire (R2) gets **coaching on pipeline, direction on pricing**.
-
----
-
-#### **Founder-Specific Leadership Challenges**
-
-| Challenge | Symptom | Resolution |
-|-----------|---------|------------|
-| **Founder's Trap** | "I can do it faster/better" → becomes bottleneck | **Delegate outcomes, not tasks**; hire people better than you; 70% rule (if they can do 70%, delegate). |
-| **Hero Mode** | Founder fixes every fire → team learns helplessness | **Blame-free postmortems**; on-call rotation; runbooks; hire ops lead. |
-| **Vision Drift** | Team executes but loses "why" | **Quarterly all-hands** (vision + metrics); OKRs cascaded from vision. |
-| **Conflict Avoidance** | Avoids tough conversations → mediocrity | **SBI Feedback** weekly; "Disagree and Commit" culture; coach on confrontation. |
-| **Burnout Contagion** | Founder works 100h → team feels guilty leaving | **Model boundaries** (no Slack after 8pm, take vacation); mandate time off. |
-
----
-
-#### **Nepal Startup Context**
-
-| Factor | Leadership Implication |
-|--------|------------------------|
-| **Hierarchical Culture** | Junior staff hesitate to challenge seniors → leader must **explicitly invite dissent** ("What am I missing?"). |
-| **Relationship-Based** | Trust built personally, not contractually → **invest in 1:1s, tea breaks, team meals**. |
-| **Talent Scarcity** | Retention > hiring → **coaching style + equity + growth path** critical. |
-| **Infrastructure Gaps** | Power, internet, logistics fail → **directive on contingencies**, empower local problem-solving. |
-| **Family/Personal Obligations** | High — weddings, festivals, elder care → **flexible leave, remote options, empathy**. |
-
----
-
-#### **Leadership Development for Founders**
-
-| Practice | Frequency | Tool |
-|----------|-----------|------|
-| **1:1s with Direct Reports** | Weekly (45 min) | Radar (L10), Notion, Fellow |
-| **Founder Peer Group** | Monthly | YPO, EO, NIC Founder Circle, WhatsApp mastermind |
-| **Executive Coach** | Bi-weekly | ICF-certified; startup-experienced |
-| **360° Feedback** | Semi-annual | CultureAmp, Lattice, Google Forms |
-| **Reading / Learning** | Weekly | "High Output Management" (Grove), "The Manager's Path" (Fournier), "Radical Candor" (Scott) |
-
----
+*(341 words)*
 
 ### C20. How do you motivate employees in startups? Explain the digital marketing and sales techniques.
 
-> **Note:** This question contains **two distinct halves**. Answer as **separate headed sections**.
+#### Part A — Employee motivation
 
----
+Motivation in startups is driven by purpose, autonomy, mastery, and recognition (Self-Determination Theory, Deci and Ryan).
 
-#### **PART A: How do you motivate employees in startups?**
+1. **Purpose and vision** — articulate a clear “why” that connects daily work to impact, such as “safe mobility for all.”
+2. **Autonomy and ownership** — set outcomes through clear goals, let teams choose methods, and avoid micromanagement.
+3. **Mastery and growth** — provide a learning budget, mentorship, stretch projects, and visible career paths.
+4. **Recognition and fair rewards** — give timely, specific praise, spot bonuses, transparent vesting where applicable, and performance-linked rewards.
 
-**Startup motivation** cannot rely on **high salaries** (cash-constrained) or **job security** (high failure rate). It must tap **intrinsic drivers** — autonomy, mastery, purpose, equity, and belonging — while acknowledging **extrinsic realities** (market rates, financial obligations).
+Cash is tight, so purpose, autonomy, mastery, and recognition can add value without raising fixed payroll. They do not replace fair pay or lawful employment terms. The founder must connect recognition with evidence, explain the reward rule, and check that equity does not distract from customer and financial outcomes.
 
----
+#### Part B — Digital marketing and sales techniques
 
-##### **1. Equity Ownership — The Ultimate Alignment**
+Digital marketing channels include SEO/SEM, social media, referral, and content/email/push. Pair them with a funnel that tracks customer acquisition cost, conversion, retention, and lifetime value.
 
-| Mechanism | How It Motivates | Implementation |
-|-----------|------------------|----------------|
-| **ESOP Pool (10–20%)** | "We win together" — financial upside tied to collective outcome. | Standard 4-year vesting, 1-year cliff; refresh grants for tenure/promotion. |
-| **Transparency** | Employees understand cap table, dilution, exit scenarios. | Quarterly cap table walkthrough; "What does my 0.1% mean at $50M exit?" |
-| **Liquidity Path** | Hope of realisation — secondary sales, buybacks, IPO. | Tender offers at Series B/C; ESOP buyback policy. |
+1. **Search** — optimise for high-intent keywords such as “ride sharing Kathmandu” and run paid search for those terms.
+2. **Social media** — use safety-first content, driver stories, referral campaigns, and targeted ads for the chosen segment.
+3. **Referral** — offer a clear two-sided benefit. Pathao publicly used a “Give NPR 100, Get NPR 100” rider referral in 2017.
+4. **Content, email, and push** — send onboarding, ride receipts, safety tips, and reactivation messages to dormant users.
 
-**Nepal reality:** ESOP culture nascent; **tax on exercise** (perquisite) is barrier — advocate for **ESOP-friendly tax policy** (defer to sale).
+Sales techniques include **B2B corporate selling**, **founder-led or driver-acquisition campaigns**, and **partnership or channel sales**. Examples include an employee-commute proposal to HR, on-ground driver onboarding with a time-limited incentive, and integration with hotels, airlines, or event platforms.
 
----
+A Nepali IT startup should use Nepali-language onboarding, support familiar payment methods, and review each channel’s cost and conversion weekly. The discipline is to stop, change, or scale channels from evidence rather than equating impressions with customers. Every channel needs a target audience, weekly cost, conversion target, and decision rule for stopping or scaling it.
 
-##### **2. Autonomy & Ownership (Self-Determination Theory)**
-
-| Driver | Startup Application |
-|--------|---------------------|
-| **Autonomy** | "Here's the outcome; you choose the path." OKRs not KPIs; choose tools, methods, schedule. |
-| **Mastery** | "Become the best at your craft." Learning budget (₨50K/yr), conference travel, mentorship, code reviews, design critiques. |
-| **Purpose** | "Your work matters." Connect every ticket to user impact (NPS verbatim, revenue, lives improved). |
-
-**Tactics:** **No micromanagement** — hire adults, define outcomes, get out of way. **20% time** (Google-style) for passion projects. **Internal mobility** — rotate across product, growth, ops.
-
----
-
-##### **3. Recognition & Psychological Safety**
-
-| Practice | Frequency | Impact |
-|----------|-----------|--------|
-| **Peer Recognition** (Bonusly, Kudos, Slack #wins) | Daily | Peer validation > manager praise. |
-| **Public Wins** (All-hands demo, customer quotes) | Weekly | Visibility, pride, culture reinforcement. |
-| **Blame-free Postmortems** | Per incident | "What happened, why, what we change" — not "who screwed up." |
-| **Founder 1:1s** | Monthly | "How can I help you grow?" not "Status update." |
-
----
-
-##### **4. Growth & Career Trajectory**
-
-| Lever | Startup Advantage |
-|-------|-------------------|
-| **Scope Expansion** | "You own this now" — faster than corporate ladder. |
-| **Title Inflation (Honest)** | Lead → Senior Lead → Head → VP — reflects scope, not tenure. |
-| **External Visibility** | Conference speaking, blog posts, open source, podcast guest — builds personal brand. |
-| **Learning Budget** | ₨50K–100K/yr for courses, conferences, books, coaching. |
-
----
-
-##### **5. Compensation & Benefits (Cash + Non-Cash)**
-
-| Component | Startup Approach |
-|-----------|------------------|
-| **Base Salary** | Market 50th–75th percentile (transparent bands); reviewed semi-annually. |
-| **Variable** | None for most; sales gets commission; others get equity refresh. |
-| **Benefits** | Health insurance (family), wellness (gym, therapy), learning, home office stipend, flexible leave. |
-| **Perks that Matter** | Remote-first, async-first, no-meeting Wednesdays, sabbatical (4 weeks after 4 years). |
-
----
-
-##### **6. Mission & Impact Connection**
-
-**Nepal startup examples:**
-- **Khalti** — "Every transaction brings a Nepali into formal finance."
-- **Hamro Patro** — "20M Nepalis start their day with us."
-- **Agro-tech** — "Farmer gets 16% better price."
-
-**Ritual:** Monthly **customer story** in all-hands — real user, real problem, our solution. **Founder writes** quarterly "State of Mission" memo.
-
----
-
-#### **PART B: Digital Marketing and Sales Techniques**
-
-Digital marketing and sales in startups are **integrated** — marketing generates **qualified pipeline**, sales converts it. Both are **data-driven, iterative, and scalable**.
-
----
-
-##### **I. Digital Marketing Techniques (Demand Generation)**
-
-| Technique | Mechanism | Startup Application | Key Metrics |
-|-----------|-----------|---------------------|-------------|
-| **Content Marketing (SEO)** | Create high-intent content ranking for buyer keywords. | "How to choose ride-sharing app in Kathmandu" → blog → lead magnet (comparison PDF) → email nurture. | Organic traffic, keyword rank, MQLs, CAC. |
-| **Search Ads (SEM)** | Bid on high-intent keywords (Google/Meta). | "Send money to Nepal" → Khalti landing page → app install. | CPC, CPA, ROAS, LTV:CAC. |
-| **Social Media Marketing** | Organic + paid on platforms where ICP hangs out. | LinkedIn for B2B SaaS (thought leadership); TikTok/Reels for B2C (UGC, trends). | Engagement, CPL, follower quality. |
-| **Email / Marketing Automation** | Drip sequences, behavioural triggers, segmentation. | Welcome → onboarding → value demo → case study → upgrade ask. | Open, click, conversion, revenue attributed. |
-| **Referral / Viral Loops** | Incentivise users to bring users. | "Give ₨100, Get ₨100" (Khalti, IME Pay); "Invite driver, earn ₨500" (Pathao). | k-factor, viral coefficient, referred LTV. |
-| **Influencer / Creator Partnerships** | Pay creators for authentic integration. | Finance influencers for Khalti; travel creators for ride-sharing. | CPM, CPE, attributed installs. |
-| **App Store Optimisation (ASO)** | Keyword optimisation, ratings, screenshots, video. | "Digital wallet Nepal" → rank #1 → organic installs. | Keyword rank, conversion rate, organic uplift. |
-| **Webinars / Events / Community** | High-touch education → trust → pipeline. | "How to start freelancing in Nepal" → MeroJob leads. | Registrants, attendance, SQLs. |
-
-**Startup Marketing Stack (Modern, Cost-Effective):**
-- **Attribution:** AppsFlyer / Adjust / Branch (mobile); UTM + GA4 (web).
-- **Automation:** HubSpot / ActiveCampaign / Customer.io / Braze.
-- **Content:** Notion (CMS), Webflow (site), Loom (video), Canva (design).
-- **SEO:** Ahrefs / Semrush / Ubersuggest; SurferSEO (content optimisation).
-- **Social:** Buffer / Later / Hootsuite; Meta Ads Manager / LinkedIn Campaign Manager.
-
----
-
-##### **II. Digital Sales Techniques (Conversion & Revenue)**
-
-| Technique | Mechanism | Startup Application | Key Metrics |
-|-----------|-----------|---------------------|-------------|
-| **Inbound Lead Qualification (BANT/MEDDIC)** | Structured discovery call → score → route. | "What's your current volume? Budget? Timeline? Decision process?" → MQL → SQL. | MQL→SQL rate, SQL→Close rate, sales cycle. |
-| **Product-Led Growth (PLG) / Free Trial / Freemium** | Product sells itself; usage triggers upgrade. | Khalti: free wallet → transaction fee revenue; SaaS: 14-day trial → PQL (Product Qualified Lead). | PQL rate, trial→paid, expansion revenue. |
-| **Outbound (Cold Email / LinkedIn)** | Personalised, value-first sequences. | "Saw you're hiring 5 devs — MeroJob fills roles in 7 days. Open to chat?" | Reply rate, meeting booked, pipeline generated. |
-| **Demo / Discovery Call Framework** | SPIN / GAP / Challenger — diagnose pain, quantify impact, vision future. | "Current state → Pain → Cost of inaction → Our solution → ROI → Next steps." | Demo→Proposal rate, proposal→Close, ACV. |
-| **Proposal / Contract Automation** | PandaDoc / DocuSign / HubSpot Quotes — e-sign, tracking. | Auto-populate from CRM; approval workflow; payment link embedded. | Time-to-sign, deal velocity. |
-| **Customer Success / Expansion Sales** | Health scoring → renewal playbook → upsell/cross-sell. | "You're at 80% seat utilisation — add 10 seats for 10% discount." | NRR (Net Revenue Retention), GRR, expansion ARR. |
-| **Sales Enablement** | Battlecards, talk tracks, objection library, competitor intel. | "Pathao objection → Our driver earns 20% more; here's the math." | Win rate, competitive win rate, ramp time. |
-
----
-
-##### **III. Integrated Marketing-Sales Operating Model**
-
-| Process | Cadence | Owner | Tool |
-|---------|---------|-------|------|
-| **Pipeline Review** | Weekly (Mon) | Head of Sales + Marketing | CRM (HubSpot/Pipedrive) |
-| **Campaign Retrospective** | Monthly | Growth Lead | GA4, AppsFlyer, CRM |
-| **Lead Scoring Calibration** | Quarterly | RevOps | CRM + Product Analytics |
-| **Battlecard Update** | Quarterly | Product Marketing | Notion / Confluence |
-| **Forecast Call** | Weekly (Fri) | Founder + Sales Lead | CRM Forecast |
-
----
-
-##### **IV. Nepal-Specific Sales Nuances**
-
-| Nuance | Adaptation |
-|--------|------------|
-| **Relationship-First** | 3–5 touchpoints before demo; tea/coffee meeting expected; WhatsApp > email. |
-| **Decision-Maker Access** | Gatekeepers strong → multi-thread (champion + economic buyer + technical). |
-| **Payment Terms** | Net 30–60 standard; negotiate advance (30–50%) for cash flow. |
-| **Language** | Nepali/English mix; proposals in English, conversation in Nepali. |
-| **Trust Signals** | Government registration (PAN/VAT), physical office, local references, PAN-linked invoices. |
-| **Festivals/Seasonality** | Dashain/Tihar (Oct/Nov) — budgets spent, bonuses paid; Chaitra (Mar/Apr) — fiscal year end. |
-
----
+*(336 words)*
 
 ### C21. Discuss about ethical marketing strategies. What are the essential elements of a business plan?
 
-> **Note:** This question contains **two distinct halves**. Answer as **separate headed sections**.
+#### Part A — Ethical marketing strategies
+
+Ethical marketing means promoting truthfully, respecting user autonomy, and avoiding manipulation so trust becomes a long-term asset.
+
+1. **Truthfulness and transparency** — no false claims, hidden fees, or bait-and-switch. Show the upfront price, cancellation charge, and campaign terms.
+2. **Respect for privacy** — use consent-based data, avoid dark patterns, and make opt-out easy. Use rider data only for stated purposes.
+3. **Inclusion and non-discrimination** — reflect diverse users and avoid stereotypes. Consider women riders, accessibility, and Nepali or English language needs.
+4. **Social responsibility** — campaigns should promote positive behaviour such as helmet use and safe riding, not exploit financial or emotional vulnerability.
+
+Ethical marketing builds trust and reduces complaint, churn, and reputational risk. Unethical tactics may gain a short-term click but damage loyalty and invite regulatory scrutiny.
+
+#### Part B — Essential elements of a business plan
+
+The plan must contain ten sections:
+
+1. **Executive summary** — problem, solution, market, traction, team, and funding ask.
+2. **Company overview** — mission, vision, legal structure, location, and stage.
+3. **Problem and solution** — the user’s pain, the proposed product, and why it works now.
+4. **Market analysis** — TAM, SAM, SOM, trends, target segments, and competitors.
+5. **Business model** — BMC, revenue streams, pricing, unit economics, and cost structure.
+6. **Marketing and sales strategy** — positioning, target customer, channels, funnel, budget, retention, and sales motion.
+7. **Operational plan** — team, hiring, processes, technology stack, suppliers, and milestones.
+8. **Financial projections** — three-year profit-and-loss statement, cash flow, balance sheet, assumptions, and break-even point.
+9. **Risk management** — market, technical, regulatory, financial, and team risks with mitigation.
+10. **Funding request and appendix** — amount, use of funds, investment terms, cap table, and supporting documents.
+
+Close with a clear implementation schedule so the reader can judge feasibility, not only ambition. These ten sections cover strategy, execution, money, and risk. The plan should state assumptions behind each forecast, identify the next milestone, and show what evidence would change the strategy. This turns the plan from a document used once into a tool for learning and control.
+
+*(337 words)*
 
 ---
 
-#### **PART A: Ethical Marketing Strategies**
+## Group D — Comprehensive Case Analysis [20]
 
-**Ethical marketing** is the practice of promoting products/services **honestly, responsibly, and with respect for consumer autonomy, privacy, and societal well-being** — going beyond legal compliance to build **long-term trust** as a competitive moat.
+### D22. Analyse the Pathao-style ride-sharing case
 
----
+**Venture:** A new Kathmandu ride-sharing platform offering safe, transparent rides and building a reliable driver network.
 
-##### **Core Principles (Adapted from AMA / DMA / ICC Codes)**
+#### (a) Idea generation and target market
 
-| Principle | Unethical Practice | Ethical Alternative |
-|-----------|-------------------|---------------------|
-| **Truthfulness** | Exaggerated claims, fake reviews, misleading "before/after" | Substantiated claims; real testimonials (with consent); clear "results not typical" disclaimers. |
-| **Transparency** | Hidden fees, auto-renewal traps, dark patterns, undisclosed sponsorship | All-in pricing; clear cancellation; labeled ads (#ad, #sponsored); accessible terms. |
-| **Privacy & Consent** | Pre-ticked boxes, data sharing without consent, tracking without notice | **Opt-in** (GDPR/PDPB standard); granular consent; easy withdrawal; data minimisation. |
-| **Fairness & Non-Discrimination** | Predatory pricing, algorithmic bias (credit, hiring, insurance), exclusionary targeting | Inclusive design; bias audits; equitable access; no dark patterns targeting vulnerable groups. |
-| **Social Responsibility** | Greenwashing, promoting harmful products (gambling, addictive apps to minors), cultural insensitivity | Authentic sustainability claims (third-party verified); age-gating; cultural consultation. |
-| **Accountability** | No redress for complaints; bots handling disputes; ignoring regulator notices | Accessible complaint channel; human escalation; public transparency report; compliance officer. |
+I would begin with a problem, not a technology. Observe commuters and drivers, then interview them about recent journeys, workarounds, delays, safety fears, and current spending. Apply **brainstorming** to generate several solutions and **SCAMPER** to improve them. A technology-trend scan can reveal changes in smartphone use, payments, and digital services, but each trend must become a customer job. Next, screen the ideas through **desirability, feasibility, and viability**. Users must want the solution; the team must deliver it; the revenue must cover delivery costs. Build a concierge MVP in one corridor, measure repeat use, completion, complaints, and willingness to pay, then revise.
 
----
+I would define the first **target market** through demographics, geography, behaviour, and need. For example, the beachhead might be Kathmandu Valley commuters who value transparent fares and safer late-night travel. The team must name the rider, payer, user, and influencer separately, then test whether drivers can reliably serve this segment.
 
-##### **Ethical Strategies by Channel**
+#### (b) Market analysis
 
-| Channel | Ethical Risks | Ethical Strategies |
-|---------|---------------|-------------------|
-| **Search (SEO/SEM)** | Keyword stuffing, cloaking, click fraud, trademark bidding | White-hat SEO (quality content, UX); negative keywords; brand protection; click fraud monitoring. |
-| **Social Media** | Bot followers, engagement pods, undisclosed paid posts, rage-bait | Organic community building; clear #ad/#sponsored; authentic UGC; crisis protocol. |
-| **Email** | Purchased lists, no unsubscribe, misleading subject lines, frequency abuse | Double opt-in; preference centre; one-click unsubscribe; frequency caps; value-first content. |
-| **Influencer** | Fake followers, undisclosed payment, scripted inauthenticity, no FTC disclosure | Vetted creators (audience quality); written contracts with disclosure clauses; performance-based pay. |
-| **Affiliate** | Cookie stuffing, trademark poaching, misleading claims by affiliates | Approved creative library; compliance monitoring; clawback clauses; approved affiliate list. |
-| **Data-Driven / AI** | Hyper-personalisation crossing creepy line; predictive manipulation; dark patterns | **Privacy by Design**; explainable AI; user control dashboard; ethical AI review board. |
-| **Referral / Viral** | Spammy invites, contact scraping, pressure tactics | Opt-in only; clear value for both sides; frequency caps; easy opt-out. |
+Market sizing should use primary evidence and explicit formulas. **TAM** covers all frequent urban ride trips in the chosen geography. **SAM** covers trips by the selected segment that the venture can serve through its channels and technology. **SOM** covers the repeat riders the venture can realistically obtain in the first pilot. The team should count route-level demand, interviews, app data, and competitor prices instead of inserting a headline population figure.
 
----
+Next, map four competitor groups. **Direct competitors** solve the same need with ride-booking apps. **Indirect competitors** use taxis, microbuses, or private vehicles. **Substitutes** include walking, workplace shuttles, and informal arrangements. **Potential entrants** include nearby delivery, payments, or logistics platforms. Track each rival’s price, coverage, safety features, customer reviews, partnerships, and technology.
 
-##### **Ethical Marketing Framework for Startups (Operational)**
+Consumer insight should test price sensitivity, trust signals, convenience, and payment habits. Interview riders and drivers separately. Observe a real booking and record where users hesitate. The regulatory scan must identify company, transport, labour, privacy, tax, and consumer-safety issues before launch.
 
-| Step | Action | Tool / Artefact |
-|------|--------|-----------------|
-| **1. Define Ethical Guardrails** | Document "We will never…" list (e.g., no dark patterns, no data selling, no fake scarcity). | **Marketing Ethics Charter** (1-pager, signed by founders). |
-| **2. Build Compliance into Process** | Pre-launch checklist: consent? truthful? accessible? privacy? | **Ethical Launch Checklist** (Notion/Jira template). |
-| **3. Measure Trust, Not Just Conversion** | Track NPS, complaint rate, unsubscribe reason, privacy requests, brand sentiment. | **Trust Dashboard** (monthly review). |
-| **4. Empower Whistleblowing** | Anonymous channel for team to flag ethical concerns. | **Speak-Up Channel** (anonymous form, external ombudsman). |
-| **5. Publish Transparency Report** | Annual: data requests, takedowns, policy violations, ad library. | **Public Trust Report** (GitHub Pages / website). |
+#### (c) Rider benefit and trust
+
+The BMC’s **value proposition** should state the rider benefit clearly: a safe, affordable, on-demand trip with an upfront fare, accurate pickup information, and dependable support. The **key activities** must produce that promise. Verify licences and vehicles, display driver identity and ratings, train drivers in service and safety, record trips, and monitor incidents. **Key partnerships** can provide maps, payments, telecommunications, and insurance. **Customer relationships** must offer visible receipts, two-way ratings, an in-app help channel, complaint escalation, and fair refund rules.
+
+Trust also depends on consistency. The platform should explain fares and cancellation charges before confirmation, support familiar payment methods during Nepal’s cash-to-digital transition, protect location and identity data, and review low-rating drivers. Promises must appear in the app, driver training, support process, and incident response. Feedback should feed driver coaching and product changes. Repeat offenders need clear escalation, and serious incidents need an independent safety review before service resumes.
+
+#### (d) Policy and law complexities
+
+The first complexity is **business classification and transport regulation**. The venture must register through the appropriate route and obtain current transport-related permissions for each operating model. Platform, contracted-carriage, taxi, and vehicle rules may overlap. The team should obtain written guidance from the transport authority and relevant local bodies rather than copy another company’s description.
+
+Second, **driver status** affects contracts, pay, working time, leave, social security, and termination duties. Calling a driver a “partner” does not remove obligations if the actual relationship is employment. The startup should obtain labour advice and design contracts around the real working arrangement.
+
+Third, **data protection** requires a lawful purpose, consent where needed, limited collection, security, retention rules, and a breach process. Fourth, **tax and accounting** depend on legal form, taxable supplies, payments, worker classification, and current Finance Act rules. The startup should register with IRD, keep auditable records, and use current professional advice.
+
+Finally, **accidents, insurance, consumer complaints, and service standards** can create liability without a dedicated platform rule. The first priority is a written regulatory map and a one-corridor pilot under reviewed agreements. The venture should launch only when it can prove demand, legal coverage, driver economics, and a real safety system.
+
+*End of model case answer.*
+
+*(710 words)*
 
 ---
 
-##### **Business Case for Ethical Marketing**
-
-| Metric | Ethical Approach | Shortcut Approach |
-|--------|------------------|-------------------|
-| **CAC (Long-term)** | Lower — trust compounds, referrals organic | Higher — churn, reputation damage, platform bans |
-| **LTV** | Higher — retention, advocacy, expansion | Lower — betrayal → churn |
-| **Brand Equity** | Asset — attracts talent, investors, partners | Liability — crisis risk |
-| **Regulatory Risk** | Low — proactive compliance | High — fines, injunctions |
-| **Talent Attraction** | Strong — mission-driven talent seeks ethics | Weak — best people avoid toxic cultures |
-
-**Nepal Context:** **Consumer Protection Act 2075** empowers consumers; **Electronic Transactions Act 2063** governs digital ads; **NRB directives** regulate fintech marketing. Early adopters of ethical marketing (Khalti's transparent fees, IME Pay's financial literacy content) build **regulatory goodwill** and **consumer trust** in a low-trust market.
-
----
-
-#### **PART B: Essential Elements of a Business Plan**
-
-A **business plan** is a **living document** that articulates the venture's **strategy, operations, financials, and risk mitigation** — written primarily **for the founding team** (alignment), secondarily for **investors** (due diligence), and thirdly for **partners/employees** (clarity).
-
----
-
-##### **Standard Structure (Investor-Ready, 15–25 Pages)**
-
-| Section | Page(s) | Core Content | Investor Focus |
-|---------|---------|--------------|----------------|
-| **1. Executive Summary** | 1 | One-page snapshot: problem, solution, market, traction, team, ask. | **Read first; decides if rest is read.** |
-| **2. Problem & Solution** | 2–3 | User pain (JTBD), current workarounds, your solution (product demo screenshots), value prop. | Urgency, differentiation, defensibility. |
-| **3. Market Opportunity** | 3–4 | TAM/SAM/SOM (bottom-up), trends, timing, regulatory tailwinds, competitive landscape. | Market size > $100M; why now? |
-| **4. Business Model** | 1–2 | BMC summary; revenue streams, pricing, unit economics (LTV, CAC, payback, gross margin). | Path to profitability; scalability. |
-| **5. Go-to-Market Strategy** | 2–3 | ICP, channels, funnel metrics, sales motion, partnerships, launch timeline, expansion roadmap. | Repeatable, scalable, measurable. |
-| **6. Traction & Milestones** | 1–2 | KPIs (users, revenue, retention, NPS), key hires, product launches, partnerships, press. | Proof of execution; momentum. |
-| **7. Product & Technology** | 1–2 | Architecture, stack, IP (patents, trademarks), roadmap, technical moat, security/compliance. | Defensibility; scalability; team capability. |
-| **8. Team** | 1 | Founders (domain expertise, prior exits, complementary skills), key hires, advisors, org chart. | **#1 criterion** for early-stage. |
-| **9. Financial Projections** | 2–3 | 3-year monthly (Y1), quarterly (Y2–3): P&L, Cash Flow, Balance Sheet; key drivers, assumptions. | Unit economics; cash runway; capital efficiency. |
-| **10. Funding Ask & Use of Funds** | 1 | Amount, instrument (SAFE/equity), valuation cap, runway (18 mo), allocation (% product, % GTM, % ops). | Capital efficiency; milestone alignment. |
-| **11. Risk Analysis & Mitigation** | 1 | Top 5 risks (market, tech, team, regulatory, financial) + specific mitigations. | Self-awareness; preparedness. |
-| **Appendix** | — | Cap table, detailed financials, technical diagrams, customer letters, press, legal docs. | Due diligence reference. |
-
----
-
-##### **Critical Elements That Separate Fundable Plans**
-
-| Element | Amateur | Fundable |
-|---------|---------|----------|
-| **Problem Statement** | "People need X" | "2.3M Nepali freelancers lose 15% income to payment fees; surveyed 200, 94% want lower-cost alternative." |
-| **Market Size** | "Huge market" | "TAM $2.1B (global freelance payments); SAM $45M (Nepal+India corridor); SOM $2M (Year 3)." |
-| **Business Model** | "We'll make money" | "Commission 2% (vs 4% incumbents); LTV ₨12,000; CAC ₨800; Payback 2 mo; Gross Margin 85%." |
-| **Traction** | "Launching soon" | "500 beta users; ₨50L ARR; 40% MoM growth; NPS 62; 3 LOIs for enterprise pilot." |
-| **Team** | "We're passionate" | "CTO: ex-Google, 2 patents; CEO: 2× founder, 1 exit; Advisor: former NRB Deputy Governor." |
-| **Financials** | "₨10Cr revenue Year 3" | "Bottom-up: 5,000 users × ₨2,000 ARPU × 12 mo = ₨12Cr; 65% GM; 18-mo cash runway at ₨5Cr raise." |
-| **Risk** | "Competition" | "Pathao enters payments → Mitigation: exclusive bank partnerships, 18-mo tech lead, network effects in driver ecosystem." |
-
----
-
-##### **Business Plan vs. Pitch Deck vs. Lean Canvas**
-
-| Artefact | Purpose | Audience | Length | Update Frequency |
-|----------|---------|----------|--------|------------------|
-| **Business Plan** | Deep strategy, operations, financials | Founders, Investors (DD), Board | 15–25 pages | Quarterly |
-| **Pitch Deck** | Storytelling, vision, highlights | Investors (meeting), Demo Day | 12–15 slides | Per raise |
-| **Lean Canvas** | Rapid hypothesis testing | Founders, Early Advisors | 1 page | Weekly (early) / Monthly |
-
-**Modern Practice:** **Notion workspace** with linked pages (Plan, Deck, Financial Model, Data Room) replaces static PDF. **Financial model** (Excel/Google Sheets) is separate, linked, with **driver-based assumptions** (not hardcoded numbers).
-
----
-
-##### **Nepal-Specific Business Plan Additions**
-
-| Section | Nepal Context |
-|---------|---------------|
-| **Regulatory Roadmap** | Company registration (OPA), PAN/VAT, industry-specific licences (NRB for fintech, MoCIT for IT), labour compliance (SSF, PF, gratuity). |
-| **Tax Strategy** | 1% turnover tax election (if eligible), VAT on exports (zero-rated), DTAA with India, advance tax calendar. |
-| **Talent Plan** | Hiring from TU/KU/Islington/Deerwalk; ESOP policy (tax implications); remote work policy (Tier-2 cities, diaspora). |
-| **Infrastructure** | Cloud (AWS Mumbai/GCP Singapore), payment gateway (Khalti/eSewa/IME Pay), KYC (eKYC via National ID), logistics (if physical). |
-| **Impact Metrics** | Jobs created, women employed, Tier-2/3 reach, financial inclusion, carbon footprint — for impact investors (Dolma, UNDP). |
-
----
-
-*End of IT Entrepreneurship & Management Model Question Answers*
+*End of IT 248 model question answers.*

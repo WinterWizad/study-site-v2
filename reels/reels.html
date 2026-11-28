@@ -88,12 +88,12 @@
         </button>
         <button class="hub-menu__item" type="button" data-hub-target="audio">
           <span class="hub-menu__label">Narrator & audio</span>
-          <span class="hub-menu__summary" id="hubSummaryAudio">Google Chirp 3 HD · 1×</span>
+          <span class="hub-menu__summary" id="hubSummaryAudio">Random browser voice · 1×</span>
           <svg class="hub-menu__chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m9 18 6-6-6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="hub-menu__item" type="button" id="aiNarrationToggle">
-          <span class="hub-menu__label">AI narration</span>
-          <span class="hub-menu__summary" id="hubSummaryAiNarration">On · reel transcript</span>
+        <button class="hub-menu__item" type="button" id="subtitlesToggle" aria-pressed="true">
+          <span class="hub-menu__label">Subtitles</span>
+          <span class="hub-menu__summary" id="hubSummarySubtitles">On · caption overlay</span>
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 6H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button class="hub-menu__item hub-menu__item--reset" type="button" id="hubResetFilters" data-hub-target="reset" hidden>
@@ -193,13 +193,11 @@
           <h3 id="narratorHeading">Narrator</h3>
           <label class="field-label" for="voiceSelect">Narrator</label>
           <select id="voiceSelect" class="modal-control" aria-describedby="narratorHelp narratorStatus">
-            <option value="google">Google Chirp 3 HD (recommended)</option>
-            <option value="ai">AI narration (reel transcript)</option>
             <option value="random">Random browser voice per card</option>
             <option value="system">Browser system voice</option>
           </select>
-          <p class="modal-note" id="narratorHelp">AI narration reads the build-time reel transcript. The browser voice is always available as the fallback.</p>
-          <p class="modal-note" id="narratorStatus" role="status" aria-live="polite">Pick a narrator.</p>
+          <p class="modal-note" id="narratorHelp">Every card is read from its reel transcript. Pick which browser voice reads it; no account, key, or network call is involved.</p>
+          <p class="modal-note" id="narratorStatus" role="status" aria-live="polite">A random browser voice reads each card.</p>
         </section>
         <section class="modal-section" aria-labelledby="speechRateHeading">
           <h3 id="speechRateHeading">Speech rate</h3>

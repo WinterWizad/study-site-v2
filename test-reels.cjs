@@ -202,23 +202,6 @@ function startServer() {
     await closeSubmodal(page, 'audioModal');
   }
 
-  async function forceNarrationManifest(page) {
-    await page.route('**/reels/content/bi.json', async route => {
-      const response = await route.fetch();
-      const payload = await response.json();
-      payload.narration = payload.narration || {};
-      payload.narration.cloudEnabled = true;
-      Object.values(payload.narration.segments || {}).forEach(segment => {
-        segment.static = false;
-      });
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(payload)
-      });
-    });
-  }
-
   async function forceAiTranscriptManifest(page) {
     await page.route('**/reels/content/bi.json', async route => {
       const response = await route.fetch();
@@ -508,9 +491,12 @@ function startServer() {
     check('Every mapped question keeps its paper identity', payload.entries.filter(entry => entry.kind === 'question').every(entry => ['board', 'model'].includes(entry.paper)));
     const defaultNarrator = await page.evaluate(() => ({
       selected: document.querySelector('#voiceSelect')?.value || '',
-      stored: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').voice || ''
+      stored: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').voice || '',
+      options: [...(document.querySelector('#voiceSelect')?.options || [])].map(option => option.value)
     }));
-    check('Google Chirp 3 HD is the default narrator', defaultNarrator.selected === 'google' && defaultNarrator.stored === 'google', JSON.stringify(defaultNarrator));
+    check('A random browser voice is the default narrator', defaultNarrator.selected === 'random' && defaultNarrator.stored === 'random', JSON.stringify(defaultNarrator));
+    check('The narrator menu offers only switchable browser voices', defaultNarrator.options.includes('random') && defaultNarrator.options.includes('system') && !defaultNarrator.options.includes('google') && !defaultNarrator.options.includes('ai'), JSON.stringify(defaultNarrator.options));
+    check('The browser payload ships no server narration manifest', payload.narration === undefined && payload.entries.every(entry => entry.narration === undefined), `payload.narration=${typeof payload.narration}`);
     check('Coverage and self-test sections stay excluded', payload.audit.excludedHeadings.some(item => /coverage map/i.test(item.heading)) && payload.audit.excludedHeadings.some(item => /self-test/i.test(item.heading)));
     check('No Unit 1 mojibake reaches the feed', !JSON.stringify(payload).match(/[âÂÃð]/));
 
@@ -650,44 +636,69 @@ function startServer() {
     await waitForFeed(page);
     check('Random narrator mode survives reload', (await persistedState(page)).voice === 'random');
 
-    // AI subtitle overlay tests
-    const subtitleHiddenInitially = await page.evaluate(() => {
-      const panel = document.querySelector('#transcriptPanel');
-      return panel ? panel.hidden : null;
-    });
-    check('AI subtitle starts hidden', subtitleHiddenInitially === true);
+    // The last test activated the visual card, which has music but no captions.
+    // Move to a text card before checking the subtitle dock.
+    await activateCard(page, '.reel-card[data-card-index="2"]');
+    await page.waitForTimeout(120);
 
-    await openSubmodal(page, 'audio');
-    await page.selectOption('#voiceSelect', 'ai');
-    await closeSubmodal(page, 'audioModal');
-    await page.waitForTimeout(150);
-
-    const subtitleAiVisible = await page.evaluate(() => {
+    // Subtitles: on by default, driven by the same Groq transcript as narration.
+    const subtitleVisibleInitially = await page.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
       const content = document.querySelector('#transcriptContent');
       return panel
-        ? { hidden: panel.hidden, role: panel.getAttribute('role'), live: panel.getAttribute('aria-live'), text: content?.textContent.trim().slice(0, 80) }
+        ? { hidden: panel.hidden, role: panel.getAttribute('role'), live: panel.getAttribute('aria-live'), text: content?.textContent.trim().slice(0, 80) || '' }
         : null;
     });
-    check('AI subtitle is visible when AI voice selected', subtitleAiVisible && subtitleAiVisible.hidden === false, JSON.stringify(subtitleAiVisible));
-    check('AI subtitle is a polite status region, not a dialog', subtitleAiVisible && subtitleAiVisible.role === 'status' && subtitleAiVisible.live === 'polite');
-    check('AI subtitle shows generated transcript text', subtitleAiVisible && subtitleAiVisible.text && subtitleAiVisible.text.length > 0, JSON.stringify(subtitleAiVisible));
+    check('Subtitles start visible with the first transcript caption', subtitleVisibleInitially && subtitleVisibleInitially.hidden === false && subtitleVisibleInitially.text.length > 0, JSON.stringify(subtitleVisibleInitially));
+    check('Subtitle dock is a polite status region, not a dialog', subtitleVisibleInitially && subtitleVisibleInitially.role === 'status' && subtitleVisibleInitially.live === 'polite');
+
+    await openHubMenu(page);
+    await page.click('#subtitlesToggle');
+    await closeHubMenu(page);
+    await page.waitForTimeout(120);
+    const subtitleHiddenAfterToggle = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      return panel ? { hidden: panel.hidden, pressed: document.querySelector('#subtitlesToggle')?.getAttribute('aria-pressed') } : null;
+    });
+    check('Subtitles toggle hides the caption dock', subtitleHiddenAfterToggle && subtitleHiddenAfterToggle.hidden === true && subtitleHiddenAfterToggle.pressed === 'false', JSON.stringify(subtitleHiddenAfterToggle));
+
+    await page.evaluate(() => {
+      window.__speechLog.speaks = [];
+      window.__speechLog.speechEvents = [];
+    });
+    await page.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await pollUntil(page, () => window.__speechLog.speaks.length > 0, null, 5000).catch(() => {});
+    const captionsOffDuringPlayback = await page.evaluate(() => ({
+      hidden: document.querySelector('#transcriptPanel')?.hidden === true,
+      speaks: window.__speechLog.speaks.length,
+      caption: document.querySelector('#transcriptContent')?.textContent.trim() || ''
+    }));
+    check('Narration keeps captions off when the switch is off',
+      captionsOffDuringPlayback.speaks > 0 && captionsOffDuringPlayback.hidden && captionsOffDuringPlayback.caption === '',
+      JSON.stringify(captionsOffDuringPlayback));
+
+    await openHubMenu(page);
+    await page.click('#subtitlesToggle');
+    await closeHubMenu(page);
+    await page.waitForTimeout(120);
+    const subtitleRestored = await page.evaluate(() => {
+      const panel = document.querySelector('#transcriptPanel');
+      const content = document.querySelector('#transcriptContent');
+      return panel ? { hidden: panel.hidden, text: content?.textContent.trim().slice(0, 80) || '' } : null;
+    });
+    check('Subtitles toggle restores the caption dock', subtitleRestored && subtitleRestored.hidden === false && subtitleRestored.text.length > 0, JSON.stringify(subtitleRestored));
 
     await openSubmodal(page, 'audio');
     await page.selectOption('#voiceSelect', 'random');
     await closeSubmodal(page, 'audioModal');
     await page.waitForTimeout(150);
 
-    const subtitleHiddenAfterNonAi = await page.evaluate(() => {
+    const subtitleIndependentOfVoice = await page.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
-      return panel ? panel.hidden : null;
+      const content = document.querySelector('#transcriptContent');
+      return panel ? { hidden: panel.hidden, text: content?.textContent.trim().slice(0, 80) || '' } : null;
     });
-    check('AI subtitle hides when a non-AI voice is selected', subtitleHiddenAfterNonAi === true);
-
-    await openSubmodal(page, 'audio');
-    await page.selectOption('#voiceSelect', 'ai');
-    await closeSubmodal(page, 'audioModal');
-    await page.waitForTimeout(150);
+    check('Captions stay on when the narrator voice changes', subtitleIndependentOfVoice && subtitleIndependentOfVoice.hidden === false && subtitleIndependentOfVoice.text.length > 0, JSON.stringify(subtitleIndependentOfVoice));
 
     const cardTextWithSubtitle = await page.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
@@ -843,10 +854,6 @@ function startServer() {
     }));
     await aiFailurePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await waitForFeed(aiFailurePage);
-    await openSubmodal(aiFailurePage, 'audio');
-    await aiFailurePage.selectOption('#voiceSelect', 'ai');
-    await closeSubmodal(aiFailurePage, 'audioModal');
-    await aiFailurePage.waitForTimeout(150);
     await aiFailurePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
     await aiFailurePage.waitForFunction(
       () => (window.__speechLog?.speaks?.length || 0) > 0,
@@ -885,42 +892,59 @@ function startServer() {
       aiUnexpectedErrors.join(' | '));
     await aiFailureContext.close();
 
-    // The AI path must also clear its loading state when the provider works.
-    const aiProviderAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
-    const aiSuccessContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await installSpeechMock(aiSuccessContext);
-    const aiSuccessPage = await aiSuccessContext.newPage();
-    await forceAiTranscriptManifest(aiSuccessPage);
-    await aiSuccessPage.route('**/api/narration?**', route => route.fulfill({
-      status: 200,
-      contentType: 'audio/mpeg',
-      body: aiProviderAudio
-    }));
-    await aiSuccessPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await waitForFeed(aiSuccessPage);
-    await openSubmodal(aiSuccessPage, 'audio');
-    await aiSuccessPage.selectOption('#voiceSelect', 'ai');
-    await closeSubmodal(aiSuccessPage, 'audioModal');
-    await aiSuccessPage.waitForTimeout(150);
-    await aiSuccessPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
-    await aiSuccessPage.waitForFunction(
-      () => document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]')?.dataset.loading === 'false',
-      null,
-      { timeout: 10000 }
-    );
-    const aiSuccessState = await aiSuccessPage.evaluate(() => {
+    // A card whose transcript is missing must play nothing at all — no browser
+    // speech, no music, no stuck spinner, and an honest status line.
+    const noTranscriptContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(noTranscriptContext);
+    const noTranscriptPage = await noTranscriptContext.newPage();
+    let strippedEntryId = '';
+    await noTranscriptPage.route('**/reels/content/bi.json', async route => {
+      const response = await route.fetch();
+      const payload = await response.json();
+      const entry = payload.entries.find(item => item.aiTranscript);
+      if (entry) {
+        strippedEntryId = entry.id;
+        delete entry.aiTranscript;
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(payload)
+      });
+    });
+    await noTranscriptPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(noTranscriptPage);
+    if (strippedEntryId) {
+      await activateCard(noTranscriptPage, `.reel-card[data-entry-id="${strippedEntryId}"]`);
+    }
+    await noTranscriptPage.evaluate(() => {
+      window.__speechLog.speaks = [];
+      window.__speechLog.speechEvents = [];
+    });
+    await noTranscriptPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await noTranscriptPage.waitForTimeout(400);
+    const noTranscriptState = await noTranscriptPage.evaluate(() => {
       const playButton = document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]');
       return {
+        entryId: document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.entryId || '',
         busy: playButton?.getAttribute('aria-busy') || '',
         loading: playButton?.dataset.loading || '',
         status: document.querySelector('#audioStatus')?.textContent.trim() || '',
-        playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || ''
+        speaks: [...(window.__speechLog?.speaks || [])],
+        musicPaused: document.querySelector('#musicPlayer')?.paused ?? true,
+        caption: document.querySelector('#transcriptContent')?.textContent.trim() || ''
       };
     });
-    check('AI narration clears the loading state once the provider answers',
-      aiSuccessState.busy === 'false' && aiSuccessState.loading === 'false' && aiSuccessState.playerSource.includes('/api/narration'),
-      JSON.stringify(aiSuccessState));
-    await aiSuccessContext.close();
+    check('A transcript-less card plays no narration at all',
+      Boolean(strippedEntryId) && noTranscriptState.entryId === strippedEntryId && noTranscriptState.speaks.length === 0,
+      JSON.stringify(noTranscriptState));
+    check('A transcript-less card does not start the music bed', noTranscriptState.musicPaused === true, JSON.stringify(noTranscriptState));
+    check('A transcript-less card explains itself instead of spinning',
+      /No narration for this card/i.test(noTranscriptState.status)
+        && noTranscriptState.busy === 'false'
+        && noTranscriptState.loading === 'false',
+      JSON.stringify({ status: noTranscriptState.status, busy: noTranscriptState.busy, loading: noTranscriptState.loading }));
+    await noTranscriptContext.close();
 
     // With no provider configured, the client must read the reel transcript
     // with the browser voice instead of waiting on an endpoint that can only
@@ -935,10 +959,6 @@ function startServer() {
     });
     await aiOfflinePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await waitForFeed(aiOfflinePage);
-    await openSubmodal(aiOfflinePage, 'audio');
-    await aiOfflinePage.selectOption('#voiceSelect', 'ai');
-    await closeSubmodal(aiOfflinePage, 'audioModal');
-    await aiOfflinePage.waitForTimeout(150);
     await aiOfflinePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
     await aiOfflinePage.waitForFunction(
       () => (window.__speechLog?.speaks?.length || 0) > 0,
@@ -954,17 +974,9 @@ function startServer() {
       JSON.stringify({ requests: aiOfflineRequests, speaks: aiOfflineState.speaks.length, status: aiOfflineState.status }));
     await aiOfflineContext.close();
 
-    // Regression: a persisted AI-voice state used to hang the feed build.
-    // splitCaptionSentences() called regex.exec() in a while loop without /g,
-    // so exec() returned the same match forever and froze the main thread.
-    // Fresh test profiles used a non-AI voice and never reached this path.
+    // Regression: a persisted retired "AI narration" voice used to hang the feed
+    // build. It must now migrate to a real browser voice and keep captions on.
     const persistedAiContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    const persistedAiAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
-    await persistedAiContext.route('**/api/narration?**', route => route.fulfill({
-      status: 200,
-      contentType: 'audio/mpeg',
-      body: persistedAiAudio
-    }));
     await persistedAiContext.addInitScript(() => {
       localStorage.setItem('quickReels.state.v1', JSON.stringify({
         version: 1,
@@ -993,15 +1005,21 @@ function startServer() {
     const persistedAiState = await persistedAiPage.evaluate(() => {
       const panel = document.querySelector('#transcriptPanel');
       const current = document.querySelector('#transcriptContent .subtitle-current');
+      const stored = JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}');
       return {
         cards: document.querySelectorAll('.reel-card:not(.reel-measure)').length,
         loadingHidden: document.querySelector('#stageLoading')?.hidden === true,
-        voice: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').voice,
+        voice: stored.voice,
+        narratorVersion: stored.narratorVersion,
+        legacyKeyRemoved: stored.aiNarrationEnabled === undefined,
+        selected: document.querySelector('#voiceSelect')?.value || '',
         subtitleVisible: panel ? panel.hidden === false : false,
         currentSentence: current?.textContent.trim().slice(0, 80) || ''
       };
     });
     check('Persisted AI voice loads the feed without hanging', persistedAiReady && persistedAiState.cards > 20 && persistedAiState.loadingHidden, JSON.stringify({ persistedAiLoadMs, ...persistedAiState }));
+    check('Persisted AI voice migrates to the default browser narrator', persistedAiState.voice === 'random' && persistedAiState.selected === 'random' && persistedAiState.narratorVersion === 3, JSON.stringify(persistedAiState));
+    check('Persisted AI toggle migrates to the subtitles switch', persistedAiState.legacyKeyRemoved && persistedAiState.subtitleVisible, JSON.stringify(persistedAiState));
     check('Persisted AI voice keeps the progressive subtitle visible', persistedAiState.subtitleVisible && persistedAiState.currentSentence.length > 0, JSON.stringify(persistedAiState));
 
     // Move to a transcript that actually contains sentence boundaries. With the
@@ -1224,16 +1242,20 @@ function startServer() {
       const card = document.querySelector('.reel-card[aria-hidden="false"]');
       const feed = await fetch('content/bi.json').then(response => response.json());
       const entry = feed.entries.find(item => item.id === card?.dataset.entryId);
-      const segmentId = entry?.narration?.title;
+      const segmentId = entry?.aiTranscript?.transcript;
+      const raw = segmentId ? (feed.aiTranscript?.segments?.[segmentId]?.text || '') : '';
       return {
         visible: card?.querySelector('.reel-card__question')?.textContent.trim() || '',
-        narrated: feed.narration?.segments?.[segmentId]?.text || ''
+        transcript: raw.replace(/→/g, ' then ').replace(/\s+/g, ' ').trim()
       };
     });
     await pollUntil(page, () => window.__speechLog.speechEvents.length >= 2, null, 5000).catch(() => {});
     const speechEvents = await page.evaluate(() => [...window.__speechLog.speechEvents]);
-    check('Question narration speaks the normalized question first', speechEvents[0]?.text === questionNarration.narrated && questionNarration.narrated !== questionNarration.visible, JSON.stringify({ questionNarration, events: speechEvents.slice(0, 2) }));
-    check('Question and answer use one voice per card', speechEvents.length >= 2 && speechEvents[0].voice && speechEvents[0].voice === speechEvents[1].voice);
+    check('Question narration speaks the reel transcript', speechEvents.length > 0 && speechEvents.every(event => questionNarration.transcript.includes(event.text)), JSON.stringify({ events: speechEvents.slice(0, 2), transcript: questionNarration.transcript.slice(0, 120) }));
+    check('Question narration does not read the card body verbatim', questionNarration.visible.length === 0 || speechEvents[0]?.text !== questionNarration.visible, JSON.stringify({ visible: questionNarration.visible.slice(0, 60), first: speechEvents[0]?.text.slice(0, 60) }));
+    check('Every narration utterance is caption-sized', speechEvents.length > 0 && speechEvents.every(event => event.text.length <= 180), JSON.stringify(speechEvents.map(event => event.text.length)));
+    check('Narration drops transcript scaffolding', speechEvents.every(event => !/^(TITLE|TABLE|DIAGRAM|ANSWER):/.test(event.text) && !event.text.includes('|')), JSON.stringify(speechEvents.map(event => event.text).slice(0, 3)));
+    check('One card keeps one voice across its utterances', speechEvents.length >= 2 && speechEvents[0].voice && speechEvents.every(event => event.voice === speechEvents[0].voice), JSON.stringify(speechEvents.map(event => event.voice)));
     check('Question and answer are separated by a deliberate pause', speechEvents.length >= 2 && speechEvents[1].time - speechEvents[0].time >= 400, speechEvents.length >= 2 ? String(speechEvents[1].time - speechEvents[0].time) : 'missing second segment');
     check('Narration uses the selected speech rate', speechEvents[0]?.rate === 1.15, String(speechEvents[0]?.rate));
     check('Every segment in one card keeps the same speech rate', speechEvents.length >= 2 && speechEvents.every(event => event.rate === 1.15), JSON.stringify(speechEvents));
@@ -1498,62 +1520,61 @@ function startServer() {
       if (message.type() === 'error') providerErrors.push(message.text());
     });
     providerPage.on('pageerror', error => providerErrors.push(error.message));
-    await forceNarrationManifest(providerPage);
+    // The shipped payload has no rendered audio and no server provider, so
+    // playback must read the build-time Groq transcript itself. Any request to
+    // /api/narration is a regression: it would mean the browser depends on a
+    // paid provider the project does not configure.
     const providerRequests = [];
-    const providerAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
-    let providerRequestsActive = 0;
-    let providerRequestsMaximum = 0;
     await providerPage.route('**/api/narration?**', async route => {
-      providerRequestsActive += 1;
-      providerRequestsMaximum = Math.max(providerRequestsMaximum, providerRequestsActive);
-      const requestUrl = new URL(route.request().url());
-      providerRequests.push({
-        segment: requestUrl.searchParams.get('segment') || '',
-        version: requestUrl.searchParams.get('v') || ''
+      providerRequests.push(route.request().url());
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'narration_not_configured' })
       });
-      await new Promise(resolve => setTimeout(resolve, 80));
-      await route.fulfill({ status: 200, contentType: 'audio/mpeg', body: providerAudio });
-      providerRequestsActive -= 1;
     });
     await providerPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await waitForFeed(providerPage);
     const providerFeed = await providerPage.evaluate(async () => fetch('content/bi.json').then(response => response.json()));
-    const visualEntry = providerFeed.entries.find(entry => entry.parts.some(part => part.type === 'visual'));
-    const visualTitleId = visualEntry?.narration?.title || '';
-    const firstProviderRequest = providerPage.waitForRequest(
-      request => request.url().includes('/api/narration?'),
-      { timeout: 10000 }
-    );
+    const providerEntryId = await providerPage.evaluate(() => document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.entryId || '');
+    const providerEntry = providerFeed.entries.find(entry => entry.id === providerEntryId);
+    const providerTranscriptId = providerEntry?.aiTranscript?.transcript || '';
+    const providerTranscript = String(providerFeed.aiTranscript?.segments?.[providerTranscriptId]?.text || '')
+      .replace(/→/g, ' then ')
+      .replace(/\s+/g, ' ')
+      .trim();
     await providerPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
-    await firstProviderRequest;
-    await providerPage.waitForFunction(() => document.querySelector('#audioStatus')?.textContent.includes('Google'), null, { timeout: 10000 });
-    await providerPage.waitForTimeout(220);
+    await pollUntil(providerPage, () => (window.__speechLog?.speaks?.length || 0) > 0, null, 10000).catch(() => {});
     const providerState = await providerPage.evaluate(() => ({
       status: document.querySelector('#audioStatus')?.textContent.trim() || '',
-      speechCount: window.__speechLog?.speaks?.length || 0,
-      playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || ''
+      speaks: [...(window.__speechLog?.speaks || [])],
+      caption: document.querySelector('#transcriptContent .subtitle-current')?.textContent.trim() || '',
+      playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || '',
+      busy: document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]')?.getAttribute('aria-busy') || ''
     }));
-    const providerRequestCounts = providerRequests.reduce((counts, request) => {
-      counts[request.segment] = (counts[request.segment] || 0) + 1;
-      return counts;
-    }, {});
     check(
-      'Google narration routes known manifest segments to the protected endpoint',
-      providerRequests.length > 0
-        && providerRequests.every(request => providerFeed.narration.segments[request.segment]
-          && providerFeed.narration.segments[request.segment].version === request.version),
-      JSON.stringify(providerRequests.slice(0, 5))
+      'Playback narrates the build-time Groq transcript',
+      providerTranscript.length > 0
+        && providerState.speaks.length > 0
+        && providerTranscript.includes(providerState.speaks[0]),
+      JSON.stringify({ transcriptId: providerTranscriptId, speaks: providerState.speaks.slice(0, 2), transcript: providerTranscript.slice(0, 120) })
     );
-    check('Google narration does not fall back to browser speech', providerState.speechCount === 0 && /Google Chirp 3 HD/.test(providerState.status), JSON.stringify(providerState));
-    check('Narration prefetch deduplicates segment requests', Object.values(providerRequestCounts).every(count => count === 1), JSON.stringify(providerRequestCounts));
-    check('Narration prefetch caps background provider concurrency', providerRequestsMaximum <= 4, String(providerRequestsMaximum));
-    check('Narration prefetch skips visual-only cards', !visualTitleId || !providerRequests.some(request => request.segment === visualTitleId), visualTitleId);
-    check('Provider playback produces no browser errors', providerErrors.length === 0, providerErrors.join(' | '));
+    check('Playback never calls the narration API', providerRequests.length === 0, JSON.stringify(providerRequests.slice(0, 3)));
+    check('Playback starts no rendered-audio element', providerState.playerSource === '' && providerState.busy === 'false', JSON.stringify(providerState));
+    check(
+      'The caption is the sentence just spoken',
+      providerState.speaks.length > 0 && providerState.caption === providerState.speaks[providerState.speaks.length - 1],
+      JSON.stringify({ caption: providerState.caption.slice(0, 100), last: providerState.speaks[providerState.speaks.length - 1]?.slice(0, 100) })
+    );
+    check('Transcript playback produces no browser errors', providerErrors.length === 0, providerErrors.join(' | '));
     await providerContext.close();
 
-    const aiOffContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await installSpeechMock(aiOffContext);
-    await aiOffContext.addInitScript(() => {
+    // A saved Google narrator must migrate to a real browser voice instead of
+    // silently doing nothing. With no rendered audio configured, narration reads
+    // the transcript locally and never touches the API.
+    const legacyGoogleContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installSpeechMock(legacyGoogleContext);
+    await legacyGoogleContext.addInitScript(() => {
       localStorage.setItem('quickReels.state.v1', JSON.stringify({
         version: 1,
         voice: 'google',
@@ -1562,31 +1583,34 @@ function startServer() {
         muted: false
       }));
     });
-    const aiOffPage = await aiOffContext.newPage();
-    await forceNarrationManifest(aiOffPage);
-    await aiOffPage.route('**/api/narration?**', route => route.fulfill({
-      status: 200,
-      contentType: 'audio/mpeg',
-      body: providerAudio
-    }));
-    await aiOffPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await waitForFeed(aiOffPage);
-    await aiOffPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
-    await aiOffPage.waitForFunction(() => /Google Chirp 3 HD/.test(document.querySelector('#audioStatus')?.textContent || ''), null, { timeout: 10000 });
-    await aiOffPage.waitForTimeout(220);
-    const aiOffState = await aiOffPage.evaluate(() => ({
+    const legacyGooglePage = await legacyGoogleContext.newPage();
+    let legacyGoogleRequests = 0;
+    await legacyGooglePage.route('**/api/narration?**', route => {
+      legacyGoogleRequests += 1;
+      route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+    });
+    await legacyGooglePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await waitForFeed(legacyGooglePage);
+    await legacyGooglePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
+    await legacyGooglePage.waitForFunction(() => (window.__speechLog?.speaks?.length || 0) > 0, null, { timeout: 10000 });
+    const legacyGoogleState = await legacyGooglePage.evaluate(() => ({
+      selected: document.querySelector('#voiceSelect')?.value || '',
+      stored: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').voice || '',
+      options: [...(document.querySelector('#voiceSelect')?.options || [])].map(option => option.value),
       status: document.querySelector('#audioStatus')?.textContent.trim() || '',
-      speechCount: window.__speechLog?.speaks?.length || 0,
-      playerSource: document.querySelector('#narrationPlayer')?.getAttribute('src') || '',
-      aiEnabled: JSON.parse(localStorage.getItem('quickReels.state.v1') || '{}').aiNarrationEnabled
+      speaks: [...(window.__speechLog?.speaks || [])]
     }));
     check(
-      'Regression: Google narration still plays with AI narration OFF',
-      aiOffState.speechCount === 0 && /Google Chirp 3 HD/.test(aiOffState.status) && Boolean(aiOffState.playerSource),
-      JSON.stringify(aiOffState)
+      'A saved Google narrator migrates to the browser narrator',
+      legacyGoogleState.selected === 'random' && legacyGoogleState.stored === 'random' && !legacyGoogleState.options.includes('google'),
+      JSON.stringify(legacyGoogleState)
     );
-    check('Regression: AI narration toggle stays OFF during Google playback', aiOffState.aiEnabled === false, JSON.stringify(aiOffState));
-    await aiOffContext.close();
+    check(
+      'Migrated narration reads the transcript without calling the API',
+      legacyGoogleRequests === 0 && legacyGoogleState.speaks.length > 0 && /reel transcript/i.test(legacyGoogleState.status),
+      JSON.stringify({ requests: legacyGoogleRequests, speaks: legacyGoogleState.speaks.length, status: legacyGoogleState.status })
+    );
+    await legacyGoogleContext.close();
 
     const retiredVoiceContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     await retiredVoiceContext.addInitScript(() => {
@@ -1606,15 +1630,16 @@ function startServer() {
       options: [...(document.querySelector('#voiceSelect')?.options || [])].map(option => option.value)
     }));
     check(
-      'Retired local voice migrates to Google on load',
-      retiredVoiceState.selected === 'google' && !retiredVoiceState.options.includes('kokoro'),
+      'Retired local voice migrates to the browser narrator',
+      retiredVoiceState.selected === 'random' && !retiredVoiceState.options.includes('kokoro'),
       JSON.stringify(retiredVoiceState)
     );
     await retiredVoiceContext.close();
+
     const quotaContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     await installSpeechMock(quotaContext);
     const quotaPage = await quotaContext.newPage();
-    await forceNarrationManifest(quotaPage);
+    await forceAiTranscriptManifest(quotaPage);
     await quotaPage.route('**/api/narration?**', route => route.fulfill({
       status: 429,
       contentType: 'application/json',
@@ -1626,74 +1651,21 @@ function startServer() {
     await quotaPage.waitForFunction(() => (window.__speechLog?.speaks?.length || 0) > 0, null, { timeout: 10000 });
     const quotaState = await quotaPage.evaluate(() => ({
       status: document.querySelector('#audioStatus')?.textContent.trim() || '',
-      speaks: [...(window.__speechLog?.speaks || [])]
+      speaks: [...(window.__speechLog?.speaks || [])],
+      busy: document.querySelector('.reel-card[aria-hidden="false"] [data-action="play"]')?.getAttribute('aria-busy') || ''
     }));
     check(
-      'Google quota failure falls back to browser speech for the current card',
-      /browser voice/i.test(quotaState.status) && quotaState.speaks.length > 0,
+      'Rendered-audio quota failure reads the same transcript with the browser voice',
+      /reel transcript/i.test(quotaState.status) && quotaState.speaks.length > 0 && quotaState.busy === 'false',
       JSON.stringify(quotaState)
     );
     await quotaContext.close();
 
-    const remainderContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-    await installSpeechMock(remainderContext);
-    const remainderPage = await remainderContext.newPage();
-    await forceNarrationManifest(remainderPage);
-    let remainderFirstId = '';
-    let remainderSecondId = '';
-    const remainderAudio = fs.readFileSync(path.join(DIST_DIR, 'reels', 'assets', 'music', 'easy-lemon-60-second.mp3'));
-    await remainderPage.route('**/api/narration?**', async route => {
-      const requestUrl = new URL(route.request().url());
-      const segment = requestUrl.searchParams.get('segment') || '';
-      if (segment === remainderSecondId) {
-        await route.fulfill({
-          status: 429,
-          contentType: 'application/json',
-          body: JSON.stringify({ error: 'quota_exhausted', message: 'Quota exhausted.' })
-        });
-        return;
-      }
-      await route.fulfill({ status: 200, contentType: 'audio/mpeg', body: remainderAudio });
-    });
-    await remainderPage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
-    await waitForFeed(remainderPage);
-    const remainderFeed = await remainderPage.evaluate(async () => fetch('content/bi.json').then(response => response.json()));
-    const remainderEntry = remainderFeed.entries[0];
-    remainderFirstId = remainderEntry?.narration?.title || '';
-    const remainderFirstPart = remainderEntry?.narration?.parts?.[0] || {};
-    remainderSecondId = remainderFirstPart.header
-      || remainderFirstPart.rows?.find(Boolean)
-      || remainderFirstPart.lines?.find(Boolean)
-      || remainderFirstPart.text
-      || '';
-    await remainderPage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
-    await pollUntil(
-      remainderPage,
-      segmentId => document.querySelector('#narrationPlayer')?.dataset.narrationSegmentId === segmentId,
-      remainderFirstId,
-      10000
-    );
-    await remainderPage.evaluate(() => document.querySelector('#narrationPlayer')?.dispatchEvent(new Event('ended')));
-    await pollUntil(remainderPage, () => (window.__speechLog?.speaks?.length || 0) > 0, null, 10000);
-    const remainderState = await remainderPage.evaluate(() => ({
-      speaks: [...(window.__speechLog?.speaks || [])],
-      status: document.querySelector('#audioStatus')?.textContent.trim() || ''
-    }));
-    const remainderFirstText = remainderFeed.narration.segments[remainderFirstId]?.text || '';
-    const remainderSecondText = remainderFeed.narration.segments[remainderSecondId]?.text || '';
-    check(
-      'Provider fallback starts at the failed segment instead of replaying earlier audio',
-      remainderState.speaks[0] === remainderSecondText
-        && remainderState.speaks[0] !== remainderFirstText
-        && /browser voice/i.test(remainderState.status),
-      JSON.stringify({ remainderFirstText, remainderSecondText, remainderState })
-    );
-    await remainderContext.close();
-
     const staleContext = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     await installSpeechMock(staleContext);
     const stalePage = await staleContext.newPage();
-    await forceNarrationManifest(stalePage);
+    await forceAiTranscriptManifest(stalePage);
+    let staleFirstId = '';
     let releaseFirstRequest;
     let markFirstRequestSeen;
     const firstRequestSeen = new Promise(resolve => { markFirstRequestSeen = resolve; });
@@ -1703,7 +1675,7 @@ function startServer() {
     await stalePage.route('**/api/narration?**', async route => {
       const requestUrl = new URL(route.request().url());
       const segment = requestUrl.searchParams.get('segment') || '';
-      if (segment === remainderFirstId && !firstRequestHandled) {
+      if (staleFirstId && segment === staleFirstId && !firstRequestHandled) {
         firstRequestHandled = true;
         markFirstRequestSeen();
         await firstRequestGate;
@@ -1716,21 +1688,25 @@ function startServer() {
     });
     await stalePage.goto(`${baseUrl}/reels/`, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await waitForFeed(stalePage);
+    const staleFeed = await stalePage.evaluate(async () => fetch('content/bi.json').then(response => response.json()));
+    staleFirstId = staleFeed.entries[0]?.aiTranscript?.transcript || '';
     await stalePage.click('.reel-card[aria-hidden="false"] [data-action="play"]');
     await firstRequestSeen;
     await stalePage.click('.reel-card[aria-hidden="false"] [data-action="next"]');
     await stalePage.click('.reel-card[aria-hidden="false"] [data-action="next"]');
+    await stalePage.waitForTimeout(400);
+    const speechBeforeRelease = await stalePage.evaluate(() => (window.__speechLog?.speaks || []).length);
     releaseFirstRequest();
-    await stalePage.waitForTimeout(350);
+    await stalePage.waitForTimeout(600);
     const staleState = await stalePage.evaluate(() => ({
       speaks: [...(window.__speechLog?.speaks || [])],
       status: document.querySelector('#audioStatus')?.textContent.trim() || '',
       activeMode: document.querySelector('.reel-card[aria-hidden="false"]')?.dataset.mode || ''
     }));
     check(
-      'A late failed Google request cannot narrate the previous card',
-      staleState.speaks.length === 0 && staleState.activeMode === 'text' && /Google/i.test(staleState.status),
-      JSON.stringify(staleState)
+      'A late failed request cannot narrate the previous card',
+      staleState.activeMode === 'text' && staleState.speaks.length === speechBeforeRelease,
+      JSON.stringify({ before: speechBeforeRelease, after: staleState.speaks.length, status: staleState.status })
     );
     await staleContext.close();
 

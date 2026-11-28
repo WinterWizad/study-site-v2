@@ -13,6 +13,7 @@
     "test:home": "node test-homepage.cjs",
     "test:mobile": "node test-mobile.cjs",
     "test:comprehensive": "node test-comprehensive.cjs",
+    "test:it248": "node test-it248-content.cjs",
     "test:routes": "node test-clean-routes.cjs",
     "test:links": "node test-production-links.mjs",
     "test:production": "npm run build && node test-production-links.mjs",

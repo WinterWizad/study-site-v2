@@ -513,23 +513,15 @@ if (fs.existsSync(reelsIndexPath) && fs.existsSync(mergedManifestPath)) {
 
     check(`${label}: entry count matches the subject index`, builtPayload.entries.length === subject.entryCount, `${builtPayload.entries.length} vs ${subject.entryCount}`);
     check(`${label}: every entry is scoped to its subject`, builtPayload.entries.every(entry => entry.subjectId === subject.id), label);
-    check(`${label}: narration manifest matches the merged manifest`, builtPayload.narration.profileHash === mergedManifest.narration.profileHash, builtPayload.narration.profileHash);
-    check(`${label}: every entry references a known narration segment`, builtPayload.entries.every(entry => {
-      const ids = collectEntrySegmentIds(entry.narration || {});
-      return ids.length > 0 && ids.every(id => mergedManifest.narration.segments[id]);
-    }));
-    const playableEntries = builtPayload.entries.filter(entry =>
-      entry.parts.some(part => part.type === 'text' && String(part.text || '').trim())
-    ).slice(0, 12);
+    // The browser narrates from the Groq transcript only, so the server-side
+    // narration manifest is deliberately not shipped in the subject payload.
     check(
-      `${label}: first twelve playable entries are queued for priming`,
-      playableEntries.length === 12 && playableEntries.every(entry =>
-        collectEntrySegmentIds(entry.narration || {}).every(id => mergedManifest.narration.segments[id].prime)
-      ),
-      JSON.stringify(playableEntries.map(entry => entry.id))
+      `${label}: browser payload omits the server narration manifest`,
+      builtPayload.narration === undefined && builtPayload.entries.every(entry => entry.narration === undefined),
+      `payload.narration=${typeof builtPayload.narration}, entry.narration=${builtPayload.entries.some(entry => entry.narration !== undefined)}`
     );
 
-    for (const [segmentId, segment] of Object.entries(builtPayload.narration.segments)) {
+    for (const [segmentId, segment] of Object.entries(mergedManifest.narration.segments)) {
       if (sharedTextById.has(segmentId) && sharedTextById.get(segmentId) !== segment.text) collidingIds.push(segmentId);
       sharedTextById.set(segmentId, segment.text);
     }
@@ -551,6 +543,9 @@ if (fs.existsSync(reelsIndexPath) && fs.existsSync(mergedManifestPath)) {
       sample: aiTranscriptAssetName(Object.values(aiManifest.segments)[0] || {})
     }.sample.includes('.mp3') && Object.values(aiManifest.segments).some(s => aiTranscriptAssetName(s).startsWith('aiseg-')));
   }
+
+  check('Merged narration manifest carries a profile hash', typeof mergedManifest.narration.profileHash === 'string' && mergedManifest.narration.profileHash.length > 0, mergedManifest.narration.profileHash);
+  check('Merged narration manifest queues at least twelve primed segments', Object.values(mergedManifest.narration.segments).filter(segment => segment.prime).length >= 12, String(Object.values(mergedManifest.narration.segments).filter(segment => segment.prime).length));
 
   check('Shared narration segment IDs keep identical text across subjects', collidingIds.length === 0, JSON.stringify(collidingIds.slice(0, 5)));
   const deterministicIds = new Set(Object.keys(mergedManifest.narration.segments));

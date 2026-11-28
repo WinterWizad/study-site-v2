@@ -13,8 +13,8 @@ It is a static pilot built on the site's existing Node/Marked pipeline. There is
 - Tables, fenced diagrams, and the Unit 1 motion visual.
 - Question cards with the question before the answer.
 - Runtime pagination that splits at source-safe boundaries and uses a visible scroll fallback only when one indivisible passage cannot fit.
-- Google Chirp 3 HD narration by default, with deployment-time MP3 priming, background prefetch, and automatic browser-speech fallback.
-- **AI narration (build-time reel transcripts)** — one AI-generated reel transcript per entry, generated at build time via Groq (qwen primary, gpt-oss fallback), with deterministic fallback. Default on, switchable with a button. The AI transcript panel shows the generated script while leaving the original note visible.
+- Narration read from the build-time Groq reel transcript, using a browser voice. No cloud account, key, or per-play network call is involved.
+- **Reel transcripts** — one AI-generated reel transcript per entry, generated at build time via Groq (qwen primary, gpt-oss fallback). The transcript is the only narration script: if a card has no transcript it plays nothing. The caption dock shows the same script while leaving the original note visible.
 - Browser text-to-speech with a fixed or random narrator voice.
 - Local MP3 music for visual-only cards.
 - Seen, Done, Saved, resume position, feed preferences, and audio preferences stored in `localStorage`.
@@ -37,25 +37,27 @@ The source files live in `reels/`. The build writes the production route to `dis
 
 ### Narration configuration
 
-The static build works without cloud credentials, but Google narration then falls back to browser speech. For the intended production setup, configure these environment variables in the build and runtime environments:
+Quick Reels needs no narration credentials at runtime. The build generates one Groq reel transcript per entry; the browser reads that transcript with a local voice. `GROQ_API_KEY` is the only required variable, and only for the build.
+
+The Google Cloud variables below are legacy: they belong to the dormant `/api/narration` endpoint and the deployment-time MP3 priming script. The current narrator menu never offers a Google voice, and the client only uses rendered audio when the build actually shipped static assets. Leave them unset.
 
 | Variable | Required | Purpose |
 |---|---|---|
-| `GOOGLE_CLOUD_TTS_API_KEY` | Production | Authenticates Chirp 3 HD synthesis in the build and `/api/narration`. |
-| `UPSTASH_REDIS_REST_URL` | Production | Provides the shared, durable narration quota store. |
-| `UPSTASH_REDIS_REST_TOKEN` | Production | Authenticates the Upstash quota store. |
-| `GOOGLE_TTS_VOICE` | No | Overrides `en-US-Chirp3-HD-Achernar`. |
-| `GOOGLE_TTS_LANGUAGE_CODE` | No | Overrides `en-US`. |
-| `GOOGLE_TTS_PACE` | No | Sets synthesis pace from `0.25` to `2`; the runtime also supports a `0.75×`–`1.25×` playback rate. |
-| `GOOGLE_TTS_MODEL_VERSION` | No | Changes the cache identity when the voice model changes. |
-| `GOOGLE_TTS_PRIME_ENTRIES` | No | Number of initial playable entries queued for deployment-time MP3 generation; default `12`. |
-| `GOOGLE_TTS_DAILY_CHAR_BUDGET` | No | Daily app-level character cap; default `100000`. |
-| `GOOGLE_TTS_MONTHLY_CHAR_BUDGET` | No | Monthly app-level character cap; default `900000`, below Google's 1M-character free monthly tier. |
-| `GOOGLE_TTS_REQUESTS_PER_FIVE_MINUTES` | No | Shared request cap; default `300`. |
-| `GOOGLE_TTS_MAX_PRIME_CHARS` | No | Safety cap for one priming run; default `900000`. |
-| `GOOGLE_TTS_PRIME_CONCURRENCY` | No | Parallel synthesis jobs during priming; default `4`, maximum `8`. |
-| `GROQ_API_KEY` | Production | Authenticates AI reel-transcript generation via Groq at build time. |
-| `GROQ_TTS_PRIME_ENTRIES` | No | Number of initial AI transcript entries queued for deployment-time MP3 generation; default `0` (AI transcripts generated on-demand). |
+| `GROQ_API_KEY` | Build | Authenticates AI reel-transcript generation via Groq at build time. |
+| `GROQ_TTS_PRIME_ENTRIES` | No | Number of initial AI transcript entries queued for deployment-time MP3 generation; default `0`. |
+| `GOOGLE_CLOUD_TTS_API_KEY` | Legacy | Authenticates Chirp 3 HD synthesis in the build and the dormant `/api/narration`. Unused by the current UI. |
+| `UPSTASH_REDIS_REST_URL` | Legacy | Shared, durable narration quota store for the dormant endpoint. |
+| `UPSTASH_REDIS_REST_TOKEN` | Legacy | Authenticates the Upstash quota store. |
+| `GOOGLE_TTS_VOICE` | Legacy | Overrides `en-US-Chirp3-HD-Achernar`. |
+| `GOOGLE_TTS_LANGUAGE_CODE` | Legacy | Overrides `en-US`. |
+| `GOOGLE_TTS_PACE` | Legacy | Sets synthesis pace from `0.25` to `2`; the runtime also supports a `0.75×`–`1.25×` playback rate. |
+| `GOOGLE_TTS_MODEL_VERSION` | Legacy | Changes the cache identity when the voice model changes. |
+| `GOOGLE_TTS_PRIME_ENTRIES` | Legacy | Number of initial playable entries queued for deployment-time MP3 generation; default `12`. |
+| `GOOGLE_TTS_DAILY_CHAR_BUDGET` | Legacy | Daily app-level character cap; default `100000`. |
+| `GOOGLE_TTS_MONTHLY_CHAR_BUDGET` | Legacy | Monthly app-level character cap; default `900000`, below Google's 1M-character free monthly tier. |
+| `GOOGLE_TTS_REQUESTS_PER_FIVE_MINUTES` | Legacy | Shared request cap; default `300`. |
+| `GOOGLE_TTS_MAX_PRIME_CHARS` | Legacy | Safety cap for one priming run; default `900000`. |
+| `GOOGLE_TTS_PRIME_CONCURRENCY` | Legacy | Parallel synthesis jobs during priming; default `4`, maximum `8`. |
 
 `GOOGLE_TTS_ALLOW_LOCAL_QUOTA=true` is a diagnostic escape hatch. Do not enable it on Vercel: serverless instances need the durable Upstash counters to enforce one shared quota.
 
@@ -204,28 +206,29 @@ Ordered and shuffled feeds use separate positions. Ordered positions do not depe
 
 ## Audio model
 
-### AI narration (build-time reel transcripts)
+### Reel transcripts (the only narration source)
 
 - One AI-generated reel transcript is built per entry at build time using Groq. Primary model: `qwen/qwen3.8-27b` (temperature `0.7`, max tokens `900`, reasoning effort `none`). Fallback for RPD/TPM failures: `openai/gpt-oss-20b` (temperature `0.7`, max tokens `1400`, reasoning effort `low`).
 - The AI only transforms source notes into reel-style spoken transcripts. It never rewrites the authoritative Markdown, original cards, tables, or diagrams.
-- Each transcript preserves protected tokens (dates, money, percentages, formulas, identifiers) and exact blockquote wording when present. It runs through `cleanForTTS()` (cue removal, markdown stripping, emoji removal, whitespace collapse) before segmentation and TTS.
-- The AI manifest is parallel to the deterministic `narration` manifest. AI segment IDs use the `aiseg-` prefix and are versioned independently.
-- AI narration is **enabled by default** with a `aiNarrationEnabled` preference persisted in `localStorage`. A button in the hub menu toggles it on/off.
-- When AI narration is active, the generated transcript appears in a collapsible transcript panel below the card while the original note remains visible.
-- Deterministic narration remains the safety net for failed, invalid, or missing AI transcripts. Fallback preserves segment boundaries and speech rate.
-- `GROQ_API_KEY` must be set for AI generation. Without it, AI generation is skipped gracefully and deterministic narration is used.
+- Each transcript preserves protected tokens (dates, money, percentages, formulas, identifiers) and exact blockquote wording when present. It runs through `cleanForTTS()` (cue removal, markdown stripping, emoji removal, whitespace collapse) before segmentation.
+- Transcript segment IDs use the `aiseg-` prefix and are versioned independently.
+- The build strips `narration` from the browser payload (≈30% smaller per subject) and writes the full copy to `dist/reels/narration-manifest.json`, which only the dormant `/api/narration` reads.
+- Playback reads the transcript with a browser voice. There is no second source: no card text, no atom narration, no cloud provider. A card with no transcript plays nothing and says `No narration for this card.`
+- The hub-menu `Subtitles` switch controls the caption dock only. Captions are on by default and always show the same script the voice is reading.
+- `GROQ_API_KEY` must be set for transcript generation. Without it, entries have no transcript and the reel says so instead of inventing narration.
+
+### Captions
+
+- One spoken utterance is one caption. The caption advances when the utterance starts, so it cannot drift from the voice.
+- Scaffolding (`TITLE:`/`TABLE:`/`DIAGRAM:` markers, pipe table rows, box-drawing frames) is dropped from both audio and captions.
+- Long lines are hard-wrapped at word boundaries, never mid-word. Captions stay at or below 180 characters.
+- The caption dock is a polite `status` region, sits above the footer, and lets pointer events through to the card.
 
 ### Text cards
 
-- Google Chirp 3 HD is the default narrator. One voice reads every segment of a card.
-- Deployment builds versioned MP3s for the first playable entries. Static audio is immutable and safe to cache for one year.
-- The browser loads primed audio ahead of the learner and prefetches more after an explicit narration action. Dynamic synthesis remains lazy.
-- `/api/narration` accepts known segment IDs and matching profile versions only. It never accepts arbitrary client text.
-- Google quota, rate-limit, network, and media errors fall back to browser speech from the failed segment onward.
-- Browser speech synthesis is the fallback narrator. Random mode chooses one English voice per card, then keeps it for that card.
+- One browser voice reads every utterance of a card. `Random browser voice per card` is the default; a fixed browser voice or the system voice can be chosen.
 - Fixed browser voices support both the modern `voiceschanged` event and legacy `onvoiceschanged` browsers. A saved voice that never appears shows an explicit unavailable/system-fallback label.
-- A deliberate 450ms pause separates the question from the answer. Pause/resume during that gap keeps the answer pending and never restarts the question.
-- Speech rate is persisted from 0.75× to 1.25× and stays consistent across all segments of one card, including a later provider fallback.
+- Speech rate is persisted from 0.75× to 1.25× and stays consistent across all utterances of one card.
 - The full visible transcript remains unchanged when narration or speech is unavailable or fails.
 
 ### Visual cards
@@ -233,7 +236,7 @@ Ordered and shuffled feeds use separate positions. Ordered positions do not depe
 - Dedicated visual cards use a local MP3 from `reels/assets/music/`. Table and diagram cards keep their source layout and are narrated.
 - Navigation after a user gesture may start the visual track.
 - Play/Pause controls the track explicitly.
-- Visual cards do not start text narration.
+- Visual cards play music only: no narration and no captions.
 - Music volume is persisted independently from the speech rate.
 
 Music source and licence details are in `reels/assets/music/CREDITS.md` and are also available in the controls drawer.
@@ -250,18 +253,20 @@ State is stored under `quickReels.state.v1`:
   "saved": [],
   "lastPosition": null,
   "positions": {},
-  "voice": "google",
-  "narratorVersion": 2,
+  "voice": "random",
+  "narratorVersion": 3,
+  "subtitlesEnabled": true,
   "speechRate": 1,
   "shuffleSeed": 541385059,
   "order": "ordered",
   "unit": "all",
   "savedOnly": false,
   "musicVolume": 0.28,
-  "muted": false,
-  "aiNarrationEnabled": true
+  "muted": false
 }
 ```
+
+Retired narrator values (`google`, `ai`, `kokoro`, `piper-*`) migrate to `random` on load, and the old `aiNarrationEnabled` key migrates to `subtitlesEnabled`.
 
 Malformed storage and unsupported state versions fall back to safe defaults. Removed entry IDs, removed units, and stale Saved-only references are cleaned on load. Storage failure does not stop the feed; the progress note then says that progress cannot be saved instead of falsely claiming it was saved. Narrator version `2` migrates the old random-browser default to Google while keeping explicitly selected browser voices.
 

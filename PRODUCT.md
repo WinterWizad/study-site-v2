@@ -23,10 +23,10 @@ The product turns the current website notes into a narrated carousel without cre
 - The site is a static Node/Marked build deployed through Vercel.
 - The Quick Reels pilot lives at `/reels/` and covers all six Business Intelligence units.
 - Learners navigate manually; there is no autoplay feed.
-- Google Cloud Text-to-Speech with the Chirp 3 HD voice is the primary narrator. Deployment-time MP3 priming and background prefetch reduce the wait before speech starts.
-- **AI narration** uses build-time generated reel transcripts via Groq (qwen primary, gpt-oss fallback). It is enabled by default, switchable with a button, and shows a generated subtitle overlay while leaving the original note visible. Deterministic narration remains the safety net.
-- Browser speech synthesis is the automatic fallback when cloud narration is unavailable.
-- Local MP3 music is used only for dedicated visual cards. Tables and diagrams remain narrated and keep their visible source layout.
+- Narration reads the build-time Groq reel transcript with a browser voice. There is no cloud account, no per-play API call, and no second narration source.
+- The transcript is the only script: a card without one plays nothing and says so, instead of falling back to card text.
+- The hub-menu `Subtitles` switch toggles the caption dock; captions are on by default and always show the sentence being spoken.
+- Local MP3 music is used only for the dedicated visual card, which never narrates. Tables and diagrams remain narrated and keep their visible source layout.
 - Progress, preferences, and the last position are stored locally in the browser.
 - The interface must work as a full-screen reading stage on portrait mobile and a centred portrait stage with a restrained edge-action rail on desktop; secondary controls belong in a modal drawer.
 
@@ -37,9 +37,9 @@ The product turns the current website notes into a narrated carousel without cre
 - Place the question before its answer on question cards.
 - Split overflowing content into continuation cards without losing text.
 - Preserve source tables and diagrams, scaling or continuing them to fit.
-- Use one consistent narrator per card: Google Chirp 3 HD by default, AI reel-transcript narration (default on, switchable), a fixed browser voice, or random browser voices.
+- Use one consistent browser narrator per card: random voice (default), system voice, or a fixed browser voice chosen from those the browser actually exposes.
 - Keep the visible transcript unchanged while applying narration-only cleanup for structural labels, arrows, flags, and instructional annotations.
-- Support speed, pause/replay, mute, and automatic browser-speech fallback.
+- Support speed, pause/replay, mute, and an honest "no narration" state when no transcript exists.
 - Support ordered and shuffled feeds, unit filters, Seen, Done, Saved, and resume-from-last-position states.
 - Keep the visible transcript available when narration or browser speech is unavailable.
 - Expand the same engine to Digital Economy, Cloud Computing, and IT Entrepreneurship later.

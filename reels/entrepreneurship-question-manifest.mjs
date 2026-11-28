@@ -357,10 +357,9 @@ export const ENTREPRENEURSHIP_QUESTION_MANIFEST = [
     marks: '5',
     officialQuestion: 'Analyze the following case carefully and answer the questions that follow: Suppose you are appointed as a promoting manager of a new ride-sharing app idea like Pathao in Nepal. Now express your idea to answer the following questions. c. How do you ensure the benefit and trust to rider?',
     displayQuestion: 'How do you ensure the benefit and trust to rider?',
-    sourceKind: 'section',
-    sourceHeading: '3.9 Case Sub-part (D22c) — "How do you ensure the benefit and trust to rider?" [5] 🎯 5-mark',
-    answerHeadings: ['3.9 Case Sub-part (D22c) — "How do you ensure the benefit and trust to rider?" [5] 🎯 5-mark'],
-    answerMode: 'section'
+    sourceKind: 'question-heading',
+    sourceHeading: 'D22(c) · "How do you ensure the benefit and trust to rider?" [5] 🎯 5-mark',
+    sourceHeadingOccurrence: 1
   },
   {
     id: 'model-d22d',
@@ -370,10 +369,9 @@ export const ENTREPRENEURSHIP_QUESTION_MANIFEST = [
     marks: '5',
     officialQuestion: 'Analyze the following case carefully and answer the questions that follow: Suppose you are appointed as a promoting manager of a new ride-sharing app idea like Pathao in Nepal. Now express your idea to answer the following questions. d. What might be the complexities due to policy and law of our country?',
     displayQuestion: 'What might be the complexities due to policy and law of our country?',
-    sourceKind: 'section',
-    sourceHeading: '4.6 Case Sub-part (D22d) — "Complexities due to policy and law" [5] 🎯 5-mark',
-    answerHeadings: ['4.6 Case Sub-part (D22d) — "Complexities due to policy and law" [5] 🎯 5-mark'],
-    answerMode: 'section'
+    sourceKind: 'question-heading',
+    sourceHeading: 'D22(d) · "What might be the complexities due to policy and law of our country?" [5] 🎯 5-mark',
+    sourceHeadingOccurrence: 1
   }
 ];
 

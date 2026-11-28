@@ -76,7 +76,7 @@
       "destination": "/cloud/$1.html/"
     },
     {
-      "source": "/entrepreneurship/(unit-[0-9]+|model-question|model-question-answers|question-bank)",
+      "source": "/entrepreneurship/(unit-[0-9]+|model-question|model-question-answers|board-paper-2026|question-bank)",
       "destination": "/entrepreneurship/$1.html/"
     },
     {
